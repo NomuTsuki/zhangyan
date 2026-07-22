@@ -525,8 +525,7 @@
 
     function showEvidenceModal() {
       state.newEvidence = !state.evidence;
-      state.evidence = true;
-      modalRoot.innerHTML = `<div class="overlay"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="found-title"><div class="handle"></div><div class="modal-top"><span class="mock">原型 Mock</span><span class="eyebrow">${state.newEvidence ? "行动点 -1" : "证据已收录"}</span></div><div class="detail"><b>胶</b></div><p class="eyebrow">S1 · ${state.newEvidence ? "发现证据" : "证据详情"}</p><h2 id="found-title">现代胶痕</h2><p>接口残留的透明胶体形态与旧漆层不一致，支持近现代拆修判断。</p><div class="pills"><span>强证据</span><span>关联：修复历史</span></div><div class="buttons"><button class="primary" data-action="collect">${state.newEvidence ? "收进证据簿" : "返回观察"}</button>${state.newEvidence ? '<button class="plain" data-action="close-modal">关闭，继续观察</button>' : ""}</div></section></div>`;
+      modalRoot.innerHTML = `<div class="overlay"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="found-title"><div class="handle"></div><div class="modal-top"><span class="mock">原型 Mock</span><span class="eyebrow">${state.newEvidence ? "行动点 -1" : "证据已收录"}</span></div><div class="detail"><b>胶</b></div><p class="eyebrow">S1 · ${state.newEvidence ? "发现证据" : "证据详情"}</p><h2 id="found-title">现代胶痕</h2><p>接口残留的透明胶体形态与旧漆层不一致，支持近现代拆修判断。</p><div class="pills"><span>强证据</span><span>关联：修复历史</span></div><div class="buttons"><button class="primary" data-action="collect">${state.newEvidence ? "收进证据簿" : "返回观察"}</button></div></section></div>`;
     }
 
     document.addEventListener("click", (event) => {
@@ -556,8 +555,12 @@
       if (!action) return;
 
       if (action === "inspect") return showEvidenceModal();
-      if (action === "close-modal") return void (modalRoot.innerHTML = "");
-      if (action === "collect") { modalRoot.innerHTML = ""; state.newEvidence = false; return go("observe"); }
+      if (action === "collect") {
+        if (state.newEvidence) state.evidence = true;
+        modalRoot.innerHTML = "";
+        state.newEvidence = false;
+        return go("observe");
+      }
       if (action === "submit") {
         if (state.tone === "professional") return go("response");
         state.feedback = state.tone === "gentle"

@@ -102,7 +102,6 @@ export default function Home() {
     const isNewEvidence = !evidenceFound;
     setArtifactView("joint");
     setDetailIsNew(isNewEvidence);
-    if (isNewEvidence) setEvidenceFound(true);
     setDetailOpen(true);
   }
 
@@ -493,12 +492,14 @@ export default function Home() {
               <p>{lacquerBoxCase.evidence.detail}</p>
               <div className="evidence-meta"><span>{lacquerBoxCase.evidence.strength}</span><span>关联：修复历史</span></div>
               <div className="button-stack">
-                <button className="primary-button" onClick={() => { setDetailOpen(false); setDetailIsNew(false); go("observe"); }}>
+                <button className="primary-button" onClick={() => {
+                  if (detailIsNew) setEvidenceFound(true);
+                  setDetailOpen(false);
+                  setDetailIsNew(false);
+                  go("observe");
+                }}>
                   {detailIsNew ? "收进证据簿" : "返回观察"}
                 </button>
-                {detailIsNew && (
-                  <button className="text-button" onClick={() => { setDetailOpen(false); setDetailIsNew(false); }}>关闭，继续观察</button>
-                )}
               </div>
             </section>
           </div>

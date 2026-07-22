@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="《掌眼》民国漆木首饰盒低保真交互原型">
+  <title>掌眼｜民国漆木首饰盒低保真原型</title>
+  <style>
+    :root {
+      --paper: #f3eee3;
+      --paper-deep: #e5dccb;
+      --white: #fffdf8;
+      --ink: #252a27;
+      --muted: #6f736b;
+      --line: #c7beae;
+      --pine: #284d46;
+      --pine-soft: #dce8e2;
+      --red: #963e32;
+      --red-soft: #f1dfda;
+      --gold: #8b672f;
+      --gold-soft: #eee4cf;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      color: var(--ink);
+      background: #d8d4ca;
+      font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background:
+        linear-gradient(rgba(255,255,255,.25) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px),
+        #d8d4ca;
+      background-size: 24px 24px;
+    }
+
+    button { font: inherit; }
+    button:focus-visible { outline: 3px solid rgba(150,62,50,.42); outline-offset: 2px; }
+    button:disabled { cursor: not-allowed; opacity: .52; }
+
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      place-items: start center;
+      padding: 24px 12px;
+    }
+
+    .phone {
+      position: relative;
+      width: min(100%, 430px);
+      min-height: 844px;
+      overflow: hidden;
+      border: 1px solid #afa695;
+      border-radius: 28px;
+      background: radial-gradient(circle at 14% 8%, #fff9, transparent 24%), var(--paper);
+      box-shadow: 0 24px 70px #1f242133;
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 2;
+      padding: 17px 17px 12px;
+      color: white;
+      background: var(--pine);
+      border-bottom: 4px double #ffffff3d;
+    }
+
+    .brand-row, .spread, .card-top, .modal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand { font: 800 27px STKaiti, KaiTi, serif; letter-spacing: .08em; }
+    .brand-note { margin-left: 8px; color: #ffffffb8; font-size: 10px; }
+    .offline { padding: 4px 8px; color: #ffffffc7; border: 1px solid #ffffff48; border-radius: 99px; font-size: 9px; }
+
+    .progress {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 2px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .progress li {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      gap: 3px;
+      color: #ffffff63;
+      font-size: 8px;
+    }
+
+    .progress li:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: calc(50% + 9px);
+      width: calc(100% - 15px);
+      height: 1px;
+      background: #ffffff31;
+    }
+
+    .progress b {
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 17px;
+      height: 17px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      background: var(--pine);
+      font-size: 9px;
+    }
+
+    .progress .done, .progress .active { color: white; }
+    .progress .done::after { background: #ffffffc7; }
+    .progress .active b { color: var(--pine); background: white; border-color: white; }
+
+    #screen { padding: 20px 17px 24px; }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      color: var(--red);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .14em;
+    }
+
+    h1 {
+      margin: 0;
+      font: 800 clamp(25px, 7vw, 30px)/1.2 STKaiti, KaiTi, serif;
+    }
+
+    h2 { margin: 0; font-size: 17px; }
+
+    .lead {
+      margin: 7px 0 15px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .panel, .guest, .statement, .risk, .truth, .result-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--white);
+    }
+
+    .status {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .status div { padding: 9px; background: #ffffff73; }
+    .status div + div { border-left: 1px solid var(--line); }
+    .status span, .status strong { display: block; }
+    .status span { margin-bottom: 3px; color: var(--muted); font-size: 9px; }
+    .status strong { font-size: 12px; }
+
+    .guest {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 13px;
+      padding: 15px;
+    }
+
+    .avatar, .npc {
+      display: grid;
+      place-items: center;
+      color: var(--paper);
+      border: 1px dashed #adb3af;
+      background: linear-gradient(145deg, #ffffff20, transparent), #69716d;
+      font: 32px STKaiti, KaiTi, serif;
+    }
+
+    .avatar { min-height: 102px; border-radius: 9px 9px 34px 34px; }
+    .guest p { margin: 6px 0 10px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tags span, .pills span { padding: 4px 7px; color: var(--pine); border-radius: 99px; background: var(--pine-soft); font-size: 9px; font-weight: 700; }
+
+    .mock-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 12px 0;
+      padding: 10px;
+      color: #604a29;
+      border: 1px dashed var(--gold);
+      border-radius: 9px;
+      background: var(--gold-soft);
+      font-size: 10px;
+      line-height: 1.55;
+    }
+
+    .mock {
+      flex: 0 0 auto;
+      padding: 3px 6px;
+      color: white;
+      border-radius: 4px;
+      background: var(--gold);
+      font-size: 8px;
+      font-weight: 800;
+    }
+
+    .primary, .secondary, .plain {
+      width: 100%;
+      min-height: 46px;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary { color: white; border: 1px solid var(--pine); background: var(--pine); }
+    .secondary { color: var(--pine); border: 1px solid var(--pine); background: transparent; }
+    .plain { color: var(--muted); border: 0; background: transparent; }
+    .buttons { display: grid; gap: 7px; margin-top: 13px; }
+
+    .scene { display: grid; grid-template-columns: 1fr 1.25fr; gap: 12px; min-height: 154px; margin-bottom: 11px; }
+    .npc { align-content: center; border-radius: 64px 64px 10px 10px; }
+    .npc small { font: 9px "Microsoft YaHei", sans-serif; opacity: .7; }
+
+    .artifact-mini, .artifact-stage {
+      position: relative;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      border: 1px dashed #a59b8c;
+      border-radius: 11px;
+      background: #e1d8c8;
+    }
+
+    .box-lid, .box-body { width: 74%; border: 3px solid #513d34; background: repeating-linear-gradient(45deg, #80513e 0 8px, #8e6149 8px 11px); }
+    .box-lid { height: 42px; border-radius: 12px 12px 2px 2px; }
+    .box-body { position: relative; height: 91px; border-radius: 2px 2px 10px 10px; }
+    .latch { position: absolute; top: -12px; left: 50%; width: 34px; height: 40px; border: 3px solid #6d5628; border-radius: 4px 4px 10px 10px; background: #b49047; transform: translateX(-50%); }
+    .artifact-mini .box-lid, .artifact-mini .box-body { width: 112px; }
+    .artifact-mini .box-lid { height: 24px; }
+    .artifact-mini .box-body { height: 62px; }
+
+    .statement { padding: 12px; border-left: 3px solid var(--pine); }
+    .statement blockquote, .quote { margin: 8px 0 0; font: 16px/1.45 STKaiti, KaiTi, serif; }
+    .tiny { color: var(--muted); font-size: 9px; }
+
+    .price { margin-top: 10px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; }
+    .price span, .price strong { display: block; }
+    .price strong { margin-top: 2px; font-size: 20px; }
+    .price em { color: var(--red); font-size: 9px; font-style: normal; }
+
+    .resource { margin-bottom: 9px; padding: 8px 10px; border-radius: 8px; background: var(--pine-soft); font-size: 11px; }
+    .resource strong { color: var(--pine); }
+
+    .next-choice { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 9px; padding: 9px 10px; border: 1px solid #9db6aa; border-radius: 8px; background: var(--pine-soft); }
+    .next-choice > span { flex: 0 0 auto; padding: 3px 6px; color: white; border-radius: 99px; background: var(--pine); font-size: 8px; font-weight: 800; }
+    .next-choice strong { display: block; font-size: 10px; }
+    .next-choice p { margin: 3px 0 0; color: var(--muted); font-size: 8px; line-height: 1.5; }
+
+    .artifact-stage { min-height: 255px; overflow: hidden; }
+    .artifact-stage::before { content: "器物主视图占位"; position: absolute; top: 9px; left: 10px; color: var(--muted); font-size: 8px; }
+    .artifact-stage p { position: absolute; right: 10px; bottom: 8px; left: 10px; margin: 0; color: var(--muted); font-size: 9px; text-align: center; }
+    .artifact-stage.bottom .box-lid { display: none; }
+    .artifact-stage.bottom .box-body { height: 140px; border-radius: 9px; }
+    .artifact-stage.bottom .box-body::after { content: "款"; position: absolute; inset: 50% auto auto 50%; display: grid; place-items: center; width: 42px; height: 42px; color: #efddad9e; border: 2px solid; transform: translate(-50%,-50%); }
+
+    .hotspot { position: absolute; top: 42%; right: 9%; display: grid; place-items: center; width: 68px; height: 68px; color: white; border: 2px solid white; border-radius: 50%; background: #963e32e8; box-shadow: 0 0 0 7px #963e3233; font-size: 10px; cursor: pointer; }
+    .hotspot b { font-size: 21px; }
+
+    .segments, .tool-grid, .delta, .scores, .two-col {
+      display: grid;
+      gap: 6px;
+    }
+
+    .segments { grid-template-columns: repeat(3, 1fr); margin: 8px 0; padding: 4px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper-deep); }
+    .segments button { min-height: 40px; color: var(--muted); border: 0; border-radius: 6px; background: transparent; cursor: pointer; }
+    .segments button.selected { color: var(--ink); background: white; font-weight: 800; }
+
+    .tool-grid { grid-template-columns: repeat(3, 1fr); margin-top: 9px; }
+    .tool-grid button { min-height: 60px; padding: 6px; color: var(--pine); border: 1px solid var(--line); border-radius: 8px; background: white; font-size: 11px; }
+    .tool-grid small { display: block; margin-top: 3px; font-size: 8px; }
+
+    .evidence, .claim { padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: white; }
+    .evidence-picture { height: 82px; display: grid; place-items: end start; margin: 8px 0; padding: 7px; color: white; border-radius: 7px; background: radial-gradient(circle at 67% 50%, #e8deb8df 0 6%, transparent 7%), linear-gradient(115deg,#543e36 0 45%,#aa7d64 46% 53%,#4c3730 54%); font-size: 8px; }
+    .evidence p { margin: 5px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .contradiction { display: grid; place-items: center; height: 28px; color: var(--red); font-size: 9px; font-weight: 800; }
+    .contradiction span { padding: 3px 9px; border: 1px solid var(--red); border-radius: 99px; }
+
+    .action-summary { display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; margin-bottom: 13px; border: 1px solid var(--line); border-radius: 9px; }
+    .action-summary div { padding: 8px 5px; text-align: center; background: #ffffff7d; }
+    .action-summary div + div { border-left: 1px solid var(--line); }
+    .action-summary span, .action-summary strong { display: block; }
+    .action-summary span { color: var(--muted); font-size: 8px; }
+    .action-summary strong { margin-top: 3px; font-size: 10px; }
+
+    fieldset { display: grid; gap: 7px; margin: 0; padding: 0; border: 0; }
+    legend { margin-bottom: 7px; font-size: 13px; font-weight: 800; }
+    .choice { min-height: 64px; padding: 9px 11px; color: var(--ink); text-align: left; border: 1px solid var(--line); border-radius: 9px; background: #ffffff78; cursor: pointer; }
+    .choice.selected { border-color: var(--pine); background: var(--pine-soft); box-shadow: inset 4px 0 var(--pine); }
+    .choice span, .choice small { display: block; }
+    .choice small { margin-top: 4px; color: var(--muted); font-size: 9px; }
+    .choice em { float: right; padding: 2px 5px; color: white; border-radius: 99px; background: var(--pine); font-size: 8px; font-style: normal; }
+
+    .feedback { margin-top: 10px; padding: 10px; color: #6b3028; border: 1px solid #c98e84; border-radius: 8px; background: var(--red-soft); font-size: 10px; line-height: 1.55; }
+    .phase { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 9px; background: white; }
+    .phase del { color: var(--muted); }
+    .phase strong { color: var(--red); }
+
+    .delta { grid-template-columns: repeat(3, 1fr); margin: 9px 0; }
+    .delta div { display: grid; justify-items: center; gap: 2px; padding: 9px 4px; border-radius: 8px; background: var(--paper-deep); }
+    .delta span, .delta small { color: var(--muted); font-size: 8px; }
+    .delta b { color: var(--red); font-size: 19px; }
+
+    .history { overflow: hidden; border: 1px solid var(--line); border-radius: 10px; }
+    .history div { padding: 11px; background: #ffffff75; }
+    .history div + div { border-top: 1px solid var(--line); background: var(--pine-soft); }
+    .history span { color: var(--muted); font-size: 8px; }
+
+    .risk { margin-bottom: 12px; padding: 11px; border-color: #c88e84; background: var(--red-soft); }
+    .risk ul, .truth ul { margin: 7px 0 0; padding-left: 17px; font-size: 10px; line-height: 1.65; }
+
+    .result-card { padding: 14px; color: white; border-color: var(--pine); background: var(--pine); }
+    .result-card h2 { margin-top: 3px; font: 24px STKaiti, KaiTi, serif; }
+    .result-card p { margin: 5px 0 0; color: #ffffffc9; font-size: 10px; line-height: 1.55; }
+    .truth { margin-top: 10px; padding: 11px; }
+    .two-col, .scores { grid-template-columns: 1fr 1fr; margin-top: 9px; }
+    .two-col div, .scores div { padding: 8px 9px; border-radius: 7px; background: var(--paper-deep); }
+    .two-col span, .scores span { display: block; color: var(--muted); font-size: 8px; }
+    .two-col strong { display: block; margin-top: 3px; font-size: 10px; }
+    .scores div { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+    .scores strong { font-size: 9px; text-align: right; }
+
+    .footer { display: flex; justify-content: space-between; padding: 10px 17px; color: var(--muted); border-top: 1px solid var(--line); font-size: 8px; letter-spacing: .08em; }
+
+    .overlay { position: absolute; z-index: 10; inset: 0; display: grid; align-items: end; background: #171d1b99; backdrop-filter: blur(2px); }
+    .modal { padding: 8px 17px 22px; border-radius: 20px 20px 0 0; background: var(--paper); box-shadow: 0 -18px 45px #161b1938; }
+    .handle { width: 43px; height: 4px; margin: 0 auto 10px; border-radius: 99px; background: var(--line); }
+    .detail { position: relative; height: 135px; margin: 10px 0 12px; border-radius: 10px; background: linear-gradient(120deg,#5e443b 0 43%,#aa7f68 44% 53%,#4d3831 54%); }
+    .detail b { position: absolute; top: 44px; right: 54px; display: grid; place-items: center; width: 48px; height: 48px; color: white; border: 2px solid white; border-radius: 50%; background: var(--red); font: 20px STKaiti, KaiTi, serif; }
+    .modal p { color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .pills { display: flex; gap: 5px; }
+
+    @media (max-width: 470px) {
+      .stage { padding: 0; }
+      .phone { width: 100%; min-height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
+      .overlay { position: fixed; }
+    }
+
+    @media (max-width: 360px) {
+      #screen, .topbar { padding-right: 13px; padding-left: 13px; }
+      .brand-note { display: none; }
+      .guest { grid-template-columns: 64px 1fr; padding: 12px; }
+    }
+
+    @media print {
+      body { background: white; }
+      .stage { padding: 0; }
+      .phone { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <section class="phone" aria-label="《掌眼》手机竖屏原型">
+      <header class="topbar">
+        <div class="brand-row">
+          <div><span class="brand">掌眼</span><span class="brand-note">鉴器 · 辨言 · 定交易</span></div>
+          <span class="offline">单文件 · 离线可用</span>
+        </div>
+        <ol class="progress" id="progress" aria-label="案件进度"></ol>
+      </header>
+      <div id="screen" aria-live="polite"></div>
+      <footer class="footer"><span>低保真交互原型</span><span>390 × 844 基准</span></footer>
+      <div id="modal-root"></div>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+
+    const steps = [
+      ["home", "开店"], ["arrival", "来客"], ["observe", "观察"], ["evidence", "证据"],
+      ["action", "行动"], ["response", "回应"], ["trade", "交易"], ["review", "复盘"]
+    ];
+
+    const outcomes = {
+      testing: { label: "送检后付款", result: "暂不付款，双方约定第三方检测后再议。", quality: "风险覆盖充分" },
+      discount: { label: "风险折价", result: "以风险折价条件继续谈判，价格为原型占位。", quality: "风险部分覆盖" },
+      reject: { label: "拒绝交易", result: "礼貌结束本次交易，不承担当前不确定性。", quality: "风险完全规避" }
+    };
+
+    const state = {
+      screen: "home",
+      view: "front",
+      evidence: false,
+      tone: "professional",
+      outcome: "testing",
+      feedback: "",
+      newEvidence: false
+    };
+
+    const screen = document.getElementById("screen");
+    const progress = document.getElementById("progress");
+    const modalRoot = document.getElementById("modal-root");
+
+    function heading(code, title, lead) {
+      return `<p class="eyebrow">${code}</p><h1>${title}</h1><p class="lead">${lead}</p>`;
+    }
+
+    function buttons(primaryText, primaryAction, secondaryText = "", secondaryAction = "") {
+      return `<div class="buttons"><button class="primary" data-action="${primaryAction}">${primaryText}</button>${secondaryText ? `<button class="plain" data-action="${secondaryAction}">${secondaryText}</button>` : ""}</div>`;
+    }
+
+    function renderProgress() {
+      const index = steps.findIndex(([id]) => id === state.screen);
+      progress.innerHTML = steps.map(([id, label], i) => `<li class="${i === index ? "active" : i < index ? "done" : ""}" ${i === index ? 'aria-current="step"' : ""}><b>${i + 1}</b><span>${label}</span></li>`).join("");
+    }
+
+    function renderHome() {
+      return heading("P0 · 店铺首页", "今日开门，第一位来客已到", "先确认来客与委托，再开始今天的掌眼。") + `
+        <div class="status"><div><span>营业状态</span><strong>已开门</strong></div><div><span>资金</span><strong>占位</strong></div><div><span>声誉</span><strong>占位</strong></div></div>
+        <article class="guest"><div class="avatar">刘</div><div><p class="eyebrow">今日来客 · 1 / 1</p><h2>刘先生</h2><p>带来一只旧漆木首饰盒，希望尽快出手。</p><div class="tags"><span>旧物委托</span><span>来源待核</span></div></div></article>
+        <div class="mock-note"><span class="mock">原型 Mock</span><span>本轮只演示一个案件的核心路径，不代表正式数值与美术。</span></div>
+        ${buttons("接待刘先生 →", "arrival")}`;
+    }
+
+    function renderArrival() {
+      return heading("P1 · 来客上门", "先听说法，再验证主张", "卖家的叙述不是答案，而是一组待核验的信息。") + `
+        <div class="scene"><div class="npc">刘<small>人物占位</small></div><div class="artifact-mini"><div class="box-lid"></div><div class="box-body"><i class="latch"></i></div><small class="tiny">器物占位</small></div></div>
+        <section class="statement"><div class="spread"><strong>刘先生</strong><span class="tiny">初始陈述</span></div><blockquote>“这是家里祖传下来的。”</blockquote><blockquote>“这件东西从来没有修过。”</blockquote></section>
+        <div class="price spread"><div><span class="tiny">卖家开价</span><strong>¥8,800</strong></div><em>原型占位，待确认</em></div>
+        ${buttons("开始掌眼", "observe", "返回店铺", "home")}`;
+    }
+
+    function renderObserve() {
+      const description = state.view === "front" ? "正面：观察漆面、纹饰与整体形制" : state.view === "bottom" ? "底部：查看底款与磨损" : "接口：检查拼接与修复痕迹";
+      return heading("P2 · 器物观察", "选择视角，寻找可验证的细节", "检查会消耗行动点。客观证据比情绪信号更可靠。") + `
+        <div class="resource spread"><span>剩余行动点</span><strong>${state.evidence ? 3 : 4} / 4</strong></div>
+        ${state.evidence ? '<div class="next-choice" role="status"><span>证据已收录</span><div><strong>下一步由你决定</strong><p>继续观察、查看证据簿，或用“现代胶痕”发起行动。</p></div></div>' : ""}
+        <div class="artifact-stage ${state.view}"><div class="box-lid"></div><div class="box-body"><i class="latch"></i></div>${state.view === "joint" ? `<button class="hotspot" data-action="inspect"><b>+</b><span>${state.evidence ? "复查接口" : "检查接口"}</span></button>` : ""}<p>${description}</p></div>
+        <div class="segments">${[["front","正面"],["bottom","底部"],["joint","接口"]].map(([id,label]) => `<button class="${state.view === id ? "selected" : ""}" data-view="${id}">${label}</button>`).join("")}</div>
+        <nav class="tool-grid"><button data-action="evidence" ${state.evidence ? "" : "disabled"}>证据簿<small>${state.evidence ? "1 条证据" : "尚未发现"}</small></button><button data-action="action" ${state.evidence ? "" : "disabled"}>行动<small>${state.evidence ? "用证据对峙" : "证据后解锁"}</small></button><button disabled>交易<small>对质后解锁</small></button></nav>
+        ${buttons("返回来客页", "arrival")}`;
+    }
+
+    function renderEvidence() {
+      return heading("P3 · 证据簿", "把物证与陈述放在一起比较", "矛盾不是自动判真伪，而是下一步行动的依据。") + `
+        <article class="evidence"><div class="card-top"><span class="tiny">客观证据</span><strong class="eyebrow">强证据</strong></div><div class="evidence-picture">胶痕局部</div><h2>现代胶痕</h2><p>接口残留的透明胶体形态与旧漆层不一致，支持近现代拆修判断。</p></article>
+        <div class="contradiction"><span>形成矛盾</span></div>
+        <article class="claim"><div class="card-top"><span class="tiny">NPC 陈述</span><strong class="tiny">待核验</strong></div><p class="tiny">修复历史</p><blockquote class="quote">“这件东西从来没有修过。”</blockquote></article>
+        <div class="buttons"><button class="primary" data-action="action">用此证据对质</button><button class="secondary" data-action="observe">返回观察</button></div>`;
+    }
+
+    function renderAction() {
+      const tones = [
+        ["gentle","温和","更利于建立信任","可能保留对方控制感"],
+        ["professional","专业","证据效果稳定","需要明确物证支撑"],
+        ["firm","强硬","快速施加压力","信任下降、可能离场"]
+      ];
+      return heading("P4 · 选择行动", "组成这一次结构化行动", "目标、行动、态度和证据共同决定回应。") + `
+        <div class="action-summary"><div><span>调查目标</span><strong>修复历史</strong></div><div><span>行动类型</span><strong>指出矛盾</strong></div><div><span>引用证据</span><strong>现代胶痕</strong></div></div>
+        <fieldset><legend>选择表达态度</legend>${tones.map(([id,label,gain,risk]) => `<button class="choice ${state.tone === id ? "selected" : ""}" data-tone="${id}"><strong>${label}${id === "professional" ? "<em>核心演示</em>" : ""}</strong><small>${gain}；${risk}</small></button>`).join("")}</fieldset>
+        ${state.feedback ? `<div class="feedback" role="status">${state.feedback}</div>` : ""}
+        ${buttons("提交行动", "submit", "返回证据簿", "evidence")}`;
+    }
+
+    function renderResponse() {
+      return heading("P5 · NPC 回应", "陈述发生变化，记录新的版本", "状态只显示方向，正式数值将在规则引擎中结算。") + `
+        <div class="phase"><del>放松</del><span>→</span><strong>谨慎</strong><span class="mock">原型 Mock</span></div>
+        <div class="delta"><div><span>压力</span><b>↑</b><small>证据命中</small></div><div><span>信任</span><b>↔</b><small>表达专业</small></div><div><span>控制感</span><b>↓</b><small>必须回应</small></div></div>
+        <section class="history"><div><span>原陈述</span><blockquote class="quote">“这件东西从来没有修过。”</blockquote></div><div><span>新陈述</span><blockquote class="quote">“至少我接手以后没有修过，之前可能处理过。”</blockquote></div></section>
+        <div class="mock-note"><strong>当前推断</strong><span>器物存在现代处理风险，卖家缩小了原陈述范围，但尚未说明完整来源。</span></div>
+        <div class="buttons"><button class="primary" data-action="trade">进入交易处置</button><button class="secondary" data-action="evidence">查看证据簿</button></div>`;
+    }
+
+    function renderTrade() {
+      const choices = [
+        ["testing","送检后付款","把不确定性转化为检测条件"],
+        ["discount","风险折价","按翻修与后配风险调整价格"],
+        ["reject","拒绝交易","在信息不足时及时止损"]
+      ];
+      return heading("P6 · 对质与交易", "选择能覆盖当前风险的处置", "胜利不是必须成交，而是让条件与证据相匹配。") + `
+        <section class="risk"><div class="spread"><span>当前风险</span><strong>中高</strong></div><ul><li>已发现：现代胶痕</li><li>已确认：修复陈述发生变化</li><li>仍未知：底款、锁扣与完整来源链</li></ul></section>
+        <fieldset><legend>选择最终处置</legend>${choices.map(([id,label,note]) => `<button class="choice ${state.outcome === id ? "selected" : ""}" data-outcome="${id}"><strong>${label}${id === "testing" ? "<em>建议演示</em>" : ""}</strong><small>${note}</small></button>`).join("")}</fieldset>
+        <div class="mock-note"><span class="mock">原型 Mock</span><span>${outcomes[state.outcome].result}</span></div>
+        ${buttons("确认处置", "review", "返回回应", "response")}`;
+    }
+
+    function renderReview() {
+      const result = outcomes[state.outcome];
+      return heading("P7 · 结算与复盘", "本次处置已记录", "复盘解释判断依据，而不是只告诉玩家买没买到。") + `
+        <section class="result-card"><span class="tiny">最终处置</span><h2>${result.label}</h2><p>${result.result}</p></section>
+        <section class="truth"><div class="spread"><h2>物品真相</h2><span class="eyebrow">复盘解锁</span></div><ul><li>木胎为旧物，年代为民国晚期</li><li>表面经过现代翻修</li><li>锁扣后配，底款后刻</li><li>卖家父亲于 1998 年从旧货市场购买</li></ul></section>
+        <div class="two-col"><div><span>本局发现</span><strong>现代胶痕</strong></div><div><span>本局忽略</span><strong>2 条线索</strong></div></div>
+        <section class="scores"><div><span>判断质量</span><strong>证据驱动</strong></div><div><span>证据质量</span><strong>强证据 × 1</strong></div><div><span>交易质量</span><strong>${result.quality}</strong></div><div><span>关系影响</span><strong>合作关系保留</strong></div></section>
+        <div class="mock-note"><strong>次日回执</strong><span>${state.outcome === "testing" ? "明日可收到第三方检测结果。" : "未来版本将在下一营业日反馈本次决定的后续影响。"}</span></div>
+        ${buttons("重新体验", "reset")}`;
+    }
+
+    const renderers = { home: renderHome, arrival: renderArrival, observe: renderObserve, evidence: renderEvidence, action: renderAction, response: renderResponse, trade: renderTrade, review: renderReview };
+
+    function render() {
+      renderProgress();
+      screen.innerHTML = renderers[state.screen]();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function go(target) {
+      state.screen = target;
+      state.feedback = "";
+      render();
+    }
+
+    function showEvidenceModal() {
+      state.newEvidence = !state.evidence;
+      state.evidence = true;
+      modalRoot.innerHTML = `<div class="overlay"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="found-title"><div class="handle"></div><div class="modal-top"><span class="mock">原型 Mock</span><span class="eyebrow">${state.newEvidence ? "行动点 -1" : "证据已收录"}</span></div><div class="detail"><b>胶</b></div><p class="eyebrow">S1 · ${state.newEvidence ? "发现证据" : "证据详情"}</p><h2 id="found-title">现代胶痕</h2><p>接口残留的透明胶体形态与旧漆层不一致，支持近现代拆修判断。</p><div class="pills"><span>强证据</span><span>关联：修复历史</span></div><div class="buttons"><button class="primary" data-action="collect">${state.newEvidence ? "收进证据簿" : "返回观察"}</button>${state.newEvidence ? '<button class="plain" data-action="close-modal">关闭，继续观察</button>' : ""}</div></section></div>`;
+    }
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+
+      if (button.dataset.view) {
+        state.view = button.dataset.view;
+        render();
+        return;
+      }
+
+      if (button.dataset.tone) {
+        state.tone = button.dataset.tone;
+        state.feedback = "";
+        render();
+        return;
+      }
+
+      if (button.dataset.outcome) {
+        state.outcome = button.dataset.outcome;
+        render();
+        return;
+      }
+
+      const action = button.dataset.action;
+      if (!action) return;
+
+      if (action === "inspect") return showEvidenceModal();
+      if (action === "close-modal") return void (modalRoot.innerHTML = "");
+      if (action === "collect") { modalRoot.innerHTML = ""; state.newEvidence = false; return go("observe"); }
+      if (action === "submit") {
+        if (state.tone === "professional") return go("response");
+        state.feedback = state.tone === "gentle"
+          ? "温和表达保住了信任，但没有迫使对方正面解释胶痕。可调整策略继续。"
+          : "强硬质疑提高了压力，也让刘先生出现离场倾向。核心演示建议改用专业表达。";
+        return render();
+      }
+      if (action === "reset") {
+        Object.assign(state, { screen: "home", view: "front", evidence: false, tone: "professional", outcome: "testing", feedback: "", newEvidence: false });
+        return render();
+      }
+      go(action);
+    });
+
+    render();
+  </script>
+</body>
+</html>

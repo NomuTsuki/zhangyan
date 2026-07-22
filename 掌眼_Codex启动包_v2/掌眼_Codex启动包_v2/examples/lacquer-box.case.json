@@ -1,0 +1,133 @@
+{
+  "id": "lacquer-box-001",
+  "title": "民国漆木首饰盒",
+  "itemTruth": {
+    "category": "lacquerware",
+    "actualEra": "late_republic",
+    "baseMaterial": "old_wood",
+    "modernRestoration": true,
+    "replacementParts": [
+      "lock"
+    ],
+    "laterInscription": true,
+    "actualProvenance": "father_bought_from_flea_market_1998",
+    "marketRisk": "medium_high"
+  },
+  "npc": {
+    "id": "seller-liu-001",
+    "displayName": "刘先生",
+    "knowledge": {
+      "knowsLockReplaced": true,
+      "knowsNotInherited": true,
+      "knowsExactEra": false,
+      "suspectsRestoration": true
+    },
+    "goal": "sell_quickly_at_high_price",
+    "traits": {
+      "pressureSensitivity": 1.0,
+      "selfRespect": 0.7,
+      "greed": 0.7,
+      "urgency": 0.9,
+      "deceptionSkill": 0.5
+    },
+    "initialState": {
+      "pressure": 10,
+      "trust": 40,
+      "dealIntent": 80,
+      "control": 70,
+      "phase": "relaxed"
+    }
+  },
+  "claims": [
+    {
+      "id": "claim-inherited",
+      "text": "这是家里祖传下来的。",
+      "topic": "provenance",
+      "truthStatus": "false"
+    },
+    {
+      "id": "claim-never-restored",
+      "text": "这件东西从来没有修过。",
+      "topic": "restoration_history",
+      "truthStatus": "false"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "modern-adhesive-trace",
+      "name": "现代胶痕",
+      "topic": "restoration_history",
+      "strength": "strong",
+      "discoverBy": "inspect_joint",
+      "contradicts": [
+        "claim-never-restored"
+      ]
+    },
+    {
+      "id": "replacement-lock",
+      "name": "现代锁扣",
+      "topic": "restoration_history",
+      "strength": "medium",
+      "discoverBy": "inspect_lock",
+      "contradicts": [
+        "claim-never-restored"
+      ]
+    },
+    {
+      "id": "receipt-1998",
+      "name": "1998年旧货市场购买票据",
+      "topic": "provenance",
+      "strength": "anchor",
+      "discoverBy": "inspect_documents",
+      "contradicts": [
+        "claim-inherited"
+      ]
+    }
+  ],
+  "mainConflict": "claim-never-restored_vs_modern-restoration",
+  "secondaryConflict": "claim-inherited_vs_purchase-record",
+  "actionBudget": 4,
+  "storylets": [
+    {
+      "id": "partial-admission-restoration",
+      "conditions": {
+        "requiresEvidence": [
+          "modern-adhesive-trace"
+        ],
+        "pressureMin": 45,
+        "controlMax": 50,
+        "notTriggered": true
+      },
+      "effects": {
+        "addStatement": "至少我接手以后没有修过，之前可能是家里人处理过。",
+        "admitFact": "possible_previous_restoration",
+        "pressureDelta": -8,
+        "trustDelta": 2,
+        "unlockActions": [
+          "propose_testing",
+          "add_trade_condition"
+        ]
+      },
+      "repeatable": false,
+      "priority": 100,
+      "presentationKey": "npc_partial_admission_restoration"
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "conditional-testing",
+      "label": "送检后付款",
+      "idealWhen": "uncertain_but_potential_value"
+    },
+    {
+      "id": "risk_discount",
+      "label": "风险折价成交",
+      "idealWhen": "restoration_confirmed_price_adjusted"
+    },
+    {
+      "id": "reject",
+      "label": "拒绝交易",
+      "idealWhen": "risk_not_covered"
+    }
+  ]
+}

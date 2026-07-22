@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zhangyan.local/schemas/player-action.schema.json",
+  "title": "PlayerAction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "target",
+    "action",
+    "tone",
+    "evidenceIds"
+  ],
+  "properties": {
+    "target": {
+      "type": "string",
+      "enum": [
+        "provenance",
+        "era",
+        "restoration_history",
+        "ownership",
+        "valuation",
+        "expert_opinion",
+        "document_authenticity",
+        "hidden_part"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "ask_open",
+        "ask_detail",
+        "repeat_confirm",
+        "request_inspection",
+        "present_evidence",
+        "challenge_contradiction",
+        "propose_testing",
+        "make_offer",
+        "add_trade_condition",
+        "withdraw"
+      ]
+    },
+    "tone": {
+      "type": "string",
+      "enum": [
+        "gentle",
+        "professional",
+        "firm"
+      ]
+    },
+    "evidenceIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "rawText": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  }
+}

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mxfile host="app.diagrams.net" modified="2026-07-15T07:00:00.000Z" agent="ChatGPT" version="24.7.17" type="device">
+  <diagram id="single_case" name="单局游玩流程">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="2500" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="&lt;b&gt;《掌眼》单局游玩流程与系统状态&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#243B5A;strokeColor=#243B5A;fontColor=#FFFFFF;fontSize=24;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="40" y="20" width="1580" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="核心：状态驱动叙事，而不是为每一种选择组合手写一条剧情分支" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF3F8;strokeColor=#C7D2E0;fontColor=#44546A;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="40" y="85" width="1580" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="gen_head" value="&lt;b&gt;0. 案件生成（玩家不可见）&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4E9D5;strokeColor=#C99A4A;fontColor=#7B5720;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="40" y="145" width="1580" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="gen_item" value="&lt;b&gt;物品真相&lt;/b&gt;&lt;br&gt;类型 / 年代 / 材料 / 修复&lt;br&gt;后配部件 / 来源链 / 市场价值" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF6EF;strokeColor=#7AA987;fontColor=#315B3C;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="70" y="205" width="460" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="gen_npc" value="&lt;b&gt;卖家设定&lt;/b&gt;&lt;br&gt;知道什么 / 不知道什么 / 误解什么&lt;br&gt;目的 / 底线价格 / 性格 / 欺骗能力" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF0F8;strokeColor=#7893B8;fontColor=#314B70;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="620" y="205" width="460" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="gen_rule" value="&lt;b&gt;案件规则&lt;/b&gt;&lt;br&gt;行动点 / 主矛盾 / 次矛盾&lt;br&gt;可触发 Storylet / 结局条件" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0ECF8;strokeColor=#9A86BA;fontColor=#57426F;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1170" y="205" width="420" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="gen_note" value="设计原则：先生成事实，再由事实推出可观察线索；随机性只改变表现，不改变核心真相。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9EE;strokeColor=#D5B56A;fontColor=#745A24;fontSize=13;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="250" y="323" width="1160" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="bg0" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF5ED;strokeColor=#4E8760;fontColor=#243248;fontSize=12;fontStyle=0;align=center;verticalAlign=middle;spacing=8;opacity=35;" parent="1" vertex="1">
+          <mxGeometry x="80" y="390" width="440" height="1880" as="geometry"/>
+        </mxCell>
+        <mxCell id="h0" value="&lt;b&gt;A. 玩家可见层&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4E8760;strokeColor=#4E8760;fontColor=#FFFFFF;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="80" y="390" width="440" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="bg1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF0F8;strokeColor=#5877A1;fontColor=#243248;fontSize=12;fontStyle=0;align=center;verticalAlign=middle;spacing=8;opacity=35;" parent="1" vertex="1">
+          <mxGeometry x="600" y="390" width="440" height="1880" as="geometry"/>
+        </mxCell>
+        <mxCell id="h1" value="&lt;b&gt;B. 系统结算层&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#5877A1;strokeColor=#5877A1;fontColor=#FFFFFF;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="600" y="390" width="440" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="bg2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F0ECF8;strokeColor=#8066A0;fontColor=#243248;fontSize=12;fontStyle=0;align=center;verticalAlign=middle;spacing=8;opacity=35;" parent="1" vertex="1">
+          <mxGeometry x="1120" y="390" width="440" height="1880" as="geometry"/>
+        </mxCell>
+        <mxCell id="h2" value="&lt;b&gt;C. NPC / 剧情层&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#8066A0;strokeColor=#8066A0;fontColor=#FFFFFF;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1120" y="390" width="440" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="s1p" value="&lt;b&gt;1. 来客上门&lt;/b&gt;&lt;br&gt;展示古玩、卖家身份、开价与初始说辞&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#667085&quot;&gt;玩家获得：第一印象与待验证主张&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="105" y="480" width="390" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="s1s" value="&lt;b&gt;建立案件上下文&lt;/b&gt;&lt;br&gt;载入事实、卖家认知、初始数值、行动点&lt;br&gt;&lt;br&gt;生成“可验证主张”列表" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="625" y="480" width="390" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="s1n" value="&lt;b&gt;NPC初始状态：放松&lt;/b&gt;&lt;br&gt;主动讲述、建立叙事框架、试探玩家专业度&lt;br&gt;&lt;br&gt;初始四值：压力 / 信任 / 成交意愿 / 控制感" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1145" y="480" width="390" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2p" value="&lt;b&gt;2. 选择调查对象&lt;/b&gt;&lt;br&gt;外观 / 底部 / 接口 / 包装 / 票据 / 图录&lt;br&gt;&lt;br&gt;消耗行动点，获得客观线索" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="105" y="650" width="390" height="145" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2s" value="&lt;b&gt;证据生成与记录&lt;/b&gt;&lt;br&gt;根据物品真相返回可观察结果&lt;br&gt;&lt;br&gt;证据强度：无 / 弱 / 中 / 强 / 锚点" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="625" y="650" width="390" height="145" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2n" value="&lt;b&gt;维持基线行为&lt;/b&gt;&lt;br&gt;NPC只对玩家公开动作作出反应&lt;br&gt;&lt;br&gt;未被展示的证据不会立即改变NPC状态" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1145" y="650" width="390" height="145" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3p" value="&lt;b&gt;3. 选择交互行动&lt;/b&gt;&lt;br&gt;调查目标：来源 / 修复 / 年代 / 价格 / 所有权&lt;br&gt;行动：询问 / 追问 / 展示证据 / 送检 / 报价&lt;br&gt;态度：温和 / 专业 / 强硬" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="105" y="835" width="390" height="185" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3s" value="&lt;b&gt;结构化玩家动作&lt;/b&gt;&lt;br&gt;目标 + 行动类型 + 态度 + 引用证据&lt;br&gt;&lt;br&gt;例：修复 + 指出矛盾 + 专业 + 现代胶痕" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="625" y="835" width="390" height="185" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3n" value="&lt;b&gt;读取动作意义&lt;/b&gt;&lt;br&gt;问题是否命中隐藏核心？&lt;br&gt;玩家证据是否有效？&lt;br&gt;当前态度是否适合该NPC？" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1145" y="835" width="390" height="185" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4p" value="&lt;b&gt;4. 获得即时反馈&lt;/b&gt;&lt;br&gt;NPC用语言、态度、是否配合来反馈&lt;br&gt;&lt;br&gt;界面显示粗粒度变化：&lt;br&gt;压力↑ / 信任↓ / 控制感↓↓" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="105" y="1060" width="390" height="215" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4s" value="&lt;b&gt;更新四项核心数值&lt;/b&gt;&lt;br&gt;&lt;br&gt;压力：是否感到暴露&lt;br&gt;信任：是否愿意继续合作&lt;br&gt;成交：是否迫切想成交&lt;br&gt;控制感：谁掌握叙事与框架&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5877A1&quot;&gt;Δ值 = 行动基础值 × 态度倍率 × 证据倍率 × NPC倍率 × 状态衰减&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="625" y="1060" width="390" height="215" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4n" value="&lt;b&gt;行为评分&lt;/b&gt;&lt;br&gt;部分承认 / 继续否认 / 模糊化 / 降价&lt;br&gt;反问 / 转移责任 / 接受送检 / 退出&lt;br&gt;&lt;br&gt;只在分数接近的合理行为之间轻微随机" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1145" y="1060" width="390" height="215" as="geometry"/>
+        </mxCell>
+        <mxCell id="s5p" value="&lt;b&gt;5. 记录与推断&lt;/b&gt;&lt;br&gt;更新证据簿、NPC陈述和矛盾标记&lt;br&gt;&lt;br&gt;玩家决定继续调查、建立信任还是施压" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="105" y="1315" width="390" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="s5s" value="&lt;b&gt;FSM判断宏观阶段&lt;/b&gt;&lt;br&gt;&lt;br&gt;放松 → 谨慎 → 受压 → 谈判 → 退出&lt;br&gt;&lt;br&gt;满足条件时解锁新行动或结局入口" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="625" y="1315" width="390" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="s5n" value="&lt;b&gt;触发 Storylet&lt;/b&gt;&lt;br&gt;按当前状态匹配短剧情模块&lt;br&gt;&lt;br&gt;例：部分承认修复 / 降价回避 / 强硬离场" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1145" y="1315" width="390" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="decision" value="&lt;b&gt;还有行动点，且案件未进入强制结算？&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF9E8;strokeColor=#C99A4A;fontColor=#6E521E;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=8;shape=rhombus;perimeter=rhombusPerimeter;" parent="1" vertex="1">
+          <mxGeometry x="680" y="1515" width="280" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="yes" value="是：继续调查 / 交互" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF6EF;strokeColor=#6FA47D;fontColor=#315B3C;fontSize=13;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="305" y="1542" width="260" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="no" value="否：进入关键对质" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0ECF8;strokeColor=#927AB2;fontColor=#57426F;fontSize=13;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1065" y="1542" width="260" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="s6p" value="&lt;b&gt;6. 关键对质与最终动作&lt;/b&gt;&lt;br&gt;揭穿 / 温和试探 / 风险折价购买&lt;br&gt;提出送检后付款 / 直接拒绝 / 放弃追问" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="105" y="1690" width="390" height="175" as="geometry"/>
+        </mxCell>
+        <mxCell id="s6s" value="&lt;b&gt;结算关键条件&lt;/b&gt;&lt;br&gt;证据强度 + NPC状态 + 交易条件&lt;br&gt;物品风险 + 价格合理度 + 关系代价&lt;br&gt;&lt;br&gt;判断成交、送检、拒绝或离场" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="625" y="1690" width="390" height="175" as="geometry"/>
+        </mxCell>
+        <mxCell id="s6n" value="&lt;b&gt;NPC最终回应&lt;/b&gt;&lt;br&gt;接受 / 改口 / 部分承认 / 降价&lt;br&gt;继续隐瞒 / 拒绝核验 / 强硬离场" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1145" y="1690" width="390" height="175" as="geometry"/>
+        </mxCell>
+        <mxCell id="out_head" value="&lt;b&gt;7. 单局结局&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4E9D5;strokeColor=#C99A4A;fontColor=#7B5720;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="120" y="1905" width="1400" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="o1" value="&lt;b&gt;正常成交&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF6EF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="135" y="1970" width="230" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="o2" value="&lt;b&gt;风险折价成交&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF4E3;strokeColor=#C99A4A;fontColor=#243248;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="405" y="1970" width="230" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="o3" value="&lt;b&gt;送检后再议&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF0F8;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="675" y="1970" width="230" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="o4" value="&lt;b&gt;玩家拒绝&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0ECF8;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="945" y="1970" width="230" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="o5" value="&lt;b&gt;NPC退出&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBECEC;strokeColor=#C96E6E;fontColor=#243248;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1215" y="1970" width="230" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="out_note" value="胜利不是“成交”或“逼NPC认错”，而是：最终处置、价格与交易条件能够覆盖真实风险。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9EE;strokeColor=#D5B56A;fontColor=#745A24;fontSize=13;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="260" y="2075" width="1120" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="s8p" value="&lt;b&gt;8. 玩家获得&lt;/b&gt;&lt;br&gt;资金变化 / 收藏品 / 档案进度&lt;br&gt;判断风格反馈 / 后续待办" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="105" y="2160" width="390" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="s8s" value="&lt;b&gt;案件评分&lt;/b&gt;&lt;br&gt;判断质量 / 证据质量 / 交易质量 / 关系影响&lt;br&gt;&lt;br&gt;写入长期系统" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="625" y="2160" width="390" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="s8n" value="&lt;b&gt;后续钩子&lt;/b&gt;&lt;br&gt;再次来访 / 补充材料 / 检测回执&lt;br&gt;推荐其他卖家 / 关系恶化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1145" y="2160" width="390" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s1p" target="s2p">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s2p" target="s3p">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s3p" target="s4p">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s4p" target="s5p">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s1s" target="s2s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s2s" target="s3s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s3s" target="s4s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s4s" target="s5s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s1n" target="s2n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s2n" target="s3n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s3n" target="s4n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s4n" target="s5n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s1p" target="s1s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s1s" target="s1n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s2p" target="s2s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s2s" target="s2n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s3p" target="s3s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s3s" target="s3n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s4p" target="s4s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s4s" target="s4n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s5p" target="s5s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s5s" target="s5n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s6p" target="s6s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8A94A6;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="s6s" target="s6n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e25" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s5s" target="decision">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e26" value="是" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4E8760;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="decision" target="yes">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e27" value="回到调查循环" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4E8760;strokeWidth=2;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="yes" target="s2p">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e28" value="否" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8066A0;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="decision" target="no">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e29" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="no" target="s6p">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s6p" target="out_head">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s6s" target="out_head">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="s6n" target="out_head">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9A7B43;strokeWidth=1;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="out_head" target="o1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9A7B43;strokeWidth=1;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="out_head" target="o2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9A7B43;strokeWidth=1;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="out_head" target="o3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9A7B43;strokeWidth=1;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="out_head" target="o4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e37" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9A7B43;strokeWidth=1;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="out_head" target="o5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e38" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9A7B43;strokeWidth=1;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="out_head" target="out_note">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="o1" target="s8p">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e40" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="o2" target="s8p">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="o3" target="s8s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e42" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="o4" target="s8s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="o5" target="s8n">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="meta_loop" name="长期留存与成长循环">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="2100" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="t2" value="&lt;b&gt;《掌眼》长期留存与成长循环&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#243B5A;strokeColor=#243B5A;fontColor=#FFFFFF;fontSize=24;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="40" y="20" width="1580" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="st2" value="每日回访理由：昨天有结果、今天有新事、长期身份在推进" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF3F8;strokeColor=#C7D2E0;fontColor=#44546A;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="40" y="85" width="1580" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="login" value="&lt;b&gt;每日开店&lt;/b&gt;&lt;br&gt;盖章 / 查看今日行情 / 接收预约" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF6EF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="650" y="160" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="reply" value="&lt;b&gt;收取昨日回执&lt;/b&gt;&lt;br&gt;检测报告 / 补充材料 / 拍卖结果 / 买家反馈" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF0F8;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="220" y="360" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="choose" value="&lt;b&gt;选择今日来客&lt;/b&gt;&lt;br&gt;稳妥委托 / 疑难案件 / 人情案件" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0ECF8;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1080" y="360" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="case" value="&lt;b&gt;完成一局鉴定与交易&lt;/b&gt;&lt;br&gt;调查 → 交互 → 对质 → 结算" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5877A1;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="650" y="590" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="archive" value="&lt;b&gt;补全器物档案&lt;/b&gt;&lt;br&gt;年代 / 修复 / 来源链 / 人物故事 / 相关器物" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF4E3;strokeColor=#C99A4A;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="160" y="830" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="relation" value="&lt;b&gt;人物关系变化&lt;/b&gt;&lt;br&gt;再次来访 / 推荐货源 / 关系恶化 / 解锁支线" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0ECF8;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="570" y="830" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="style" value="&lt;b&gt;店铺身份形成&lt;/b&gt;&lt;br&gt;证据派 / 投机派 / 人情派 / 研究派" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF6EF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="980" y="830" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="distribution" value="&lt;b&gt;案件分布变化&lt;/b&gt;&lt;br&gt;玩家过去行为影响未来来客与风险类型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF0F8;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="570" y="1050" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="daily" value="&lt;b&gt;每日“一眼掌眼”&lt;/b&gt;&lt;br&gt;30—60秒识别关键证据或下一步动作" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6FA47D;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="160" y="1240" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="weekly" value="&lt;b&gt;每周主题策展&lt;/b&gt;&lt;br&gt;用收藏、证据和人物故事组成观点" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF4E3;strokeColor=#C99A4A;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="570" y="1240" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="weekend" value="&lt;b&gt;周末鬼市 / 公共案件&lt;/b&gt;&lt;br&gt;高风险高回报；次日查看玩家统计" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0ECF8;strokeColor=#927AB2;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="980" y="1240" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="season" value="&lt;b&gt;月度 / 赛季目标&lt;/b&gt;&lt;br&gt;重聚失散套系 / 调查大型来源链 / 举办大型展览" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF0F8;strokeColor=#708DB5;fontColor=#243248;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="570" y="1480" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="next" value="&lt;b&gt;进入下一营业日&lt;/b&gt;&lt;br&gt;新的行情、来客、回执和关系变化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#243B5A;strokeColor=#243B5A;fontColor=#FFFFFF;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="650" y="1740" width="420" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="principles" value="&lt;b&gt;留存设计原则&lt;/b&gt;&lt;br&gt;&lt;br&gt;① 不靠断签惩罚&lt;br&gt;② 回访内容来自玩家昨日行为&lt;br&gt;③ 收藏不仅看稀有度，还看档案完整度&lt;br&gt;④ 成长解锁信息与策略，不替玩家自动判断&lt;br&gt;⑤ 日、周、月目标相互嵌套" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9EE;strokeColor=#D5B56A;fontColor=#745A24;fontSize=14;fontStyle=0;align=left;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="90" y="1580" width="420" height="260" as="geometry"/>
+        </mxCell>
+        <mxCell id="rewards" value="&lt;b&gt;长期可积累内容&lt;/b&gt;&lt;br&gt;&lt;br&gt;器物收藏 / 来源图谱 / 专家联系人&lt;br&gt;NPC关系 / 店铺声誉 / 策展主题&lt;br&gt;检测工具 / 新问题类型 / 新地区案件" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF3F8;strokeColor=#7893B8;fontColor=#314B70;fontSize=14;fontStyle=0;align=left;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="1190" y="1580" width="420" height="220" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend" value="&lt;b&gt;阅读方式&lt;/b&gt;&lt;br&gt;实线：主流程　虚线：跨日循环&lt;br&gt;浅色框：玩家可见内容　深色框：周期入口" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#AAB3C2;fontColor=#44546A;fontSize=13;fontStyle=0;align=center;verticalAlign=middle;spacing=8;" parent="1" vertex="1">
+          <mxGeometry x="560" y="1940" width="580" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="m1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="login" target="reply">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="login" target="choose">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="reply" target="case">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="choose" target="case">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="case" target="archive">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="case" target="relation">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="case" target="style">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="archive" target="distribution">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="relation" target="distribution">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="style" target="distribution">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="distribution" target="daily">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="distribution" target="weekly">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="distribution" target="weekend">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="daily" target="season">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="weekly" target="season">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="weekend" target="season">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#667085;strokeWidth=2;endArrow=block;endFill=1;dashed=0;" parent="1" edge="1" source="season" target="next">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m18" value="次日循环" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4E8760;strokeWidth=3;endArrow=block;endFill=1;dashed=1;" parent="1" edge="1" source="next" target="login">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

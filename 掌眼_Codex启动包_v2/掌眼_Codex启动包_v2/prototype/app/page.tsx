@@ -5,6 +5,16 @@ import {
   lacquerBoxCase,
   type OutcomeId,
 } from "../content/lacquer-box";
+import {
+  PARTIAL_RESTORATION_ADMISSION,
+  resolveAction,
+} from "../game/resolve-action";
+import type {
+  ActionResult,
+  ActionTone,
+  NPCPhase,
+  PlayerAction,
+} from "../game/types";
 
 type Screen =
   | "home"
@@ -16,7 +26,38 @@ type Screen =
   | "trade"
   | "review";
 type ArtifactView = "front" | "bottom" | "joint";
-type Tone = "gentle" | "professional" | "firm";
+type Tone = ActionTone;
+
+const actionSeed = 20260722;
+const phaseLabels: Record<NPCPhase, string> = {
+  relaxed: "放松",
+  cautious: "谨慎",
+  pressured: "受压",
+  negotiating: "议价",
+  exited: "离场",
+};
+
+function resolveCaseAction(tone: Tone) {
+  const action: PlayerAction = {
+    target: "repair-history",
+    type: "point-out-contradiction",
+    tone,
+    evidenceIds: [lacquerBoxCase.evidence.id],
+  };
+
+  return resolveAction({
+    initialState: lacquerBoxCase.initialNpcState,
+    action,
+    evidence: [{
+      id: lacquerBoxCase.evidence.id,
+      strength: lacquerBoxCase.evidence.ruleStrength,
+      contradicts: lacquerBoxCase.evidence.contradicts,
+    }],
+    seed: actionSeed,
+  });
+}
+
+const initialActionResult = resolveCaseAction("professional");
 
 const progress = [
   { id: "home", label: "开店" },
@@ -27,6 +68,15 @@ const progress = [
   { id: "response", label: "回应" },
   { id: "trade", label: "交易" },
   { id: "review", label: "复盘" },
+] as const;
+
+const rulePipeline = [
+  "接收玩家输入",
+  "构造 PlayerAction",
+  "规则结算",
+  "归并 NPCState",
+  "检查 Storylet",
+  "生成表现结果",
 ] as const;
 
 const toneOptions: Array<{
@@ -70,6 +120,9 @@ export default function Home() {
   const [detailIsNew, setDetailIsNew] = useState(false);
   const [tone, setTone] = useState<Tone>("professional");
   const [toneFeedback, setToneFeedback] = useState<string | null>(null);
+  const [actionResult, setActionResult] =
+    useState<ActionResult>(initialActionResult);
+  const [hasResolvedAction, setHasResolvedAction] = useState(false);
   const [selectedOutcome, setSelectedOutcome] =
     useState<OutcomeId>("conditional-testing");
 
@@ -79,6 +132,17 @@ export default function Home() {
     () => lacquerBoxCase.outcomes.find((item) => item.id === selectedOutcome)!,
     [selectedOutcome],
   );
+  const admissionTriggered = actionResult.triggeredStoryletIds.includes(
+    PARTIAL_RESTORATION_ADMISSION,
+  );
+  const storyletEvent = actionResult.eventLog.find(
+    (event) => event.type === "storylet-triggered",
+  );
+  const debugPipelineStep = hasResolvedAction
+    ? rulePipeline.length
+    : screen === "action"
+      ? 1
+      : 0;
 
   function go(next: Screen) {
     setToneFeedback(null);
@@ -94,6 +158,8 @@ export default function Home() {
     setDetailIsNew(false);
     setTone("professional");
     setToneFeedback(null);
+    setActionResult(initialActionResult);
+    setHasResolvedAction(false);
     setSelectedOutcome("conditional-testing");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -107,6 +173,8 @@ export default function Home() {
 
   function submitAction() {
     if (tone === "professional") {
+      setActionResult(resolveCaseAction(tone));
+      setHasResolvedAction(true);
       go("response");
       return;
     }
@@ -356,29 +424,19 @@ export default function Home() {
               <ScreenHeading
                 eyebrow="P5 · NPC 回应"
                 title="陈述发生变化，记录新的版本"
-                description="现阶段显示 0—100 精确 Mock 数值，便于讨论规则；尚非最终平衡。"
+                description="对方在证据压力下收窄了原陈述。现在判断这份改口意味着什么。"
               />
 
               <div className="phase-change">
-                <span>放松</span><i aria-hidden="true">→</i><strong>谨慎</strong><MockBadge />
-              </div>
-
-              <div className="delta-grid">
-                {lacquerBoxCase.npcStatePreview.map((item) => {
-                  const delta = item.after - item.before;
-                  return (
-                    <div key={item.id}>
-                      <span>{item.label}</span>
-                      <strong>{item.before} → {item.after}</strong>
-                      <small>{delta > 0 ? "+" : ""}{delta} · {item.reason}</small>
-                    </div>
-                  );
-                })}
+                <span>{phaseLabels[actionResult.initialState.phase]}</span>
+                <i aria-hidden="true">→</i>
+                <strong>{phaseLabels[actionResult.nextState.phase]}</strong>
+                <span className="mock-badge">规则切片</span>
               </div>
 
               <section className="statement-history">
                 <div><span>原陈述</span><blockquote>“{lacquerBoxCase.response.before}”</blockquote></div>
-                <div className="new-statement"><span>新陈述</span><blockquote>“{lacquerBoxCase.response.after}”</blockquote></div>
+                <div className="new-statement"><span>新陈述</span><blockquote>“{admissionTriggered ? lacquerBoxCase.response.after : lacquerBoxCase.response.before}”</blockquote></div>
               </section>
 
               <div className="insight-callout">
@@ -505,6 +563,65 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      <aside className="debug-rail" aria-label="开发调试与规则进程">
+        <header className="debug-rail-header">
+          <p>DEVELOPMENT VIEW</p>
+          <h2>规则与系统进程</h2>
+          <span>供讨论与调试，不属于玩家界面</span>
+        </header>
+
+        <section className="debug-panel">
+          <div className="debug-panel-title"><h3>当前运行状态</h3><span>实时</span></div>
+          <dl className="debug-snapshot">
+            <div><dt>页面</dt><dd>P{currentStep} · {progress[currentStep].label}</dd></div>
+            <div><dt>证据</dt><dd>{evidenceFound ? "现代胶痕已收录" : "尚未收录"}</dd></div>
+            <div><dt>行动点</dt><dd>{actionPoints} / {lacquerBoxCase.actionBudget}</dd></div>
+            <div><dt>态度</dt><dd>{toneOptions.find((item) => item.id === tone)?.label}</dd></div>
+          </dl>
+        </section>
+
+        <section className="debug-panel">
+          <div className="debug-panel-title"><h3>规则处理链</h3><span>{hasResolvedAction ? "已完成" : "等待中"}</span></div>
+          <ol className="debug-pipeline">
+            {rulePipeline.map((item, index) => (
+              <li
+                key={item}
+                className={index < debugPipelineStep ? "done" : index === debugPipelineStep ? "active" : ""}
+              >
+                <i>{index + 1}</i><span>{item}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="debug-panel debug-result">
+          <div className="debug-panel-title"><h3>精确规则输出</h3><span>seed {actionResult.seed}</span></div>
+          {hasResolvedAction ? (
+            <>
+              <div className="debug-delta-grid">
+                {actionResult.changes.map((change) => (
+                  <div key={change.key}>
+                    <span>{change.label}</span>
+                    <strong>{change.before} → {change.after}</strong>
+                    <small>{change.delta > 0 ? "+" : ""}{change.delta}</small>
+                  </div>
+                ))}
+              </div>
+              <div className="debug-log">
+                {actionResult.changes.map((change) => (
+                  <p key={change.key}><strong>{change.label}</strong>{change.reasons.join("；")} → {change.delta > 0 ? "+" : ""}{change.delta}</p>
+                ))}
+                {storyletEvent?.type === "storylet-triggered" && (
+                  <p><strong>Storylet</strong>{storyletEvent.reasons.join("；")}</p>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="debug-empty">提交行动后，这里显示四项精确数值、delta 原因和 Storylet 阈值结果。</p>
+          )}
+        </section>
+      </aside>
     </main>
   );
 }

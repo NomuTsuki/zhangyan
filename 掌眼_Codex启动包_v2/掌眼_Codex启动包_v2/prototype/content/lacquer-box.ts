@@ -1,3 +1,5 @@
+import type { NPCState } from "../game/types";
+
 export const lacquerBoxCase = {
   id: "lacquer-box-001",
   title: "民国漆木首饰盒",
@@ -21,6 +23,7 @@ export const lacquerBoxCase = {
     name: "现代胶痕",
     topic: "修复历史",
     strength: "强证据",
+    ruleStrength: "strong",
     detail: "接口残留的透明胶体形态与旧漆层不一致，支持近现代拆修判断。",
     contradicts: "claim-never-restored",
   },
@@ -28,12 +31,13 @@ export const lacquerBoxCase = {
     before: "这件东西从来没有修过。",
     after: "至少我接手以后没有修过，之前可能处理过。",
   },
-  npcStatePreview: [
-    { id: "pressure", label: "压力", before: 26, after: 54, reason: "强证据命中" },
-    { id: "trust", label: "信任", before: 58, after: 61, reason: "专业表达" },
-    { id: "dealIntent", label: "成交意愿", before: 72, after: 66, reason: "风险被指出" },
-    { id: "control", label: "控制感", before: 68, after: 42, reason: "必须回应矛盾" },
-  ],
+  initialNpcState: {
+    pressure: 26,
+    trust: 58,
+    dealIntent: 72,
+    control: 68,
+    phase: "relaxed",
+  } satisfies NPCState,
   truth: [
     "木胎为旧物，年代为民国晚期",
     "表面经过现代翻修",

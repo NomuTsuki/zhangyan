@@ -48,7 +48,10 @@
     .stage {
       min-height: 100vh;
       display: grid;
-      place-items: start center;
+      grid-template-columns: minmax(320px,430px) minmax(280px,350px);
+      align-items: start;
+      justify-content: center;
+      gap: 24px;
       padding: 24px 12px;
     }
 
@@ -62,6 +65,39 @@
       background: radial-gradient(circle at 14% 8%, #fff9, transparent 24%), var(--paper);
       box-shadow: 0 24px 70px #1f242133;
     }
+
+    .debug-rail { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow: auto; color: #dfe7e2; border: 1px solid #252d2a55; border-radius: 16px; background: #202b28; box-shadow: 0 18px 50px #1f242921; }
+    .debug-head { padding: 16px 17px 14px; border-bottom: 1px solid #ffffff1f; background: #18221f; }
+    .debug-head p, .debug-head h2, .debug-head span { margin: 0; }
+    .debug-head p { color: #b39a68; font: 700 8px Consolas, monospace; letter-spacing: .14em; }
+    .debug-head h2 { margin-top: 5px; color: #fffdf8; font-size: 17px; }
+    .debug-head span { display: block; margin-top: 4px; color: #9eaaa5; font-size: 9px; }
+    .debug-panel { margin: 13px; padding: 12px; border: 1px solid #ffffff1a; border-radius: 10px; background: #ffffff09; }
+    .debug-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+    .debug-title h3 { margin: 0; color: #f6f2e9; font-size: 11px; }
+    .debug-title span { color: #b39a68; font: 700 8px Consolas, monospace; }
+    .debug-snapshot { display: grid; gap: 6px; margin: 0; }
+    .debug-snapshot div { display: flex; justify-content: space-between; gap: 10px; padding-bottom: 6px; border-bottom: 1px solid #ffffff12; }
+    .debug-snapshot div:last-child { padding: 0; border: 0; }
+    .debug-snapshot dt, .debug-snapshot dd { margin: 0; font-size: 8px; }
+    .debug-snapshot dt { color: #8f9c97; }
+    .debug-snapshot dd { color: #e3e9e5; text-align: right; }
+    .debug-pipeline { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+    .debug-pipeline li { position: relative; display: grid; grid-template-columns: 21px 1fr; align-items: center; gap: 7px; min-height: 28px; color: #73817b; font-size: 8px; }
+    .debug-pipeline li:not(:last-child)::after { position: absolute; top: 21px; bottom: -7px; left: 9px; width: 1px; content: ""; background: #42504b; }
+    .debug-pipeline i { position: relative; z-index: 1; display: grid; place-items: center; width: 20px; height: 20px; border: 1px solid #4f5c57; border-radius: 50%; background: #202b28; font: 8px Consolas, monospace; }
+    .debug-pipeline li.active { color: #f5ead3; }
+    .debug-pipeline li.active i { color: #1d2825; border-color: #cfb577; background: #cfb577; }
+    .debug-pipeline li.done { color: #b8c9c1; }
+    .debug-pipeline li.done i { color: #dce8e2; border-color: #6d9185; background: #31574e; }
+    .debug-delta { display: grid; grid-template-columns: repeat(2,1fr); gap: 6px; }
+    .debug-delta div { display: grid; gap: 2px; padding: 8px; border-radius: 7px; background: #17211e; }
+    .debug-delta span, .debug-delta small { color: #899791; font-size: 8px; }
+    .debug-delta b { color: #f0d9a7; font: 700 12px Consolas, monospace; }
+    .debug-delta small { color: #d78c7f; }
+    .debug-log { display: grid; gap: 6px; margin-top: 9px; }
+    .debug-log p, .debug-empty { margin: 0; color: #9eaaa5; font: 8px/1.5 Consolas, monospace; }
+    .debug-log strong { display: block; color: #dbe4df; font-size: 8px; }
 
     .topbar {
       position: relative;
@@ -318,11 +354,6 @@
     .phase del { color: var(--muted); }
     .phase strong { color: var(--red); }
 
-    .delta { grid-template-columns: repeat(2, 1fr); margin: 9px 0; }
-    .delta div { display: grid; justify-items: center; gap: 2px; padding: 9px 4px; border-radius: 8px; background: var(--paper-deep); }
-    .delta span, .delta small { color: var(--muted); font-size: 8px; }
-    .delta b { color: var(--red); font-size: 15px; }
-
     .history { overflow: hidden; border: 1px solid var(--line); border-radius: 10px; }
     .history div { padding: 11px; background: #ffffff75; }
     .history div + div { border-top: 1px solid var(--line); background: var(--pine-soft); }
@@ -352,6 +383,11 @@
     .modal p { color: var(--muted); font-size: 11px; line-height: 1.55; }
     .pills { display: flex; gap: 5px; }
 
+    @media (max-width: 860px) {
+      .stage { grid-template-columns: minmax(320px,430px); }
+      .debug-rail { display: none; }
+    }
+
     @media (max-width: 470px) {
       .stage { padding: 0; }
       .phone { width: 100%; min-height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
@@ -368,6 +404,7 @@
       body { background: white; }
       .stage { padding: 0; }
       .phone { box-shadow: none; }
+      .debug-rail { display: none; }
     }
   </style>
 </head>
@@ -385,6 +422,7 @@
       <footer class="footer"><span>低保真交互原型</span><span>390 × 844 基准</span></footer>
       <div id="modal-root"></div>
     </section>
+    <aside class="debug-rail" id="debug-root" aria-label="开发调试与规则进程"></aside>
   </main>
 
   <script>
@@ -395,11 +433,107 @@
       ["action", "行动"], ["response", "回应"], ["trade", "交易"], ["review", "复盘"]
     ];
 
+    const rulePipeline = [
+      "接收玩家输入", "构造 PlayerAction", "规则结算",
+      "归并 NPCState", "检查 Storylet", "生成表现结果"
+    ];
+
     const outcomes = {
       testing: { label: "送检后付款", result: "暂不付款，双方约定第三方检测后再议。", quality: "风险覆盖充分" },
       discount: { label: "风险折价", result: "以风险折价条件继续谈判，价格为原型占位。", quality: "风险部分覆盖" },
       reject: { label: "拒绝交易", result: "礼貌结束本次交易，不承担当前不确定性。", quality: "风险完全规避" }
     };
+
+    const ACTION_SEED = 20260722;
+    const INITIAL_NPC_STATE = {
+      pressure: 26,
+      trust: 58,
+      dealIntent: 72,
+      control: 68,
+      phase: "relaxed"
+    };
+    const MODERN_ADHESIVE = {
+      id: "modern-adhesive-trace",
+      strength: "strong",
+      contradicts: "claim-never-restored"
+    };
+
+    function clamp(value, min = 0, max = 100) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function pressureDecay(pressure) {
+      if (pressure <= 40) return 1;
+      if (pressure <= 70) return 0.75;
+      return 0.5;
+    }
+
+    function resolveAction(initialState, action, evidence, seed) {
+      if (!Number.isInteger(seed)) throw new Error("seed 必须是整数");
+      if (action.type !== "point-out-contradiction" || action.target !== "repair-history") {
+        throw new Error("当前规则切片只支持针对修复历史指出矛盾");
+      }
+
+      const selectedEvidence = evidence.find((item) => action.evidenceIds.includes(item.id));
+      if (!selectedEvidence) throw new Error("行动缺少可用证据");
+
+      const stateLabels = { pressure: "压力", trust: "信任", dealIntent: "成交意愿", control: "控制感" };
+      const toneMultiplier = { gentle: 0.75, professional: 1, firm: 1.25 }[action.tone];
+      const evidenceMultiplier = { none: 0.5, weak: 0.75, medium: 1, strong: 1.3, anchor: 1.6 }[selectedEvidence.strength];
+      const decay = pressureDecay(initialState.pressure);
+      const rawDeltas = {
+        pressure: clamp(Math.round(20 * toneMultiplier * evidenceMultiplier * decay + 2), 0, 35),
+        trust: { gentle: 8, professional: 3, firm: -10 }[action.tone],
+        dealIntent: Math.round({ gentle: -2, professional: -5, firm: -9 }[action.tone] * evidenceMultiplier),
+        control: Math.round(-20 * toneMultiplier * evidenceMultiplier)
+      };
+      const reasons = {
+        pressure: [`指出矛盾基础 20 × 态度 ${toneMultiplier}`, `${selectedEvidence.strength}证据 × ${evidenceMultiplier}`, `压力衰减 × ${decay}，矛盾上下文 +2`],
+        trust: [action.tone === "professional" ? "专业表达维持公平感 +3" : "态度副作用"],
+        dealIntent: [`修复风险被指出，基础变化按证据强度 × ${evidenceMultiplier}`],
+        control: [`指出矛盾基础 -20 × 态度 ${toneMultiplier} × 证据 ${evidenceMultiplier}`]
+      };
+      const changes = Object.keys(rawDeltas).map((key) => {
+        const before = initialState[key];
+        const after = clamp(before + rawDeltas[key]);
+        return { key, label: stateLabels[key], before, after, delta: after - before, reasons: reasons[key] };
+      });
+      const nextState = changes.reduce((next, change) => ({ ...next, [change.key]: change.after }), { ...initialState });
+      nextState.phase = nextState.pressure >= 75 ? "pressured" : nextState.pressure >= 50 ? "cautious" : "relaxed";
+      const triggersAdmission = selectedEvidence.contradicts === "claim-never-restored"
+        && nextState.pressure >= 50
+        && nextState.control <= 45
+        && nextState.dealIntent >= 60;
+      const triggerReasons = triggersAdmission ? [
+        `压力 ${nextState.pressure} ≥ 50`,
+        `控制感 ${nextState.control} ≤ 45`,
+        `成交意愿 ${nextState.dealIntent} ≥ 60`,
+        "现代胶痕反驳从未修复"
+      ] : [];
+
+      return {
+        seed,
+        initialState: { ...initialState },
+        nextState,
+        changes,
+        triggeredStoryletIds: triggersAdmission ? ["partial-restoration-admission"] : [],
+        triggerReasons
+      };
+    }
+
+    function resolveProfessionalAction() {
+      return resolveAction(
+        INITIAL_NPC_STATE,
+        {
+          target: "repair-history",
+          type: "point-out-contradiction",
+          tone: "professional",
+          evidenceIds: [MODERN_ADHESIVE.id]
+        },
+        [MODERN_ADHESIVE],
+        ACTION_SEED
+      );
+    }
 
     const state = {
       screen: "home",
@@ -408,12 +542,15 @@
       tone: "professional",
       outcome: "testing",
       feedback: "",
-      newEvidence: false
+      newEvidence: false,
+      actionResult: null,
+      hasResolvedAction: false
     };
 
     const screen = document.getElementById("screen");
     const progress = document.getElementById("progress");
     const modalRoot = document.getElementById("modal-root");
+    const debugRoot = document.getElementById("debug-root");
 
     function heading(code, title, lead) {
       return `<p class="eyebrow">${code}</p><h1>${title}</h1><p class="lead">${lead}</p>`;
@@ -426,6 +563,27 @@
     function renderProgress() {
       const index = steps.findIndex(([id]) => id === state.screen);
       progress.innerHTML = steps.map(([id, label], i) => `<li class="${i === index ? "active" : i < index ? "done" : ""}" ${i === index ? 'aria-current="step"' : ""}><b>${i + 1}</b><span>${label}</span></li>`).join("");
+    }
+
+    function renderDebug() {
+      const screenIndex = steps.findIndex(([id]) => id === state.screen);
+      const pipelineStep = state.hasResolvedAction ? rulePipeline.length : state.screen === "action" ? 1 : 0;
+      const toneLabels = { gentle: "温和", professional: "专业", firm: "强硬" };
+      const result = state.actionResult;
+      debugRoot.innerHTML = `
+        <header class="debug-head"><p>DEVELOPMENT VIEW</p><h2>规则与系统进程</h2><span>供讨论与调试，不属于玩家界面</span></header>
+        <section class="debug-panel"><div class="debug-title"><h3>当前运行状态</h3><span>实时</span></div><dl class="debug-snapshot">
+          <div><dt>页面</dt><dd>P${screenIndex} · ${steps[screenIndex][1]}</dd></div>
+          <div><dt>证据</dt><dd>${state.evidence ? "现代胶痕已收录" : "尚未收录"}</dd></div>
+          <div><dt>行动点</dt><dd>${state.evidence ? 3 : 4} / 4</dd></div>
+          <div><dt>态度</dt><dd>${toneLabels[state.tone]}</dd></div>
+        </dl></section>
+        <section class="debug-panel"><div class="debug-title"><h3>规则处理链</h3><span>${state.hasResolvedAction ? "已完成" : "等待中"}</span></div><ol class="debug-pipeline">
+          ${rulePipeline.map((item, index) => `<li class="${index < pipelineStep ? "done" : index === pipelineStep ? "active" : ""}"><i>${index + 1}</i><span>${item}</span></li>`).join("")}
+        </ol></section>
+        <section class="debug-panel"><div class="debug-title"><h3>精确规则输出</h3><span>seed ${ACTION_SEED}</span></div>
+          ${state.hasResolvedAction && result ? `<div class="debug-delta">${result.changes.map((change) => `<div><span>${change.label}</span><b>${change.before} → ${change.after}</b><small>${change.delta > 0 ? "+" : ""}${change.delta}</small></div>`).join("")}</div><div class="debug-log">${result.changes.map((change) => `<p><strong>${change.label}</strong>${change.reasons.join("；")} → ${change.delta > 0 ? "+" : ""}${change.delta}</p>`).join("")}${result.triggerReasons.length ? `<p><strong>Storylet</strong>${result.triggerReasons.join("；")}</p>` : ""}</div>` : `<p class="debug-empty">提交行动后，这里显示四项精确数值、delta 原因和 Storylet 阈值结果。</p>`}
+        </section>`;
     }
 
     function renderHome() {
@@ -477,10 +635,12 @@
     }
 
     function renderResponse() {
-      return heading("P5 · NPC 回应", "陈述发生变化，记录新的版本", "现阶段显示 0—100 精确 Mock 数值，便于讨论规则；尚非最终平衡。") + `
-        <div class="phase"><del>放松</del><span>→</span><strong>谨慎</strong><span class="mock">原型 Mock</span></div>
-        <div class="delta"><div><span>压力</span><b>26 → 54</b><small>+28 · 强证据命中</small></div><div><span>信任</span><b>58 → 61</b><small>+3 · 专业表达</small></div><div><span>成交意愿</span><b>72 → 66</b><small>-6 · 风险被指出</small></div><div><span>控制感</span><b>68 → 42</b><small>-26 · 必须回应矛盾</small></div></div>
-        <section class="history"><div><span>原陈述</span><blockquote class="quote">“这件东西从来没有修过。”</blockquote></div><div><span>新陈述</span><blockquote class="quote">“至少我接手以后没有修过，之前可能处理过。”</blockquote></div></section>
+      const actionResult = state.actionResult || resolveProfessionalAction();
+      const phaseLabels = { relaxed: "放松", cautious: "谨慎", pressured: "受压", negotiating: "议价", exited: "离场" };
+      const admissionTriggered = actionResult.triggeredStoryletIds.includes("partial-restoration-admission");
+      return heading("P5 · NPC 回应", "陈述发生变化，记录新的版本", "对方在证据压力下收窄了原陈述。现在判断这份改口意味着什么。") + `
+        <div class="phase"><del>${phaseLabels[actionResult.initialState.phase]}</del><span>→</span><strong>${phaseLabels[actionResult.nextState.phase]}</strong><span class="mock">规则切片</span></div>
+        <section class="history"><div><span>原陈述</span><blockquote class="quote">“这件东西从来没有修过。”</blockquote></div><div><span>新陈述</span><blockquote class="quote">“${admissionTriggered ? "至少我接手以后没有修过，之前可能处理过。" : "这件东西从来没有修过。"}”</blockquote></div></section>
         <div class="mock-note"><strong>当前推断</strong><span>器物存在现代处理风险，卖家缩小了原陈述范围，但尚未说明完整来源。</span></div>
         <div class="buttons"><button class="primary" data-action="trade">进入交易处置</button><button class="secondary" data-action="evidence">查看证据簿</button></div>`;
     }
@@ -514,6 +674,7 @@
     function render() {
       renderProgress();
       screen.innerHTML = renderers[state.screen]();
+      renderDebug();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -562,14 +723,18 @@
         return go("observe");
       }
       if (action === "submit") {
-        if (state.tone === "professional") return go("response");
+        if (state.tone === "professional") {
+          state.actionResult = resolveProfessionalAction();
+          state.hasResolvedAction = true;
+          return go("response");
+        }
         state.feedback = state.tone === "gentle"
           ? "温和表达保住了信任，但没有迫使对方正面解释胶痕。可调整策略继续。"
           : "强硬质疑提高了压力，也让刘先生出现离场倾向。核心演示建议改用专业表达。";
         return render();
       }
       if (action === "reset") {
-        Object.assign(state, { screen: "home", view: "front", evidence: false, tone: "professional", outcome: "testing", feedback: "", newEvidence: false });
+        Object.assign(state, { screen: "home", view: "front", evidence: false, tone: "professional", outcome: "testing", feedback: "", newEvidence: false, actionResult: null, hasResolvedAction: false });
         return render();
       }
       go(action);

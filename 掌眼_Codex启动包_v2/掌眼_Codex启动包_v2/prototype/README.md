@@ -22,12 +22,13 @@ This starter does not use `wrangler.jsonc`.
 
 - 单案件、单路由；
 - 8 个必要页面状态和 1 个证据发现浮层；
-- 证据、NPC 回应和结算均为明确标注的 Mock；
-- 不包含正式数值规则、自然语言输入、存档或生产 API。
+- 证据发现与交易结算仍为明确标注的 Mock；
+- “专业 + 指出矛盾 + 现代胶痕”已接入首个可复现规则切片，NPC 四项状态、阶段、改口阈值和原因日志均由规则输出；
+- 不包含完整数值平衡、自然语言输入、存档或生产 API。
 
 ## 常用命令
 
 - `npm run dev`: start local development
 - `npm run build`: verify the vinext build output
-- `npm test`：构建并检查关键原型内容是否能服务端渲染
+- `npm test`：构建并检查服务端渲染、单文件逻辑与规则确定性/边界
 - `npm run lint`：检查代码规范

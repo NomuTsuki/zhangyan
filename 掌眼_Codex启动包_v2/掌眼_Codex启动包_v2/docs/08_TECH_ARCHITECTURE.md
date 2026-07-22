@@ -56,6 +56,8 @@ UI / Natural Language
 - 一键重新开始案件；
 - 导出完整回放日志。
 
+调试信息属于独立开发表面：桌面原型放在手机画布外的侧栏，正式手机玩家界面不承载 seed、公式明细、阈值检查或系统处理链。
+
 ## 可测试性
 
 规则引擎应允许无 UI 运行：
@@ -66,3 +68,11 @@ initialState + actionSequence + seed
 ```
 
 这也是后续 Agent 模拟和平衡测试的基础。
+
+## 当前落地状态（2026-07-22）
+
+- `prototype/game/types.ts` 已定义 `PlayerAction`、`NPCState`、`ActionResult` 与规则事件；
+- `prototype/game/resolve-action.ts` 已实现首个无 UI 可运行规则切片；
+- React 页面与单文件 HTML 均只读取规则输出显示 P5 数值和日志；
+- 自动测试已覆盖固定输入可复现、Storylet 阈值结果、0—100 边界和错误输入；
+- 该实现只证明规则接口与 H5 原型可协作，不等于已经完成引擎选型。

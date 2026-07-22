@@ -44,3 +44,18 @@ type NPCState = {
 ```
 
 随机只决定合理表现差异，不决定真相。
+
+## 当前最小实现（2026-07-22）
+
+首案已用独立规则模块实现以下闭环：
+
+```text
+NPCState + PlayerAction + Evidence + seed
+→ StateChange[] + nextState + eventLog + triggeredStoryletIds
+```
+
+- UI 只提交 `PlayerAction`，不直接改写四项 NPC 状态；
+- 每项变化记录 before、delta、after 与 reasons；
+- 当前固定 seed 为 `20260722`，相同输入必须产生完全相同结果；
+- 当前 Storylet 只覆盖“现代胶痕迫使卖家部分承认修复可能”这一条最小路径；
+- 温和与强硬仍停留在策略提示，下一轮再接入同一规则接口。

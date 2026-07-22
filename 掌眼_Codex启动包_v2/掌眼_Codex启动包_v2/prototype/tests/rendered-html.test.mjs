@@ -32,5 +32,7 @@ test("server renders the Zhangyan prototype", async () => {
   assert.match(html, /今日开门，第一位来客已到/);
   assert.match(html, /接待刘先生/);
   assert.match(html, /低保真交互原型/);
+  assert.match(html, /规则与系统进程/);
+  assert.match(html, /供讨论与调试，不属于玩家界面/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });

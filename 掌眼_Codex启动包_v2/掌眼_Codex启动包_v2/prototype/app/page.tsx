@@ -308,7 +308,6 @@ export default function Home() {
               </div>
 
               <div className="button-stack">
-                <button className="primary-button" onClick={() => go("action")}>用此证据对质</button>
                 <button className="secondary-button" onClick={() => go("observe")}>返回观察</button>
               </div>
             </>
@@ -348,7 +347,7 @@ export default function Home() {
 
               <div className="button-stack">
                 <button className="primary-button" onClick={submitAction}>提交行动</button>
-                <button className="text-button" onClick={() => go("evidence")}>返回证据簿</button>
+                <button className="text-button" onClick={() => go("observe")}>返回观察</button>
               </div>
             </>
           )}
@@ -358,7 +357,7 @@ export default function Home() {
               <ScreenHeading
                 eyebrow="P5 · NPC 回应"
                 title="陈述发生变化，记录新的版本"
-                description="状态只显示方向，正式数值将在规则引擎中结算。"
+                description="现阶段显示 0—100 精确 Mock 数值，便于讨论规则；尚非最终平衡。"
               />
 
               <div className="phase-change">
@@ -366,9 +365,16 @@ export default function Home() {
               </div>
 
               <div className="delta-grid">
-                <div><span>压力</span><strong>↑</strong><small>证据命中</small></div>
-                <div><span>信任</span><strong>↔</strong><small>表达专业</small></div>
-                <div><span>控制感</span><strong>↓</strong><small>必须回应</small></div>
+                {lacquerBoxCase.npcStatePreview.map((item) => {
+                  const delta = item.after - item.before;
+                  return (
+                    <div key={item.id}>
+                      <span>{item.label}</span>
+                      <strong>{item.before} → {item.after}</strong>
+                      <small>{delta > 0 ? "+" : ""}{delta} · {item.reason}</small>
+                    </div>
+                  );
+                })}
               </div>
 
               <section className="statement-history">

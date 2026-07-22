@@ -28,6 +28,12 @@ export const lacquerBoxCase = {
     before: "这件东西从来没有修过。",
     after: "至少我接手以后没有修过，之前可能处理过。",
   },
+  npcStatePreview: [
+    { id: "pressure", label: "压力", before: 26, after: 54, reason: "强证据命中" },
+    { id: "trust", label: "信任", before: 58, after: 61, reason: "专业表达" },
+    { id: "dealIntent", label: "成交意愿", before: 72, after: 66, reason: "风险被指出" },
+    { id: "control", label: "控制感", before: 68, after: 42, reason: "必须回应矛盾" },
+  ],
   truth: [
     "木胎为旧物，年代为民国晚期",
     "表面经过现代翻修",

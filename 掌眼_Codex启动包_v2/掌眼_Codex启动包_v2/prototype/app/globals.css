@@ -40,6 +40,10 @@ button {
   font: inherit;
 }
 
+button:not(:disabled) {
+  cursor: pointer;
+}
+
 button:focus-visible {
   outline: 3px solid rgba(154, 61, 49, 0.38);
   outline-offset: 2px;
@@ -966,7 +970,7 @@ blockquote {
 
 .delta-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 7px;
   margin: 10px 0;
 }
@@ -988,7 +992,7 @@ blockquote {
 
 .delta-grid strong {
   color: var(--cinnabar);
-  font-size: 20px;
+  font-size: 17px;
 }
 
 .statement-history {

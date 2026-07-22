@@ -18,12 +18,24 @@ test("standalone teacher demo is self-contained and executable", async () => {
   assert.match(html, /现代胶痕/);
   assert.match(html, /送检后付款/);
   assert.match(html, /下一步由你决定/);
+  assert.match(html, /button:not\(:disabled\)\s*\{\s*cursor:\s*pointer/);
   assert.match(html, /if \(action === "collect"\)[\s\S]*?go\("observe"\)/);
   assert.doesNotMatch(html, /if \(action === "collect"\)[^\n]*go\("evidence"\)/);
+  const standaloneEvidenceScreen = html.match(/function renderEvidence\(\) \{([\s\S]*?)function renderAction/);
+  assert.ok(standaloneEvidenceScreen, "expected standalone evidence screen");
+  assert.doesNotMatch(standaloneEvidenceScreen[1], /data-action="action"/);
+  assert.match(standaloneEvidenceScreen[1], /data-action="observe"/);
+  assert.match(html, /压力<\/span><b>26 → 54/);
+  assert.match(html, /成交意愿<\/span><b>72 → 66/);
   assert.doesNotMatch(html, /<script[^>]+src=/i);
   assert.doesNotMatch(html, /<link[^>]+rel=["']stylesheet["']/i);
 
   assert.match(page, /下一步由你决定/);
+  assert.match(page, /npcStatePreview\.map/);
+  const reactEvidenceScreen = page.match(/screen === "evidence"([\s\S]*?)screen === "action"/);
+  assert.ok(reactEvidenceScreen, "expected React evidence screen");
+  assert.doesNotMatch(reactEvidenceScreen[1], /go\("action"\)/);
+  assert.match(reactEvidenceScreen[1], /go\("observe"\)/);
   assert.match(
     page,
     /setDetailOpen\(false\); setDetailIsNew\(false\); go\("observe"\);/,

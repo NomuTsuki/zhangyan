@@ -41,6 +41,7 @@
     }
 
     button { font: inherit; }
+    button:not(:disabled) { cursor: pointer; }
     button:focus-visible { outline: 3px solid rgba(150,62,50,.42); outline-offset: 2px; }
     button:disabled { cursor: not-allowed; opacity: .52; }
 
@@ -317,10 +318,10 @@
     .phase del { color: var(--muted); }
     .phase strong { color: var(--red); }
 
-    .delta { grid-template-columns: repeat(3, 1fr); margin: 9px 0; }
+    .delta { grid-template-columns: repeat(2, 1fr); margin: 9px 0; }
     .delta div { display: grid; justify-items: center; gap: 2px; padding: 9px 4px; border-radius: 8px; background: var(--paper-deep); }
     .delta span, .delta small { color: var(--muted); font-size: 8px; }
-    .delta b { color: var(--red); font-size: 19px; }
+    .delta b { color: var(--red); font-size: 15px; }
 
     .history { overflow: hidden; border: 1px solid var(--line); border-radius: 10px; }
     .history div { padding: 11px; background: #ffffff75; }
@@ -459,7 +460,7 @@
         <article class="evidence"><div class="card-top"><span class="tiny">客观证据</span><strong class="eyebrow">强证据</strong></div><div class="evidence-picture">胶痕局部</div><h2>现代胶痕</h2><p>接口残留的透明胶体形态与旧漆层不一致，支持近现代拆修判断。</p></article>
         <div class="contradiction"><span>形成矛盾</span></div>
         <article class="claim"><div class="card-top"><span class="tiny">NPC 陈述</span><strong class="tiny">待核验</strong></div><p class="tiny">修复历史</p><blockquote class="quote">“这件东西从来没有修过。”</blockquote></article>
-        <div class="buttons"><button class="primary" data-action="action">用此证据对质</button><button class="secondary" data-action="observe">返回观察</button></div>`;
+        <div class="buttons"><button class="secondary" data-action="observe">返回观察</button></div>`;
     }
 
     function renderAction() {
@@ -472,13 +473,13 @@
         <div class="action-summary"><div><span>调查目标</span><strong>修复历史</strong></div><div><span>行动类型</span><strong>指出矛盾</strong></div><div><span>引用证据</span><strong>现代胶痕</strong></div></div>
         <fieldset><legend>选择表达态度</legend>${tones.map(([id,label,gain,risk]) => `<button class="choice ${state.tone === id ? "selected" : ""}" data-tone="${id}"><strong>${label}${id === "professional" ? "<em>核心演示</em>" : ""}</strong><small>${gain}；${risk}</small></button>`).join("")}</fieldset>
         ${state.feedback ? `<div class="feedback" role="status">${state.feedback}</div>` : ""}
-        ${buttons("提交行动", "submit", "返回证据簿", "evidence")}`;
+        ${buttons("提交行动", "submit", "返回观察", "observe")}`;
     }
 
     function renderResponse() {
-      return heading("P5 · NPC 回应", "陈述发生变化，记录新的版本", "状态只显示方向，正式数值将在规则引擎中结算。") + `
+      return heading("P5 · NPC 回应", "陈述发生变化，记录新的版本", "现阶段显示 0—100 精确 Mock 数值，便于讨论规则；尚非最终平衡。") + `
         <div class="phase"><del>放松</del><span>→</span><strong>谨慎</strong><span class="mock">原型 Mock</span></div>
-        <div class="delta"><div><span>压力</span><b>↑</b><small>证据命中</small></div><div><span>信任</span><b>↔</b><small>表达专业</small></div><div><span>控制感</span><b>↓</b><small>必须回应</small></div></div>
+        <div class="delta"><div><span>压力</span><b>26 → 54</b><small>+28 · 强证据命中</small></div><div><span>信任</span><b>58 → 61</b><small>+3 · 专业表达</small></div><div><span>成交意愿</span><b>72 → 66</b><small>-6 · 风险被指出</small></div><div><span>控制感</span><b>68 → 42</b><small>-26 · 必须回应矛盾</small></div></div>
         <section class="history"><div><span>原陈述</span><blockquote class="quote">“这件东西从来没有修过。”</blockquote></div><div><span>新陈述</span><blockquote class="quote">“至少我接手以后没有修过，之前可能处理过。”</blockquote></div></section>
         <div class="mock-note"><strong>当前推断</strong><span>器物存在现代处理风险，卖家缩小了原陈述范围，但尚未说明完整来源。</span></div>
         <div class="buttons"><button class="primary" data-action="trade">进入交易处置</button><button class="secondary" data-action="evidence">查看证据簿</button></div>`;

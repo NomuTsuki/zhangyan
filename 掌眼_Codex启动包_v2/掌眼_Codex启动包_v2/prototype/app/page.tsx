@@ -1,34 +1,41 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { lacquerBoxCase } from "../content/lacquer-box";
 import {
-  lacquerBoxCase,
-  type OutcomeId,
-} from "../content/lacquer-box";
-import {
-  PARTIAL_RESTORATION_ADMISSION,
-  resolveAction,
+  createInitialWorldState,
+  getDiscoveredEvidence,
+  getStateLabels,
+  getTestConsent,
+  getTruthForDebug,
+  resolveTurn,
 } from "../game/resolve-action";
 import type {
-  ActionResult,
   ActionTone,
+  EvidenceDefinition,
   NPCPhase,
   PlayerAction,
+  TurnRecord,
+  WorldState,
 } from "../game/types";
 
 type Screen =
   | "home"
   | "arrival"
-  | "observe"
+  | "investigate"
   | "evidence"
-  | "action"
   | "response"
   | "trade"
   | "review";
-type ArtifactView = "front" | "bottom" | "joint";
-type Tone = ActionTone;
 
-const actionSeed = 20260722;
+const progress = [
+  { id: "home", label: "开店" },
+  { id: "arrival", label: "来客" },
+  { id: "investigate", label: "调查" },
+  { id: "trade", label: "交易" },
+  { id: "review", label: "复盘" },
+] as const;
+
 const phaseLabels: Record<NPCPhase, string> = {
   relaxed: "放松",
   cautious: "谨慎",
@@ -37,61 +44,44 @@ const phaseLabels: Record<NPCPhase, string> = {
   exited: "离场",
 };
 
-function resolveCaseAction(tone: Tone) {
-  const action: PlayerAction = {
-    target: "repair-history",
-    type: "point-out-contradiction",
-    tone,
-    evidenceIds: [lacquerBoxCase.evidence.id],
-  };
-
-  return resolveAction({
-    initialState: lacquerBoxCase.initialNpcState,
-    action,
-    evidence: [{
-      id: lacquerBoxCase.evidence.id,
-      strength: lacquerBoxCase.evidence.ruleStrength,
-      contradicts: lacquerBoxCase.evidence.contradicts,
-    }],
-    seed: actionSeed,
-  });
-}
-
-const initialActionResult = resolveCaseAction("professional");
-
-const progress = [
-  { id: "home", label: "开店" },
-  { id: "arrival", label: "来客" },
-  { id: "observe", label: "观察" },
-  { id: "evidence", label: "证据" },
-  { id: "action", label: "行动" },
-  { id: "response", label: "回应" },
-  { id: "trade", label: "交易" },
-  { id: "review", label: "复盘" },
-] as const;
-
-const rulePipeline = [
-  "接收玩家输入",
-  "构造 PlayerAction",
-  "规则结算",
-  "归并 NPCState",
-  "检查 Storylet",
-  "生成表现结果",
-] as const;
-
 const toneOptions: Array<{
-  id: Tone;
+  id: ActionTone;
   label: string;
   benefit: string;
   risk: string;
 }> = [
-  { id: "gentle", label: "温和", benefit: "更利于建立信任", risk: "可能保留对方控制感" },
-  { id: "professional", label: "专业", benefit: "证据效果稳定", risk: "需要明确物证支撑" },
-  { id: "firm", label: "强硬", benefit: "快速施加压力", risk: "信任下降、可能离场" },
+  {
+    id: "gentle",
+    label: "温和",
+    benefit: "更容易建立信任",
+    risk: "对方可能继续掌控叙事",
+  },
+  {
+    id: "professional",
+    label: "专业",
+    benefit: "证据与关系较平衡",
+    risk: "无依据时推进有限",
+  },
+  {
+    id: "firm",
+    label: "强硬",
+    benefit: "快速增加压力",
+    risk: "信任和成交意愿下降",
+  },
 ];
 
+const stateColors = {
+  pressure: "#d66c5c",
+  trust: "#78c7a4",
+  dealIntent: "#e1bd64",
+  control: "#7fa9d8",
+  actionPoints: "#d9d4c8",
+} as const;
+
+const stateLabelMap = getStateLabels();
+
 function MockBadge() {
-  return <span className="mock-badge">原型 Mock</span>;
+  return <span className="mock-badge">规则样片</span>;
 }
 
 function ScreenHeading({
@@ -112,78 +102,457 @@ function ScreenHeading({
   );
 }
 
+function StateTimelineChart({ state }: { state: WorldState }) {
+  const snapshots = [
+    {
+      label: "初始",
+      npcState: lacquerBoxCase.initialNpcState,
+      actionPoints: lacquerBoxCase.actionBudget,
+    },
+    ...state.actionHistory.map((turn) => ({
+      label: `${turn.turn}`,
+      npcState: turn.after.npcState,
+      actionPoints: turn.after.actionPoints,
+    })),
+  ];
+  const width = 640;
+  const height = 248;
+  const left = 38;
+  const right = 16;
+  const top = 18;
+  const bottom = 34;
+  const plotWidth = width - left - right;
+  const plotHeight = height - top - bottom;
+  const x = (index: number) =>
+    snapshots.length === 1
+      ? left
+      : left + (index / (snapshots.length - 1)) * plotWidth;
+  const y = (value: number) => top + ((100 - value) / 100) * plotHeight;
+  const apAsPercent = (points: number) =>
+    (points / lacquerBoxCase.actionBudget) * 100;
+  const series = [
+    {
+      id: "pressure",
+      label: "压力",
+      color: stateColors.pressure,
+      values: snapshots.map((item) => item.npcState.pressure),
+    },
+    {
+      id: "trust",
+      label: "信任",
+      color: stateColors.trust,
+      values: snapshots.map((item) => item.npcState.trust),
+    },
+    {
+      id: "dealIntent",
+      label: "成交",
+      color: stateColors.dealIntent,
+      values: snapshots.map((item) => item.npcState.dealIntent),
+    },
+    {
+      id: "control",
+      label: "控制",
+      color: stateColors.control,
+      values: snapshots.map((item) => item.npcState.control),
+    },
+    {
+      id: "actionPoints",
+      label: "行动点%",
+      color: stateColors.actionPoints,
+      values: snapshots.map((item) => apAsPercent(item.actionPoints)),
+    },
+  ];
+
+  return (
+    <div className="debug-chart-wrap">
+      <svg
+        className="debug-chart"
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-label="NPC四项状态与行动点逐回合变化图"
+      >
+        {[0, 25, 50, 75, 100].map((value) => (
+          <g key={value}>
+            <line
+              x1={left}
+              x2={width - right}
+              y1={y(value)}
+              y2={y(value)}
+              stroke="rgba(255,255,255,.12)"
+              strokeWidth="1"
+            />
+            <text
+              x={left - 8}
+              y={y(value) + 4}
+              textAnchor="end"
+              fill="#84918c"
+              fontSize="10"
+            >
+              {value}
+            </text>
+          </g>
+        ))}
+        {series.map((item) => (
+          <polyline
+            key={item.id}
+            points={item.values
+              .map((value, index) => `${x(index)},${y(value)}`)
+              .join(" ")}
+            fill="none"
+            stroke={item.color}
+            strokeWidth={item.id === "actionPoints" ? 2 : 2.6}
+            strokeDasharray={item.id === "actionPoints" ? "6 5" : undefined}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+        ))}
+        {snapshots.map((item, index) => (
+          <g key={`${item.label}-${index}`}>
+            <line
+              x1={x(index)}
+              x2={x(index)}
+              y1={height - bottom}
+              y2={height - bottom + 5}
+              stroke="#84918c"
+            />
+            <text
+              x={x(index)}
+              y={height - 12}
+              textAnchor="middle"
+              fill="#aab4b0"
+              fontSize="10"
+            >
+              {item.label}
+            </text>
+          </g>
+        ))}
+      </svg>
+      <div className="debug-chart-legend">
+        {series.map((item) => (
+          <span key={item.id}>
+            <i style={{ background: item.color }} />
+            {item.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function EvidenceMiniCard({
+  evidenceId,
+}: {
+  evidenceId: string;
+}) {
+  const evidence = (
+    lacquerBoxCase.evidence as Record<string, EvidenceDefinition>
+  )[evidenceId];
+  return (
+    <article className="evidence-list-card">
+      <div className="card-topline">
+        <span>{evidence.kind === "statement" ? "陈述证据" : evidence.kind === "test" ? "检测证据" : "器物证据"}</span>
+        <strong>{evidence.strength}</strong>
+      </div>
+      <h3>{evidence.name}</h3>
+      <p><strong>观察事实：</strong>{evidence.detail}</p>
+      <p><strong>可能含义：</strong>{evidence.inference}</p>
+      <small><strong>温和导向：</strong>{evidence.lead}</small>
+    </article>
+  );
+}
+
+function debugLine(line: string, revealSecrets: boolean) {
+  if (revealSecrets) return line;
+  const pricingSecrets = [
+    "卖家底价",
+    "接受线",
+    "报价差额",
+    "信任溢价",
+    "压力溢价",
+    "成交意愿折让",
+  ];
+  if (pricingSecrets.some((token) => line.includes(token))) {
+    return "定价门控与精确数值：局末解锁（本轮NPC回应已照常结算）";
+  }
+  return line;
+}
+
+function DebugTurnDetails({
+  turn,
+  revealSecrets,
+}: {
+  turn: TurnRecord;
+  revealSecrets: boolean;
+}) {
+  const hidePricingTrace = turn.action.kind === "discount" && !revealSecrets;
+
+  return (
+    <article className="debug-turn-detail">
+      <header>
+        <span>第 {turn.turn} 轮</span>
+        <strong>{turn.actionLabel}</strong>
+        <em>-{turn.actionPointCost} AP</em>
+      </header>
+
+      {turn.changes.length > 0 && (
+        <div className="debug-delta-grid">
+          {turn.changes.map((change, index) => (
+            <div key={`${change.key}-${index}`}>
+              <span>{change.label}</span>
+              <strong>{change.before} → {change.after}</strong>
+              <small>{change.delta > 0 ? "+" : ""}{change.delta}</small>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="debug-log">
+        {turn.formulaLog.map((line, index) => (
+          <p key={`${line}-${index}`}><code>{debugLine(line, revealSecrets)}</code></p>
+        ))}
+      </div>
+
+      {turn.spindle && (
+        <div className="spindle-debug">
+          <div className="spindle-stage">
+            <strong>输入发散</strong>
+            {turn.spindle.expansion.map((line) => (
+              <span key={line}>{debugLine(line, revealSecrets)}</span>
+            ))}
+          </div>
+          <div className="candidate-list">
+            {turn.spindle.candidates.map((candidate) => (
+              <div
+                className={`${candidate.id === turn.spindle?.selectedId ? "selected" : ""} ${candidate.eligible ? "" : "filtered"}`}
+                key={candidate.id}
+              >
+                <span>{candidate.label}</span>
+                <strong>
+                  {hidePricingTrace
+                    ? candidate.eligible ? "入围" : "过滤"
+                    : candidate.eligible ? candidate.score : "过滤"}
+                </strong>
+                <small>
+                  {hidePricingTrace ? "定价评分分项：局末解锁" : candidate.formula}
+                </small>
+                <em>
+                  {hidePricingTrace
+                    ? "本轮只公开候选状态与最终回应"
+                    : candidate.reasons.join("；")}
+                </em>
+              </div>
+            ))}
+          </div>
+          <div className="spindle-stage converge">
+            <strong>Storylet收敛</strong>
+            {turn.spindle.convergence.map((line) => (
+              <span key={line}>{debugLine(line, revealSecrets)}</span>
+            ))}
+          </div>
+        </div>
+      )}
+    </article>
+  );
+}
+
+function DebugRail({
+  state,
+  screen,
+}: {
+  state: WorldState;
+  screen: Screen;
+}) {
+  const revealSecrets = state.status === "settled";
+  const truth = revealSecrets ? getTruthForDebug(lacquerBoxCase, state) : null;
+  const lastTurn = state.actionHistory.at(-1);
+  const settlement = state.settlement;
+  const pageLabel =
+    screen === "evidence" || screen === "response"
+      ? "调查辅助"
+      : progress.find((item) => item.id === screen)?.label ?? screen;
+
+  return (
+    <aside className="debug-rail" aria-label="开发调试与规则进程">
+      <header className="debug-rail-header">
+        <p>DEVELOPMENT VIEW</p>
+        <h2>规则、状态与回放</h2>
+        <span>供讨论和调试，不属于手机玩家界面</span>
+      </header>
+
+      <section className="debug-panel">
+        <div className="debug-panel-title"><h3>当前 WorldState</h3><span>实时</span></div>
+        <dl className="debug-snapshot">
+          <div><dt>页面</dt><dd>{pageLabel}</dd></div>
+          <div><dt>回合</dt><dd>{state.turn}</dd></div>
+          <div><dt>行动点</dt><dd>{state.actionPoints} / {lacquerBoxCase.actionBudget}</dd></div>
+          <div><dt>证据</dt><dd>{state.discoveredEvidenceIds.length} 条</dd></div>
+          <div><dt>当前价格</dt><dd>{state.currentPrice} 点</dd></div>
+          <div><dt>检测费用</dt><dd>{state.feesPaid} 点</dd></div>
+          <div><dt>NPC阶段</dt><dd>{phaseLabels[state.npcState.phase]}</dd></div>
+          <div><dt>NPC认知档案</dt><dd>{lacquerBoxCase.npcProfile.label}</dd></div>
+          <div><dt>隐藏真相</dt><dd>{truth ? `${truth.label} · ${truth.trueValue}点` : "局末解锁"}</dd></div>
+          <div><dt>seed</dt><dd>{state.seed}</dd></div>
+        </dl>
+        <div className="debug-live-state">
+          {Object.entries(stateLabelMap).map(([key, label]) => (
+            <div key={key}>
+              <span>{label}</span>
+              <strong>{state.npcState[key as keyof typeof stateLabelMap]}</strong>
+              <i><b style={{ width: `${state.npcState[key as keyof typeof stateLabelMap]}%` }} /></i>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="debug-panel">
+        <div className="debug-panel-title">
+          <h3>纺锤规则链</h3>
+          <span>{lastTurn ? `第 ${lastTurn.turn} 轮` : "等待输入"}</span>
+        </div>
+        <ol className="debug-pipeline">
+          {[
+            "接收结构化行动",
+            "扣除共享行动成本",
+            "发散证据、态度与历史特征",
+            "收敛为四项 NPC 数值",
+            "发散合法候选行为",
+            "效用评分与 Storylet 收敛",
+            "写入回应与完整回放",
+          ].map((item, index) => (
+            <li className={lastTurn ? "done" : index === 0 ? "active" : ""} key={item}>
+              <i>{index + 1}</i><span>{item}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {lastTurn ? (
+        <section className="debug-panel debug-result">
+          <div className="debug-panel-title"><h3>最近一轮精确输出</h3><span>{lastTurn.title}</span></div>
+          <DebugTurnDetails turn={lastTurn} revealSecrets={revealSecrets} />
+        </section>
+      ) : (
+        <section className="debug-panel">
+          <div className="debug-panel-title"><h3>最近一轮精确输出</h3><span>空</span></div>
+          <p className="debug-empty">开始检查或询问后，这里会显示公式、候选行为、过滤原因与收敛结果。</p>
+        </section>
+      )}
+
+      {state.status === "settled" && settlement && (
+        <>
+          <section className="debug-panel debug-report">
+            <div className="debug-panel-title"><h3>整局状态变化图</h3><span>{state.actionHistory.length} 轮</span></div>
+            <StateTimelineChart state={state} />
+          </section>
+
+          <section className="debug-panel debug-report">
+            <div className="debug-panel-title"><h3>客观结果公式</h3><span>{settlement.objectiveScore} / 100</span></div>
+            <div className="debug-formula-stack">
+              {settlement.objectiveFormula.map((line) => <code key={line}>{line}</code>)}
+            </div>
+          </section>
+
+          <section className="debug-panel debug-report">
+            <div className="debug-panel-title"><h3>判断质量公式</h3><span>{settlement.judgmentScore} / 100</span></div>
+            <div className="posterior-grid">
+              {settlement.posterior.map((entry) => (
+                <div key={entry.variantId}>
+                  <span>{entry.label}</span>
+                  <strong>{(entry.probability * 100).toFixed(1)}%</strong>
+                  <small>价值 {entry.trueValue}</small>
+                </div>
+              ))}
+            </div>
+            <div className="debug-formula-stack">
+              {settlement.judgmentFormula.map((line) => <code key={line}>{line}</code>)}
+            </div>
+          </section>
+
+          <section className="debug-panel debug-report">
+            <div className="debug-panel-title"><h3>全回合公式记录</h3><span>可复现</span></div>
+            <div className="debug-all-turns">
+              {state.actionHistory.map((turn) => (
+                <DebugTurnDetails key={turn.turn} turn={turn} revealSecrets={revealSecrets} />
+              ))}
+            </div>
+          </section>
+        </>
+      )}
+    </aside>
+  );
+}
+
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("home");
-  const [artifactView, setArtifactView] = useState<ArtifactView>("front");
-  const [evidenceFound, setEvidenceFound] = useState(false);
-  const [detailOpen, setDetailOpen] = useState(false);
-  const [detailIsNew, setDetailIsNew] = useState(false);
-  const [tone, setTone] = useState<Tone>("professional");
-  const [toneFeedback, setToneFeedback] = useState<string | null>(null);
-  const [actionResult, setActionResult] =
-    useState<ActionResult>(initialActionResult);
-  const [hasResolvedAction, setHasResolvedAction] = useState(false);
-  const [selectedOutcome, setSelectedOutcome] =
-    useState<OutcomeId>("conditional-testing");
+  const [worldState, setWorldState] = useState<WorldState>(() =>
+    createInitialWorldState(lacquerBoxCase),
+  );
+  const [selectedTargetId, setSelectedTargetId] = useState("surface");
+  const [selectedTopicId, setSelectedTopicId] = useState("repair-history");
+  const [selectedTone, setSelectedTone] =
+    useState<ActionTone>("professional");
+  const [selectedEvidenceId, setSelectedEvidenceId] = useState("");
+  const [evidenceReturnScreen, setEvidenceReturnScreen] =
+    useState<"investigate" | "trade">("investigate");
+  const [feedback, setFeedback] = useState<string | null>(null);
 
-  const currentStep = progress.findIndex((item) => item.id === screen);
-  const actionPoints = evidenceFound ? 3 : lacquerBoxCase.actionBudget;
-  const outcome = useMemo(
-    () => lacquerBoxCase.outcomes.find((item) => item.id === selectedOutcome)!,
-    [selectedOutcome],
+  const discoveredEvidence = useMemo(
+    () => getDiscoveredEvidence(lacquerBoxCase, worldState),
+    [worldState],
   );
-  const admissionTriggered = actionResult.triggeredStoryletIds.includes(
-    PARTIAL_RESTORATION_ADMISSION,
-  );
-  const storyletEvent = actionResult.eventLog.find(
-    (event) => event.type === "storylet-triggered",
-  );
-  const debugPipelineStep = hasResolvedAction
-    ? rulePipeline.length
-    : screen === "action"
-      ? 1
-      : 0;
+  const lastTurn = worldState.actionHistory.at(-1);
+  const selectedTarget = lacquerBoxCase.observationTargets.find(
+    (item) => item.id === selectedTargetId,
+  )!;
+  const selectedTopic = lacquerBoxCase.dialogueTopics.find(
+    (item) => item.id === selectedTopicId,
+  )!;
+  const testConsent = getTestConsent(lacquerBoxCase, worldState);
+  const settlement = worldState.settlement;
+  const currentStep =
+    screen === "home"
+      ? 0
+      : screen === "arrival"
+        ? 1
+        : screen === "trade"
+          ? 3
+          : screen === "review"
+            ? 4
+            : 2;
 
   function go(next: Screen) {
-    setToneFeedback(null);
+    setFeedback(null);
     setScreen(next);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function openEvidence(returnScreen: "investigate" | "trade") {
+    setEvidenceReturnScreen(returnScreen);
+    go("evidence");
+  }
+
+  function performAction(action: PlayerAction) {
+    try {
+      const next = resolveTurn(lacquerBoxCase, worldState, action);
+      setWorldState(next);
+      setFeedback(null);
+      setScreen(next.status === "settled" ? "review" : "response");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      setFeedback(error instanceof Error ? error.message : "行动无法执行");
+    }
+  }
+
   function resetPrototype() {
     setScreen("home");
-    setArtifactView("front");
-    setEvidenceFound(false);
-    setDetailOpen(false);
-    setDetailIsNew(false);
-    setTone("professional");
-    setToneFeedback(null);
-    setActionResult(initialActionResult);
-    setHasResolvedAction(false);
-    setSelectedOutcome("conditional-testing");
+    setWorldState(createInitialWorldState(lacquerBoxCase));
+    setSelectedTargetId("surface");
+    setSelectedTopicId("repair-history");
+    setSelectedTone("professional");
+    setSelectedEvidenceId("");
+    setEvidenceReturnScreen("investigate");
+    setFeedback(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function inspectJoint() {
-    const isNewEvidence = !evidenceFound;
-    setArtifactView("joint");
-    setDetailIsNew(isNewEvidence);
-    setDetailOpen(true);
-  }
-
-  function submitAction() {
-    if (tone === "professional") {
-      setActionResult(resolveCaseAction(tone));
-      setHasResolvedAction(true);
-      go("response");
-      return;
-    }
-
-    setToneFeedback(
-      tone === "gentle"
-        ? "温和表达保住了信任，但这次没有迫使对方正面解释胶痕。可以换一种策略继续。"
-        : "强硬质疑迅速提高压力，同时让刘先生产生离场倾向。核心演示建议改用专业表达。",
-    );
   }
 
   return (
@@ -217,32 +586,26 @@ export default function Home() {
               <ScreenHeading
                 eyebrow="P0 · 店铺首页"
                 title="今日开门，第一位来客已到"
-                description="先确认来客与委托，再开始今天的掌眼。"
+                description="客观真相藏在器物里，交易结果取决于你如何分配有限行动。"
               />
-
               <div className="status-board">
                 <div><span>营业状态</span><strong>已开门</strong></div>
-                <div><span>资金</span><strong>占位</strong></div>
-                <div><span>声誉</span><strong>占位</strong></div>
+                <div><span>调查预算</span><strong>{lacquerBoxCase.actionBudget} 点</strong></div>
+                <div><span>案件</span><strong>1 / 1</strong></div>
               </div>
-
               <article className="guest-card">
                 <div className="avatar-placeholder" aria-hidden="true">刘</div>
                 <div className="guest-copy">
-                  <p className="card-kicker">今日来客 · 1 / 1</p>
+                  <p className="card-kicker">今日来客</p>
                   <h2>{lacquerBoxCase.seller.name}</h2>
                   <p>带来一只旧漆木首饰盒，希望尽快出手。</p>
-                  <div className="tag-row">
-                    <span>旧物委托</span><span>来源待核</span>
-                  </div>
+                  <div className="tag-row"><span>来源待核</span><span>开价待判</span></div>
                 </div>
               </article>
-
               <div className="prototype-callout">
                 <MockBadge />
-                <p>本轮只演示一个案件的核心交互路径，不代表正式数值与美术。</p>
+                <p>本版重点验证共享行动点、动态证据、NPC纺锤决策与客观结算。</p>
               </div>
-
               <button className="primary-button" onClick={() => go("arrival")}>
                 接待刘先生 <span aria-hidden="true">→</span>
               </button>
@@ -253,10 +616,9 @@ export default function Home() {
             <>
               <ScreenHeading
                 eyebrow="P1 · 来客上门"
-                title="先听说法，再验证主张"
-                description="卖家的叙述不是答案，而是一组待核验的信息。"
+                title="先记录说法，再决定如何验证"
+                description="检测和询问可以任意交叉，但都会消耗同一套行动点。"
               />
-
               <div className="arrival-scene">
                 <div className="npc-bust" aria-label="刘先生人物占位">
                   <span>刘</span><small>人物占位</small>
@@ -266,187 +628,256 @@ export default function Home() {
                   <small>器物占位</small>
                 </div>
               </div>
-
               <section className="statement-panel">
                 <div className="speaker-line"><strong>刘先生</strong><span>初始陈述</span></div>
                 {lacquerBoxCase.claims.map((claim) => (
                   <blockquote key={claim.id}>“{claim.text}”</blockquote>
                 ))}
               </section>
-
               <div className="price-row">
-                <div><span>卖家开价</span><strong>{lacquerBoxCase.seller.openingPrice}</strong></div>
-                <small>{lacquerBoxCase.seller.openingPriceNote}</small>
+                <div><span>卖家开价</span><strong>{lacquerBoxCase.seller.openingPrice} 价值点</strong></div>
+                <small>游戏内量化值，不对应真实市场人民币</small>
               </div>
-
               <div className="button-stack">
-                <button className="primary-button" onClick={() => go("observe")}>开始掌眼</button>
+                <button className="primary-button" onClick={() => go("investigate")}>进入调查循环</button>
                 <button className="text-button" onClick={() => go("home")}>返回店铺</button>
               </div>
             </>
           )}
 
-          {screen === "observe" && (
+          {screen === "investigate" && (
             <>
               <ScreenHeading
-                eyebrow="P2 · 器物观察"
-                title="选择视角，寻找可验证的细节"
-                description="检查会消耗行动点。客观证据比情绪信号更可靠。"
+                eyebrow="P2 · 交叉调查"
+                title="边看边问，把线索连成证据"
+                description="检查、询问、追问和议价共用行动点；交易入口始终保留。"
               />
 
-              <div className="resource-row">
-                <span>剩余行动点</span>
-                <strong>{actionPoints} / {lacquerBoxCase.actionBudget}</strong>
+              <div className="resource-row resource-triple">
+                <div><span>行动点</span><strong>{worldState.actionPoints} / {lacquerBoxCase.actionBudget}</strong></div>
+                <div><span>证据</span><strong>{discoveredEvidence.length}</strong></div>
+                <div><span>当前价</span><strong>{worldState.currentPrice}</strong></div>
               </div>
 
-              {evidenceFound && (
-                <div className="next-choice" role="status">
-                  <span>证据已收录</span>
-                  <div>
-                    <strong>下一步由你决定</strong>
-                    <p>继续观察、查看证据簿，或用“现代胶痕”发起行动。</p>
-                  </div>
+              {worldState.actionPoints === 0 && (
+                <div className="strategy-feedback" role="status">
+                  调查预算已经耗尽。你仍可按当前价格购买或拒绝，不会陷入死局。
                 </div>
               )}
 
-              <div className={`artifact-stage view-${artifactView}`}>
-                <div className="artifact-lid" />
-                <div className="artifact-body"><span className="artifact-latch" /></div>
-                {artifactView === "joint" && (
-                  <button className="joint-hotspot" onClick={inspectJoint} aria-label="检查接口热点">
-                    <span>+</span><small>{evidenceFound ? "复查接口" : "检查接口"}</small>
-                  </button>
-                )}
-                <p>{artifactView === "front" ? "正面：观察漆面、纹饰与整体形制" : artifactView === "bottom" ? "底部：查看底款与磨损" : "接口：检查拼接与修复痕迹"}</p>
-              </div>
+              <section className="investigation-card">
+                <div className="section-title">
+                  <div><span>器物检测</span><h2>选择观察位置</h2></div>
+                  <small>每次 -1 行动点</small>
+                </div>
+                <div className="observation-targets">
+                  {lacquerBoxCase.observationTargets.map((target) => {
+                    const inspected = worldState.inspectedTargetIds.includes(target.id);
+                    return (
+                      <button
+                        className={selectedTargetId === target.id ? "selected" : ""}
+                        onClick={() => setSelectedTargetId(target.id)}
+                        key={target.id}
+                      >
+                        <strong>{target.label}</strong>
+                        <small>{inspected ? "已检查" : target.short}</small>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className={`artifact-map target-${selectedTarget.id}`}>
+                  <div className="artifact-map-lid" />
+                  <div className="artifact-map-body"><i /></div>
+                  <span>{selectedTarget.label}</span>
+                </div>
+                <div className="soft-guidance">
+                  <strong>背景提示</strong>
+                  <p>{selectedTarget.knowledgeHint}</p>
+                </div>
+                <button
+                  className="primary-button"
+                  disabled={worldState.actionPoints < 1}
+                  onClick={() => performAction({ kind: "inspect", targetId: selectedTarget.id })}
+                >
+                  {worldState.inspectedTargetIds.includes(selectedTarget.id)
+                    ? `复查${selectedTarget.label}（仍消耗 1 点）`
+                    : `检查${selectedTarget.label}（-1 行动点）`}
+                </button>
+              </section>
 
-              <div className="segmented-control" aria-label="器物视角">
-                {(["front", "bottom", "joint"] as ArtifactView[]).map((view) => (
-                  <button
-                    key={view}
-                    aria-pressed={artifactView === view}
-                    onClick={() => setArtifactView(view)}
+              <section className="investigation-card dialogue-builder">
+                <div className="section-title">
+                  <div><span>NPC交流</span><h2>组成一次询问或追问</h2></div>
+                  <small>每次 -1 行动点</small>
+                </div>
+                <p className="builder-label">1. 选择问题</p>
+                <div className="topic-options">
+                  {lacquerBoxCase.dialogueTopics.map((topic) => (
+                    <button
+                      className={selectedTopicId === topic.id ? "selected" : ""}
+                      onClick={() => setSelectedTopicId(topic.id)}
+                      key={topic.id}
+                    >
+                      {topic.label}
+                    </button>
+                  ))}
+                </div>
+                <blockquote className="question-preview">“{selectedTopic.prompt}”</blockquote>
+
+                <label className="evidence-select">
+                  <span>2. 引用证据（可以不选）</span>
+                  <select
+                    value={selectedEvidenceId}
+                    onChange={(event) => setSelectedEvidenceId(event.target.value)}
                   >
-                    {view === "front" ? "正面" : view === "bottom" ? "底部" : "接口"}
-                  </button>
-                ))}
-              </div>
+                    <option value="">不出示证据，先固定说法</option>
+                    {discoveredEvidence.map((evidence) => (
+                      <option value={evidence.id} key={evidence.id}>
+                        {evidence.name} · {evidence.topic}
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
-              {artifactView === "joint" && !evidenceFound && (
-                <button className="primary-button" onClick={inspectJoint}>点击检查接口热点</button>
-              )}
+                <p className="builder-label">3. 选择表达方式</p>
+                <div className="tone-compact">
+                  {toneOptions.map((option) => (
+                    <button
+                      className={selectedTone === option.id ? "selected" : ""}
+                      onClick={() => setSelectedTone(option.id)}
+                      key={option.id}
+                    >
+                      <strong>{option.label}</strong>
+                      <span>{option.benefit}</span>
+                      <small>{option.risk}</small>
+                    </button>
+                  ))}
+                </div>
 
-              <nav className="tool-nav" aria-label="案件工具">
-                <button disabled={!evidenceFound} onClick={() => go("evidence")}>
-                  <strong>证据簿</strong><span>{evidenceFound ? "1 条证据" : "尚未发现"}</span>
+                <button
+                  className="primary-button"
+                  disabled={worldState.actionPoints < 1}
+                  onClick={() => performAction({
+                    kind: "dialogue",
+                    topicId: selectedTopicId,
+                    tone: selectedTone,
+                    evidenceId: selectedEvidenceId || undefined,
+                  })}
+                >
+                  {selectedEvidenceId ? "引用证据追问（-1 行动点）" : "开放询问（-1 行动点）"}
                 </button>
-                <button disabled={!evidenceFound} onClick={() => go("action")}>
-                  <strong>行动</strong><span>{evidenceFound ? "用证据对峙" : "发现证据后解锁"}</span>
+              </section>
+
+              <details className="knowledge-drawer">
+                <summary>打开鉴定背景知识</summary>
+                <div>
+                  {lacquerBoxCase.knowledgeCards.map((card) => (
+                    <article key={card.id}><strong>{card.title}</strong><p>{card.body}</p></article>
+                  ))}
+                </div>
+              </details>
+
+              {feedback && <div className="strategy-feedback" role="status">{feedback}</div>}
+
+              <nav className="tool-nav investigation-tools" aria-label="案件工具">
+                <button onClick={() => openEvidence("investigate")}>
+                  <strong>证据簿</strong><span>{discoveredEvidence.length} 条证据</span>
                 </button>
-                <button disabled><strong>交易</strong><span>对质后解锁</span></button>
+                <button onClick={() => go("trade")}>
+                  <strong>进入交易</strong><span>随时决策</span>
+                </button>
               </nav>
-
-              <button className="text-button" onClick={() => go("arrival")}>返回来客页</button>
             </>
           )}
 
           {screen === "evidence" && (
             <>
               <ScreenHeading
-                eyebrow="P3 · 证据簿"
-                title="把物证与陈述放在一起比较"
-                description="矛盾不是自动判真伪，而是下一步行动的依据。"
+                eyebrow="P2 · 证据簿"
+                title="事实、解释和导向分开记录"
+                description="证据簿只保存信息，不在这里直接发起行动。"
               />
+              {discoveredEvidence.length > 0 ? (
+                <div className="evidence-list">
+                  {discoveredEvidence.map((evidence) => (
+                    <EvidenceMiniCard evidenceId={evidence.id} key={evidence.id} />
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-evidence">
+                  <strong>尚未发现器物证据</strong>
+                  <p>你仍然可以先向NPC开放询问，记录他的原始说法。</p>
+                </div>
+              )}
 
-              <div className="comparison-grid">
-                <article className="evidence-card">
-                  <div className="card-topline"><span>客观证据</span><strong>{lacquerBoxCase.evidence.strength}</strong></div>
-                  <div className="evidence-thumb"><span>胶痕局部</span></div>
-                  <h2>{lacquerBoxCase.evidence.name}</h2>
-                  <p>{lacquerBoxCase.evidence.detail}</p>
-                </article>
-                <div className="contradiction-mark"><span>形成矛盾</span></div>
-                <article className="claim-card">
-                  <div className="card-topline"><span>NPC 陈述</span><strong>待核验</strong></div>
-                  <p className="claim-topic">修复历史</p>
-                  <blockquote>“{lacquerBoxCase.response.before}”</blockquote>
-                  <small>记录于来客上门阶段</small>
-                </article>
-              </div>
-
-              <div className="button-stack">
-                <button className="secondary-button" onClick={() => go("observe")}>返回观察</button>
-              </div>
-            </>
-          )}
-
-          {screen === "action" && (
-            <>
-              <ScreenHeading
-                eyebrow="P4 · 选择行动"
-                title="组成这一次结构化行动"
-                description="目标、行动、态度和证据共同决定回应。"
-              />
-
-              <dl className="action-summary">
-                <div><dt>调查目标</dt><dd>修复历史</dd></div>
-                <div><dt>行动类型</dt><dd>指出矛盾</dd></div>
-                <div><dt>引用证据</dt><dd>现代胶痕</dd></div>
-              </dl>
-
-              <fieldset className="tone-fieldset">
-                <legend>选择表达态度</legend>
-                {toneOptions.map((option) => (
-                  <button
-                    type="button"
-                    className={tone === option.id ? "selected" : ""}
-                    aria-pressed={tone === option.id}
-                    onClick={() => { setTone(option.id); setToneFeedback(null); }}
-                    key={option.id}
-                  >
-                    <span className="tone-title"><strong>{option.label}</strong>{option.id === "professional" && <em>核心演示</em>}</span>
-                    <span>{option.benefit}</span><small>{option.risk}</small>
-                  </button>
-                ))}
-              </fieldset>
-
-              {toneFeedback && <div className="strategy-feedback" role="status">{toneFeedback}</div>}
-
-              <div className="button-stack">
-                <button className="primary-button" onClick={submitAction}>提交行动</button>
-                <button className="text-button" onClick={() => go("observe")}>返回观察</button>
-              </div>
-            </>
-          )}
-
-          {screen === "response" && (
-            <>
-              <ScreenHeading
-                eyebrow="P5 · NPC 回应"
-                title="陈述发生变化，记录新的版本"
-                description="对方在证据压力下收窄了原陈述。现在判断这份改口意味着什么。"
-              />
-
-              <div className="phase-change">
-                <span>{phaseLabels[actionResult.initialState.phase]}</span>
-                <i aria-hidden="true">→</i>
-                <strong>{phaseLabels[actionResult.nextState.phase]}</strong>
-                <span className="mock-badge">规则切片</span>
-              </div>
-
-              <section className="statement-history">
-                <div><span>原陈述</span><blockquote>“{lacquerBoxCase.response.before}”</blockquote></div>
-                <div className="new-statement"><span>新陈述</span><blockquote>“{admissionTriggered ? lacquerBoxCase.response.after : lacquerBoxCase.response.before}”</blockquote></div>
+              <section className="statement-log">
+                <div className="section-title"><h2>NPC陈述历史</h2><span>{worldState.statementHistory.length} 条</span></div>
+                {worldState.statementHistory.length > 0 ? worldState.statementHistory.map((statement) => (
+                  <div key={`${statement.turn}-${statement.topicId}`}>
+                    <span>第 {statement.turn} 轮 · {lacquerBoxCase.dialogueTopics.find((topic) => topic.id === statement.topicId)?.label}</span>
+                    <blockquote>“{statement.text}”</blockquote>
+                  </div>
+                )) : <p>初始陈述已记录；后续询问会在这里形成时间线。</p>}
               </section>
 
-              <div className="insight-callout">
-                <strong>当前推断</strong>
-                <p>器物存在现代处理风险，卖家缩小了原陈述范围，但尚未说明完整来源。</p>
-              </div>
+              <button className="secondary-button" onClick={() => go(evidenceReturnScreen)}>
+                {evidenceReturnScreen === "trade" ? "返回交易" : "返回调查"}
+              </button>
+            </>
+          )}
+
+          {screen === "response" && lastTurn && (
+            <>
+              <ScreenHeading
+                eyebrow={`第 ${lastTurn.turn} 轮 · 行动结果`}
+                title={lastTurn.title}
+                description={lastTurn.actionLabel}
+              />
+
+              {lastTurn.changes.length > 0 && (
+                <div className="phase-change">
+                  <span>{phaseLabels[lastTurn.before.npcState.phase]}</span>
+                  <i aria-hidden="true">→</i>
+                  <strong>{phaseLabels[lastTurn.after.npcState.phase]}</strong>
+                  <MockBadge />
+                </div>
+              )}
+
+              <section className="response-card">
+                <div className="card-topline">
+                  <span>{lastTurn.statement ? "NPC回应" : "调查结果"}</span>
+                  <strong>行动点 -{lastTurn.actionPointCost}</strong>
+                </div>
+                {lastTurn.statement
+                  ? <blockquote>“{lastTurn.statement.text}”</blockquote>
+                  : <p>{lastTurn.description}</p>}
+              </section>
+
+              {lastTurn.evidenceAdded.length > 0 && (
+                <section className="new-evidence-stack">
+                  <div className="section-title"><h2>本轮新增证据</h2><span>{lastTurn.evidenceAdded.length} 条</span></div>
+                  {lastTurn.evidenceAdded.map((evidenceId) => (
+                    <EvidenceMiniCard evidenceId={evidenceId} key={evidenceId} />
+                  ))}
+                </section>
+              )}
+
+              {lastTurn.statement && (
+                <div className="insight-callout">
+                  <strong>系统已记录</strong>
+                  <p>这句话已经进入陈述历史。下一轮可以换问题、继续观察，或引用已有证据追问。</p>
+                </div>
+              )}
 
               <div className="button-stack">
-                <button className="primary-button" onClick={() => go("trade")}>进入交易处置</button>
-                <button className="secondary-button" onClick={() => go("evidence")}>查看证据簿</button>
+                <button
+                  className="primary-button"
+                  onClick={() => go(worldState.actionPoints > 0 ? "investigate" : "trade")}
+                >
+                  {worldState.actionPoints > 0 ? "继续调查" : "行动点耗尽，进入交易"}
+                </button>
+                <button className="secondary-button" onClick={() => go("trade")}>现在进入交易</button>
+                <button className="text-button" onClick={() => openEvidence("investigate")}>查看证据簿</button>
               </div>
             </>
           )}
@@ -454,80 +885,115 @@ export default function Home() {
           {screen === "trade" && (
             <>
               <ScreenHeading
-                eyebrow="P6 · 对质与交易"
-                title="选择能覆盖当前风险的处置"
-                description="胜利不是必须成交，而是让条件与证据相匹配。"
+                eyebrow="P3 · 交易处置"
+                title="结束、议价，还是付费补证"
+                description="买下和拒绝是终局；折价与专项检测有真实代价，也可能失败。"
               />
 
+              <div className="resource-row resource-triple">
+                <div><span>行动点</span><strong>{worldState.actionPoints}</strong></div>
+                <div><span>当前价</span><strong>{worldState.currentPrice}</strong></div>
+                <div><span>检测费</span><strong>{worldState.feesPaid}</strong></div>
+              </div>
+
               <div className="risk-summary">
-                <div><span>当前风险</span><strong>中高</strong></div>
+                <div><span>已知证据</span><strong>{discoveredEvidence.length} 条</strong></div>
                 <ul>
-                  <li>已发现：现代胶痕</li>
-                  <li>已确认：卖家修复陈述发生变化</li>
-                  <li>仍未知：底款、锁扣与完整来源链</li>
+                  {discoveredEvidence.slice(-3).map((evidence) => (
+                    <li key={evidence.id}>{evidence.name}：{evidence.inference}</li>
+                  ))}
+                  {discoveredEvidence.length === 0 && <li>尚无器物证据，只掌握卖家初始说法。</li>}
                 </ul>
               </div>
 
-              <fieldset className="outcome-fieldset">
-                <legend>选择最终处置</legend>
-                {lacquerBoxCase.outcomes.map((item) => (
-                  <button
-                    type="button"
-                    key={item.id}
-                    className={selectedOutcome === item.id ? "selected" : ""}
-                    aria-pressed={selectedOutcome === item.id}
-                    onClick={() => setSelectedOutcome(item.id)}
-                  >
-                    <span><strong>{item.label}</strong>{item.id === "conditional-testing" && <em>建议演示</em>}</span>
-                    <small>{item.short}</small>
-                  </button>
-                ))}
-              </fieldset>
-
-              <div className="trade-condition">
-                <MockBadge />
-                <p>{outcome.result}</p>
+              <div className="trade-actions">
+                <button onClick={() => performAction({ kind: "buy" })}>
+                  <span><strong>按当前价买下</strong><em>终局</em></span>
+                  <small>支付 {worldState.currentPrice} 价值点，直接承担真伪与价值结果。</small>
+                </button>
+                <button
+                  disabled={worldState.actionPoints < 1 || worldState.currentPrice <= lacquerBoxCase.suggestedDiscount}
+                  onClick={() => performAction({ kind: "discount", offer: lacquerBoxCase.suggestedDiscount })}
+                >
+                  <span><strong>提出 {lacquerBoxCase.suggestedDiscount} 点折价</strong><em>-1 AP</em></span>
+                  <small>NPC可能接受、还价、拒绝或离场；不是必定成功的按钮。</small>
+                </button>
+                <button
+                  disabled={!testConsent.allowed}
+                  onClick={() => performAction({ kind: "test", testId: lacquerBoxCase.test.id })}
+                >
+                  <span><strong>{lacquerBoxCase.test.label}</strong><em>-2 AP / -10价值</em></span>
+                  <small>{lacquerBoxCase.test.description} 检测后仍需交易决策。</small>
+                </button>
+                <button onClick={() => performAction({ kind: "reject" })}>
+                  <span><strong>拒绝交易</strong><em>终局</em></span>
+                  <small>避免继续承担价格风险，但可能错失被低估的珍品。</small>
+                </button>
               </div>
 
-              <div className="button-stack">
-                <button className="primary-button" onClick={() => go("review")}>确认处置</button>
-                <button className="text-button" onClick={() => go("response")}>返回回应</button>
-              </div>
+              {!testConsent.allowed && (
+                <div className="strategy-feedback">
+                  当前不能送检：{testConsent.reasons.join("；") || "条件不满足"}。
+                </div>
+              )}
+              {feedback && <div className="strategy-feedback" role="status">{feedback}</div>}
+
+              <button
+                className="secondary-button"
+                onClick={() => openEvidence("trade")}
+              >
+                查看完整证据簿与陈述
+              </button>
+              <button
+                className="text-button"
+                disabled={worldState.actionPoints === 0}
+                onClick={() => go("investigate")}
+              >
+                {worldState.actionPoints > 0 ? "返回调查" : "行动点耗尽，只能买下或拒绝"}
+              </button>
             </>
           )}
 
-          {screen === "review" && (
+          {screen === "review" && settlement && (
             <>
               <ScreenHeading
-                eyebrow="P7 · 结算与复盘"
-                title="本次处置已记录"
-                description="复盘解释判断依据，而不是只告诉玩家买没买到。"
+                eyebrow="P4 · 双层结算"
+                title={settlement.endingTitle}
+                description="客观结果决定本局事实上的成败；判断质量解释你当时是否有理有据。"
               />
 
-              <div className="outcome-banner">
-                <span>最终处置</span><h2>{outcome.label}</h2><p>{outcome.result}</p>
+              <div className={`outcome-banner ${settlement.objectiveSuccess ? "success" : "failure"}`}>
+                <span>最终处置</span>
+                <h2>{settlement.choiceLabel}</h2>
+                <p>{settlement.objectiveLabel} · {settlement.judgmentLabel}</p>
               </div>
 
               <section className="truth-panel">
-                <div className="section-title"><h2>物品真相</h2><span>复盘解锁</span></div>
-                <ul>{lacquerBoxCase.truth.map((item) => <li key={item}>{item}</li>)}</ul>
+                <div className="section-title"><h2>物品客观真相</h2><span>复盘解锁</span></div>
+                <h3>{settlement.truthLabel} · 真实价值 {settlement.trueValue}</h3>
+                <ul>
+                  {lacquerBoxCase.truthVariants[settlement.truthVariantId].facts.map((fact) => (
+                    <li key={fact}>{fact}</li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="score-panel score-panel-large">
+                <div><span>客观结果分</span><strong>{settlement.objectiveScore}</strong><small>{settlement.objectiveLabel}</small></div>
+                <div><span>判断质量分</span><strong>{settlement.judgmentScore}</strong><small>{settlement.judgmentLabel}</small></div>
+                <div><span>实际净结果</span><strong>{settlement.actualNet > 0 ? "+" : ""}{settlement.actualNet}</strong><small>价值 - 成交 - 检测费</small></div>
+                <div><span>机会损失</span><strong>{settlement.regret}</strong><small>最佳可能 - 实际结果</small></div>
               </section>
 
               <div className="review-evidence">
-                <div><span>本局发现</span><strong>现代胶痕</strong></div>
-                <div><span>本局忽略</span><strong>{lacquerBoxCase.ignoredEvidence.length} 条线索</strong></div>
+                <div><span>本局发现</span><strong>{discoveredEvidence.length} 条证据</strong></div>
+                <div><span>有成本行动</span><strong>{worldState.actionHistory.filter((turn) => turn.actionPointCost > 0).length} 次</strong></div>
+                <div><span>检测费用</span><strong>{worldState.feesPaid} 点</strong></div>
               </div>
 
-              <section className="score-panel">
-                <div><span>判断质量</span><strong>证据驱动</strong></div>
-                <div><span>证据质量</span><strong>强证据 × 1</strong></div>
-                <div><span>交易质量</span><strong>{outcome.assessment}</strong></div>
-                <div><span>关系影响</span><strong>合作关系保留</strong></div>
-              </section>
-
-              <div className="receipt-placeholder">
-                <span>次日回执占位</span>
-                <p>{selectedOutcome === "conditional-testing" ? "明日可收到第三方检测结果。" : "未来版本将在下一营业日反馈本次决定的后续影响。"}</p>
+              <div className="prototype-callout">
+                <MockBadge />
+                <p>桌面右侧已经展开四项状态曲线、每轮公式、候选行为评分、后验概率和结算公式。</p>
               </div>
 
               <button className="primary-button" onClick={resetPrototype}>重新体验</button>
@@ -536,92 +1002,11 @@ export default function Home() {
         </div>
 
         <footer className="app-footer">
-          <span>低保真交互原型</span><span>390 × 844 基准</span>
+          <span>共享行动循环原型</span><span>390 × 844 基准</span>
         </footer>
-
-        {detailOpen && (
-          <div className="modal-backdrop" role="presentation">
-            <section className="evidence-modal" role="dialog" aria-modal="true" aria-labelledby="evidence-modal-title">
-              <div className="modal-handle" />
-              <div className="modal-topline"><MockBadge /><span>{detailIsNew ? "行动点 -1" : "证据已收录"}</span></div>
-              <div className="detail-placeholder" aria-hidden="true"><i /><i /><b>胶</b></div>
-              <p className="eyebrow">S1 · {detailIsNew ? "发现证据" : "证据详情"}</p>
-              <h2 id="evidence-modal-title">{lacquerBoxCase.evidence.name}</h2>
-              <p>{lacquerBoxCase.evidence.detail}</p>
-              <div className="evidence-meta"><span>{lacquerBoxCase.evidence.strength}</span><span>关联：修复历史</span></div>
-              <div className="button-stack">
-                <button className="primary-button" onClick={() => {
-                  if (detailIsNew) setEvidenceFound(true);
-                  setDetailOpen(false);
-                  setDetailIsNew(false);
-                  go("observe");
-                }}>
-                  {detailIsNew ? "收进证据簿" : "返回观察"}
-                </button>
-              </div>
-            </section>
-          </div>
-        )}
       </section>
 
-      <aside className="debug-rail" aria-label="开发调试与规则进程">
-        <header className="debug-rail-header">
-          <p>DEVELOPMENT VIEW</p>
-          <h2>规则与系统进程</h2>
-          <span>供讨论与调试，不属于玩家界面</span>
-        </header>
-
-        <section className="debug-panel">
-          <div className="debug-panel-title"><h3>当前运行状态</h3><span>实时</span></div>
-          <dl className="debug-snapshot">
-            <div><dt>页面</dt><dd>P{currentStep} · {progress[currentStep].label}</dd></div>
-            <div><dt>证据</dt><dd>{evidenceFound ? "现代胶痕已收录" : "尚未收录"}</dd></div>
-            <div><dt>行动点</dt><dd>{actionPoints} / {lacquerBoxCase.actionBudget}</dd></div>
-            <div><dt>态度</dt><dd>{toneOptions.find((item) => item.id === tone)?.label}</dd></div>
-          </dl>
-        </section>
-
-        <section className="debug-panel">
-          <div className="debug-panel-title"><h3>规则处理链</h3><span>{hasResolvedAction ? "已完成" : "等待中"}</span></div>
-          <ol className="debug-pipeline">
-            {rulePipeline.map((item, index) => (
-              <li
-                key={item}
-                className={index < debugPipelineStep ? "done" : index === debugPipelineStep ? "active" : ""}
-              >
-                <i>{index + 1}</i><span>{item}</span>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="debug-panel debug-result">
-          <div className="debug-panel-title"><h3>精确规则输出</h3><span>seed {actionResult.seed}</span></div>
-          {hasResolvedAction ? (
-            <>
-              <div className="debug-delta-grid">
-                {actionResult.changes.map((change) => (
-                  <div key={change.key}>
-                    <span>{change.label}</span>
-                    <strong>{change.before} → {change.after}</strong>
-                    <small>{change.delta > 0 ? "+" : ""}{change.delta}</small>
-                  </div>
-                ))}
-              </div>
-              <div className="debug-log">
-                {actionResult.changes.map((change) => (
-                  <p key={change.key}><strong>{change.label}</strong>{change.reasons.join("；")} → {change.delta > 0 ? "+" : ""}{change.delta}</p>
-                ))}
-                {storyletEvent?.type === "storylet-triggered" && (
-                  <p><strong>Storylet</strong>{storyletEvent.reasons.join("；")}</p>
-                )}
-              </div>
-            </>
-          ) : (
-            <p className="debug-empty">提交行动后，这里显示四项精确数值、delta 原因和 Storylet 阈值结果。</p>
-          )}
-        </section>
-      </aside>
+      <DebugRail state={worldState} screen={screen} />
     </main>
   );
 }

@@ -22,7 +22,7 @@ async function render() {
   );
 }
 
-test("server renders the Zhangyan prototype", async () => {
+test("server renders the integrated Zhangyan prototype", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -31,8 +31,8 @@ test("server renders the Zhangyan prototype", async () => {
   assert.match(html, /<title>掌眼｜民国漆木首饰盒低保真原型<\/title>/i);
   assert.match(html, /今日开门，第一位来客已到/);
   assert.match(html, /接待刘先生/);
-  assert.match(html, /低保真交互原型/);
-  assert.match(html, /规则与系统进程/);
-  assert.match(html, /供讨论与调试，不属于玩家界面/);
+  assert.match(html, /共享行动循环原型/);
+  assert.match(html, /规则、状态与回放/);
+  assert.match(html, /本版重点验证共享行动点、动态证据、NPC纺锤决策与客观结算/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });

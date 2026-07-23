@@ -1,78 +1,146 @@
 # 技术架构草案
 
-本文件不规定具体框架，只规定模块边界。
+> 当前实现基线：2026-07-23。本文件规定现阶段已经落地的规则边界，不把低保真原型框架等同于最终引擎承诺。
 
-## 已确认的载体决策
+## 载体边界
 
-- 最终载体：H5（2026-07-22 确认）；
-- 当前低保真原型使用 Web 技术验证交互，可直接作为 H5 方向的基线；
-- “微信内 H5 网页”“微信小游戏”和“Unity Web 构建”不是同一个概念。Unity 可以构建 Web 内容，也可以借助转换工具生成微信小游戏工程，但不是 H5 的必经步骤；
-- 正式框架仍未决定。先以当前 Web 原型明确玩法与状态边界，再用最小技术样片比较标准 Web/H5 与 Unity 路线的学习成本、包体、启动速度、手机适配和后续发布流程；
-- 在技术样片完成前，不把可逆的浏览器原型工作等同于对最终引擎的承诺。
+- 最终载体：手机竖屏 H5；
+- 当前 React/Web 原型与单文件 HTML 用于验证玩法、状态和调试可解释性；
+- “微信内 H5 网页”“微信小游戏”和“Unity Web 构建”不是同一个交付物，Unity 不是 H5 的必经步骤；
+- 在分发入口、包体、性能和平台 API 要求明确前，不迁移到 Unity；
+- 当前实现证明标准 Web 技术可以承载首案规则闭环，但不等于最终框架已经不可逆选定。
 
-## 模块
+## 当前源码边界
 
 ```text
-src/
+prototype/
   app/
-  ui/
-  input/
-  game/
-    actions/
-    evidence/
-    npc/
-    rules/
-    storylets/
-    outcomes/
+    page.tsx                 玩家流程、桌面调试栏与局末复盘
+    globals.css              手机画布、桌面双栏和响应式样式
   content/
-  services/
-  debug/
+    lacquer-box.ts           首案内容、真相、NPC认知、证据、话题和参数
+  game/
+    types.ts                 规则输入、世界状态、行为候选与结算类型
+    resolve-action.ts        无 UI 的纯规则解析、回放和结算
+  standalone/
+    client.js                单文件 HTML 的浏览器运行时
+  public/
+    掌眼_低保真交互原型.html  可离线交付给老师的生成产物
+  generate-standalone.mjs    注入内容、样式和客户端脚本的生成器
+  tests/
+    rules.test.mjs           规则、边界、回放与结算
+    rendered-html.test.mjs   React 构建产物关键结构
+    standalone-html.test.mjs 单文件交付物结构与脚本
 ```
 
-## 运行链路
+## 核心运行链路
 
 ```text
-UI / Natural Language
-→ Action Builder
-→ Action Validator
-→ Rule Resolver
-→ State Reducer
-→ NPC Behavior Resolver
-→ Storylet Resolver
-→ Presentation Model
-→ UI
+玩家 UI
+→ 构造 PlayerAction
+→ 动作合法性与行动点校验
+→ resolveTurn(caseDefinition, worldState, action)
+   ├─ 观察 / 对话 / 检测 / 折价 / 终局分支
+   ├─ 四状态 reducer
+   ├─ NPC 纺锤行为解析
+   ├─ Storylet 收敛
+   ├─ 证据与陈述后验
+   └─ 客观结果与判断质量结算
+→ ActionResult / TurnRecord / WorldState
+→ 玩家表现层 + 独立调试表现层
 ```
 
-## 调试工具
+UI 只提交动作并读取结构化结果，不直接修改 NPC 数值、不直接触发 Storylet，也不在组件中自行判定胜负。
 
-必须支持：
-
-- 查看当前 CaseState；
-- 手动修改四项数值；
-- 查看每次 delta 计算明细；
-- 固定随机 seed；
-- 强制触发 Storylet；
-- 查看陈述历史；
-- 一键重新开始案件；
-- 导出完整回放日志。
-
-调试信息属于独立开发表面：桌面原型放在手机画布外的侧栏，正式手机玩家界面不承载 seed、公式明细、阈值检查或系统处理链。
-
-## 可测试性
-
-规则引擎应允许无 UI 运行：
+## 信息隔离
 
 ```text
-initialState + actionSequence + seed
-→ finalState + eventLog
+隐藏物品真相
+  → 观察结果、检测结果、真实价值、客观结算
+
+NPC 固定认知档案
+  + 当前四状态
+  + 玩家本轮输入
+  + 历史
+  → 候选行为、Storylet、NPC回应、折价接受线
+
+玩家已见物证/检测
+  + 去重后的陈述信号
+  → 后验、期望价值、判断质量
 ```
 
-这也是后续 Agent 模拟和平衡测试的基础。
+禁止的依赖：
 
-## 当前落地状态（2026-07-22）
+- NPC 回应或底线价格直接读取隐藏物品真相；
+- 判断质量直接读取隐藏真相；
+- 展示用陈述卡和同源结构化信号重复计权；
+- UI 用按钮分支绕过规则解析器修改正式结果。
 
-- `prototype/game/types.ts` 已定义 `PlayerAction`、`NPCState`、`ActionResult` 与规则事件；
-- `prototype/game/resolve-action.ts` 已实现首个无 UI 可运行规则切片；
-- React 页面与单文件 HTML 均只读取规则输出显示 P5 数值和日志；
-- 自动测试已覆盖固定输入可复现、Storylet 阈值结果、0—100 边界和错误输入；
-- 该实现只证明规则接口与 H5 原型可协作，不等于已经完成引擎选型。
+内容配置还必须维持一条不变量：所有 `kind: "statement"` 展示卡都有同回合、同来源的 `StatementRecord signal`。当前后验会忽略展示卡，只计算唯一信号；未来若出现独立口述材料，需要定义新的来源类型和计权规则。
+
+## 纺锤规则的可测试输出
+
+每轮规则输出必须包含：
+
+- 动作前后世界状态快照；
+- 行动点与费用变化；
+- 四状态逐项 `before / delta / after / reasons / formula`；
+- 新增证据和陈述信号；
+- 候选行为的合法性、过滤原因、分项、基础分、seed 扰动和最终分；
+- 选中行为、Storylet 和 NPC 回应；
+- 终局时的客观与判断两套完整公式。
+
+因此规则可以脱离 UI 回放：
+
+```text
+caseDefinition + truthVariantId + initialState + actionSequence + seed
+→ finalState + turnRecords + settlement
+```
+
+这也是后续批量模拟、平衡测试和问题复现的基础。
+
+## 调试表现层
+
+调试信息与玩家手机 UI 明确分离：
+
+- 桌面宽屏：手机画布外的独立侧栏实时显示系统状态、候选分数和规则链；
+- 手机 390 × 844：自动隐藏开发侧栏，只保留玩家需要的信息；
+- 局中：隐藏真实真相、真实价值和 NPC 底线；
+- 局末：解锁完整状态变化图、每轮纺锤轨迹、客观公式、判断公式与隐藏真相。
+
+证据簿是只读玩家信息仓库；调试侧栏才承载 seed、公式、阈值和系统进程。
+
+## 单文件 HTML
+
+`generate-standalone.mjs` 将以下内容写入一个离线 HTML：
+
+1. `lacquer-box.ts` 的首案数据；
+2. `globals.css` 的界面样式；
+3. `standalone/client.js` 的浏览器运行时。
+
+生成物无需本地服务器即可交给老师打开。每次规则或内容变化后都必须重新生成并运行单文件测试。
+
+当前 React/TypeScript 规则实现与 `standalone/client.js` 仍是两个需要保持行为一致的运行时来源。这是后续维护风险：本阶段用差分回放和交付物测试控制漂移，正式开发应优先把二者收敛为同一规则源，而不是长期手工同步。
+
+## 当前验证状态
+
+已验证：
+
+- 20 项自动测试全部通过；
+- 三种隐藏真相、共享行动点、动态证据、NPC 状态、重复行动、送检、折价和零点数终局路径均有规则覆盖；
+- 客观结果与只读可见证据的判断质量可以独立结算；
+- 同源陈述卡不重复计权；
+- 固定 seed 可以复现候选扰动和完整回放；
+- 单文件 HTML 可生成并运行；
+- 桌面双栏与 390 × 844 手机单栏均完成浏览器验证，手机无横向溢出。
+
+尚未验证：
+
+- 6 点预算和现有阈值是否经过真人试玩达到合适难度；
+- 第二个案件接入时内容配置边界是否足够通用；
+- 最终分发平台对包体、启动速度、存档和平台 API 的要求；
+- React 与单文件运行时在长期迭代下是否会继续保持完全一致。
+
+## 当前工程决策
+
+现阶段继续用 Web/H5 低成本降低玩法不确定性。下一步优先做小规模结构化试玩与参数调整；只有当分发入口或技术样片证明现有 Web 路线不满足明确约束时，才重新比较 Unity 或微信小游戏工程路线。

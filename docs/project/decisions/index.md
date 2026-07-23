@@ -7,5 +7,6 @@
 | DEC-003 | 检测与询问交叉进行并共用行动点 | Active | 2026-07-23 | [DEC-003](DEC-003-integrated-investigation-loop.md) |
 | DEC-004 | 客观交易结果与判断质量分层结算 | Active | 2026-07-23 | [DEC-004](DEC-004-objective-outcome-and-judgment.md) |
 | DEC-005 | 物品真相与 NPC 认知档案分离 | Active | 2026-07-23 | [DEC-005](DEC-005-separate-object-truth-and-npc-belief.md) |
+| DEC-006 | 厚尾价值先验与保守后验参考报价 | Active | 2026-07-23 | [DEC-006](DEC-006-heavy-tail-value-and-conservative-reference.md) |
 
 状态使用：`Active`、`Experimental`、`Superseded`、`Archived`。

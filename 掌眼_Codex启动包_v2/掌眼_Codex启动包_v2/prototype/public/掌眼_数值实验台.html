@@ -1,0 +1,2946 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>掌眼｜定价数值实验台</title>
+  <meta name="description" content="《掌眼》厚尾价值、保守后验报价、NPC错价与有限议价批量模拟实验台">
+  <style>
+    :root {
+      --paper: #f3eee3;
+      --paper-deep: #e7decd;
+      --paper-soft: #faf7f0;
+      --ink: #242a27;
+      --muted: #6d736d;
+      --line: #c8c0b1;
+      --pine: #284d46;
+      --pine-2: #3f6f65;
+      --pine-soft: #dce8e2;
+      --cinnabar: #9a3d31;
+      --cinnabar-soft: #f1dfda;
+      --ochre: #8b672f;
+      --ochre-soft: #eee4cf;
+      --indigo: #52627a;
+      --indigo-soft: #e1e5eb;
+      --white: #fffdf8;
+      --dark: #1d2926;
+      --dark-2: #14201d;
+      --shadow: 0 18px 50px rgba(31, 36, 33, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      color: var(--ink);
+      background: #d8d4ca;
+      font-family: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.28) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+        #d8d4ca;
+      background-size: 24px 24px;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button:not(:disabled),
+    select:not(:disabled),
+    input[type="range"]:not(:disabled) {
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid rgba(154, 61, 49, 0.32);
+      outline-offset: 2px;
+    }
+
+    .lab-header {
+      color: #e8eee9;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(179, 154, 104, 0.14), transparent 28%),
+        var(--dark-2);
+      border-bottom: 3px solid var(--ochre);
+    }
+
+    .lab-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      width: min(1760px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 26px 0 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: #c5a66a;
+      font: 700 11px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .lab-header h1 {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(25px, 3vw, 38px);
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+    }
+
+    .lab-header p:last-child {
+      max-width: 850px;
+      margin: 8px 0 0;
+      color: #aebbb5;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .header-actions {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      min-height: 42px;
+      padding: 9px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 9px;
+      color: #eef2ef;
+      background: rgba(255, 255, 255, 0.07);
+      font-weight: 700;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .btn-primary {
+      border-color: #b59a63;
+      color: #15201d;
+      background: #d3bb88;
+    }
+
+    .btn-primary:hover {
+      background: #e1c996;
+    }
+
+    .btn:disabled {
+      cursor: wait;
+      opacity: 0.65;
+    }
+
+    .run-status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      color: #bac6c0;
+      font: 700 11px ui-monospace, SFMono-Regular, Consolas, monospace;
+      white-space: nowrap;
+    }
+
+    .run-status.dirty {
+      color: #f4dca9;
+      border-color: rgba(197, 166, 106, 0.55);
+      background: rgba(197, 166, 106, 0.09);
+    }
+
+    .lab-page {
+      width: min(1760px, calc(100% - 40px));
+      margin: 24px auto 50px;
+    }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: 318px minmax(660px, 1fr) 318px;
+      align-items: start;
+      gap: 20px;
+    }
+
+    .left-rail,
+    .right-rail {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .main-column {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      min-width: 0;
+      gap: 18px;
+    }
+
+    .panel,
+    .metric {
+      border: 1px solid rgba(37, 42, 39, 0.17);
+      border-radius: 16px;
+      background: rgba(255, 253, 248, 0.96);
+      box-shadow: 0 10px 30px rgba(31, 36, 33, 0.07);
+    }
+
+    .panel {
+      min-width: 0;
+      padding: 20px;
+    }
+
+    .panel-dark {
+      color: #e7ede9;
+      border-color: rgba(255, 255, 255, 0.09);
+      background: var(--dark);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title h2,
+    .panel-title h3 {
+      margin: 0;
+      color: inherit;
+      line-height: 1.3;
+    }
+
+    .panel-title h2 {
+      font-size: 21px;
+    }
+
+    .panel-title h3 {
+      font-size: 17px;
+    }
+
+    .panel-title p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .panel-dark .panel-title p {
+      color: #9eaaa5;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--pine);
+      background: var(--pine-soft);
+      font: 700 11px ui-monospace, SFMono-Regular, Consolas, monospace;
+      white-space: nowrap;
+    }
+
+    .tag.warn {
+      color: var(--cinnabar);
+      background: var(--cinnabar-soft);
+    }
+
+    .tag.gold {
+      color: var(--ochre);
+      background: var(--ochre-soft);
+    }
+
+    .control-stack {
+      display: grid;
+      gap: 15px;
+    }
+
+    .control-group {
+      display: grid;
+      gap: 7px;
+    }
+
+    .control-group label,
+    .range-head {
+      color: #dfe7e2;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .range-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .range-head output {
+      color: #d3bb88;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .control-group small {
+      color: #8f9c96;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    select,
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.17);
+      border-radius: 8px;
+      color: #f2f5f3;
+      background: #283632;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #c8a86b;
+    }
+
+    .inline-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 2px 0;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      min-width: 0;
+      padding: 16px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 7px;
+      color: var(--pine);
+      font-size: clamp(22px, 2.4vw, 32px);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .metric small {
+      display: block;
+      min-height: 32px;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .chart-wrap {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .chart-wrap svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 330px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .legend-line {
+      width: 24px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--pine);
+    }
+
+    .legend-line.event {
+      background: var(--cinnabar);
+    }
+
+    .legend-line.dashed {
+      height: 0;
+      border-top: 2px dashed var(--ochre);
+      background: none;
+    }
+
+    .probability-stack {
+      display: flex;
+      min-height: 38px;
+      margin-top: 14px;
+      overflow: hidden;
+      border-radius: 9px;
+      background: var(--paper-deep);
+    }
+
+    .probability-segment {
+      display: grid;
+      min-width: 2px;
+      place-items: center;
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+      transition: width 220ms ease;
+    }
+
+    .probability-segment:nth-child(1) { background: #8b3b35; }
+    .probability-segment:nth-child(2) { background: #b06d4d; }
+    .probability-segment:nth-child(3) { background: #8a7a58; }
+    .probability-segment:nth-child(4) { background: #447065; }
+    .probability-segment:nth-child(5) { background: #b18b3e; }
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 11px 10px;
+      border-bottom: 1px solid rgba(37, 42, 39, 0.11);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    td.numeric,
+    th.numeric {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody tr.is-highlight {
+      background: rgba(220, 232, 226, 0.55);
+    }
+
+    .signal-pill {
+      display: inline-flex;
+      min-width: 84px;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 8px;
+      border-radius: 7px;
+      color: var(--pine);
+      background: var(--pine-soft);
+      font-weight: 700;
+    }
+
+    .formula-strip {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 9px;
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--paper-soft);
+    }
+
+    .formula-part {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .formula-part span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .formula-part strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--pine);
+      font-size: 20px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .formula-symbol {
+      color: var(--ochre);
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .strategy-bars {
+      display: grid;
+      gap: 13px;
+      margin: 6px 0 18px;
+    }
+
+    .strategy-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 64px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .strategy-row strong {
+      font-size: 12px;
+    }
+
+    .dual-track {
+      display: grid;
+      gap: 5px;
+    }
+
+    .track {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--paper-deep);
+    }
+
+    .track > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      transition: width 220ms ease;
+    }
+
+    .track.deal > span {
+      background: var(--pine-2);
+    }
+
+    .track.loss > span {
+      background: var(--cinnabar);
+    }
+
+    .strategy-percent {
+      color: var(--muted);
+      font-size: 11px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .branch-stack {
+      display: flex;
+      min-height: 40px;
+      margin: 8px 0 12px;
+      overflow: hidden;
+      border-radius: 9px;
+      background: var(--paper-deep);
+    }
+
+    .branch-stack > span {
+      display: grid;
+      min-width: 2px;
+      place-items: center;
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    }
+
+    .branch-accept { background: var(--pine-2); }
+    .branch-counter { background: var(--ochre); }
+    .branch-reject { background: var(--indigo); }
+    .branch-exit { background: var(--cinnabar); }
+
+    .validation-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .validation-item {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .validation-item:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .validation-icon {
+      display: grid;
+      width: 22px;
+      height: 22px;
+      place-items: center;
+      border-radius: 50%;
+      color: #13201d;
+      background: #79aa97;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .validation-item.warn .validation-icon {
+      color: #2a1c13;
+      background: #d9b36f;
+    }
+
+    .validation-item.fail .validation-icon {
+      color: var(--white);
+      background: #b85448;
+    }
+
+    .validation-item strong {
+      display: block;
+      color: #f0f4f1;
+      font-size: 13px;
+    }
+
+    .validation-item span:last-child {
+      display: block;
+      margin-top: 3px;
+      color: #9eaaa5;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .interpretation {
+      margin: 0;
+      color: #d6dfda;
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .interpretation strong {
+      color: #d4b775;
+    }
+
+    .heatmap-wrap {
+      overflow-x: auto;
+    }
+
+    .heatmap {
+      min-width: 720px;
+      border-collapse: separate;
+      border-spacing: 5px;
+    }
+
+    .heatmap th,
+    .heatmap td {
+      border: 0;
+      text-align: center;
+    }
+
+    .heatmap th:first-child {
+      min-width: 160px;
+      text-align: left;
+    }
+
+    .heat-cell {
+      min-width: 70px;
+      height: 48px;
+      border-radius: 8px;
+      color: var(--white);
+      font-weight: 800;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    }
+
+    .heat-cell.accept { background: var(--pine-2); }
+    .heat-cell.counter { background: var(--ochre); }
+    .heat-cell.reject { background: var(--indigo); }
+    .heat-cell.exit { background: var(--cinnabar); }
+
+    .wide-sections {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .parameter-table input {
+      min-width: 76px;
+      min-height: 34px;
+      padding: 5px 7px;
+      color: var(--ink);
+      border-color: var(--line);
+      background: var(--white);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .weight-total {
+      display: inline-flex;
+      margin-top: 12px;
+      padding: 6px 9px;
+      border-radius: 7px;
+      color: var(--pine);
+      background: var(--pine-soft);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .weight-total.invalid {
+      color: var(--cinnabar);
+      background: var(--cinnabar-soft);
+    }
+
+    details {
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+
+    details + details {
+      margin-top: 14px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--pine);
+      font-weight: 700;
+    }
+
+    .formula-code {
+      margin: 12px 0 0;
+      padding: 14px;
+      overflow-x: auto;
+      border-radius: 9px;
+      color: #dfe8e3;
+      background: var(--dark);
+      font: 12px/1.75 ui-monospace, SFMono-Regular, Consolas, monospace;
+      white-space: pre-wrap;
+    }
+
+    .footnote {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .error-box {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(154, 61, 49, 0.45);
+      border-radius: 8px;
+      color: var(--cinnabar);
+      background: var(--cinnabar-soft);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .error-box.show {
+      display: block;
+    }
+
+    @media (max-width: 1390px) {
+      .lab-grid {
+        grid-template-columns: 310px minmax(0, 1fr);
+      }
+
+      .right-rail {
+        position: static;
+        grid-column: 2;
+        grid-row: 2;
+      }
+    }
+
+    @media (max-width: 1040px) {
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .lab-header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 880px) {
+      .lab-page,
+      .lab-header-inner {
+        width: min(100% - 24px, 1760px);
+      }
+
+      .lab-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .left-rail,
+      .right-rail {
+        position: static;
+        grid-column: 1;
+      }
+
+      .main-column {
+        grid-row: 2;
+      }
+
+      .right-rail {
+        grid-row: 3;
+      }
+
+      .chart-wrap svg {
+        min-height: 300px;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .lab-page {
+        margin-top: 12px;
+      }
+
+      .lab-header-inner {
+        padding: 20px 0;
+      }
+
+      .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      .header-actions .btn {
+        flex: 1 1 130px;
+      }
+
+      .panel {
+        padding: 16px;
+        border-radius: 12px;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .metric {
+        padding: 13px;
+      }
+
+      .inline-fields,
+      .formula-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .formula-symbol {
+        transform: rotate(90deg);
+        text-align: center;
+      }
+
+      .strategy-row {
+        grid-template-columns: 92px 1fr;
+      }
+
+      .strategy-percent {
+        grid-column: 2;
+        text-align: left;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="lab-header">
+    <div class="lab-header-inner">
+      <div>
+        <p class="eyebrow">Development Lab · working hypothesis</p>
+        <h1>掌眼 · 定价数值实验台</h1>
+        <p>检查厚尾价值、风险分位收购上限、NPC双向错价和有限议价。全部为游戏价值点与实验参数，不是现实古董市场报价，也不会进入玩家手机UI。</p>
+      </div>
+      <div class="header-actions">
+        <span class="run-status" id="run-status">尚未运行</span>
+        <button class="btn" id="reset-button" type="button">恢复基准</button>
+        <button class="btn btn-primary" id="run-button" type="button">运行批量模拟</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="lab-page">
+    <div class="lab-grid">
+      <aside class="left-rail" aria-label="实验参数">
+        <section class="panel panel-dark">
+          <div class="panel-title">
+            <div>
+              <h2>本轮场景</h2>
+              <p>修改后需重新运行，便于比较每次改动。</p>
+            </div>
+            <span class="tag gold">首饰盒</span>
+          </div>
+
+          <div class="control-stack">
+            <div class="control-group">
+              <label for="market-select">市场状态</label>
+              <select id="market-select">
+                <option value="normal">常态市场</option>
+                <option value="influx">日报：真假货源集中流入</option>
+              </select>
+              <small>日报改变品级先验，不直接改变当前物件真相。</small>
+            </div>
+
+            <div class="control-group">
+              <label for="evidence-select">已形成的证据质量</label>
+              <select id="evidence-select">
+                <option value="low">经验不足：1个弱信号</option>
+                <option value="medium">基础调查：弱 + 中信号</option>
+                <option value="high" selected>关键证据链：弱 + 中 + 强信号</option>
+              </select>
+              <small>真相经有噪声的观察模型生成信号；玩家后验只读取已经取得的信号。</small>
+            </div>
+
+            <div class="control-group">
+              <label for="npc-select">NPC档案</label>
+              <select id="npc-select">
+                <option value="novice">外行急售者</option>
+                <option value="collector" selected>普通藏家</option>
+                <option value="dealer">精明商贩</option>
+              </select>
+              <small>专业度越高，开价通常越接近其掌握信息推导的价值。</small>
+            </div>
+
+            <div class="inline-fields">
+              <div class="control-group">
+                <label for="run-count">样本数</label>
+                <select id="run-count">
+                  <option value="2000">2,000 快速</option>
+                  <option value="10000" selected>10,000 标准</option>
+                  <option value="50000">50,000 完整</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="seed-input">固定seed</label>
+                <input id="seed-input" type="text" value="20260723" spellcheck="false">
+              </div>
+            </div>
+
+            <div class="inline-fields">
+              <div class="control-group">
+                <label for="fee-input">已发生费用</label>
+                <input id="fee-input" type="number" min="0" max="100" step="1" value="10">
+              </div>
+              <div class="control-group">
+                <label for="ap-input">剩余行动点</label>
+                <input id="ap-input" type="number" min="0" max="6" step="1" value="4">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="range-head">
+                <label for="risk-range">保守分位数</label>
+                <output id="risk-output" for="risk-range">Q20</output>
+              </div>
+              <input id="risk-range" type="range" min="5" max="40" step="5" value="20">
+              <small id="risk-help">Q20表示：只按器物证据估计，约80%的价值位于该线以上；它不等于成交后亏损率。</small>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="control-group">
+              <div class="range-head">
+                <label for="trust-range">信任</label>
+                <output id="trust-output" for="trust-range">55</output>
+              </div>
+              <input id="trust-range" type="range" min="0" max="100" step="1" value="55">
+            </div>
+
+            <div class="control-group">
+              <div class="range-head">
+                <label for="pressure-range">压力</label>
+                <output id="pressure-output" for="pressure-range">25</output>
+              </div>
+              <input id="pressure-range" type="range" min="0" max="100" step="1" value="25">
+            </div>
+
+            <div class="control-group">
+              <div class="range-head">
+                <label for="intent-range">成交意愿</label>
+                <output id="intent-output" for="intent-range">60</output>
+              </div>
+              <input id="intent-range" type="range" min="0" max="100" step="1" value="60">
+            </div>
+
+            <div class="control-group">
+              <div class="range-head">
+                <label for="control-range">控制感</label>
+                <output id="control-output" for="control-range">60</output>
+              </div>
+              <input id="control-range" type="range" min="0" max="100" step="1" value="60">
+            </div>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+        </section>
+      </aside>
+
+      <main class="main-column">
+        <section class="metrics" aria-label="核心指标">
+          <article class="metric">
+            <span>市场先验均值</span>
+            <strong id="metric-mean">—</strong>
+            <small>受珍品右侧长尾影响</small>
+          </article>
+          <article class="metric">
+            <span>市场先验Q50</span>
+            <strong id="metric-q50">—</strong>
+            <small>典型价值，不作为安全报价</small>
+          </article>
+          <article class="metric">
+            <span>批量中位保守上限</span>
+            <strong id="metric-safe">—</strong>
+            <small id="metric-safe-note">依据当前证据信号</small>
+          </article>
+          <article class="metric">
+            <span>Q线经验覆盖率</span>
+            <strong id="metric-coverage">—</strong>
+            <small>真实价值高于风险线的比例</small>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <div>
+              <h2>价值分布：常态与当前市场</h2>
+              <p>横轴使用对数价值，避免绝世珍品把普通品压缩在左侧。</p>
+            </div>
+            <span class="tag" id="market-tag">常态市场</span>
+          </div>
+          <div class="chart-wrap" id="value-chart"></div>
+          <div class="legend" aria-label="价值分布图例">
+            <span class="legend-item"><span class="legend-line"></span>常态先验</span>
+            <span class="legend-item"><span class="legend-line event"></span>当前市场先验</span>
+            <span class="legend-item"><span class="legend-line dashed"></span><span id="risk-legend">当前Q20</span> / Q50 / 均值</span>
+          </div>
+          <div class="probability-stack" id="probability-stack" aria-label="当前品级概率"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <div>
+              <h2>证据信号如何改变后验</h2>
+              <p id="signal-table-note">枚举本阶段全部有噪声信号组合，再按后验最高品级归组；归组概率合计为100%。玩家界面不会直接显示品级名。</p>
+            </div>
+            <span class="tag gold" id="evidence-tag">关键证据链</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>后验主倾向</th>
+                  <th class="numeric">归组概率</th>
+                  <th class="numeric">赝品后验</th>
+                  <th class="numeric" id="posterior-risk-heading">Q20</th>
+                  <th class="numeric">Q50</th>
+                  <th class="numeric">保守上限</th>
+                </tr>
+              </thead>
+              <tbody id="posterior-table-body"></tbody>
+            </table>
+          </div>
+          <div class="formula-strip" aria-label="保守上限公式">
+            <div class="formula-part">
+              <span id="formula-quantile-label">本批次中位Q20</span>
+              <strong id="formula-q20">—</strong>
+            </div>
+            <div class="formula-symbol">−</div>
+            <div class="formula-part">
+              <span>费用 + 利润缓冲</span>
+              <strong id="formula-cost">—</strong>
+            </div>
+            <div class="formula-symbol">=</div>
+            <div class="formula-part">
+              <span>保守收购上限</span>
+              <strong id="formula-safe">—</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <div>
+              <h2>四种策略的批量结果</h2>
+              <p>成交率与成交后亏损率必须同时看；净结果已扣除本轮已发生费用。</p>
+            </div>
+            <span class="tag" id="batch-tag">0 局</span>
+          </div>
+          <div class="strategy-bars" id="strategy-bars"></div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>策略</th>
+                  <th class="numeric">成交率</th>
+                  <th class="numeric">成交后亏损</th>
+                  <th class="numeric">平均成交价</th>
+                  <th class="numeric">平均净结果</th>
+                  <th class="numeric">净结果中位数</th>
+                  <th class="numeric">珍品漏买</th>
+                  <th class="numeric">珍品收益贡献</th>
+                  <th class="numeric">议价启动率</th>
+                  <th class="numeric">启动后平均轮数</th>
+                  <th class="numeric">多轮占比</th>
+                </tr>
+              </thead>
+              <tbody id="strategy-table-body"></tbody>
+            </table>
+          </div>
+          <p class="footnote" id="strategy-risk-note">风险分位只描述玩家基于器物证据形成的后验。NPC开价与回应会造成选择偏差；即使Q20覆盖率约为80%，成交后的亏损率也可能远高于20%，必须单独观察。</p>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <div>
+              <h2>有限议价：行为分支与可达性</h2>
+              <p>上方为批量议价中每次NPC回应的占比，下方是典型状态空间枚举。</p>
+            </div>
+            <span class="tag" id="branch-tag">等待模拟</span>
+          </div>
+          <div class="branch-stack" id="branch-stack" aria-label="NPC行为分支占比"></div>
+          <div class="legend">
+            <span class="legend-item"><span class="tag">接受 A</span></span>
+            <span class="legend-item"><span class="tag gold">还价 C</span></span>
+            <span class="legend-item"><span class="tag" style="color:#52627a;background:#e1e5eb">拒绝 R</span></span>
+            <span class="legend-item"><span class="tag warn">离场 X</span></span>
+          </div>
+          <div class="heatmap-wrap">
+            <table class="heatmap">
+              <thead id="heatmap-head"></thead>
+              <tbody id="heatmap-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <aside class="right-rail" aria-label="实验核验">
+        <section class="panel panel-dark">
+          <div class="panel-title">
+            <div>
+              <h2>验证门槛</h2>
+              <p>这些是实验参考线，不是最终游戏规则。</p>
+            </div>
+            <span class="tag gold" id="validation-summary">0 / 0</span>
+          </div>
+          <ul class="validation-list" id="validation-list"></ul>
+        </section>
+
+        <section class="panel panel-dark">
+          <div class="panel-title">
+            <div>
+              <h3>当前读法</h3>
+              <p>帮助判断，而不是替你给出最终答案。</p>
+            </div>
+          </div>
+          <p class="interpretation" id="interpretation">运行模拟后生成本组参数的主要权衡。</p>
+        </section>
+
+        <section class="panel panel-dark">
+          <div class="panel-title">
+            <div>
+              <h3>信息边界</h3>
+            </div>
+          </div>
+          <p class="interpretation">
+            <strong>价值后验</strong>只读取市场先验与玩家证据；<strong>NPC开价与接受线</strong>只读取NPC私有信号、人物档案和动态状态。模拟器知道真相只是为了局末统计，不会把真相送进推荐系统。
+          </p>
+        </section>
+      </aside>
+    </div>
+
+    <div class="wide-sections">
+      <section class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>五档价值参数表</h2>
+            <p>数值均为游戏价值点。修改概率、价值或品级内波动后，点击顶部“运行批量模拟”。</p>
+          </div>
+          <span class="tag warn">工作参数 · 未平衡</span>
+        </div>
+        <div class="table-scroll">
+          <table class="parameter-table">
+            <thead>
+              <tr>
+                <th>隐藏品级</th>
+                <th class="numeric">常态概率%</th>
+                <th class="numeric">日报概率%</th>
+                <th class="numeric">价值中位数</th>
+                <th class="numeric">log σ</th>
+                <th class="numeric">硬下限</th>
+                <th class="numeric">硬上限</th>
+              </tr>
+            </thead>
+            <tbody id="parameter-table-body"></tbody>
+          </table>
+        </div>
+        <span class="weight-total" id="weight-total">概率合计检查</span>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>NPC档案与议价规则</h2>
+            <p>三类NPC都只能依靠自己的私有信号估值；巨大错价来自认知误差，而非读取真相后故意配价。</p>
+          </div>
+          <span class="tag">开发侧数据</span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>NPC</th>
+                <th class="numeric">私有信号τ</th>
+                <th class="numeric">日报认知</th>
+                <th class="numeric">开价倍率</th>
+                <th class="numeric">底价倍率</th>
+                <th class="numeric">锚定log σ</th>
+                <th class="numeric">基础耐心</th>
+                <th class="numeric">让步基准</th>
+              </tr>
+            </thead>
+            <tbody id="npc-table-body"></tbody>
+          </table>
+        </div>
+
+        <p class="footnote">每次正式报价消耗1 AP和1点NPC耐心；后续报价必须至少提高一个价格刻度。耐心或AP耗尽后，玩家仍可零AP接受当前价或离开，因此死局必须为0。</p>
+
+        <details>
+          <summary>查看价值后验与保守上限公式</summary>
+          <pre class="formula-code">P(品级 z | 市场, 证据) ∝ P(z | 市场) × ∏ P(证据信号 | z)
+
+典型估值 = Q50(价值后验)
+保守收购上限 = floor(max(0, Qα − 已发生费用 − max(5, 8% × Q50)))
+
+α 由左侧设置，默认 20%。推荐系统不读取隐藏真相，也不读取NPC底价。</pre>
+        </details>
+
+        <details>
+          <summary>查看NPC接受线与耐心公式</summary>
+          <pre class="formula-code">接受线 = ceil(基础底价 × (1 + 信任风险 + 反抗溢价 − 成交减让))
+
+信任风险 = clamp((50 − 信任) × 0.002, 0, 0.10)
+反抗溢价仅在 压力 > 70 且 控制感 < 40 时触发
+成交减让 = clamp((成交意愿 − 70) × 0.003, 0, 0.10)
+NPC还价让步率以人物“让步基准”为核心，再受信任、压力、成交意愿与本轮证据支持修正。
+
+正式报价上限 M = clamp(
+  人物基础耐心
+  + I(信任 ≥ 65 且成交意愿 ≥ 70)
+  − I(信任 < 40 或成交意愿 < 35)
+  − I(压力 ≥ 75 或控制感 < 30),
+  1, 3
+)</pre>
+        </details>
+      </section>
+    </div>
+  </div>
+
+  <script id="simulation-model">
+  (function (global) {
+    "use strict";
+
+    const DEFAULT_TIERS = [
+      { key: "bad-fake", label: "劣质赝品", normalWeight: 0.07, eventWeight: 0.15, median: 5, sigma: 0.35, min: 1, max: 12 },
+      { key: "fake", label: "普通赝品", normalWeight: 0.18, eventWeight: 0.20, median: 20, sigma: 0.30, min: 10, max: 40 },
+      { key: "restored", label: "重修真品", normalWeight: 0.30, eventWeight: 0.20, median: 65, sigma: 0.25, min: 35, max: 100 },
+      { key: "genuine", label: "普通真品", normalWeight: 0.42, eventWeight: 0.35, median: 130, sigma: 0.30, min: 75, max: 260 },
+      { key: "treasure", label: "珍品", normalWeight: 0.03, eventWeight: 0.10, median: 1200, sigma: 0.55, min: 350, max: 5000 },
+    ];
+
+    const EVIDENCE_PROFILES = {
+      low: { label: "经验不足", taus: [2.0], support: 0.25, defaultFee: 0, apSpent: 0 },
+      medium: { label: "基础调查", taus: [2.0, 0.9], support: 0.60, defaultFee: 5, apSpent: 1 },
+      high: { label: "关键证据链", taus: [2.0, 0.9, 0.35], support: 1.00, defaultFee: 10, apSpent: 2 },
+    };
+
+    const NPC_PROFILES = {
+      novice: {
+        label: "外行急售者",
+        signalTau: 2.0,
+        eventAwareness: 0.25,
+        markup: 1.10,
+        urgency: 0.85,
+        floorMultiplier: 0.58,
+        anchorSigma: 0.40,
+        basePatience: 1,
+        flexibility: 0.35,
+        face: 0.80,
+        initial: { trust: 55, pressure: 20, intent: 78, control: 48 },
+      },
+      collector: {
+        label: "普通藏家",
+        signalTau: 0.9,
+        eventAwareness: 0.65,
+        markup: 1.18,
+        urgency: 0.98,
+        floorMultiplier: 0.72,
+        anchorSigma: 0.25,
+        basePatience: 2,
+        flexibility: 0.25,
+        face: 1.00,
+        initial: { trust: 55, pressure: 25, intent: 60, control: 60 },
+      },
+      dealer: {
+        label: "精明商贩",
+        signalTau: 0.40,
+        eventAwareness: 1.00,
+        markup: 1.28,
+        urgency: 1.00,
+        floorMultiplier: 0.84,
+        anchorSigma: 0.12,
+        basePatience: 3,
+        flexibility: 0.15,
+        face: 1.20,
+        initial: { trust: 45, pressure: 18, intent: 52, control: 78 },
+      },
+    };
+
+    const STRATEGIES = {
+      opening: "接受NPC开价",
+      safeOnce: "Q线一次报价",
+      safeBargain: "Q线上限内阶梯议价",
+      medianRisk: "Q50风险报价",
+    };
+
+    const BRANCH_LABELS = {
+      accept: "接受",
+      counter: "还价",
+      reject: "拒绝",
+      exit: "离场",
+    };
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function normalize(values) {
+      const sum = values.reduce((acc, value) => acc + Math.max(0, Number(value) || 0), 0);
+      if (sum <= 0) {
+        return values.map(() => 1 / values.length);
+      }
+      return values.map((value) => Math.max(0, Number(value) || 0) / sum);
+    }
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function fnv1a(text) {
+      let hash = 0x811c9dc5;
+      for (let index = 0; index < text.length; index += 1) {
+        hash ^= text.charCodeAt(index);
+        hash = Math.imul(hash, 0x01000193);
+      }
+      return hash >>> 0;
+    }
+
+    function mulberry32(seed) {
+      let state = seed >>> 0;
+      return function next() {
+        state += 0x6d2b79f5;
+        let value = state;
+        value = Math.imul(value ^ (value >>> 15), value | 1);
+        value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+        return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function rngFor(master, runIndex, streamName) {
+      return mulberry32(fnv1a(`${master}|${runIndex}|${streamName}`));
+    }
+
+    function normalSample(rng) {
+      let u = 0;
+      let v = 0;
+      while (u === 0) u = rng();
+      while (v === 0) v = rng();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    }
+
+    function erf(value) {
+      const sign = value < 0 ? -1 : 1;
+      const x = Math.abs(value);
+      const a1 = 0.254829592;
+      const a2 = -0.284496736;
+      const a3 = 1.421413741;
+      const a4 = -1.453152027;
+      const a5 = 1.061405429;
+      const p = 0.3275911;
+      const t = 1 / (1 + p * x);
+      const y = 1 - (((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t) * Math.exp(-x * x);
+      return sign * y;
+    }
+
+    function normalCdf(value) {
+      return 0.5 * (1 + erf(value / Math.sqrt(2)));
+    }
+
+    function logNormalBounds(tier) {
+      const sigma = Math.max(0.01, tier.sigma);
+      const lower = normalCdf(Math.log(tier.min / tier.median) / sigma);
+      const upper = normalCdf(Math.log(tier.max / tier.median) / sigma);
+      return { lower, upper, width: Math.max(1e-9, upper - lower) };
+    }
+
+    function truncatedLogNormalCdf(value, tier) {
+      if (value <= tier.min) return 0;
+      if (value >= tier.max) return 1;
+      const bounds = logNormalBounds(tier);
+      const raw = normalCdf(Math.log(value / tier.median) / Math.max(0.01, tier.sigma));
+      return clamp((raw - bounds.lower) / bounds.width, 0, 1);
+    }
+
+    function truncatedLogNormalPdf(value, tier) {
+      if (value < tier.min || value > tier.max || value <= 0) return 0;
+      const sigma = Math.max(0.01, tier.sigma);
+      const z = Math.log(value / tier.median) / sigma;
+      const raw = Math.exp(-0.5 * z * z) / (value * sigma * Math.sqrt(2 * Math.PI));
+      return raw / logNormalBounds(tier).width;
+    }
+
+    function sampleTruncatedLogNormal(tier, rng) {
+      for (let attempt = 0; attempt < 80; attempt += 1) {
+        const value = tier.median * Math.exp(tier.sigma * normalSample(rng));
+        if (value >= tier.min && value <= tier.max) return value;
+      }
+      return clamp(tier.median, tier.min, tier.max);
+    }
+
+    function sampleCategorical(weights, rng) {
+      const roll = rng();
+      let cumulative = 0;
+      for (let index = 0; index < weights.length; index += 1) {
+        cumulative += weights[index];
+        if (roll <= cumulative || index === weights.length - 1) return index;
+      }
+      return weights.length - 1;
+    }
+
+    function signalLikelihood(signalIndex, truthIndex, tau, count) {
+      const raw = [];
+      for (let index = 0; index < count; index += 1) {
+        raw.push(Math.exp(-Math.abs(index - truthIndex) / Math.max(0.05, tau)));
+      }
+      return normalize(raw)[signalIndex];
+    }
+
+    function sampleSignal(truthIndex, tau, count, rng) {
+      const weights = [];
+      for (let signal = 0; signal < count; signal += 1) {
+        weights.push(signalLikelihood(signal, truthIndex, tau, count));
+      }
+      return sampleCategorical(weights, rng);
+    }
+
+    function posteriorFromSignals(prior, signals, count) {
+      const logWeights = prior.map((weight) => Math.log(Math.max(1e-12, weight)));
+      for (const signal of signals) {
+        for (let truth = 0; truth < count; truth += 1) {
+          logWeights[truth] += Math.log(Math.max(1e-12, signalLikelihood(signal.value, truth, signal.tau, count)));
+        }
+      }
+      const maxLog = Math.max(...logWeights);
+      return normalize(logWeights.map((value) => Math.exp(value - maxLog)));
+    }
+
+    function mixtureCdf(value, tiers, weights) {
+      let total = 0;
+      for (let index = 0; index < tiers.length; index += 1) {
+        total += weights[index] * truncatedLogNormalCdf(value, tiers[index]);
+      }
+      return total;
+    }
+
+    function mixturePdf(value, tiers, weights) {
+      let total = 0;
+      for (let index = 0; index < tiers.length; index += 1) {
+        total += weights[index] * truncatedLogNormalPdf(value, tiers[index]);
+      }
+      return total;
+    }
+
+    function mixtureQuantile(q, tiers, weights) {
+      const target = clamp(q, 0.0001, 0.9999);
+      let low = Math.min(...tiers.map((tier) => tier.min));
+      let high = Math.max(...tiers.map((tier) => tier.max));
+      for (let iteration = 0; iteration < 54; iteration += 1) {
+        const middle = Math.exp((Math.log(Math.max(1e-9, low)) + Math.log(high)) / 2);
+        if (mixtureCdf(middle, tiers, weights) < target) {
+          low = middle;
+        } else {
+          high = middle;
+        }
+      }
+      return (low + high) / 2;
+    }
+
+    function numericIntegralMean(tiers, weights) {
+      const min = Math.min(...tiers.map((tier) => tier.min));
+      const max = Math.max(...tiers.map((tier) => tier.max));
+      const steps = 900;
+      const minLog = Math.log(min);
+      const maxLog = Math.log(max);
+      let total = 0;
+      for (let index = 0; index < steps; index += 1) {
+        const x1 = Math.exp(lerp(minLog, maxLog, index / steps));
+        const x2 = Math.exp(lerp(minLog, maxLog, (index + 1) / steps));
+        const middle = Math.sqrt(x1 * x2);
+        total += middle * mixturePdf(middle, tiers, weights) * (x2 - x1);
+      }
+      return total;
+    }
+
+    function percentile(values, q) {
+      if (!values.length) return 0;
+      const sorted = [...values].sort((a, b) => a - b);
+      const position = clamp(q, 0, 1) * (sorted.length - 1);
+      const lower = Math.floor(position);
+      const upper = Math.ceil(position);
+      if (lower === upper) return sorted[lower];
+      return lerp(sorted[lower], sorted[upper], position - lower);
+    }
+
+    function prettyTick(opening) {
+      const candidates = [1, 2, 5, 10, 20, 50, 100, 200, 500];
+      const ceiling = Math.max(1, opening * 0.025);
+      let selected = 1;
+      for (const candidate of candidates) {
+        if (candidate <= ceiling) selected = candidate;
+      }
+      return selected;
+    }
+
+    function floorToTick(value, tick) {
+      return Math.max(0, Math.floor(value / tick) * tick);
+    }
+
+    function ceilToTick(value, tick) {
+      return Math.max(tick, Math.ceil(value / tick) * tick);
+    }
+
+    function cloneState(state) {
+      return {
+        trust: state.trust,
+        pressure: state.pressure,
+        intent: state.intent,
+        control: state.control,
+      };
+    }
+
+    function acceptanceLine(baseFloor, state, tick) {
+      const risk = clamp((50 - state.trust) * 0.002, 0, 0.10);
+      const reactance =
+        state.pressure > 70 && state.control < 40
+          ? clamp((state.pressure - 70) * 0.003 + (40 - state.control) * 0.002, 0, 0.12)
+          : 0;
+      const concession = clamp((state.intent - 70) * 0.003, 0, 0.10);
+      return ceilToTick(baseFloor * (1 + risk + reactance - concession), tick);
+    }
+
+    function negotiationCapacity(profile, state) {
+      return clamp(
+        profile.basePatience
+          + (state.trust >= 65 && state.intent >= 70 ? 1 : 0)
+          - (state.trust < 40 || state.intent < 35 ? 1 : 0)
+          - (state.pressure >= 75 || state.control < 30 ? 1 : 0),
+        1,
+        3,
+      );
+    }
+
+    function updateStateFromOffer(state, currentAsk, offer, evidenceSupport, roundIndex, profile) {
+      const next = cloneState(state);
+      const cut = clamp((currentAsk - offer) / Math.max(1, currentAsk), 0, 1);
+      const pressureDelta = clamp(Math.round(2 + 10 * cut - 2 * evidenceSupport + roundIndex), 1, 10);
+      const trustDelta = clamp(Math.round(-1 - 6 * Math.max(0, cut - 0.25) + 3 * evidenceSupport), -7, 3);
+      const intentDelta = clamp(Math.round(-1 - 5 * Math.max(0, cut - 0.35) + 2 * evidenceSupport), -6, 2);
+      const controlDelta = clamp(Math.round(-2 - 8 * cut + 2 * evidenceSupport), -10, -1);
+      next.pressure = clamp(next.pressure + Math.round(pressureDelta * profile.face), 0, 100);
+      next.trust = clamp(next.trust + trustDelta, 0, 100);
+      next.intent = clamp(next.intent + intentDelta, 0, 100);
+      next.control = clamp(next.control + controlDelta, 0, 100);
+      return {
+        state: next,
+        delta: {
+          pressure: next.pressure - state.pressure,
+          trust: next.trust - state.trust,
+          intent: next.intent - state.intent,
+          control: next.control - state.control,
+        },
+      };
+    }
+
+    function chooseResponse(input) {
+      const {
+        offer,
+        currentAsk,
+        baseFloor,
+        state,
+        profile,
+        evidenceSupport,
+        roundIndex,
+        patienceAfter,
+        jitterRng,
+        tick,
+      } = input;
+      const lineBefore = acceptanceLine(baseFloor, state, tick);
+      if (offer >= lineBefore) {
+        return {
+          actor: "npc",
+          type: "response",
+          branch: "accept",
+          lineBefore,
+          nextLine: lineBefore,
+          nextState: cloneState(state),
+          delta: { pressure: 0, trust: 0, intent: 0, control: 0 },
+          counter: null,
+        };
+      }
+
+      const updated = updateStateFromOffer(state, currentAsk, offer, evidenceSupport, roundIndex, profile);
+      const nextLine = acceptanceLine(baseFloor, updated.state, tick);
+      const gap = Math.max(0, (lineBefore - offer) / Math.max(1, lineBefore));
+      const exitEligible =
+        gap >= 0.45
+        && (
+          updated.state.trust < 40
+          || updated.state.intent < 40
+          || updated.state.pressure > 70
+          || updated.state.control < 35
+        );
+
+      const jitter = () => (jitterRng ? jitterRng() * 2 - 1 : 0);
+      const candidates = [
+        {
+          branch: "counter",
+          eligible: gap <= 0.35,
+          score:
+            50
+            + 0.25 * updated.state.intent
+            + 0.15 * updated.state.trust
+            - 0.15 * updated.state.pressure
+            + 0.10 * updated.state.control
+            - 40 * gap
+            + jitter(),
+        },
+        {
+          branch: "reject",
+          eligible: true,
+          score:
+            40
+            + 50 * gap
+            + 0.15 * updated.state.control
+            - 0.10 * updated.state.intent
+            + 0.05 * updated.state.pressure
+            + jitter(),
+        },
+        {
+          branch: "exit",
+          eligible: exitEligible,
+          score:
+            35
+            + 60 * gap
+            + 0.20 * updated.state.pressure
+            + 0.20 * (100 - updated.state.trust)
+            + 0.20 * (100 - updated.state.intent)
+            - 0.10 * updated.state.control
+            + jitter(),
+        },
+      ];
+
+      const selected = candidates
+        .filter((candidate) => candidate.eligible)
+        .sort((left, right) => right.score - left.score)[0];
+
+      let counter = null;
+      if (selected.branch === "counter") {
+        const concessionRate = clamp(
+          0.03
+            + 0.22 * profile.flexibility
+            + 0.0025 * (updated.state.intent - 50)
+            + 0.0015 * (updated.state.trust - 50)
+            - 0.002 * (updated.state.pressure - 50)
+            + 0.04 * evidenceSupport,
+          0.03,
+          0.25,
+        );
+        const rawCounter = currentAsk - concessionRate * (currentAsk - offer);
+        counter = clamp(ceilToTick(Math.max(nextLine, rawCounter), tick), nextLine, Math.max(nextLine, currentAsk));
+        if (counter >= currentAsk && currentAsk - tick >= nextLine) {
+          counter = currentAsk - tick;
+        }
+        if (patienceAfter < 0) {
+          selected.branch = "reject";
+          counter = null;
+        }
+      }
+
+      return {
+        actor: "npc",
+        type: "response",
+        branch: selected.branch,
+        lineBefore,
+        nextLine,
+        nextState: updated.state,
+        delta: updated.delta,
+        counter,
+      };
+    }
+
+    function makeDefaultConfig() {
+      return {
+        tiers: DEFAULT_TIERS.map((tier) => ({ ...tier })),
+        market: "normal",
+        evidence: "high",
+        npc: "collector",
+        runs: 10000,
+        seed: "20260723",
+        riskQuantile: 0.20,
+        fee: 10,
+        remainingAP: 4,
+        state: { ...NPC_PROFILES.collector.initial },
+      };
+    }
+
+    function scenarioFromConfig(config) {
+      const normalWeights = normalize(config.tiers.map((tier) => tier.normalWeight));
+      const eventWeights = normalize(config.tiers.map((tier) => tier.eventWeight));
+      const activeWeights = config.market === "influx" ? eventWeights : normalWeights;
+      const priorQ20 = mixtureQuantile(0.20, config.tiers, activeWeights);
+      const priorQRisk = mixtureQuantile(config.riskQuantile, config.tiers, activeWeights);
+      const priorQ50 = mixtureQuantile(0.50, config.tiers, activeWeights);
+      const priorMean = numericIntegralMean(config.tiers, activeWeights);
+      return {
+        normalWeights,
+        eventWeights,
+        activeWeights,
+        priorQ20,
+        priorQRisk,
+        priorQ50,
+        priorMean,
+      };
+    }
+
+    function posteriorStatsForWeights(config, inputWeights) {
+      const weights = normalize(inputWeights);
+      const qRisk = mixtureQuantile(config.riskQuantile, config.tiers, weights);
+      const q20 = mixtureQuantile(0.20, config.tiers, weights);
+      const q50 = mixtureQuantile(0.50, config.tiers, weights);
+      const mean = numericIntegralMean(config.tiers, weights);
+      const margin = Math.max(5, 0.08 * q50);
+      const safeCeiling = Math.max(0, Math.floor(qRisk - config.fee - margin));
+      return { weights, qRisk, q20, q50, mean, margin, safeCeiling };
+    }
+
+    function posteriorStatsForSignals(config, scenario, signals) {
+      return posteriorStatsForWeights(
+        config,
+        posteriorFromSignals(scenario.activeWeights, signals, config.tiers.length),
+      );
+    }
+
+    function evidenceKey(signals) {
+      return signals.map((signal) => `${signal.tau}:${signal.value}`).join("|");
+    }
+
+    function npcValuation(config, scenario, trueTierIndex, runIndex) {
+      const profile = NPC_PROFILES[config.npc];
+      const npcPrior = normalize(
+        scenario.normalWeights.map((weight, index) =>
+          lerp(weight, scenario.activeWeights[index], profile.eventAwareness)),
+      );
+      const signalRng = rngFor(config.seed, runIndex, "npcSignal");
+      const privateSignal = sampleSignal(trueTierIndex, profile.signalTau, config.tiers.length, signalRng);
+      const npcPosterior = posteriorFromSignals(
+        npcPrior,
+        [{ value: privateSignal, tau: profile.signalTau }],
+        config.tiers.length,
+      );
+      const npcQ50 = mixtureQuantile(0.50, config.tiers, npcPosterior);
+      const anchorRng = rngFor(config.seed, runIndex, "npcAnchor");
+      const anchor = Math.exp(profile.anchorSigma * normalSample(anchorRng));
+      const provisionalOpening = Math.max(1, npcQ50 * profile.markup * profile.urgency * anchor);
+      const tick = prettyTick(provisionalOpening);
+      let opening = ceilToTick(provisionalOpening, tick);
+      let baseFloor = floorToTick(npcQ50 * profile.floorMultiplier * profile.urgency * Math.sqrt(anchor), tick);
+      baseFloor = Math.max(tick, baseFloor);
+      opening = Math.max(baseFloor + tick, opening);
+      return {
+        privateSignal,
+        npcPosterior,
+        npcQ50,
+        anchor,
+        opening,
+        baseFloor,
+        tick,
+      };
+    }
+
+    function offerSupport(config, scenario, posteriorStats) {
+      const profile = EVIDENCE_PROFILES[config.evidence];
+      const downwardEvidence = clamp(
+        (scenario.priorQ50 - posteriorStats.q50) / Math.max(1, scenario.priorQ50),
+        0,
+        1,
+      );
+      return clamp(profile.support * downwardEvidence, 0, 1);
+    }
+
+    function emptyStrategyAccumulator(key) {
+      return {
+        key,
+        label: STRATEGIES[key],
+        deals: 0,
+        losses: 0,
+        totalPaid: 0,
+        totalNet: 0,
+        nets: [],
+        treasureTotal: 0,
+        treasureMissed: 0,
+        positiveTotal: 0,
+        treasurePositive: 0,
+        formalOffers: 0,
+        negotiationsStarted: 0,
+        multiRoundNegotiations: 0,
+        deadlocks: 0,
+        branchCounts: { accept: 0, counter: 0, reject: 0, exit: 0 },
+        playerActionCounts: {},
+        terminalCounts: {},
+      };
+    }
+
+    function isTerminalRecord(record) {
+      return Boolean(
+        record
+        && record.terminal
+        && record.terminal.reached === true
+        && ["deal", "noDeal"].includes(record.terminal.outcome)
+        && ["player", "npc"].includes(record.terminal.actor),
+      );
+    }
+
+    function resultRecord(deal, paidPrice, trueValue, fee, formalOffers, trace, terminal) {
+      const record = {
+        deal,
+        paidPrice,
+        net: (deal ? trueValue - paidPrice : 0) - fee,
+        formalOffers,
+        trace,
+        terminal: terminal || null,
+      };
+      record.deadlocked = !isTerminalRecord(record);
+      return record;
+    }
+
+    function simulateOpeningBuy(caseData, config) {
+      return resultRecord(true, caseData.npc.opening, caseData.trueValue, config.fee, 0, [
+        { actor: "player", type: "decision", action: "acceptOpening", price: caseData.npc.opening, note: "按开价直接买下" },
+      ], { reached: true, outcome: "deal", actor: "player", reason: "playerAcceptedOpening" });
+    }
+
+    function simulateOneOffer(caseData, config, cap, strategyKey) {
+      if (caseData.npc.opening <= cap) {
+        return resultRecord(true, caseData.npc.opening, caseData.trueValue, config.fee, 0, [
+          { actor: "player", type: "decision", action: "acceptOpening", price: caseData.npc.opening, note: "开价未超过收购上限" },
+        ], { reached: true, outcome: "deal", actor: "player", reason: "playerAcceptedOpening" });
+      }
+      if (cap <= 0 || config.remainingAP <= 0) {
+        return resultRecord(false, 0, caseData.trueValue, config.fee, 0, [
+          { actor: "player", type: "decision", action: "leave", price: 0, note: "没有合法正式报价空间，零AP离开" },
+        ], { reached: true, outcome: "noDeal", actor: "player", reason: "playerWalkedAway" });
+      }
+      const profile = NPC_PROFILES[config.npc];
+      const state = cloneState(config.state);
+      const patience = negotiationCapacity(profile, state);
+      const offer = Math.max(caseData.npc.tick, floorToTick(Math.min(cap, caseData.npc.opening - caseData.npc.tick), caseData.npc.tick));
+      const response = chooseResponse({
+        offer,
+        currentAsk: caseData.npc.opening,
+        baseFloor: caseData.npc.baseFloor,
+        state,
+        profile,
+        evidenceSupport: caseData.evidenceSupport,
+        roundIndex: 1,
+        patienceAfter: patience - 1,
+        jitterRng: rngFor(config.seed, caseData.index, `${strategyKey}:jitter:1`),
+        tick: caseData.npc.tick,
+      });
+      if (response.branch === "accept") {
+        return resultRecord(true, offer, caseData.trueValue, config.fee, 1, [
+          { actor: "player", type: "offer", action: "submitOffer", price: offer, round: 1 },
+          { ...response, price: offer },
+        ], { reached: true, outcome: "deal", actor: "npc", reason: "npcAcceptedOffer" });
+      }
+      if (response.branch === "counter" && response.counter != null && response.counter <= cap) {
+        return resultRecord(true, response.counter, caseData.trueValue, config.fee, 1, [
+          { actor: "player", type: "offer", action: "submitOffer", price: offer, round: 1 },
+          { ...response, price: offer },
+          { actor: "player", type: "decision", action: "acceptCounter", price: response.counter },
+        ], { reached: true, outcome: "deal", actor: "player", reason: "playerAcceptedCounter" });
+      }
+      return resultRecord(false, 0, caseData.trueValue, config.fee, 1, [
+        { actor: "player", type: "offer", action: "submitOffer", price: offer, round: 1 },
+        { ...response, price: offer },
+        { actor: "player", type: "decision", action: "leave", price: 0, note: "一次报价未成交，零AP离开" },
+      ], response.branch === "exit"
+        ? { reached: true, outcome: "noDeal", actor: "npc", reason: "npcExited" }
+        : { reached: true, outcome: "noDeal", actor: "player", reason: "playerWalkedAway" });
+    }
+
+    function nextOffer(previousOffer, target, cap, tick) {
+      const desired = previousOffer + Math.max(tick, (target - previousOffer) * 0.55);
+      return Math.min(cap, Math.max(previousOffer + tick, floorToTick(desired, tick)));
+    }
+
+    function simulateBargaining(caseData, config, cap) {
+      if (caseData.npc.opening <= cap) {
+        return resultRecord(true, caseData.npc.opening, caseData.trueValue, config.fee, 0, [
+          { actor: "player", type: "decision", action: "acceptOpening", price: caseData.npc.opening, note: "开价未超过保守上限" },
+        ], { reached: true, outcome: "deal", actor: "player", reason: "playerAcceptedOpening" });
+      }
+      if (cap <= 0 || config.remainingAP <= 0) {
+        return resultRecord(false, 0, caseData.trueValue, config.fee, 0, [
+          { actor: "player", type: "decision", action: "leave", price: 0, note: "保守上限为0或行动点耗尽，零AP离开" },
+        ], { reached: true, outcome: "noDeal", actor: "player", reason: "playerWalkedAway" });
+      }
+
+      const profile = NPC_PROFILES[config.npc];
+      let state = cloneState(config.state);
+      let patience = negotiationCapacity(profile, state);
+      let ap = config.remainingAP;
+      let currentAsk = caseData.npc.opening;
+      const maximumOffers = Math.min(3, ap, patience);
+      let offer = Math.max(
+        caseData.npc.tick,
+        floorToTick(
+          maximumOffers <= 1 ? cap : Math.min(cap, currentAsk * 0.72),
+          caseData.npc.tick,
+        ),
+      );
+      let formalOffers = 0;
+      const trace = [];
+
+      while (ap > 0 && patience > 0 && formalOffers < maximumOffers && offer < currentAsk) {
+        formalOffers += 1;
+        ap -= 1;
+        patience -= 1;
+        const cut = (currentAsk - offer) / Math.max(1, currentAsk);
+        if (cut >= 0.40 && caseData.evidenceSupport < 0.75 && patience > 0) {
+          patience -= 1;
+        }
+
+        const response = chooseResponse({
+          offer,
+          currentAsk,
+          baseFloor: caseData.npc.baseFloor,
+          state,
+          profile,
+          evidenceSupport: formalOffers === 1 ? caseData.evidenceSupport : 0,
+          roundIndex: formalOffers,
+          patienceAfter: patience,
+          jitterRng: rngFor(config.seed, caseData.index, `safeBargain:jitter:${formalOffers}`),
+          tick: caseData.npc.tick,
+        });
+        trace.push({
+          actor: "player",
+          type: "offer",
+          action: "submitOffer",
+          price: offer,
+          round: formalOffers,
+        });
+        trace.push({ ...response, price: offer, currentAsk });
+        state = response.nextState;
+
+        if (response.branch === "accept") {
+          return resultRecord(
+            true,
+            offer,
+            caseData.trueValue,
+            config.fee,
+            formalOffers,
+            trace,
+            { reached: true, outcome: "deal", actor: "npc", reason: "npcAcceptedOffer" },
+          );
+        }
+        if (response.branch === "exit") {
+          return resultRecord(
+            false,
+            0,
+            caseData.trueValue,
+            config.fee,
+            formalOffers,
+            trace,
+            { reached: true, outcome: "noDeal", actor: "npc", reason: "npcExited" },
+          );
+        }
+
+        if (response.branch === "counter" && response.counter != null) {
+          currentAsk = response.counter;
+          if (currentAsk <= cap) {
+            trace.push({
+              actor: "player",
+              type: "decision",
+              action: "acceptCounter",
+              price: currentAsk,
+              note: "接受不高于收购上限的NPC还价",
+            });
+            return resultRecord(
+              true,
+              currentAsk,
+              caseData.trueValue,
+              config.fee,
+              formalOffers,
+              trace,
+              { reached: true, outcome: "deal", actor: "player", reason: "playerAcceptedCounter" },
+            );
+          }
+          if (cap <= offer) break;
+          if (patience <= 1 || ap <= 1 || formalOffers >= maximumOffers - 1) {
+            offer = floorToTick(cap, caseData.npc.tick);
+          } else {
+            const target = Math.min(cap, currentAsk);
+            if (target <= offer) break;
+            offer = nextOffer(offer, target, cap, caseData.npc.tick);
+          }
+        } else {
+          if (cap <= offer) break;
+          offer =
+            patience <= 1 || ap <= 1 || formalOffers >= maximumOffers - 1
+              ? floorToTick(cap, caseData.npc.tick)
+              : nextOffer(offer, cap, cap, caseData.npc.tick);
+        }
+      }
+
+      if (currentAsk <= cap) {
+        trace.push({
+          actor: "player",
+          type: "decision",
+          action: "acceptCounter",
+          price: currentAsk,
+          note: "耐心耗尽后接受最终价",
+        });
+        return resultRecord(
+          true,
+          currentAsk,
+          caseData.trueValue,
+          config.fee,
+          formalOffers,
+          trace,
+          { reached: true, outcome: "deal", actor: "player", reason: "playerAcceptedCounter" },
+        );
+      }
+      trace.push({
+        actor: "player",
+        type: "decision",
+        action: "leave",
+        price: 0,
+        note: "报价空间耗尽，零AP离开",
+      });
+      return resultRecord(
+        false,
+        0,
+        caseData.trueValue,
+        config.fee,
+        formalOffers,
+        trace,
+        { reached: true, outcome: "noDeal", actor: "player", reason: "playerWalkedAway" },
+      );
+    }
+
+    function applyRecord(accumulator, record, caseData) {
+      if (record.deal) {
+        accumulator.deals += 1;
+        accumulator.totalPaid += record.paidPrice;
+        if (record.net < 0) accumulator.losses += 1;
+      }
+      accumulator.totalNet += record.net;
+      accumulator.nets.push(record.net);
+      accumulator.formalOffers += record.formalOffers;
+      if (record.formalOffers > 0) accumulator.negotiationsStarted += 1;
+      if (record.formalOffers >= 2) accumulator.multiRoundNegotiations += 1;
+      if (record.deadlocked) {
+        accumulator.deadlocks += 1;
+      } else {
+        const reason = record.terminal.reason;
+        accumulator.terminalCounts[reason] = (accumulator.terminalCounts[reason] || 0) + 1;
+      }
+      if (caseData.trueTierIndex === caseData.tiers.length - 1) {
+        accumulator.treasureTotal += 1;
+        if (!record.deal) accumulator.treasureMissed += 1;
+      }
+      if (record.net > 0) {
+        accumulator.positiveTotal += record.net;
+        if (caseData.trueTierIndex === caseData.tiers.length - 1) {
+          accumulator.treasurePositive += record.net;
+        }
+      }
+      for (const step of record.trace) {
+        if (
+          step.actor === "npc"
+          && step.type === "response"
+          && accumulator.branchCounts[step.branch] !== undefined
+        ) {
+          accumulator.branchCounts[step.branch] += 1;
+        }
+        if (step.actor === "player" && step.action) {
+          accumulator.playerActionCounts[step.action] =
+            (accumulator.playerActionCounts[step.action] || 0) + 1;
+        }
+      }
+    }
+
+    function summarizeAccumulator(accumulator, runs) {
+      return {
+        key: accumulator.key,
+        label: accumulator.label,
+        dealRate: accumulator.deals / runs,
+        lossRateAmongDeals: accumulator.deals ? accumulator.losses / accumulator.deals : 0,
+        averagePaidPrice: accumulator.deals ? accumulator.totalPaid / accumulator.deals : 0,
+        meanNet: accumulator.totalNet / runs,
+        medianNet: percentile(accumulator.nets, 0.50),
+        treasureMissRate: accumulator.treasureTotal ? accumulator.treasureMissed / accumulator.treasureTotal : 0,
+        treasureProfitShare: accumulator.positiveTotal ? accumulator.treasurePositive / accumulator.positiveTotal : 0,
+        averageFormalOffers: accumulator.formalOffers / runs,
+        negotiationStartRate: accumulator.negotiationsStarted / runs,
+        averageOffersPerStarted: accumulator.negotiationsStarted
+          ? accumulator.formalOffers / accumulator.negotiationsStarted
+          : 0,
+        multiRoundRate: accumulator.negotiationsStarted
+          ? accumulator.multiRoundNegotiations / accumulator.negotiationsStarted
+          : 0,
+        npcResponses: Object.values(accumulator.branchCounts).reduce((sum, value) => sum + value, 0),
+        unresolvedCount: accumulator.deadlocks,
+        branchCounts: { ...accumulator.branchCounts },
+        playerActionCounts: { ...accumulator.playerActionCounts },
+        terminalCounts: { ...accumulator.terminalCounts },
+      };
+    }
+
+    function buildSignalRows(config, scenario) {
+      const profile = EVIDENCE_PROFILES[config.evidence];
+      const tierCount = config.tiers.length;
+      const groups = config.tiers.map((tier, signalIndex) => ({
+        signalIndex,
+        label: tier.label,
+        probability: 0,
+        combinationCount: 0,
+        truthMass: config.tiers.map(() => 0),
+      }));
+      let combinationCount = 0;
+
+      function visitSignals(depth, signals) {
+        if (depth < profile.taus.length) {
+          for (let value = 0; value < tierCount; value += 1) {
+            visitSignals(depth + 1, [...signals, { value, tau: profile.taus[depth] }]);
+          }
+          return;
+        }
+
+        combinationCount += 1;
+        const jointByTruth = config.tiers.map(() => 0);
+        for (let truth = 0; truth < tierCount; truth += 1) {
+          let conditional = 1;
+          for (const signal of signals) {
+            conditional *= signalLikelihood(signal.value, truth, signal.tau, tierCount);
+          }
+          jointByTruth[truth] = scenario.activeWeights[truth] * conditional;
+        }
+        const jointProbability = jointByTruth.reduce((sum, value) => sum + value, 0);
+
+        const stats = posteriorStatsForWeights(config, jointByTruth);
+        let mapIndex = 0;
+        for (let index = 1; index < stats.weights.length; index += 1) {
+          if (stats.weights[index] > stats.weights[mapIndex]) mapIndex = index;
+        }
+        const group = groups[mapIndex];
+        group.probability += jointProbability;
+        group.combinationCount += 1;
+        for (let truth = 0; truth < tierCount; truth += 1) {
+          group.truthMass[truth] += jointByTruth[truth];
+        }
+      }
+
+      visitSignals(0, []);
+      const probabilityTotal = groups.reduce((sum, group) => sum + group.probability, 0);
+      const expectedCombinationCount = tierCount ** profile.taus.length;
+      if (combinationCount !== expectedCombinationCount) {
+        throw new Error(`信号枚举不完整：${combinationCount} / ${expectedCombinationCount}`);
+      }
+      if (Math.abs(probabilityTotal - 1) > 1e-9) {
+        throw new Error(`信号联合概率未归一：${probabilityTotal}`);
+      }
+      return groups
+        .filter((group) => group.probability > 1e-12)
+        .map((group) => {
+          const stats = posteriorStatsForWeights(config, group.truthMass);
+          return {
+            signalIndex: group.signalIndex,
+            label: group.label,
+            probability: group.probability / probabilityTotal,
+            combinationCount: group.combinationCount,
+            totalCombinationCount: combinationCount,
+            fakePosterior: stats.weights[0] + stats.weights[1],
+            ...stats,
+          };
+        });
+    }
+
+    function buildReachability(config) {
+      const offerRatios = [0.35, 0.50, 0.65, 0.80, 0.95, 1.05];
+      const states = [
+        { key: "good", label: "关系良好", state: { trust: 72, pressure: 22, intent: 78, control: 62 } },
+        { key: "neutral", label: "关系中性", state: { trust: 52, pressure: 45, intent: 55, control: 52 } },
+        { key: "strained", label: "关系紧张", state: { trust: 28, pressure: 82, intent: 32, control: 24 } },
+      ];
+      const rows = [];
+      const seen = new Set();
+      for (const [profileKey, profile] of Object.entries(NPC_PROFILES)) {
+        for (const statePreset of states) {
+          const opening = 100;
+          const tick = 2;
+          const baseFloor = Math.round(62 + profile.floorMultiplier * 10);
+          const patience = negotiationCapacity(profile, statePreset.state);
+          const cells = offerRatios.map((ratio, index) => {
+            const offer = floorToTick(opening * ratio, tick);
+            const response = chooseResponse({
+              offer,
+              currentAsk: opening,
+              baseFloor,
+              state: statePreset.state,
+              profile,
+              evidenceSupport: EVIDENCE_PROFILES[config.evidence].support,
+              roundIndex: 1,
+              patienceAfter: patience - 1,
+              jitterRng: rngFor(config.seed, index, `reach:${profileKey}:${statePreset.key}`),
+              tick,
+            });
+            seen.add(response.branch);
+            return {
+              ratio,
+              offer,
+              branch: response.branch,
+              line: response.lineBefore,
+            };
+          });
+          rows.push({
+            key: `${profileKey}-${statePreset.key}`,
+            label: `${profile.label} · ${statePreset.label}`,
+            profileKey,
+            stateKey: statePreset.key,
+            cells,
+          });
+        }
+      }
+      return { offerRatios, rows, seen: [...seen] };
+    }
+
+    function runBatch(inputConfig) {
+      const config = {
+        ...makeDefaultConfig(),
+        ...inputConfig,
+        tiers: inputConfig.tiers.map((tier) => ({ ...tier })),
+        state: { ...inputConfig.state },
+      };
+      const scenario = scenarioFromConfig(config);
+      const evidenceProfile = EVIDENCE_PROFILES[config.evidence];
+      const profile = NPC_PROFILES[config.npc];
+      const posteriorMemo = new Map();
+      const accumulators = Object.keys(STRATEGIES).map(emptyStrategyAccumulator);
+      const accumulatorMap = Object.fromEntries(accumulators.map((accumulator) => [accumulator.key, accumulator]));
+      const gradeCounts = config.tiers.map(() => 0);
+      const safeValues = [];
+      const qRiskValues = [];
+      const q50Values = [];
+      let quantileHits = 0;
+      let capCoverageEligible = 0;
+      let capCoverageHits = 0;
+      let safeZero = 0;
+      let severeNpcMisprice = 0;
+
+      for (let index = 0; index < config.runs; index += 1) {
+        const gradeRng = rngFor(config.seed, index, "grade");
+        const trueTierIndex = sampleCategorical(scenario.activeWeights, gradeRng);
+        gradeCounts[trueTierIndex] += 1;
+        const valueRng = rngFor(config.seed, index, "value");
+        const trueValue = sampleTruncatedLogNormal(config.tiers[trueTierIndex], valueRng);
+
+        const signals = evidenceProfile.taus.map((tau, signalIndex) => ({
+          value: sampleSignal(
+            trueTierIndex,
+            tau,
+            config.tiers.length,
+            rngFor(config.seed, index, `playerEvidence:${signalIndex}`),
+          ),
+          tau,
+        }));
+        const memoKey = evidenceKey(signals);
+        let posteriorStats = posteriorMemo.get(memoKey);
+        if (!posteriorStats) {
+          posteriorStats = posteriorStatsForSignals(config, scenario, signals);
+          posteriorMemo.set(memoKey, posteriorStats);
+        }
+
+        safeValues.push(posteriorStats.safeCeiling);
+        qRiskValues.push(posteriorStats.qRisk);
+        q50Values.push(posteriorStats.q50);
+        if (trueValue >= posteriorStats.qRisk) quantileHits += 1;
+        if (posteriorStats.safeCeiling <= 0) {
+          safeZero += 1;
+        } else {
+          capCoverageEligible += 1;
+          if (trueValue >= posteriorStats.safeCeiling + config.fee + posteriorStats.margin) {
+            capCoverageHits += 1;
+          }
+        }
+
+        const npc = npcValuation(config, scenario, trueTierIndex, index);
+        const openingRatio = npc.opening / Math.max(1, trueValue);
+        if (openingRatio < 0.5 || openingRatio > 2) severeNpcMisprice += 1;
+        const evidenceSupport = offerSupport(config, scenario, posteriorStats);
+        const caseData = {
+          index,
+          tiers: config.tiers,
+          trueTierIndex,
+          trueValue,
+          posteriorStats,
+          npc,
+          evidenceSupport,
+        };
+
+        const openingRecord = simulateOpeningBuy(caseData, config);
+        const safeOnceRecord = simulateOneOffer(caseData, config, posteriorStats.safeCeiling, "safeOnce");
+        const safeBargainRecord = simulateBargaining(caseData, config, posteriorStats.safeCeiling);
+        const q50Cap = Math.max(0, Math.floor(posteriorStats.q50 - config.fee));
+        const medianRiskRecord = simulateOneOffer(caseData, config, q50Cap, "medianRisk");
+
+        applyRecord(accumulatorMap.opening, openingRecord, caseData);
+        applyRecord(accumulatorMap.safeOnce, safeOnceRecord, caseData);
+        applyRecord(accumulatorMap.safeBargain, safeBargainRecord, caseData);
+        applyRecord(accumulatorMap.medianRisk, medianRiskRecord, caseData);
+      }
+
+      const strategySummaries = accumulators.map((accumulator) => summarizeAccumulator(accumulator, config.runs));
+      const signalRows = buildSignalRows(config, scenario);
+      const reachability = buildReachability(config);
+      const bargainSummary = strategySummaries.find((summary) => summary.key === "safeBargain");
+      const branchTotal = Object.values(bargainSummary.branchCounts).reduce((sum, value) => sum + value, 0);
+      const branchRates = Object.fromEntries(
+        Object.entries(bargainSummary.branchCounts).map(([key, value]) => [key, branchTotal ? value / branchTotal : 0]),
+      );
+
+      return {
+        config,
+        profile,
+        scenario,
+        signalRows,
+        strategySummaries,
+        gradeRates: gradeCounts.map((count) => count / config.runs),
+        safeMedian: percentile(safeValues, 0.50),
+        qRiskMedian: percentile(qRiskValues, 0.50),
+        q50Median: percentile(q50Values, 0.50),
+        safeZeroRate: safeZero / config.runs,
+        safeZeroCount: safeZero,
+        quantileCoverage: quantileHits / config.runs,
+        quantileCoverageTotal: config.runs,
+        capCoverage: capCoverageEligible ? capCoverageHits / capCoverageEligible : null,
+        capCoverageEligible,
+        severeNpcMispriceRate: severeNpcMisprice / config.runs,
+        branchRates,
+        reachability,
+        deadlocks: strategySummaries.reduce((sum, summary) => sum + summary.unresolvedCount, 0),
+        posteriorMemoSize: posteriorMemo.size,
+      };
+    }
+
+    global.ZhangyanNumericLabModel = Object.freeze({
+      DEFAULT_TIERS,
+      EVIDENCE_PROFILES,
+      NPC_PROFILES,
+      STRATEGIES,
+      BRANCH_LABELS,
+      makeDefaultConfig,
+      scenarioFromConfig,
+      posteriorFromSignals,
+      posteriorStatsForSignals,
+      mixtureCdf,
+      mixturePdf,
+      mixtureQuantile,
+      numericIntegralMean,
+      runBatch,
+      buildSignalRows,
+      buildReachability,
+      acceptanceLine,
+      negotiationCapacity,
+      chooseResponse,
+      offerSupport,
+      isTerminalRecord,
+      normalize,
+      clamp,
+    });
+  })(globalThis);
+  </script>
+
+  <script>
+  (function () {
+    "use strict";
+
+    const Model = globalThis.ZhangyanNumericLabModel;
+    const byId = (id) => document.getElementById(id);
+    const state = {
+      defaults: Model.makeDefaultConfig(),
+      lastResult: null,
+      dirty: false,
+      running: false,
+    };
+
+    const percent = (value, digits = 1) => `${(value * 100).toFixed(digits)}%`;
+    const number = (value, digits = 0) =>
+      Number(value).toLocaleString("zh-CN", {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+      });
+    const signed = (value) => `${value >= 0 ? "+" : ""}${number(value, 1)}`;
+
+    function quantileCopy(riskQuantile) {
+      const qPercent = Math.round(riskQuantile * 100);
+      return {
+        qLabel: `Q${qPercent}`,
+        abovePercent: Math.round((1 - riskQuantile) * 100),
+      };
+    }
+
+    function applyRiskLabels(riskQuantile) {
+      const copy = quantileCopy(riskQuantile);
+      byId("risk-output").textContent = copy.qLabel;
+      byId("risk-help").textContent =
+        `${copy.qLabel}表示：只按器物证据估计，约${copy.abovePercent}%的价值位于该线以上；它不等于成交后亏损率。`;
+      byId("risk-legend").textContent = `当前${copy.qLabel}`;
+      byId("posterior-risk-heading").textContent = copy.qLabel;
+      byId("formula-quantile-label").textContent = `本批次中位${copy.qLabel}`;
+      byId("strategy-risk-note").textContent =
+        `风险分位只描述玩家基于器物证据形成的后验。NPC开价与回应会造成选择偏差；即使${copy.qLabel}覆盖率约为${copy.abovePercent}%，成交后的亏损率也可能更高，必须单独观察。`;
+      return copy;
+    }
+
+    function markDirty() {
+      state.dirty = true;
+      const status = byId("run-status");
+      status.textContent = "参数已修改 · 待运行";
+      status.classList.add("dirty");
+    }
+
+    function setRunning(isRunning) {
+      state.running = isRunning;
+      byId("run-button").disabled = isRunning;
+      byId("reset-button").disabled = isRunning;
+      if (isRunning) {
+        byId("run-status").textContent = "正在模拟…";
+        byId("run-status").classList.remove("dirty");
+      }
+    }
+
+    function renderParameterRows(tiers) {
+      byId("parameter-table-body").innerHTML = tiers.map((tier, index) => `
+        <tr data-tier-index="${index}">
+          <td><strong>${tier.label}</strong></td>
+          <td class="numeric"><input data-field="normalWeight" type="number" min="0" max="100" step="0.5" value="${(tier.normalWeight * 100).toFixed(1)}" aria-label="${tier.label}常态概率"></td>
+          <td class="numeric"><input data-field="eventWeight" type="number" min="0" max="100" step="0.5" value="${(tier.eventWeight * 100).toFixed(1)}" aria-label="${tier.label}日报概率"></td>
+          <td class="numeric"><input data-field="median" type="number" min="1" step="1" value="${tier.median}" aria-label="${tier.label}价值中位数"></td>
+          <td class="numeric"><input data-field="sigma" type="number" min="0.05" max="1.5" step="0.05" value="${tier.sigma.toFixed(2)}" aria-label="${tier.label}对数波动"></td>
+          <td class="numeric"><input data-field="min" type="number" min="0.1" step="1" value="${tier.min}" aria-label="${tier.label}硬下限"></td>
+          <td class="numeric"><input data-field="max" type="number" min="1" step="1" value="${tier.max}" aria-label="${tier.label}硬上限"></td>
+        </tr>
+      `).join("");
+      updateWeightTotal();
+    }
+
+    function renderNpcTable() {
+      byId("npc-table-body").innerHTML = Object.entries(Model.NPC_PROFILES).map(([key, profile]) => `
+        <tr${key === byId("npc-select").value ? ' class="is-highlight"' : ""}>
+          <td><strong>${profile.label}</strong></td>
+          <td class="numeric">${profile.signalTau.toFixed(2)}</td>
+          <td class="numeric">${percent(profile.eventAwareness, 0)}</td>
+          <td class="numeric">×${profile.markup.toFixed(2)}</td>
+          <td class="numeric">×${profile.floorMultiplier.toFixed(2)}</td>
+          <td class="numeric">${profile.anchorSigma.toFixed(2)}</td>
+          <td class="numeric">${profile.basePatience}</td>
+          <td class="numeric">${percent(profile.flexibility, 0)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function readTiers() {
+      return [...byId("parameter-table-body").querySelectorAll("tr")].map((row, index) => {
+        const base = state.defaults.tiers[index];
+        const field = (name) => Number(row.querySelector(`[data-field="${name}"]`).value);
+        return {
+          ...base,
+          normalWeight: field("normalWeight") / 100,
+          eventWeight: field("eventWeight") / 100,
+          median: field("median"),
+          sigma: field("sigma"),
+          min: field("min"),
+          max: field("max"),
+        };
+      });
+    }
+
+    function updateWeightTotal() {
+      const rows = [...byId("parameter-table-body").querySelectorAll("tr")];
+      if (!rows.length) return;
+      const normal = rows.reduce((sum, row) => sum + Number(row.querySelector('[data-field="normalWeight"]').value || 0), 0);
+      const event = rows.reduce((sum, row) => sum + Number(row.querySelector('[data-field="eventWeight"]').value || 0), 0);
+      const label = byId("weight-total");
+      label.textContent = `常态合计 ${normal.toFixed(1)}% · 日报合计 ${event.toFixed(1)}%（模拟时自动归一）`;
+      label.classList.toggle("invalid", Math.abs(normal - 100) > 0.05 || Math.abs(event - 100) > 0.05);
+    }
+
+    function readConfig() {
+      const tiers = readTiers();
+      for (const tier of tiers) {
+        if (![tier.normalWeight, tier.eventWeight, tier.median, tier.sigma, tier.min, tier.max].every(Number.isFinite)) {
+          throw new Error(`${tier.label}存在非数字参数。`);
+        }
+        if (tier.min <= 0 || tier.max <= tier.min || tier.median < tier.min || tier.median > tier.max) {
+          throw new Error(`${tier.label}必须满足 0 < 下限 ≤ 中位数 ≤ 上限。`);
+        }
+      }
+      return {
+        tiers,
+        market: byId("market-select").value,
+        evidence: byId("evidence-select").value,
+        npc: byId("npc-select").value,
+        runs: Number(byId("run-count").value),
+        seed: byId("seed-input").value.trim() || "20260723",
+        riskQuantile: Number(byId("risk-range").value) / 100,
+        fee: Number(byId("fee-input").value),
+        remainingAP: Number(byId("ap-input").value),
+        state: {
+          trust: Number(byId("trust-range").value),
+          pressure: Number(byId("pressure-range").value),
+          intent: Number(byId("intent-range").value),
+          control: Number(byId("control-range").value),
+        },
+      };
+    }
+
+    function renderValueChart(result) {
+      const { tiers } = result.config;
+      const riskCopy = quantileCopy(result.config.riskQuantile);
+      const min = Math.min(...tiers.map((tier) => tier.min));
+      const max = Math.max(...tiers.map((tier) => tier.max));
+      const width = 920;
+      const height = 350;
+      const margin = { left: 60, right: 24, top: 22, bottom: 52 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+      const minLog = Math.log(min);
+      const maxLog = Math.log(max);
+      const x = (value) => margin.left + ((Math.log(value) - minLog) / (maxLog - minLog)) * innerWidth;
+      const points = 130;
+      const normal = [];
+      const active = [];
+      let maxDensity = 0;
+      for (let index = 0; index < points; index += 1) {
+        const value = Math.exp(minLog + (maxLog - minLog) * (index / (points - 1)));
+        const normalDensity = value * Model.mixturePdf(value, tiers, result.scenario.normalWeights);
+        const activeDensity = value * Model.mixturePdf(value, tiers, result.scenario.activeWeights);
+        normal.push({ value, density: normalDensity });
+        active.push({ value, density: activeDensity });
+        maxDensity = Math.max(maxDensity, normalDensity, activeDensity);
+      }
+      const y = (density) => margin.top + innerHeight - (density / Math.max(1e-9, maxDensity)) * innerHeight;
+      const path = (series) => series.map((point, index) => `${index ? "L" : "M"}${x(point.value).toFixed(2)},${y(point.density).toFixed(2)}`).join(" ");
+      const ticks = [1, 5, 10, 20, 50, 100, 200, 500, 1000, 5000].filter((tick) => tick >= min && tick <= max);
+      const markers = [
+        { label: `${riskCopy.qLabel} ${number(result.scenario.priorQRisk)}`, value: result.scenario.priorQRisk, color: "#8b672f", dash: "5 4", y: 36 },
+        { label: `Q50 ${number(result.scenario.priorQ50)}`, value: result.scenario.priorQ50, color: "#284d46", dash: "3 3", y: 54 },
+        { label: `均值 ${number(result.scenario.priorMean)}`, value: result.scenario.priorMean, color: "#9a3d31", dash: "2 5", y: 72 },
+      ];
+      const svg = `
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="常态市场与当前市场的对数价值分布">
+          <title>常态与当前市场的价值分布</title>
+          <desc>横轴为对数价值点，纵轴为对数区间内概率密度，并标出当前市场${riskCopy.qLabel}、Q50和均值。</desc>
+          <rect x="${margin.left}" y="${margin.top}" width="${innerWidth}" height="${innerHeight}" fill="#faf7f0"></rect>
+          ${[0, 0.25, 0.5, 0.75, 1].map((ratio) => {
+            const gridY = margin.top + innerHeight * ratio;
+            return `<line x1="${margin.left}" y1="${gridY}" x2="${width - margin.right}" y2="${gridY}" stroke="#ded7ca" stroke-width="1"></line>`;
+          }).join("")}
+          ${ticks.map((tick) => `
+            <line x1="${x(tick)}" y1="${margin.top}" x2="${x(tick)}" y2="${margin.top + innerHeight}" stroke="#e5dfd4" stroke-width="1"></line>
+            <text x="${x(tick)}" y="${height - 22}" text-anchor="middle" fill="#6d736d" font-size="11">${number(tick)}</text>
+          `).join("")}
+          <path d="${path(normal)}" fill="none" stroke="#284d46" stroke-width="3"></path>
+          <path d="${path(active)}" fill="none" stroke="#9a3d31" stroke-width="3"></path>
+          ${markers.map((marker) => `
+            <line x1="${x(marker.value)}" y1="${margin.top}" x2="${x(marker.value)}" y2="${margin.top + innerHeight}" stroke="${marker.color}" stroke-width="2" stroke-dasharray="${marker.dash}"></line>
+            <text x="${Math.min(width - 116, Math.max(margin.left + 4, x(marker.value) + 5))}" y="${marker.y}" fill="${marker.color}" font-size="11" font-weight="700">${marker.label}</text>
+          `).join("")}
+          <line x1="${margin.left}" y1="${margin.top + innerHeight}" x2="${width - margin.right}" y2="${margin.top + innerHeight}" stroke="#817b70" stroke-width="1.5"></line>
+          <text x="${margin.left + innerWidth / 2}" y="${height - 4}" text-anchor="middle" fill="#6d736d" font-size="12">游戏价值点（对数轴）</text>
+        </svg>
+      `;
+      byId("value-chart").innerHTML = svg;
+
+      byId("probability-stack").innerHTML = result.scenario.activeWeights.map((weight, index) => {
+        const label = weight >= 0.07 ? `${tiers[index].label} ${percent(weight, 0)}` : "";
+        return `<span class="probability-segment" style="width:${weight * 100}%" aria-label="${tiers[index].label}${percent(weight)}">${label}</span>`;
+      }).join("");
+    }
+
+    function renderPosteriorTable(result) {
+      const mostLikely = result.signalRows.reduce((best, row) => row.probability > best.probability ? row : best, result.signalRows[0]);
+      byId("signal-table-note").textContent =
+        `枚举本阶段全部${result.signalRows[0].totalCombinationCount}个有噪声信号组合，再按后验最高品级归组；归组概率合计为100%。玩家界面不会直接显示品级名。`;
+      byId("posterior-table-body").innerHTML = result.signalRows.map((row) => `
+        <tr${row.signalIndex === mostLikely.signalIndex ? ' class="is-highlight"' : ""}>
+          <td><span class="signal-pill">倾向 ${row.signalIndex + 1}</span> <span class="footnote">${row.label} · ${row.combinationCount}组信号</span></td>
+          <td class="numeric">${percent(row.probability)}</td>
+          <td class="numeric">${percent(row.fakePosterior)}</td>
+          <td class="numeric">${number(row.qRisk)}</td>
+          <td class="numeric">${number(row.q50)}</td>
+          <td class="numeric"><strong>${number(row.safeCeiling)}</strong></td>
+        </tr>
+      `).join("");
+      const medianMargin = Math.max(5, 0.08 * result.q50Median);
+      byId("formula-q20").textContent = number(result.qRiskMedian);
+      byId("formula-cost").textContent = number(result.config.fee + medianMargin);
+      byId("formula-safe").textContent = number(result.safeMedian);
+    }
+
+    function renderStrategyResults(result) {
+      byId("strategy-bars").innerHTML = result.strategySummaries.map((strategy) => `
+        <div class="strategy-row">
+          <strong>${strategy.label}</strong>
+          <div class="dual-track" aria-label="${strategy.label}成交和亏损比例">
+            <div class="track deal"><span style="width:${strategy.dealRate * 100}%"></span></div>
+            <div class="track loss"><span style="width:${strategy.lossRateAmongDeals * 100}%"></span></div>
+          </div>
+          <div class="strategy-percent">成交 ${percent(strategy.dealRate, 0)}<br>亏损 ${percent(strategy.lossRateAmongDeals, 0)}</div>
+        </div>
+      `).join("");
+
+      byId("strategy-table-body").innerHTML = result.strategySummaries.map((strategy) => `
+        <tr${strategy.key === "safeBargain" ? ' class="is-highlight"' : ""}>
+          <td><strong>${strategy.label}</strong></td>
+          <td class="numeric">${percent(strategy.dealRate)}</td>
+          <td class="numeric">${percent(strategy.lossRateAmongDeals)}</td>
+          <td class="numeric">${strategy.dealRate ? number(strategy.averagePaidPrice, 1) : "—"}</td>
+          <td class="numeric">${signed(strategy.meanNet)}</td>
+          <td class="numeric">${signed(strategy.medianNet)}</td>
+          <td class="numeric">${percent(strategy.treasureMissRate)}</td>
+          <td class="numeric">${percent(strategy.treasureProfitShare)}</td>
+          <td class="numeric">${percent(strategy.negotiationStartRate)}</td>
+          <td class="numeric">${strategy.averageOffersPerStarted.toFixed(2)}</td>
+          <td class="numeric">${percent(strategy.multiRoundRate)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderBranches(result) {
+      const entries = [
+        ["accept", "A 接受"],
+        ["counter", "C 还价"],
+        ["reject", "R 拒绝"],
+        ["exit", "X 离场"],
+      ];
+      byId("branch-stack").innerHTML = entries.map(([key, label]) => {
+        const rate = result.branchRates[key] || 0;
+        return `<span class="branch-${key}" style="width:${rate * 100}%" aria-label="${label}${percent(rate)}">${rate >= 0.07 ? `${label} ${percent(rate, 0)}` : ""}</span>`;
+      }).join("");
+      const reached = entries.filter(([key]) => (result.branchRates[key] || 0) > 0).length;
+      byId("branch-tag").textContent = `批量触发 ${reached} / 4`;
+
+      byId("heatmap-head").innerHTML = `
+        <tr>
+          <th>NPC与关系状态</th>
+          ${result.reachability.offerRatios.map((ratio) => `<th>${Math.round(ratio * 100)}%开价</th>`).join("")}
+        </tr>
+      `;
+      const short = { accept: "A 接受", counter: "C 还价", reject: "R 拒绝", exit: "X 离场" };
+      byId("heatmap-body").innerHTML = result.reachability.rows.map((row) => `
+        <tr>
+          <th>${row.label}</th>
+          ${row.cells.map((cell) => `<td class="heat-cell ${cell.branch}" aria-label="${row.label}报价${cell.offer}结果${short[cell.branch]}">${short[cell.branch]}</td>`).join("")}
+        </tr>
+      `).join("");
+    }
+
+    function buildValidations(result) {
+      const fakeNormal = result.scenario.normalWeights[0] + result.scenario.normalWeights[1];
+      const fakeEvent = result.scenario.eventWeights[0] + result.scenario.eventWeights[1];
+      const treasureNormal = result.scenario.normalWeights.at(-1);
+      const treasureEvent = result.scenario.eventWeights.at(-1);
+      const safe = result.strategySummaries.find((strategy) => strategy.key === "safeOnce");
+      const bargain = result.strategySummaries.find((strategy) => strategy.key === "safeBargain");
+      const median = result.strategySummaries.find((strategy) => strategy.key === "medianRisk");
+      const reached = new Set(result.reachability.seen);
+      const targetCoverage = 1 - result.config.riskQuantile;
+      const riskCopy = quantileCopy(result.config.riskQuantile);
+      const bargainHasTradeoff =
+        safe.dealRate > 0
+        && bargain.dealRate > 0
+        && bargain.averagePaidPrice < safe.averagePaidPrice * 0.99
+        && (
+          bargain.dealRate < safe.dealRate - 0.005
+          || bargain.lossRateAmongDeals < safe.lossRateAmongDeals - 0.005
+        );
+      const validations = [
+        {
+          level: fakeEvent > fakeNormal && treasureEvent > treasureNormal ? "pass" : "fail",
+          title: "日报同时加厚两端",
+          detail: `赝品 ${percent(fakeNormal)} → ${percent(fakeEvent)}；珍品 ${percent(treasureNormal)} → ${percent(treasureEvent)}。`,
+        },
+        {
+          level: Math.abs(result.quantileCoverage - targetCoverage) <= 0.06 ? "pass" : "warn",
+          title: "保守分位覆盖基本校准",
+          detail: `${riskCopy.qLabel}目标约 ${percent(targetCoverage, 0)}，全样本经验覆盖 ${percent(result.quantileCoverage)}；正上限局的利润缓冲覆盖 ${result.capCoverage == null ? "无样本" : percent(result.capCoverage)}。`,
+        },
+        {
+          level: median.lossRateAmongDeals > safe.lossRateAmongDeals + 0.01 ? "pass" : "warn",
+          title: `${riskCopy.qLabel}与Q50存在风险差`,
+          detail: `Q线一次报价亏损 ${percent(safe.lossRateAmongDeals)}，Q50风险报价 ${percent(median.lossRateAmongDeals)}。`,
+        },
+        {
+          level: safe.lossRateAmongDeals <= result.config.riskQuantile + 0.05 ? "pass" : "warn",
+          title: "成交后风险单独核验",
+          detail: `${riskCopy.qLabel}覆盖 ${percent(result.quantileCoverage)}，但成交样本亏损 ${percent(safe.lossRateAmongDeals)}；NPC开价造成的逆向选择不能用分位覆盖替代。`,
+        },
+        {
+          level: bargainHasTradeoff ? "pass" : "warn",
+          title: "有限议价不是免费增益",
+          detail: `平均成交价 ${number(safe.averagePaidPrice, 1)} → ${number(bargain.averagePaidPrice, 1)}；成交率 ${percent(safe.dealRate)} → ${percent(bargain.dealRate)}；成交后亏损 ${percent(safe.lossRateAmongDeals)} → ${percent(bargain.lossRateAmongDeals)}。`,
+        },
+        {
+          level: reached.size === 4 ? "pass" : "warn",
+          title: "四类NPC行为可达",
+          detail: `状态空间枚举已触发 ${[...reached].map((key) => Model.BRANCH_LABELS[key]).join("、")}。`,
+        },
+        {
+          level: result.deadlocks === 0 ? "pass" : "fail",
+          title: "终局无死锁",
+          detail: `死局 ${result.deadlocks}；AP或耐心耗尽后仍可买下最终价或离开。`,
+        },
+        {
+          level: result.safeZeroRate < 0.75 ? "pass" : "warn",
+          title: "保守上限不是长期归零",
+          detail: `上限为0的局占 ${percent(result.safeZeroRate)}。过高会使辅助系统长期失去交易能力。`,
+        },
+        {
+          level: result.severeNpcMispriceRate <= 0.20 ? "pass" : "warn",
+          title: "两倍级错价保持低频",
+          detail: `当前NPC开价低于真值一半或高于两倍的局占 ${percent(result.severeNpcMispriceRate)}；20%只是本实验参考线。`,
+        },
+      ];
+      return validations;
+    }
+
+    function renderValidations(result) {
+      const validations = buildValidations(result);
+      const passed = validations.filter((item) => item.level === "pass").length;
+      byId("validation-summary").textContent = `${passed} / ${validations.length} 通过`;
+      byId("validation-list").innerHTML = validations.map((item) => `
+        <li class="validation-item ${item.level === "pass" ? "" : item.level}">
+          <span class="validation-icon">${item.level === "pass" ? "✓" : item.level === "warn" ? "!" : "×"}</span>
+          <span>
+            <strong>${item.title}</strong>
+            <span>${item.detail}</span>
+          </span>
+        </li>
+      `).join("");
+
+      const safe = result.strategySummaries.find((strategy) => strategy.key === "safeOnce");
+      const bargain = result.strategySummaries.find((strategy) => strategy.key === "safeBargain");
+      byId("interpretation").innerHTML = `
+        当前证据下，系统给出的中位保守上限为 <strong>${number(result.safeMedian)}</strong>。
+        一次报价预计成交 <strong>${percent(safe.dealRate)}</strong>，成交后的客观亏损率为
+        <strong>${percent(safe.lossRateAmongDeals)}</strong>；阶梯议价把平均成交价从
+        <strong>${number(safe.averagePaidPrice, 1)}</strong>降到
+        <strong>${number(bargain.averagePaidPrice, 1)}</strong>，成交率为
+        <strong>${percent(bargain.dealRate)}</strong>。NPC两倍级错价率为
+        <strong>${percent(result.severeNpcMispriceRate)}</strong>，当前仍高于“低频事件”的实验参考线。
+      `;
+    }
+
+    function renderResult(result) {
+      state.lastResult = result;
+      state.dirty = false;
+      applyRiskLabels(result.config.riskQuantile);
+      byId("run-status").textContent = `已运行 · seed ${result.config.seed}`;
+      byId("run-status").classList.remove("dirty");
+      byId("market-tag").textContent = result.config.market === "influx" ? "真假混杂日报" : "常态市场";
+      byId("market-tag").classList.toggle("warn", result.config.market === "influx");
+      byId("evidence-tag").textContent = Model.EVIDENCE_PROFILES[result.config.evidence].label;
+      byId("batch-tag").textContent = `${number(result.config.runs)} 局`;
+      byId("metric-mean").textContent = number(result.scenario.priorMean);
+      byId("metric-q50").textContent = number(result.scenario.priorQ50);
+      byId("metric-safe").textContent = number(result.safeMedian);
+      byId("metric-safe-note").textContent = `${percent(result.safeZeroRate)} 的局上限为0`;
+      byId("metric-coverage").textContent = percent(result.quantileCoverage);
+      renderValueChart(result);
+      renderPosteriorTable(result);
+      renderStrategyResults(result);
+      renderBranches(result);
+      renderValidations(result);
+      renderNpcTable();
+    }
+
+    function runSimulation() {
+      const errorBox = byId("error-box");
+      errorBox.classList.remove("show");
+      errorBox.textContent = "";
+      let config;
+      try {
+        config = readConfig();
+      } catch (error) {
+        errorBox.textContent = error.message;
+        errorBox.classList.add("show");
+        return;
+      }
+      setRunning(true);
+      window.setTimeout(() => {
+        try {
+          renderResult(Model.runBatch(config));
+        } catch (error) {
+          errorBox.textContent = `模拟失败：${error.message}`;
+          errorBox.classList.add("show");
+          console.error(error);
+        } finally {
+          setRunning(false);
+        }
+      }, 20);
+    }
+
+    function applyNpcDefaults(profileKey) {
+      const initial = Model.NPC_PROFILES[profileKey].initial;
+      for (const [key, value] of Object.entries(initial)) {
+        const inputId = key === "intent" ? "intent-range" : `${key}-range`;
+        const outputId = key === "intent" ? "intent-output" : `${key}-output`;
+        byId(inputId).value = value;
+        byId(outputId).textContent = value;
+      }
+      renderNpcTable();
+    }
+
+    function resetDefaults() {
+      state.defaults = Model.makeDefaultConfig();
+      renderParameterRows(state.defaults.tiers);
+      byId("market-select").value = state.defaults.market;
+      byId("evidence-select").value = state.defaults.evidence;
+      byId("npc-select").value = state.defaults.npc;
+      byId("run-count").value = String(state.defaults.runs);
+      byId("seed-input").value = state.defaults.seed;
+      byId("risk-range").value = String(state.defaults.riskQuantile * 100);
+      applyRiskLabels(state.defaults.riskQuantile);
+      byId("fee-input").value = String(state.defaults.fee);
+      byId("ap-input").value = String(state.defaults.remainingAP);
+      applyNpcDefaults(state.defaults.npc);
+      markDirty();
+    }
+
+    function bindEvents() {
+      byId("run-button").addEventListener("click", runSimulation);
+      byId("reset-button").addEventListener("click", () => {
+        resetDefaults();
+        runSimulation();
+      });
+
+      byId("npc-select").addEventListener("change", (event) => {
+        applyNpcDefaults(event.target.value);
+        markDirty();
+      });
+
+      byId("evidence-select").addEventListener("change", (event) => {
+        const profile = Model.EVIDENCE_PROFILES[event.target.value];
+        byId("fee-input").value = profile.defaultFee;
+        byId("ap-input").value = Math.max(0, 6 - profile.apSpent);
+        markDirty();
+      });
+
+      byId("risk-range").addEventListener("input", (event) => {
+        applyRiskLabels(Number(event.target.value) / 100);
+        markDirty();
+      });
+
+      for (const key of ["trust", "pressure", "intent", "control"]) {
+        byId(`${key}-range`).addEventListener("input", (event) => {
+          byId(`${key}-output`).textContent = event.target.value;
+          markDirty();
+        });
+      }
+
+      for (const id of ["market-select", "run-count", "seed-input", "fee-input", "ap-input"]) {
+        byId(id).addEventListener("change", markDirty);
+      }
+
+      byId("parameter-table-body").addEventListener("input", () => {
+        updateWeightTotal();
+        markDirty();
+      });
+    }
+
+    renderParameterRows(state.defaults.tiers);
+    renderNpcTable();
+    bindEvents();
+    runSimulation();
+  })();
+  </script>
+</body>
+</html>

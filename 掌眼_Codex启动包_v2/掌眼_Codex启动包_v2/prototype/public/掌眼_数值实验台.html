@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>掌眼｜定价数值实验台</title>
-  <meta name="description" content="《掌眼》厚尾价值、保守后验报价、NPC错价与有限议价批量模拟实验台">
+  <title>掌眼｜规则与定价数值实验台</title>
+  <meta name="description" content="《掌眼》双后验、证据公开、风险转移、厚尾价值与有限议价批量模拟实验台">
   <style>
     :root {
       --paper: #f3eee3;
@@ -118,13 +118,16 @@
     }
 
     .btn {
+      display: inline-grid;
       min-height: 42px;
       padding: 9px 15px;
+      place-items: center;
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 9px;
       color: #eef2ef;
       background: rgba(255, 255, 255, 0.07);
       font-weight: 700;
+      text-decoration: none;
     }
 
     .btn:hover {
@@ -711,6 +714,447 @@
       margin-top: 20px;
     }
 
+    .experiment-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .experiment-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 6px 11px;
+      border: 1px solid rgba(37, 42, 39, 0.18);
+      border-radius: 999px;
+      color: var(--pine);
+      background: rgba(255, 253, 248, 0.82);
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .experiment-nav a:first-child {
+      color: var(--white);
+      border-color: var(--pine);
+      background: var(--pine);
+    }
+
+    .disclosure-lab {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 28px;
+      scroll-margin-top: 18px;
+    }
+
+    .experiment-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(500px, 0.95fr);
+      gap: 24px;
+      align-items: start;
+      padding: 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 85% 0%, rgba(197, 166, 106, 0.16), transparent 34%),
+        var(--dark);
+    }
+
+    .experiment-kicker {
+      margin: 0 0 7px;
+      color: #d2b476;
+      font: 800 11px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .experiment-hero h2 {
+      max-width: 760px;
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(24px, 2.8vw, 38px);
+      line-height: 1.25;
+    }
+
+    .experiment-lead {
+      max-width: 820px;
+      margin: 12px 0 0;
+      color: #bac7c1;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .experiment-rules {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .experiment-rule {
+      min-width: 0;
+      padding: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .experiment-rule span {
+      display: block;
+      color: #91a099;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+    }
+
+    .experiment-rule strong {
+      display: block;
+      margin-top: 5px;
+      color: #edf2ef;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .disclosure-controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 13px;
+      background: rgba(8, 17, 14, 0.42);
+    }
+
+    .disclosure-controls .control-group {
+      min-width: 0;
+    }
+
+    .disclosure-control-actions {
+      display: flex;
+      grid-column: 1 / -1;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 9px;
+      padding-top: 3px;
+    }
+
+    .disclosure-control-actions .btn {
+      flex: 1 1 150px;
+    }
+
+    .disclosure-run-status {
+      flex: 1 1 100%;
+      color: #a9b6b0;
+      font: 700 11px/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    .dual-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .dual-main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.65fr);
+      align-items: start;
+      gap: 18px;
+    }
+
+    .dual-side-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-summary {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .case-summary-item {
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--paper-soft);
+    }
+
+    .case-summary-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .case-summary-item strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--pine);
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .posterior-board {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 18px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #f7f3e9;
+    }
+
+    .posterior-board-head {
+      display: grid;
+      grid-template-columns: minmax(90px, 0.7fr) minmax(150px, 1fr) minmax(150px, 1fr);
+      gap: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .posterior-row {
+      display: grid;
+      grid-template-columns: minmax(90px, 0.7fr) minmax(150px, 1fr) minmax(150px, 1fr);
+      align-items: center;
+      gap: 10px;
+    }
+
+    .posterior-label {
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .posterior-track {
+      position: relative;
+      height: 22px;
+      overflow: hidden;
+      border-radius: 6px;
+      background: #dfd9cc;
+    }
+
+    .posterior-track span {
+      display: block;
+      height: 100%;
+      min-width: 1px;
+      border-radius: inherit;
+      transition: width 180ms ease;
+    }
+
+    .posterior-track.player span {
+      background: var(--pine-2);
+    }
+
+    .posterior-track.npc span {
+      background: var(--ochre);
+    }
+
+    .posterior-track em {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      font: normal 800 10px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    }
+
+    .trace-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .trace-step {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 11px;
+      padding: 12px;
+      border: 1px solid rgba(37, 42, 39, 0.14);
+      border-radius: 11px;
+      background: var(--white);
+    }
+
+    .trace-index {
+      display: grid;
+      width: 30px;
+      height: 30px;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--pine);
+      font: 800 11px ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    .trace-step.is-share .trace-index {
+      background: var(--ochre);
+    }
+
+    .trace-step.is-price .trace-index {
+      background: var(--cinnabar);
+    }
+
+    .trace-step.is-terminal .trace-index {
+      background: var(--indigo);
+    }
+
+    .trace-content {
+      min-width: 0;
+    }
+
+    .trace-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .trace-head strong {
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .trace-head .tag {
+      flex: 0 0 auto;
+    }
+
+    .trace-detail {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .trace-numbers {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .trace-number {
+      min-width: 0;
+      padding: 7px;
+      border-radius: 7px;
+      background: var(--paper-soft);
+    }
+
+    .trace-number span {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .trace-number strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--pine);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .dual-table th:first-child,
+    .dual-table td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      min-width: 150px;
+      background: var(--white);
+    }
+
+    .dual-table thead th:first-child {
+      z-index: 2;
+      background: var(--paper-soft);
+    }
+
+    .dual-table tbody tr.is-highlight td:first-child {
+      background: #edf3ef;
+    }
+
+    .npc-matrix {
+      min-width: 820px;
+    }
+
+    .npc-matrix td {
+      min-width: 132px;
+      text-align: center;
+    }
+
+    .matrix-result {
+      display: grid;
+      gap: 3px;
+      padding: 8px;
+      border-radius: 8px;
+      background: var(--paper-soft);
+    }
+
+    .matrix-result.best {
+      color: var(--pine);
+      background: var(--pine-soft);
+      box-shadow: inset 0 0 0 1px rgba(40, 77, 70, 0.18);
+    }
+
+    .matrix-result strong {
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .matrix-result span {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .dual-detail-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(360px, 0.8fr);
+      gap: 18px;
+    }
+
+    .evidence-mode {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      color: var(--indigo);
+      background: var(--indigo-soft);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .evidence-mode.shared {
+      color: var(--ochre);
+      background: var(--ochre-soft);
+    }
+
+    .experiment-divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 4px 0 20px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .experiment-divider::before,
+    .experiment-divider::after {
+      content: "";
+      flex: 1 1 auto;
+      height: 1px;
+      background: rgba(37, 42, 39, 0.22);
+    }
+
     .parameter-table input {
       min-width: 76px;
       min-height: 34px;
@@ -797,6 +1241,18 @@
         grid-column: 2;
         grid-row: 2;
       }
+
+      .experiment-hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .disclosure-controls {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .disclosure-control-actions {
+        grid-column: 1 / -1;
+      }
     }
 
     @media (max-width: 1040px) {
@@ -807,6 +1263,19 @@
       .lab-header-inner {
         align-items: flex-start;
         flex-direction: column;
+      }
+
+      .disclosure-controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .dual-main-grid,
+      .dual-detail-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .case-summary {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
@@ -837,6 +1306,14 @@
       .chart-wrap svg {
         min-height: 300px;
       }
+
+      .experiment-rules {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .trace-numbers {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 580px) {
@@ -855,6 +1332,42 @@
 
       .header-actions .btn {
         flex: 1 1 130px;
+      }
+
+      .experiment-hero {
+        padding: 17px;
+      }
+
+      .disclosure-controls,
+      .dual-metrics,
+      .case-summary,
+      .posterior-board-head,
+      .posterior-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .posterior-board-head span:first-child {
+        display: none;
+      }
+
+      .posterior-row {
+        gap: 5px;
+      }
+
+      .posterior-label {
+        margin-top: 4px;
+      }
+
+      .trace-head {
+        display: grid;
+      }
+
+      .trace-head .tag {
+        justify-self: start;
+      }
+
+      .trace-numbers {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .panel {
@@ -906,19 +1419,26 @@
     <div class="lab-header-inner">
       <div>
         <p class="eyebrow">Development Lab · working hypothesis</p>
-        <h1>掌眼 · 定价数值实验台</h1>
-        <p>检查厚尾价值、风险分位收购上限、NPC双向错价和有限议价。全部为游戏价值点与实验参数，不是现实古董市场报价，也不会进入玩家手机UI。</p>
+        <h1>掌眼 · 规则与定价数值实验台</h1>
+        <p>实验一检查厚尾价值与有限议价；实验二检查双方独立认知、证据公开代价和风险转移。全部为开发侧游戏参数，不是现实古董市场报价，也不会进入玩家手机UI。</p>
       </div>
       <div class="header-actions">
         <span class="run-status" id="run-status">尚未运行</span>
+        <a class="btn" href="#dual-belief-lab">查看双后验实验</a>
         <button class="btn" id="reset-button" type="button">恢复基准</button>
-        <button class="btn btn-primary" id="run-button" type="button">运行批量模拟</button>
+        <button class="btn btn-primary" id="run-button" type="button">运行旧定价模拟</button>
       </div>
     </div>
   </header>
 
   <div class="lab-page">
-    <div class="lab-grid">
+    <nav class="experiment-nav" aria-label="实验台导航">
+      <a href="#dual-belief-lab">实验二 · 双后验与信息公开</a>
+      <a href="#pricing-lab">实验一 · 厚尾价值与有限议价</a>
+      <a href="#parameter-lab">参数与公式</a>
+    </nav>
+
+    <div class="lab-grid" id="pricing-lab">
       <aside class="left-rail" aria-label="实验参数">
         <section class="panel panel-dark">
           <div class="panel-title">
@@ -1117,8 +1637,8 @@
         <section class="panel">
           <div class="panel-title">
             <div>
-              <h2>四种策略的批量结果</h2>
-              <p>成交率与成交后亏损率必须同时看；净结果已扣除本轮已发生费用。</p>
+              <h2>四组旧定价自动测试代理</h2>
+              <p>它们是开发侧基准，不是替玩家规定的正式策略。成交率与成交后亏损率必须同时看。</p>
             </div>
             <span class="tag" id="batch-tag">0 局</span>
           </div>
@@ -1127,7 +1647,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>策略</th>
+                  <th>自动代理</th>
                   <th class="numeric">成交率</th>
                   <th class="numeric">成交后亏损</th>
                   <th class="numeric">平均成交价</th>
@@ -1205,7 +1725,248 @@
       </aside>
     </div>
 
-    <div class="wide-sections">
+    <div class="wide-sections" id="parameter-lab">
+      <section class="disclosure-lab" id="dual-belief-lab" aria-labelledby="dual-belief-heading">
+        <section class="panel panel-dark experiment-hero">
+          <div>
+            <p class="experiment-kicker">Experiment 02 · HYP-004 · implemented for testing</p>
+            <h2 id="dual-belief-heading">双后验与有代价的信息公开</h2>
+            <p class="experiment-lead">
+              同一件漆木首饰盒同时维护玩家后验与NPC后验。私下观察只教育玩家；证据一旦用于质询或共同检测，就成为共享事实，可能换来真诚但会出错的口供，也可能让卖家重新估价。
+            </p>
+            <div class="experiment-rules" aria-label="实验边界">
+              <div class="experiment-rule">
+                <span>信息获取</span>
+                <strong>6点预算决定检查哪里，seed决定具体看到什么</strong>
+              </div>
+              <div class="experiment-rule">
+                <span>信息公开</span>
+                <strong>快速证据链通常会同时降低双方的不确定性</strong>
+              </div>
+              <div class="experiment-rule">
+                <span>风险归属</span>
+                <strong>立即无条件买断可接走急售卖家的波动风险</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="disclosure-controls" aria-label="双后验实验参数">
+            <div class="control-group">
+              <label for="dual-npc-select">单局NPC</label>
+              <select id="dual-npc-select">
+                <option value="novice">外行急售者</option>
+                <option value="collector" selected>重真诚藏家</option>
+                <option value="expert">精明行家</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label for="dual-strategy-select">单局测试代理</label>
+              <select id="dual-strategy-select">
+                <option value="private">A 全部保密</option>
+                <option value="public">B 全部公开</option>
+                <option value="downside">C 只公开利空</option>
+                <option value="information" selected>D 按信息价值披露</option>
+                <option value="buyout">E 立即买断转移风险</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label for="dual-truth-select">单局隐藏品质</label>
+              <select id="dual-truth-select">
+                <option value="random">按先验随机</option>
+                <option value="bad-fake">劣质赝品</option>
+                <option value="fake">普通赝品</option>
+                <option value="restored" selected>重修真品</option>
+                <option value="genuine">普通真品</option>
+                <option value="treasure">珍品</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label for="dual-run-count">批量样本</label>
+              <select id="dual-run-count">
+                <option value="1000">1,000 快速</option>
+                <option value="4000" selected>4,000 标准</option>
+                <option value="10000">10,000 完整</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label for="dual-seed-input">固定seed</label>
+              <input id="dual-seed-input" type="text" value="20260724" spellcheck="false">
+            </div>
+            <div class="control-group">
+              <label for="dual-ap-input">调查行动点</label>
+              <input id="dual-ap-input" type="number" min="3" max="8" step="1" value="6">
+            </div>
+            <div class="disclosure-control-actions">
+              <button class="btn" id="dual-reset-button" type="button">恢复实验二基准</button>
+              <button class="btn btn-primary" id="dual-run-button" type="button">运行双后验实验</button>
+              <span class="disclosure-run-status" id="dual-run-status">尚未运行</span>
+            </div>
+            <div class="error-box" id="dual-error-box" role="alert"></div>
+          </div>
+        </section>
+
+        <section class="dual-metrics" aria-label="双后验核心指标">
+          <article class="metric">
+            <span>单局玩家终局不确定性</span>
+            <strong id="dual-metric-player-entropy">—</strong>
+            <small>0表示完全确定，100表示仍接近先验混沌</small>
+          </article>
+          <article class="metric">
+            <span>单局NPC估值变化</span>
+            <strong id="dual-metric-reprice">—</strong>
+            <small>只由共享事实或正式档位跨越触发</small>
+          </article>
+          <article class="metric">
+            <span>信息价值代理净结果差</span>
+            <strong id="dual-metric-uplift">—</strong>
+            <small>相对“只公开利空”的批量平均差</small>
+          </article>
+          <article class="metric">
+            <span>风险转移成交率</span>
+            <strong id="dual-metric-buyout">—</strong>
+            <small id="dual-metric-buyout-note">应集中在急售、风险规避NPC</small>
+          </article>
+        </section>
+
+        <div class="dual-main-grid">
+          <section class="panel">
+            <div class="panel-title">
+              <div>
+                <h2>单局轨迹：谁在什么时候知道了什么</h2>
+                <p>调试视图会显示隐藏品质；正式玩家界面不会显示NPC私有认知和接受线。</p>
+              </div>
+              <span class="tag gold" id="dual-trace-tag">等待运行</span>
+            </div>
+            <div class="case-summary" id="dual-case-summary"></div>
+            <div class="posterior-board" id="dual-posterior-board" aria-label="双方终局后验"></div>
+            <ol class="trace-list" id="dual-trace-list"></ol>
+          </section>
+
+          <aside class="dual-side-stack">
+            <section class="panel panel-dark">
+              <div class="panel-title">
+                <div>
+                  <h2>结构验证门槛</h2>
+                  <p>绿色表示这组参数通过，黄色表示仍需继续调参。</p>
+                </div>
+                <span class="tag gold" id="dual-validation-summary">0 / 0</span>
+              </div>
+              <ul class="validation-list" id="dual-validation-list"></ul>
+            </section>
+
+            <section class="panel panel-dark">
+              <div class="panel-title">
+                <div>
+                  <h3>本轮读法</h3>
+                  <p>先看策略是否翻转，再看平均收益。</p>
+                </div>
+              </div>
+              <p class="interpretation" id="dual-interpretation">运行后解释公开证据、人物差异和风险转移之间的主要权衡。</p>
+            </section>
+          </aside>
+        </div>
+
+        <section class="panel">
+          <div class="panel-title">
+            <div>
+              <h2>五组信息策略自动代理</h2>
+              <p>五组代理使用相同案件与seed；它们用于寻找支配策略，不代表正式游戏替玩家自动决策。</p>
+            </div>
+            <span class="tag" id="dual-batch-tag">0 局</span>
+          </div>
+          <div class="table-scroll">
+            <table class="dual-table">
+              <thead>
+                <tr>
+                  <th>自动代理</th>
+                  <th class="numeric">成交率</th>
+                  <th class="numeric">成交后亏损</th>
+                  <th class="numeric">平均净结果</th>
+                  <th class="numeric">净结果中位数</th>
+                  <th class="numeric">判断质量</th>
+                  <th class="numeric">终局不确定性</th>
+                  <th class="numeric">平均共享数</th>
+                  <th class="numeric">口供解锁</th>
+                  <th class="numeric">平均重估</th>
+                  <th class="numeric">信任变化</th>
+                </tr>
+              </thead>
+              <tbody id="dual-strategy-table-body"></tbody>
+            </table>
+          </div>
+          <p class="footnote">净结果已经扣除共同检测费用。判断质量只读取玩家当时可见的信息；隐藏品质只用于局末核验。</p>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <div>
+              <h2>人物差异：同一策略在三类NPC中的结果</h2>
+              <p>每格显示平均净结果与成交率。绿色只是该NPC下本批次平均净结果最高，不代表全局最优。</p>
+            </div>
+            <span class="tag" id="dual-matrix-tag">配对seed</span>
+          </div>
+          <div class="table-scroll">
+            <table class="npc-matrix">
+              <thead id="dual-matrix-head"></thead>
+              <tbody id="dual-matrix-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="dual-detail-grid">
+          <section class="panel">
+            <div class="panel-title">
+              <div>
+                <h2>有限证据图</h2>
+                <p>观察结果先进入玩家私有区；共同检测自动共享，主动质询额外消耗1点行动。</p>
+              </div>
+              <span class="tag">8条观察 · 3条口供</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>证据节点</th>
+                    <th>证据族</th>
+                    <th>初始可见性</th>
+                    <th class="numeric">AP</th>
+                    <th class="numeric">费用</th>
+                    <th>公开后可能触发</th>
+                  </tr>
+                </thead>
+                <tbody id="dual-evidence-table-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <div>
+                <h2>双后验与确定性价格</h2>
+                <p>证据改变认知；关系改变谈判档位；两者在调试轨迹中分账。</p>
+              </div>
+              <span class="tag warn">工作公式</span>
+            </div>
+            <pre class="formula-code">玩家后验 ∝ 市场先验 × 玩家私有证据 × 共享证据
+NPC后验  ∝ 市场先验 × NPC私有记忆 × 共享证据^专业解释力
+
+NPC确定性价值
+= max(外部选择,
+      NPC主观分位
+      × (1 − 风险厌恶折价 − 急售折价))
+
+普通接受线 = NPC确定性价值 × 谈判档位
+立即买断线 = max(外部选择,
+                  普通接受线 × 确定成交折价)
+
+关键共享证据使NPC后验中位数变化≥8%
+或最可能品质跨档时，才允许正式重新估价。</pre>
+          </section>
+        </div>
+      </section>
+
+      <div class="experiment-divider"><span>实验一 · 旧定价基准参数与公式</span></div>
+
       <section class="panel">
         <div class="panel-title">
           <div>
@@ -1353,10 +2114,10 @@ NPC还价让步率以人物“让步基准”为核心，再受信任、压力�
     };
 
     const STRATEGIES = {
-      opening: "接受NPC开价",
-      safeOnce: "Q线一次报价",
-      safeBargain: "Q线上限内阶梯议价",
-      medianRisk: "Q50风险报价",
+      opening: "基准A：直接接受开价",
+      safeOnce: "对照B：Q线一次报价",
+      safeBargain: "对照C：保守上限内逐步报价",
+      medianRisk: "压力测试D：Q50风险报价",
     };
 
     const BRANCH_LABELS = {
@@ -2409,6 +3170,1358 @@ NPC还价让步率以人物“让步基准”为核心，再受信任、压力�
       };
     }
 
+    const DISCLOSURE_TIERS = [
+      { key: "bad-fake", label: "劣质赝品", prior: 0.08, value: 8 },
+      { key: "fake", label: "普通赝品", prior: 0.17, value: 25 },
+      { key: "restored", label: "重修真品", prior: 0.34, value: 70 },
+      { key: "genuine", label: "普通真品", prior: 0.35, value: 150 },
+      { key: "treasure", label: "珍品", prior: 0.06, value: 500 },
+    ];
+
+    const DISCLOSURE_EVIDENCE = [
+      {
+        id: "E1",
+        label: "现代透明胶痕",
+        family: "修复",
+        apCost: 1,
+        fee: 0,
+        yieldRate: 0.95,
+        visibility: "optional",
+        noticed: true,
+        probabilities: [0.35, 0.45, 0.80, 0.30, 0.20],
+        surfaceProbabilities: [0.52, 0.63, 0.72, 0.34, 0.24],
+        presentText: "接口检出较新的透明胶层；它能证明后期干预，但不能单独证明胎体为新。",
+        absentText: "接口没有检出明显现代透明胶，修复路径暂时缺少直接支点。",
+        triggers: ["T1"],
+      },
+      {
+        id: "E2",
+        label: "接口下方老胎",
+        family: "物理",
+        apCost: 1,
+        fee: 0,
+        yieldRate: 0.65,
+        visibility: "private",
+        noticed: false,
+        probabilities: [0.08, 0.18, 0.75, 0.88, 0.94],
+        presentText: "接口下方露出连续旧胎与旧漆层，支持器物主体早于本次修补。",
+        absentText: "接口下方没有形成可确认的老胎层，主体年代仍然含混。",
+        triggers: [],
+      },
+      {
+        id: "E3",
+        label: "晚期工具痕",
+        family: "物理",
+        apCost: 1,
+        fee: 0,
+        yieldRate: 0.85,
+        visibility: "private",
+        noticed: false,
+        probabilities: [0.82, 0.68, 0.18, 0.08, 0.04],
+        presentText: "关键位置留下明显晚期机械工具痕，整体制作年代受到质疑。",
+        absentText: "没有发现明显晚期机械工具痕，但这并不能单独证明年代。",
+        triggers: [],
+      },
+      {
+        id: "E4",
+        label: "连续自然磨损",
+        family: "物理",
+        apCost: 1,
+        fee: 0,
+        yieldRate: 0.75,
+        visibility: "private",
+        noticed: false,
+        probabilities: [0.10, 0.22, 0.65, 0.84, 0.90],
+        presentText: "边角磨损、氧化和积尘层次连续，较难由一次做旧完整复制。",
+        absentText: "磨损与氧化层次没有形成稳定连续性，仍需其他证据补足。",
+        triggers: [],
+      },
+      {
+        id: "E5",
+        label: "材质光谱共同检测",
+        family: "物理",
+        apCost: 2,
+        fee: 10,
+        yieldRate: 1,
+        visibility: "joint",
+        noticed: true,
+        probabilities: [0.12, 0.25, 0.62, 0.82, 0.91],
+        presentText: "共同检测显示主要材料谱线与目标年代相容，结果自动成为共享信息。",
+        absentText: "共同检测没有形成与目标年代相容的材料谱线，结果自动成为共享信息。",
+        triggers: [],
+      },
+      {
+        id: "E6",
+        label: "修复边界包裹旧漆",
+        family: "修复",
+        apCost: 1,
+        fee: 0,
+        yieldRate: 0.55,
+        visibility: "optional",
+        noticed: true,
+        probabilities: [0.05, 0.12, 0.72, 0.38, 0.25],
+        surfaceProbabilities: [0.10, 0.22, 0.55, 0.42, 0.34],
+        presentText: "修复边界包裹在更早的旧漆层之外，更接近老胎后修而非整体新作。",
+        absentText: "修复边界与旧漆层关系不清，修复年代无法单独落锤。",
+        triggers: ["T1"],
+      },
+      {
+        id: "E7",
+        label: "旧账与款识对应",
+        family: "来源",
+        apCost: 1,
+        fee: 0,
+        yieldRate: 0.45,
+        visibility: "optional",
+        noticed: true,
+        probabilities: [0.03, 0.07, 0.22, 0.58, 0.78],
+        surfaceProbabilities: [0.08, 0.13, 0.30, 0.50, 0.65],
+        presentText: "款识、旧账描述与器物细节能够对应，来源链出现可追问支点。",
+        absentText: "旧账与款识暂时无法对应，来源链没有形成有效闭合。",
+        triggers: ["T2"],
+      },
+      {
+        id: "E8",
+        label: "来源年代矛盾",
+        family: "来源",
+        apCost: 1,
+        fee: 0,
+        yieldRate: 0.65,
+        visibility: "private",
+        noticed: true,
+        probabilities: [0.68, 0.55, 0.20, 0.08, 0.05],
+        presentText: "现有来源叙述与器物细节年代发生矛盾，需要追问取得经历。",
+        absentText: "来源叙述暂未出现明显年代矛盾，但仍缺少完整出处。",
+        triggers: ["T3"],
+      },
+    ];
+
+    const DISCLOSURE_TESTIMONIES = [
+      {
+        id: "T1",
+        label: "修复记忆",
+        family: "修复",
+        triggers: ["E1", "E6"],
+        probabilities: [0.10, 0.20, 0.80, 0.35, 0.20],
+        presentText: "“我记得十年前确实找人修过一次。”",
+        absentText: "“我记得家里没专门大修过，但时间久了也不敢说死。”",
+      },
+      {
+        id: "T2",
+        label: "家族旧账记忆",
+        family: "来源",
+        triggers: ["E7"],
+        probabilities: [0.05, 0.12, 0.35, 0.70, 0.82],
+        presentText: "“家里保存很多年了，旧账应该还在，只是我没带来。”",
+        absentText: "“家里没有留下能核对的旧账，我只知道它放了很多年。”",
+      },
+      {
+        id: "T3",
+        label: "近期取得记忆",
+        family: "来源",
+        triggers: ["E8"],
+        probabilities: [0.70, 0.60, 0.25, 0.12, 0.08],
+        presentText: "“这件东西是近几年从市场收来的，前手情况我确实不清楚。”",
+        absentText: "“它不是近几年从市场收来的，我记得一直就在家里。”",
+      },
+    ];
+
+    const DISCLOSURE_NPCS = {
+      novice: {
+        label: "外行急售者",
+        expertise: { 修复: 0.30, 物理: 0.25, 来源: 0.30 },
+        memoryReliability: 0.62,
+        honestySensitivity: 0.30,
+        openness: 0.88,
+        riskAversion: 0.88,
+        urgency: 0.88,
+        markup: 0.10,
+        anchorSigma: 0.28,
+        noQuoteChance: 0.34,
+        noQuoteEntropy: 0.72,
+        initial: { trust: 58, pressure: 20, intent: 80, control: 38 },
+      },
+      collector: {
+        label: "重真诚藏家",
+        expertise: { 修复: 0.62, 物理: 0.58, 来源: 0.66 },
+        memoryReliability: 0.80,
+        honestySensitivity: 0.96,
+        openness: 0.72,
+        riskAversion: 0.56,
+        urgency: 0.42,
+        markup: 0.18,
+        anchorSigma: 0.18,
+        noQuoteChance: 0.11,
+        noQuoteEntropy: 0.82,
+        initial: { trust: 55, pressure: 25, intent: 62, control: 58 },
+      },
+      expert: {
+        label: "精明行家",
+        expertise: { 修复: 0.92, 物理: 0.95, 来源: 0.86 },
+        memoryReliability: 0.90,
+        honestySensitivity: 0.72,
+        openness: 0.58,
+        riskAversion: 0.24,
+        urgency: 0.18,
+        markup: 0.28,
+        anchorSigma: 0.09,
+        noQuoteChance: 0.02,
+        noQuoteEntropy: 0.92,
+        initial: { trust: 45, pressure: 18, intent: 50, control: 80 },
+      },
+    };
+
+    const DISCLOSURE_STRATEGIES = {
+      private: "A 全部保密",
+      public: "B 全部公开",
+      downside: "C 只公开利空",
+      information: "D 按信息价值披露",
+      buyout: "E 立即买断转移风险",
+    };
+
+    const DUAL_STANCE_LABELS = {
+      cooperative: "合作",
+      neutral: "中性",
+      guarded: "戒备",
+      resistant: "抵触",
+    };
+
+    const DUAL_STANCE_MULTIPLIERS = {
+      cooperative: 0.94,
+      neutral: 1,
+      guarded: 1.08,
+      resistant: 1.20,
+    };
+
+    const DUAL_TICK = 5;
+
+    function makeDefaultDisclosureConfig() {
+      return {
+        npc: "collector",
+        strategy: "information",
+        truth: "restored",
+        runs: 4000,
+        seed: "20260724",
+        actionPoints: 6,
+      };
+    }
+
+    function dualPrior() {
+      return normalize(DISCLOSURE_TIERS.map((tier) => tier.prior));
+    }
+
+    function dualEntropy(weights) {
+      const raw = weights.reduce(
+        (sum, weight) => sum - (weight > 0 ? weight * Math.log(weight) : 0),
+        0,
+      );
+      return raw / Math.log(weights.length);
+    }
+
+    function dualTopIndex(weights) {
+      let selected = 0;
+      for (let index = 1; index < weights.length; index += 1) {
+        if (weights[index] > weights[selected]) selected = index;
+      }
+      return selected;
+    }
+
+    function dualQuantile(weights, q) {
+      let cumulative = 0;
+      for (let index = 0; index < weights.length; index += 1) {
+        cumulative += weights[index];
+        if (cumulative >= q) return DISCLOSURE_TIERS[index].value;
+      }
+      return DISCLOSURE_TIERS.at(-1).value;
+    }
+
+    function dualMeanValue(weights) {
+      return weights.reduce(
+        (sum, weight, index) => sum + weight * DISCLOSURE_TIERS[index].value,
+        0,
+      );
+    }
+
+    function dualRoundPrice(value, mode = "nearest") {
+      const scaled = Math.max(DUAL_TICK, value) / DUAL_TICK;
+      const rounded = mode === "floor" ? Math.floor(scaled) : mode === "ceil" ? Math.ceil(scaled) : Math.round(scaled);
+      return Math.max(DUAL_TICK, rounded * DUAL_TICK);
+    }
+
+    function dualEvidenceById(id) {
+      return DISCLOSURE_EVIDENCE.find((item) => item.id === id);
+    }
+
+    function dualTestimonyById(id) {
+      return DISCLOSURE_TESTIMONIES.find((item) => item.id === id);
+    }
+
+    function dualBlendProbabilities(source, profile) {
+      if (!source.surfaceProbabilities) return source.probabilities;
+      const expertise = profile.expertise[source.family] ?? 0.5;
+      return source.probabilities.map((value, index) =>
+        lerp(source.surfaceProbabilities[index], value, expertise));
+    }
+
+    function dualRecomputePosterior(ledger, party, profile) {
+      let weights = dualPrior();
+      const familyCounts = {};
+      for (const source of ledger) {
+        const count = familyCounts[source.family] || 0;
+        const familyPower = 0.65 ** count;
+        familyCounts[source.family] = count + 1;
+        const probabilities =
+          party === "npc" && source.kind === "evidence"
+            ? dualBlendProbabilities(source, profile)
+            : source.probabilities;
+        const interpretation =
+          source.kind === "testimony"
+            ? source.strength
+            : party === "npc"
+              ? (profile.expertise[source.family] ?? 0.5)
+              : 1;
+        weights = normalize(weights.map((weight, index) => {
+          const rawLikelihood = source.present
+            ? probabilities[index]
+            : 1 - probabilities[index];
+          const likelihood = clamp(rawLikelihood, 0.005, 0.995);
+          return weight * (likelihood ** (familyPower * interpretation));
+        }));
+      }
+      return weights;
+    }
+
+    function dualExpectedInformationGain(posterior, source, strength = 1) {
+      const before = dualEntropy(posterior);
+      const presentProbability = posterior.reduce(
+        (sum, weight, index) => sum + weight * source.probabilities[index],
+        0,
+      );
+      const presentPosterior = normalize(posterior.map(
+        (weight, index) => weight * (clamp(source.probabilities[index], 0.005, 0.995) ** strength),
+      ));
+      const absentPosterior = normalize(posterior.map(
+        (weight, index) => weight * (clamp(1 - source.probabilities[index], 0.005, 0.995) ** strength),
+      ));
+      const expectedAfter =
+        presentProbability * dualEntropy(presentPosterior)
+        + (1 - presentProbability) * dualEntropy(absentPosterior);
+      return Math.max(0, before - expectedAfter);
+    }
+
+    function dualStateClone(state) {
+      return {
+        trust: state.trust,
+        pressure: state.pressure,
+        intent: state.intent,
+        control: state.control,
+      };
+    }
+
+    function dualStance(state) {
+      if (
+        state.trust < 30
+        || state.intent < 25
+        || state.pressure > 80
+        || (state.control < 35 && state.trust < 50)
+      ) {
+        return "resistant";
+      }
+      const controlSynergy =
+        state.trust >= 60
+          ? 0.10 * (50 - state.control)
+          : -0.10 * Math.max(0, 50 - state.control);
+      const score =
+        0.40 * state.trust
+        + 0.35 * state.intent
+        + 0.15 * (100 - state.pressure)
+        + controlSynergy;
+      if (score >= 68) return "cooperative";
+      if (score >= 52) return "neutral";
+      if (score >= 38) return "guarded";
+      return "resistant";
+    }
+
+    function dualPricingCore(world) {
+      const posterior = world.npcPosterior;
+      const profile = world.profile;
+      const stance = dualStance(world.state);
+      const q10 = dualQuantile(posterior, 0.10);
+      const q25 = dualQuantile(posterior, 0.25);
+      const q50 = dualQuantile(posterior, 0.50);
+      const q60 = dualQuantile(posterior, 0.60);
+      const q75 = dualQuantile(posterior, 0.75);
+      const spread = Math.max(0, (q75 - q25) / 2);
+      const outside = Math.max(DUAL_TICK, 0.80 * q10);
+      const certainty = Math.max(
+        outside,
+        q50 - profile.riskAversion * spread - 0.10 * profile.urgency * q50,
+      );
+      const acceptLine = Math.max(
+        outside,
+        certainty * DUAL_STANCE_MULTIPLIERS[stance],
+      );
+      const buyoutLine = Math.max(
+        outside,
+        acceptLine - 0.08 * profile.riskAversion * profile.urgency * (q75 - q25),
+      );
+      const targetAsk = Math.max(
+        acceptLine + DUAL_TICK,
+        q60 * (1 + profile.markup) * world.caseData.anchor,
+      );
+      return {
+        stance,
+        q10,
+        q25,
+        q50,
+        q60,
+        q75,
+        outside: dualRoundPrice(outside, "ceil"),
+        certainty: dualRoundPrice(certainty, "ceil"),
+        acceptLine: dualRoundPrice(acceptLine, "ceil"),
+        buyoutLine: dualRoundPrice(buyoutLine, "ceil"),
+        targetAsk: dualRoundPrice(targetAsk, "ceil"),
+      };
+    }
+
+    function dualSnapshot(world) {
+      const pricing = world.pricing || dualPricingCore(world);
+      return {
+        ap: world.ap,
+        fee: world.fee,
+        playerPosterior: [...world.playerPosterior],
+        npcPosterior: [...world.npcPosterior],
+        playerEntropy: dualEntropy(world.playerPosterior),
+        npcEntropy: dualEntropy(world.npcPosterior),
+        playerTop: dualTopIndex(world.playerPosterior),
+        npcTop: dualTopIndex(world.npcPosterior),
+        playerQ20: dualQuantile(world.playerPosterior, 0.20),
+        playerQ50: dualQuantile(world.playerPosterior, 0.50),
+        npcQ50: dualQuantile(world.npcPosterior, 0.50),
+        currentAsk: world.currentAsk,
+        acceptanceLine: pricing.acceptLine,
+        buyoutLine: pricing.buyoutLine,
+        stance: pricing.stance,
+        state: dualStateClone(world.state),
+        sharedCount: world.sharedEvidence.size + world.sharedStatements.size,
+      };
+    }
+
+    function dualTrace(world, entry) {
+      world.trace.push({
+        ...entry,
+        snapshot: dualSnapshot(world),
+      });
+    }
+
+    function dualCreateCase(config, runIndex, truthOverride = null) {
+      const profile = DISCLOSURE_NPCS[config.npc];
+      const prior = dualPrior();
+      const forcedIndex =
+        truthOverride && truthOverride !== "random"
+          ? DISCLOSURE_TIERS.findIndex((tier) => tier.key === truthOverride)
+          : -1;
+      const truthIndex =
+        forcedIndex >= 0
+          ? forcedIndex
+          : sampleCategorical(prior, rngFor(config.seed, runIndex, "dual:truth"));
+      const valueNoise = Math.exp(0.12 * normalSample(rngFor(config.seed, runIndex, "dual:value")));
+      const trueValue = dualRoundPrice(DISCLOSURE_TIERS[truthIndex].value * valueNoise);
+      const evidenceOutcomes = Object.fromEntries(DISCLOSURE_EVIDENCE.map((node) => {
+        const yielded =
+          rngFor(config.seed, runIndex, `dual:yield:${node.id}`)() <= node.yieldRate;
+        const present =
+          rngFor(config.seed, runIndex, `dual:result:${node.id}`)()
+          <= node.probabilities[truthIndex];
+        return [node.id, { yielded, present }];
+      }));
+      const testimonyOutcomes = Object.fromEntries(DISCLOSURE_TESTIMONIES.map((testimony) => {
+        const present =
+          rngFor(config.seed, runIndex, `dual:testimony:${testimony.id}`)()
+          <= testimony.probabilities[truthIndex];
+        const revealRoll = rngFor(config.seed, runIndex, `dual:reveal:${testimony.id}`)();
+        return [testimony.id, { present, revealRoll }];
+      }));
+      const anchor = Math.exp(
+        profile.anchorSigma * normalSample(rngFor(config.seed, runIndex, `dual:anchor:${config.npc}`)),
+      );
+      const noQuoteRoll = rngFor(config.seed, runIndex, `dual:noquote:${config.npc}`)();
+      return {
+        runIndex,
+        truthIndex,
+        trueValue,
+        evidenceOutcomes,
+        testimonyOutcomes,
+        anchor,
+        noQuoteRoll,
+      };
+    }
+
+    function dualCreateWorld(caseData, config) {
+      const profile = DISCLOSURE_NPCS[config.npc];
+      const npcLedger = DISCLOSURE_TESTIMONIES.map((testimony) => ({
+        id: testimony.id,
+        kind: "testimony",
+        family: testimony.family,
+        probabilities: testimony.probabilities,
+        present: caseData.testimonyOutcomes[testimony.id].present,
+        strength: profile.memoryReliability,
+      }));
+      const npcPosterior = dualRecomputePosterior(npcLedger, "npc", profile);
+      const world = {
+        caseData,
+        config,
+        profile,
+        ap: config.actionPoints,
+        fee: 0,
+        playerLedger: [],
+        npcLedger,
+        playerKnown: new Set(),
+        npcKnown: new Set(npcLedger.map((source) => source.id)),
+        observed: new Map(),
+        sharedEvidence: new Set(),
+        sharedStatements: new Set(),
+        attemptedTestimonies: new Set(),
+        noticedInspections: new Set(),
+        playerPosterior: dualPrior(),
+        npcPosterior,
+        state: dualStateClone(profile.initial),
+        pricing: null,
+        currentAsk: null,
+        initialAsk: null,
+        initialNpcQ50: dualQuantile(npcPosterior, 0.50),
+        repriceEvents: [],
+        trace: [],
+        terminal: null,
+      };
+      world.pricing = dualPricingCore(world);
+      const noQuote =
+        dualEntropy(world.npcPosterior) >= profile.noQuoteEntropy
+        && caseData.noQuoteRoll < profile.noQuoteChance;
+      world.currentAsk = noQuote ? null : world.pricing.targetAsk;
+      world.initialAsk = world.currentAsk;
+      dualTrace(world, {
+        type: "initial",
+        label: "双方从不同信息出发",
+        detail:
+          `玩家只有市场先验；${profile.label}已经按三条私人记忆形成自己的后验。`
+          + (noQuote ? "NPC当前认知区间过宽，因此没有先开价。" : `NPC初始开价为${world.currentAsk}。`),
+        visibility: "信息边界",
+      });
+      return world;
+    }
+
+    function dualAddPlayerSource(world, source) {
+      if (world.playerKnown.has(source.id)) return false;
+      world.playerKnown.add(source.id);
+      world.playerLedger.push(source);
+      world.playerPosterior = dualRecomputePosterior(world.playerLedger, "player", world.profile);
+      return true;
+    }
+
+    function dualAddNpcSource(world, source) {
+      if (world.npcKnown.has(source.id)) return false;
+      world.npcKnown.add(source.id);
+      world.npcLedger.push(source);
+      world.npcPosterior = dualRecomputePosterior(world.npcLedger, "npc", world.profile);
+      return true;
+    }
+
+    function dualSourceFromEvidence(world, node) {
+      const outcome = world.caseData.evidenceOutcomes[node.id];
+      return {
+        id: node.id,
+        kind: "evidence",
+        family: node.family,
+        probabilities: node.probabilities,
+        surfaceProbabilities: node.surfaceProbabilities,
+        present: outcome.present,
+        strength: 1,
+      };
+    }
+
+    function dualSourceFromTestimony(world, testimony) {
+      return {
+        id: testimony.id,
+        kind: "testimony",
+        family: testimony.family,
+        probabilities: testimony.probabilities,
+        present: world.caseData.testimonyOutcomes[testimony.id].present,
+        strength: world.profile.memoryReliability,
+      };
+    }
+
+    function dualRefreshPricing(world, context) {
+      const before = world.pricing;
+      const beforeAsk = world.currentAsk;
+      const after = dualPricingCore(world);
+      const reasons = [];
+      if (before) {
+        const qChange = Math.abs(Math.log(Math.max(1, after.q50) / Math.max(1, before.q50)));
+        if (qChange >= 0.08) reasons.push(`NPC后验中位数${after.q50 >= before.q50 ? "上升" : "下降"}`);
+        if (dualTopIndex(world.npcPosterior) !== context.npcTopBefore) reasons.push("最可能品质跨档");
+        if (after.stance !== before.stance) {
+          reasons.push(`谈判档位${DUAL_STANCE_LABELS[before.stance]}→${DUAL_STANCE_LABELS[after.stance]}`);
+        }
+      }
+      if (context.keyEvidence) reasons.push("关键共享信息");
+      const shouldReprice =
+        reasons.length > 0
+        && world.repriceEvents.length < 2;
+      if (shouldReprice) {
+        const nextAsk =
+          beforeAsk == null
+            ? after.targetAsk
+            : dualRoundPrice(0.25 * beforeAsk + 0.75 * after.targetAsk, "ceil");
+        world.currentAsk = nextAsk;
+        if (beforeAsk !== nextAsk) {
+          world.repriceEvents.push({
+            before: beforeAsk,
+            after: nextAsk,
+            reasons: [...reasons],
+          });
+        }
+      }
+      world.pricing = after;
+      return {
+        beforeAsk,
+        afterAsk: world.currentAsk,
+        reasons,
+        repriced: beforeAsk !== world.currentAsk,
+      };
+    }
+
+    function dualInspect(world, nodeId) {
+      const node = dualEvidenceById(nodeId);
+      if (!node || world.observed.has(nodeId) || world.ap < node.apCost) return null;
+      const beforePlayerQ50 = dualQuantile(world.playerPosterior, 0.50);
+      const beforeEntropy = dualEntropy(world.playerPosterior);
+      const outcome = world.caseData.evidenceOutcomes[nodeId];
+      world.ap -= node.apCost;
+      world.fee += node.fee;
+      world.observed.set(nodeId, outcome);
+      if (node.noticed) world.noticedInspections.add(nodeId);
+      if (outcome.yielded) {
+        dualAddPlayerSource(world, dualSourceFromEvidence(world, node));
+      }
+      const resultText =
+        !outcome.yielded
+          ? "本次检查没有形成可计权结果，行动点仍然消耗。"
+          : outcome.present
+            ? node.presentText
+            : node.absentText;
+      dualTrace(world, {
+        type: node.visibility === "joint" ? "share" : "inspect",
+        label: `检查：${node.label}`,
+        detail: resultText,
+        visibility:
+          node.visibility === "joint"
+            ? "共同检测"
+            : outcome.yielded
+              ? "玩家私有"
+              : "无有效证据",
+      });
+      if (node.visibility === "joint" && outcome.yielded) {
+        dualShare(world, nodeId, "neutral", true);
+      }
+      return {
+        yielded: outcome.yielded,
+        present: outcome.present,
+        q50Before: beforePlayerQ50,
+        q50After: dualQuantile(world.playerPosterior, 0.50),
+        entropyGain: beforeEntropy - dualEntropy(world.playerPosterior),
+      };
+    }
+
+    function dualTestimonyRevealChance(world) {
+      return clamp(
+        0.18
+          + 0.52 * world.profile.openness
+          + 0.003 * world.state.trust
+          - 0.002 * world.state.pressure,
+        0.20,
+        0.94,
+      );
+    }
+
+    function dualRevealTriggeredTestimonies(world, evidenceId) {
+      const revealed = [];
+      for (const testimony of DISCLOSURE_TESTIMONIES) {
+        if (
+          !testimony.triggers.includes(evidenceId)
+          || world.attemptedTestimonies.has(testimony.id)
+        ) {
+          continue;
+        }
+        world.attemptedTestimonies.add(testimony.id);
+        const outcome = world.caseData.testimonyOutcomes[testimony.id];
+        if (outcome.revealRoll > dualTestimonyRevealChance(world)) {
+          dualTrace(world, {
+            type: "share",
+            label: `口供未形成：${testimony.label}`,
+            detail: "NPC没有编造答案，只表示记不清或暂时不愿继续说明。",
+            visibility: "拒答 / 不确定",
+          });
+          continue;
+        }
+        const source = dualSourceFromTestimony(world, testimony);
+        dualAddPlayerSource(world, source);
+        world.sharedStatements.add(testimony.id);
+        world.state.trust = clamp(
+          world.state.trust + Math.max(1, Math.round(2 * world.profile.honestySensitivity)),
+          0,
+          100,
+        );
+        const text = outcome.present ? testimony.presentText : testimony.absentText;
+        dualTrace(world, {
+          type: "share",
+          label: `NPC口供：${testimony.label}`,
+          detail: `${text} 这是真诚记忆，可能与客观真相不一致；NPC不会因此重复更新自己的后验。`,
+          visibility: "共享口供",
+        });
+        revealed.push(testimony.id);
+      }
+      return revealed;
+    }
+
+    function dualShare(world, nodeId, framing = "neutral", automatic = false) {
+      const node = dualEvidenceById(nodeId);
+      const outcome = world.observed.get(nodeId);
+      if (
+        !node
+        || !outcome
+        || !outcome.yielded
+        || world.sharedEvidence.has(nodeId)
+        || (!automatic && world.ap < 1)
+      ) {
+        return null;
+      }
+      if (!automatic) world.ap -= 1;
+      const npcTopBefore = dualTopIndex(world.npcPosterior);
+      const npcQ50Before = dualQuantile(world.npcPosterior, 0.50);
+      const stanceBefore = dualStance(world.state);
+      const stateBefore = dualStateClone(world.state);
+      dualAddNpcSource(world, dualSourceFromEvidence(world, node));
+      world.sharedEvidence.add(nodeId);
+      const npcQ50AfterEvidence = dualQuantile(world.npcPosterior, 0.50);
+      const visibleWithheld = [...world.noticedInspections].filter(
+        (id) => id !== nodeId && !world.sharedEvidence.has(id),
+      ).length;
+      const priceRatio = npcQ50AfterEvidence / Math.max(1, npcQ50Before);
+      const framingGap =
+        framing === "downside"
+          ? clamp(Math.max(0, Math.log(priceRatio)) * 1.8 + visibleWithheld * 0.16, 0, 1)
+          : 0;
+      const expertise = world.profile.expertise[node.family] ?? 0.5;
+      const honestyPenalty = Math.round(
+        12 * world.profile.honestySensitivity * expertise * framingGap,
+      );
+      const trustBase =
+        framing === "neutral"
+          ? Math.max(1, Math.round(4 * world.profile.honestySensitivity))
+          : 1;
+      const intentDelta = clamp(
+        Math.round(-20 * Math.log(Math.max(0.2, priceRatio))),
+        -10,
+        10,
+      );
+      world.state.trust = clamp(world.state.trust + trustBase - honestyPenalty, 0, 100);
+      world.state.intent = clamp(world.state.intent + intentDelta - Math.round(honestyPenalty * 0.45), 0, 100);
+      world.state.pressure = clamp(world.state.pressure + 1 + Math.round(honestyPenalty * 0.35), 0, 100);
+      world.state.control = clamp(
+        world.state.control - Math.max(1, Math.round(5 * Math.abs(Math.log(Math.max(0.2, priceRatio))))),
+        0,
+        100,
+      );
+      const revealed = dualRevealTriggeredTestimonies(world, nodeId);
+      const priceChange = dualRefreshPricing(world, {
+        npcTopBefore,
+        stanceBefore,
+        keyEvidence: node.visibility === "joint" || revealed.length > 0,
+      });
+      const framingCopy =
+        framing === "downside"
+          ? honestyPenalty > 0
+            ? `玩家强调利空；NPC从可见的片面解释中识别到不完整性，信任-${honestyPenalty - trustBase}.`
+            : "玩家强调利空；当前NPC没有从可见信息中识别到明显片面。"
+          : "玩家完整公开事实，并以中性方式追问。";
+      const priceCopy =
+        priceChange.repriced
+          ? `NPC开价${priceChange.beforeAsk == null ? "从无报价" : `从${priceChange.beforeAsk}`}调整为${priceChange.afterAsk}，原因：${priceChange.reasons.join("、")}。`
+          : "本次没有达到正式重估阈值；接受线按当前谈判档位更新。";
+      dualTrace(world, {
+        type: "share",
+        label: `${automatic ? "自动共享" : "公开质询"}：${node.label}`,
+        detail:
+          `${framingCopy} NPC主观中位价值${npcQ50Before}→${dualQuantile(world.npcPosterior, 0.50)}。${priceCopy}`,
+        visibility: automatic ? "共同检测" : "共享证据",
+        stateBefore,
+      });
+      return {
+        npcQ50Before,
+        npcQ50After: dualQuantile(world.npcPosterior, 0.50),
+        honestyPenalty,
+        revealed,
+        priceChange,
+      };
+    }
+
+    function dualPlayerCap(world, riskTransfer = false) {
+      const q = dualQuantile(world.playerPosterior, riskTransfer ? 0.35 : 0.20);
+      const q50 = dualQuantile(world.playerPosterior, 0.50);
+      const margin = Math.max(5, (riskTransfer ? 0.05 : 0.08) * q50);
+      return Math.max(0, dualRoundPrice(q - world.fee - margin, "floor"));
+    }
+
+    function dualRigorousEnough(posterior) {
+      const fakeProbability = posterior[0] + posterior[1];
+      const maxProbability = Math.max(...posterior);
+      const q25 = dualQuantile(posterior, 0.25);
+      const q50 = dualQuantile(posterior, 0.50);
+      const q75 = dualQuantile(posterior, 0.75);
+      return (
+        fakeProbability < 0.10
+        || maxProbability >= 0.75
+        || (q75 - q25) / Math.max(1, q50) <= 0.45
+      );
+    }
+
+    function dualSettle(world, riskTransfer = false) {
+      world.pricing = dualPricingCore(world);
+      const cap = dualPlayerCap(world, riskTransfer);
+      const opening = world.currentAsk;
+      let deal = false;
+      let paidPrice = 0;
+      let offer = null;
+      let reason = "";
+      let actor = "player";
+      let riskTransferEligible = true;
+      if (riskTransfer) {
+        const authenticProbability = world.playerPosterior
+          .slice(2)
+          .reduce((sum, value) => sum + value, 0);
+        const uncertainty = dualEntropy(world.playerPosterior);
+        riskTransferEligible =
+          authenticProbability >= 0.52
+          && uncertainty >= 0.30
+          && uncertainty <= 0.88;
+        if (!riskTransferEligible) {
+          reason = "玩家的私有后验尚不支持承担这笔波动风险，选择离开";
+        }
+      }
+      if (!riskTransfer && opening != null && opening <= cap) {
+        deal = true;
+        paidPrice = opening;
+        reason = "当前开价没有超过玩家保守上限，零行动点接受";
+      } else if (riskTransferEligible && world.ap >= 1 && cap > 0) {
+        world.ap -= 1;
+        offer = riskTransfer
+          ? dualRoundPrice(cap, "floor")
+          : dualRoundPrice(
+              Math.min(cap, opening == null ? cap * 0.88 : opening * 0.80),
+              "floor",
+            );
+        const line = riskTransfer ? world.pricing.buyoutLine : world.pricing.acceptLine;
+        if (offer >= line) {
+          deal = true;
+          paidPrice = offer;
+          reason = riskTransfer
+            ? "立即付款、无后续检测、无反悔条件；NPC接受确定成交"
+            : "正式报价达到当前接受线";
+          actor = "npc";
+        } else if (
+          !riskTransfer
+          && cap >= line
+          && offer >= world.pricing.outside * 0.80
+          && world.pricing.stance !== "resistant"
+        ) {
+          deal = true;
+          paidPrice = line;
+          reason = "NPC提出不高于玩家上限的还价，玩家零行动点接受";
+          actor = "player";
+        } else {
+          reason = riskTransfer
+            ? "立即买断报价低于NPC的确定成交线，被拒后直接离开"
+            : "报价没有进入可接受区间，玩家选择离开";
+          actor = "npc";
+        }
+      } else if (!reason) {
+        reason =
+          world.ap < 1
+            ? "行动点不足以提出新报价，只能零行动点离开"
+            : "玩家保守上限为0，选择离开";
+      }
+      const net = (deal ? world.caseData.trueValue - paidPrice : 0) - world.fee;
+      const playerEntropy = dualEntropy(world.playerPosterior);
+      const terminal = {
+        reached: true,
+        outcome: deal ? "deal" : "noDeal",
+        actor,
+        reason,
+        deal,
+        paidPrice,
+        offer,
+        cap,
+        riskTransfer,
+        riskTransferEligible,
+        net,
+      };
+      world.terminal = terminal;
+      dualTrace(world, {
+        type: "terminal",
+        label: deal ? (riskTransfer ? "立即买断成交" : "完成交易") : "结束本局",
+        detail:
+          `${reason}。玩家上限${cap}，${riskTransfer ? "买断线" : "普通接受线"}`
+          + `${riskTransfer ? world.pricing.buyoutLine : world.pricing.acceptLine}。`,
+        visibility: deal ? `成交价 ${paidPrice}` : "未成交",
+      });
+      const uniquePlayerSources = new Set(world.playerLedger.map((source) => source.id));
+      const uniqueNpcSources = new Set(world.npcLedger.map((source) => source.id));
+      return {
+        strategy: world.config.strategy,
+        profileKey: world.config.npc,
+        deal,
+        paidPrice,
+        net,
+        fee: world.fee,
+        offer,
+        cap,
+        terminal,
+        playerPosterior: [...world.playerPosterior],
+        npcPosterior: [...world.npcPosterior],
+        playerEntropy,
+        npcEntropy: dualEntropy(world.npcPosterior),
+        judgmentQuality: (1 - playerEntropy) * 100,
+        rigorous: dualRigorousEnough(world.playerPosterior),
+        sharedCount: world.sharedEvidence.size + world.sharedStatements.size,
+        testimonyCount: world.sharedStatements.size,
+        privateEvidenceCount: [...world.observed.keys()].filter(
+          (id) => !world.sharedEvidence.has(id),
+        ).length,
+        repriceCount: world.repriceEvents.length,
+        repriceEvents: world.repriceEvents.map((event) => ({ ...event })),
+        trustDelta: world.state.trust - world.profile.initial.trust,
+        intentDelta: world.state.intent - world.profile.initial.intent,
+        finalState: dualStateClone(world.state),
+        initialAsk: world.initialAsk,
+        finalAsk: world.currentAsk,
+        initialNpcQ50: world.initialNpcQ50,
+        finalNpcQ50: dualQuantile(world.npcPosterior, 0.50),
+        noQuote: world.initialAsk == null,
+        riskTransferDeal: deal && riskTransfer,
+        trace: world.trace,
+        terminalReached: terminal.reached,
+        duplicatePlayerSources: world.playerLedger.length - uniquePlayerSources.size,
+        duplicateNpcSources: world.npcLedger.length - uniqueNpcSources.size,
+        apRemaining: world.ap,
+      };
+    }
+
+    function dualAvailableEvidence(world, includeJoint = true) {
+      return DISCLOSURE_EVIDENCE.filter(
+        (node) =>
+          !world.observed.has(node.id)
+          && (includeJoint || node.visibility !== "joint")
+          && node.apCost <= Math.max(0, world.ap - 1),
+      );
+    }
+
+    function dualBestInspection(world, includeJoint = true) {
+      return dualAvailableEvidence(world, includeJoint)
+        .map((node) => ({
+          node,
+          score:
+            node.yieldRate * dualExpectedInformationGain(world.playerPosterior, node)
+              / Math.max(1, node.apCost)
+            - node.fee / 400,
+        }))
+        .sort((left, right) => right.score - left.score)[0] || null;
+    }
+
+    function dualDisclosureScore(world, nodeId) {
+      const node = dualEvidenceById(nodeId);
+      const outcome = world.observed.get(nodeId);
+      if (!node || !outcome?.yielded || world.sharedEvidence.has(nodeId) || world.ap <= 1) {
+        return -Infinity;
+      }
+      const testimonyGain = node.triggers.reduce((sum, testimonyId) => {
+        if (world.attemptedTestimonies.has(testimonyId)) return sum;
+        const testimony = dualTestimonyById(testimonyId);
+        return sum + dualExpectedInformationGain(
+          world.playerPosterior,
+          testimony,
+          world.profile.memoryReliability,
+        );
+      }, 0);
+      const beforeQ50 = dualQuantile(world.npcPosterior, 0.50);
+      const hypotheticalLedger = [...world.npcLedger, dualSourceFromEvidence(world, node)];
+      const hypothetical = dualRecomputePosterior(hypotheticalLedger, "npc", world.profile);
+      const afterQ50 = dualQuantile(hypothetical, 0.50);
+      const positivePriceImpact = Math.max(0, afterQ50 - beforeQ50) / Math.max(1, beforeQ50);
+      const downwardSupport = Math.max(0, beforeQ50 - afterQ50) / Math.max(1, beforeQ50);
+      return (
+        1.55 * testimonyGain
+        + 0.10 * downwardSupport
+        + 0.025 * world.profile.honestySensitivity
+        - 0.28 * positivePriceImpact
+        - 0.035
+      );
+    }
+
+    function dualRunPrivatePolicy(world) {
+      while (world.ap > 1) {
+        const choice = dualBestInspection(world, false);
+        if (!choice || choice.score <= 0) break;
+        dualInspect(world, choice.node.id);
+      }
+      return dualSettle(world, false);
+    }
+
+    function dualRunPublicPolicy(world) {
+      const preferred = ["E1", "E7", "E6", "E8", "E2", "E4"];
+      for (const nodeId of preferred) {
+        const node = dualEvidenceById(nodeId);
+        if (!node || world.ap - node.apCost < 1) continue;
+        const result = dualInspect(world, nodeId);
+        if (result?.yielded && world.ap > 1) {
+          dualShare(world, nodeId, "neutral", false);
+        }
+        if (world.ap <= 1) break;
+      }
+      return dualSettle(world, false);
+    }
+
+    function dualRunDownsidePolicy(world) {
+      while (world.ap > 1) {
+        const choice = dualBestInspection(world, false);
+        if (!choice || choice.score <= 0) break;
+        const result = dualInspect(world, choice.node.id);
+        if (
+          result?.yielded
+          && result.q50After <= result.q50Before * 0.92
+          && world.ap > 1
+        ) {
+          dualShare(world, choice.node.id, "downside", false);
+        }
+      }
+      return dualSettle(world, false);
+    }
+
+    function dualRunInformationPolicy(world) {
+      let actionCount = 0;
+      while (world.ap > 1 && actionCount < 8) {
+        const disclosureChoices = [...world.observed.keys()]
+          .map((nodeId) => ({ nodeId, score: dualDisclosureScore(world, nodeId) }))
+          .filter((choice) => Number.isFinite(choice.score))
+          .sort((left, right) => right.score - left.score);
+        const inspection = dualBestInspection(world, true);
+        const bestDisclosure = disclosureChoices[0];
+        const forceDisclosure =
+          actionCount >= 2
+          && bestDisclosure
+          && dualEntropy(world.playerPosterior) > 0.34
+          && bestDisclosure.score > -0.01;
+        if (
+          bestDisclosure
+          && (forceDisclosure || !inspection || bestDisclosure.score >= inspection.score * 0.86)
+        ) {
+          dualShare(world, bestDisclosure.nodeId, "neutral", false);
+        } else if (inspection && inspection.score > 0) {
+          dualInspect(world, inspection.node.id);
+        } else {
+          break;
+        }
+        actionCount += 1;
+        if (dualRigorousEnough(world.playerPosterior) && dualEntropy(world.playerPosterior) < 0.34) {
+          break;
+        }
+      }
+      return dualSettle(world, false);
+    }
+
+    function dualRunBuyoutPolicy(world) {
+      for (let count = 0; count < 2 && world.ap > 1; count += 1) {
+        const choice = dualBestInspection(world, false);
+        if (!choice || choice.score <= 0) break;
+        dualInspect(world, choice.node.id);
+      }
+      return dualSettle(world, true);
+    }
+
+    function runDisclosurePolicy(caseData, inputConfig, strategyKey) {
+      const config = {
+        ...makeDefaultDisclosureConfig(),
+        ...inputConfig,
+        strategy: strategyKey,
+      };
+      const world = dualCreateWorld(caseData, config);
+      if (strategyKey === "private") return dualRunPrivatePolicy(world);
+      if (strategyKey === "public") return dualRunPublicPolicy(world);
+      if (strategyKey === "downside") return dualRunDownsidePolicy(world);
+      if (strategyKey === "buyout") return dualRunBuyoutPolicy(world);
+      return dualRunInformationPolicy(world);
+    }
+
+    function dualEmptyAccumulator(key) {
+      return {
+        key,
+        label: DISCLOSURE_STRATEGIES[key],
+        deals: 0,
+        losses: 0,
+        nets: [],
+        totalNet: 0,
+        totalPaid: 0,
+        totalJudgment: 0,
+        totalPlayerEntropy: 0,
+        totalNpcEntropy: 0,
+        totalShared: 0,
+        totalTestimonies: 0,
+        totalPrivateEvidence: 0,
+        totalReprices: 0,
+        totalAbsoluteReprice: 0,
+        totalTrustDelta: 0,
+        totalIntentDelta: 0,
+        rigorous: 0,
+        noQuotes: 0,
+        riskTransferDeals: 0,
+        terminals: 0,
+        duplicates: 0,
+      };
+    }
+
+    function dualApplyResult(accumulator, result) {
+      if (result.deal) {
+        accumulator.deals += 1;
+        accumulator.totalPaid += result.paidPrice;
+        if (result.net < 0) accumulator.losses += 1;
+      }
+      accumulator.nets.push(result.net);
+      accumulator.totalNet += result.net;
+      accumulator.totalJudgment += result.judgmentQuality;
+      accumulator.totalPlayerEntropy += result.playerEntropy;
+      accumulator.totalNpcEntropy += result.npcEntropy;
+      accumulator.totalShared += result.sharedCount;
+      accumulator.totalTestimonies += result.testimonyCount;
+      accumulator.totalPrivateEvidence += result.privateEvidenceCount;
+      accumulator.totalReprices += result.repriceCount;
+      accumulator.totalTrustDelta += result.trustDelta;
+      accumulator.totalIntentDelta += result.intentDelta;
+      accumulator.rigorous += result.rigorous ? 1 : 0;
+      accumulator.noQuotes += result.noQuote ? 1 : 0;
+      accumulator.riskTransferDeals += result.riskTransferDeal ? 1 : 0;
+      accumulator.terminals += result.terminalReached ? 1 : 0;
+      accumulator.duplicates += result.duplicatePlayerSources + result.duplicateNpcSources;
+      for (const event of result.repriceEvents) {
+        if (event.before != null && event.after != null) {
+          accumulator.totalAbsoluteReprice += Math.abs(event.after - event.before) / Math.max(1, event.before);
+        }
+      }
+    }
+
+    function dualSummarize(accumulator, runs) {
+      const mean = accumulator.totalNet / runs;
+      const variance =
+        accumulator.nets.reduce((sum, value) => sum + (value - mean) ** 2, 0) / runs;
+      const sorted = [...accumulator.nets].sort((a, b) => a - b);
+      const tailCount = Math.max(1, Math.ceil(sorted.length * 0.10));
+      const cvar10 = sorted.slice(0, tailCount).reduce((sum, value) => sum + value, 0) / tailCount;
+      return {
+        key: accumulator.key,
+        label: accumulator.label,
+        dealRate: accumulator.deals / runs,
+        lossRateAmongDeals: accumulator.deals ? accumulator.losses / accumulator.deals : 0,
+        averagePaidPrice: accumulator.deals ? accumulator.totalPaid / accumulator.deals : 0,
+        meanNet: mean,
+        medianNet: percentile(accumulator.nets, 0.50),
+        standardDeviation: Math.sqrt(variance),
+        cvar10,
+        judgmentQuality: accumulator.totalJudgment / runs,
+        playerFinalEntropy: accumulator.totalPlayerEntropy / runs,
+        npcFinalEntropy: accumulator.totalNpcEntropy / runs,
+        averageShared: accumulator.totalShared / runs,
+        testimonyRate: accumulator.totalTestimonies / runs,
+        averagePrivateEvidence: accumulator.totalPrivateEvidence / runs,
+        repriceRate: accumulator.totalReprices / runs,
+        averageAbsoluteReprice:
+          accumulator.totalReprices
+            ? accumulator.totalAbsoluteReprice / accumulator.totalReprices
+            : 0,
+        trustDelta: accumulator.totalTrustDelta / runs,
+        intentDelta: accumulator.totalIntentDelta / runs,
+        rigorousRate: accumulator.rigorous / runs,
+        noQuoteRate: accumulator.noQuotes / runs,
+        riskTransferDealRate: accumulator.riskTransferDeals / runs,
+        terminalRate: accumulator.terminals / runs,
+        duplicateSources: accumulator.duplicates,
+      };
+    }
+
+    function runDisclosureBatch(inputConfig) {
+      const config = {
+        ...makeDefaultDisclosureConfig(),
+        ...inputConfig,
+      };
+      const accumulators = Object.keys(DISCLOSURE_STRATEGIES).map(dualEmptyAccumulator);
+      const map = Object.fromEntries(accumulators.map((item) => [item.key, item]));
+      for (let runIndex = 0; runIndex < config.runs; runIndex += 1) {
+        const caseData = dualCreateCase(config, runIndex, null);
+        for (const strategyKey of Object.keys(DISCLOSURE_STRATEGIES)) {
+          dualApplyResult(
+            map[strategyKey],
+            runDisclosurePolicy(caseData, config, strategyKey),
+          );
+        }
+      }
+      return {
+        config,
+        summaries: accumulators.map((item) => dualSummarize(item, config.runs)),
+        deadlocks: accumulators.reduce(
+          (sum, item) => sum + (config.runs - item.terminals),
+          0,
+        ),
+        duplicateSources: accumulators.reduce((sum, item) => sum + item.duplicates, 0),
+      };
+    }
+
+    function dualDecisionSignature(result) {
+      return JSON.stringify({
+        deal: result.deal,
+        paidPrice: result.paidPrice,
+        offer: result.offer,
+        cap: result.cap,
+        terminalReason: result.terminal.reason,
+        playerPosterior: result.playerPosterior,
+        npcPosterior: result.npcPosterior,
+        finalState: result.finalState,
+        sharedCount: result.sharedCount,
+        testimonyCount: result.testimonyCount,
+        initialAsk: result.initialAsk,
+        finalAsk: result.finalAsk,
+        actions: result.trace.map((step) => [step.type, step.label, step.visibility]),
+      });
+    }
+
+    function dualTruthIsolationProbe(inputConfig) {
+      const config = {
+        ...makeDefaultDisclosureConfig(),
+        ...inputConfig,
+        runs: 1,
+      };
+      const original = dualCreateCase(config, 777, "restored");
+      const altered = {
+        ...original,
+        truthIndex: 0,
+        trueValue: DISCLOSURE_TIERS[0].value,
+      };
+      const first = runDisclosurePolicy(original, config, "information");
+      const second = runDisclosurePolicy(altered, config, "information");
+      return dualDecisionSignature(first) === dualDecisionSignature(second);
+    }
+
+    function runDisclosureExperiment(inputConfig) {
+      const config = {
+        ...makeDefaultDisclosureConfig(),
+        ...inputConfig,
+      };
+      const batch = runDisclosureBatch(config);
+      const traceCase = dualCreateCase(config, 0, config.truth);
+      const traceResult = runDisclosurePolicy(traceCase, config, config.strategy);
+      const matrixRuns = Math.min(config.runs, 1800);
+      const matrix = Object.keys(DISCLOSURE_NPCS).map((npcKey) => {
+        const result = runDisclosureBatch({
+          ...config,
+          npc: npcKey,
+          runs: matrixRuns,
+        });
+        return {
+          npcKey,
+          npcLabel: DISCLOSURE_NPCS[npcKey].label,
+          summaries: result.summaries,
+          deadlocks: result.deadlocks,
+        };
+      });
+      const summaryByKey = Object.fromEntries(
+        batch.summaries.map((summary) => [summary.key, summary]),
+      );
+      const downsideBestCount = matrix.filter((row) => {
+        const best = Math.max(...row.summaries.map((summary) => summary.meanNet));
+        return row.summaries.find((summary) => summary.key === "downside").meanNet >= best - 1e-9;
+      }).length;
+      const noviceBuyout = matrix
+        .find((row) => row.npcKey === "novice")
+        .summaries.find((summary) => summary.key === "buyout");
+      const expertBuyout = matrix
+        .find((row) => row.npcKey === "expert")
+        .summaries.find((summary) => summary.key === "buyout");
+      const allPublic = summaryByKey.public;
+      const allPrivate = summaryByKey.private;
+      const information = summaryByKey.information;
+      const downside = summaryByKey.downside;
+      const validations = [
+        {
+          level: batch.deadlocks === 0 && matrix.every((row) => row.deadlocks === 0) ? "pass" : "fail",
+          title: "五组代理全部可结束",
+          detail: `选中NPC与三类人物矩阵的死锁数合计为${batch.deadlocks + matrix.reduce((sum, row) => sum + row.deadlocks, 0)}。`,
+        },
+        {
+          level: batch.duplicateSources === 0 ? "pass" : "fail",
+          title: "同一来源不重复计权",
+          detail: `玩家与NPC账本发现${batch.duplicateSources}次重复来源；目标必须为0。`,
+        },
+        {
+          level: dualTruthIsolationProbe(config) ? "pass" : "fail",
+          title: "隐藏真相不进入决策",
+          detail: "固定全部可见历史后替换客观真相，信息策略的行动、报价与NPC回应保持一致。",
+        },
+        {
+          level: allPublic.npcFinalEntropy < allPrivate.npcFinalEntropy ? "pass" : "warn",
+          title: "公开证据确实教育卖家",
+          detail: `NPC终局不确定性：全部保密${(allPrivate.npcFinalEntropy * 100).toFixed(1)}，全部公开${(allPublic.npcFinalEntropy * 100).toFixed(1)}。`,
+        },
+        {
+          level: downsideBestCount < matrix.length ? "pass" : "warn",
+          title: "只公开利空不是跨人物万能解",
+          detail: `它在${downsideBestCount}/${matrix.length}类NPC中取得最高平均净结果；目标不能是3/3。`,
+        },
+        {
+          level:
+            information.playerFinalEntropy <= downside.playerFinalEntropy + 0.02
+            && information.testimonyRate >= downside.testimonyRate
+              ? "pass"
+              : "warn",
+          title: "信息价值策略换到更多确定性",
+          detail: `终局不确定性${(information.playerFinalEntropy * 100).toFixed(1)}，口供${information.testimonyRate.toFixed(2)}条/局。`,
+        },
+        {
+          level:
+            noviceBuyout.riskTransferDealRate > expertBuyout.riskTransferDealRate + 0.01
+              ? "pass"
+              : "warn",
+          title: "风险转移集中在急售者",
+          detail: `外行急售者成交${(noviceBuyout.riskTransferDealRate * 100).toFixed(1)}%，精明行家${(expertBuyout.riskTransferDealRate * 100).toFixed(1)}%。`,
+        },
+        {
+          level: batch.summaries.every((summary) => summary.repriceRate <= 2) ? "pass" : "warn",
+          title: "正式重估次数受限",
+          detail: `每局平均重估位于${Math.min(...batch.summaries.map((summary) => summary.repriceRate)).toFixed(2)}—${Math.max(...batch.summaries.map((summary) => summary.repriceRate)).toFixed(2)}之间，上限为2。`,
+        },
+      ];
+      return {
+        config,
+        batch,
+        matrix,
+        matrixRuns,
+        traceCase,
+        traceResult,
+        validations,
+        tiers: DISCLOSURE_TIERS,
+        evidence: DISCLOSURE_EVIDENCE,
+        testimonies: DISCLOSURE_TESTIMONIES,
+        npcProfiles: DISCLOSURE_NPCS,
+        strategies: DISCLOSURE_STRATEGIES,
+      };
+    }
+
     global.ZhangyanNumericLabModel = Object.freeze({
       DEFAULT_TIERS,
       EVIDENCE_PROFILES,
@@ -2433,6 +4546,19 @@ NPC还价让步率以人物“让步基准”为核心，再受信任、压力�
       isTerminalRecord,
       normalize,
       clamp,
+      DISCLOSURE_TIERS,
+      DISCLOSURE_EVIDENCE,
+      DISCLOSURE_TESTIMONIES,
+      DISCLOSURE_NPCS,
+      DISCLOSURE_STRATEGIES,
+      makeDefaultDisclosureConfig,
+      runDisclosurePolicy,
+      runDisclosureBatch,
+      runDisclosureExperiment,
+      dualTruthIsolationProbe,
+      dualEntropy,
+      dualQuantile,
+      dualRigorousEnough,
     });
   })(globalThis);
   </script>
@@ -2449,6 +4575,12 @@ NPC还价让步率以人物“让步基准”为核心，再受信任、压力�
       dirty: false,
       running: false,
     };
+    const dualState = {
+      defaults: Model.makeDefaultDisclosureConfig(),
+      lastResult: null,
+      dirty: false,
+      running: false,
+    };
 
     const percent = (value, digits = 1) => `${(value * 100).toFixed(digits)}%`;
     const number = (value, digits = 0) =>
@@ -2457,6 +4589,12 @@ NPC还价让步率以人物“让步基准”为核心，再受信任、压力�
         maximumFractionDigits: digits,
       });
     const signed = (value) => `${value >= 0 ? "+" : ""}${number(value, 1)}`;
+    const escapeHtml = (value) => String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
 
     function quantileCopy(riskQuantile) {
       const qPercent = Math.round(riskQuantile * 100);
@@ -2895,6 +5033,332 @@ NPC还价让步率以人物“让步基准”为核心，再受信任、压力�
       markDirty();
     }
 
+    function readDualConfig() {
+      const npc = byId("dual-npc-select").value;
+      const strategy = byId("dual-strategy-select").value;
+      const truth = byId("dual-truth-select").value;
+      const runs = Number(byId("dual-run-count").value);
+      const actionPoints = Number(byId("dual-ap-input").value);
+      const seed = byId("dual-seed-input").value.trim() || dualState.defaults.seed;
+      if (!Model.DISCLOSURE_NPCS[npc]) throw new Error("请选择有效的NPC类型。");
+      if (!Model.DISCLOSURE_STRATEGIES[strategy]) throw new Error("请选择有效的测试代理。");
+      if (
+        truth !== "random"
+        && !Model.DISCLOSURE_TIERS.some((tier) => tier.key === truth)
+      ) {
+        throw new Error("请选择有效的隐藏品质。");
+      }
+      if (!Number.isInteger(runs) || runs < 100 || runs > 10000) {
+        throw new Error("批量样本必须为100—10,000局。");
+      }
+      if (!Number.isInteger(actionPoints) || actionPoints < 3 || actionPoints > 8) {
+        throw new Error("调查行动点必须为3—8的整数。");
+      }
+      return { npc, strategy, truth, runs, actionPoints, seed };
+    }
+
+    function setDualRunning(isRunning) {
+      dualState.running = isRunning;
+      byId("dual-run-button").disabled = isRunning;
+      byId("dual-reset-button").disabled = isRunning;
+      if (isRunning) {
+        byId("dual-run-status").textContent = "正在生成配对案件与三类NPC矩阵…";
+      }
+    }
+
+    function markDualDirty() {
+      dualState.dirty = true;
+      byId("dual-run-status").textContent = "参数已修改 · 待运行";
+    }
+
+    function resetDualDefaults() {
+      dualState.defaults = Model.makeDefaultDisclosureConfig();
+      byId("dual-npc-select").value = dualState.defaults.npc;
+      byId("dual-strategy-select").value = dualState.defaults.strategy;
+      byId("dual-truth-select").value = dualState.defaults.truth;
+      byId("dual-run-count").value = String(dualState.defaults.runs);
+      byId("dual-seed-input").value = dualState.defaults.seed;
+      byId("dual-ap-input").value = String(dualState.defaults.actionPoints);
+      markDualDirty();
+    }
+
+    function renderDualEvidenceTable() {
+      const testimonyLabels = Object.fromEntries(
+        Model.DISCLOSURE_TESTIMONIES.map((item) => [item.id, item.label]),
+      );
+      const visibilityCopy = {
+        private: ["玩家私下观察", ""],
+        optional: ["可选择公开", ""],
+        joint: ["共同检测，自动共享", " shared"],
+      };
+      byId("dual-evidence-table-body").innerHTML = Model.DISCLOSURE_EVIDENCE.map((node) => {
+        const [visibility, modeClass] = visibilityCopy[node.visibility] || ["未知", ""];
+        const triggers = node.triggers.length
+          ? node.triggers.map((id) => testimonyLabels[id] || id).join("、")
+          : "无";
+        return `
+          <tr>
+            <td><strong>${escapeHtml(node.id)} · ${escapeHtml(node.label)}</strong></td>
+            <td>${escapeHtml(node.family)}</td>
+            <td><span class="evidence-mode${modeClass}">${escapeHtml(visibility)}</span></td>
+            <td class="numeric">${number(node.apCost)}</td>
+            <td class="numeric">${node.fee ? number(node.fee) : "—"}</td>
+            <td>${escapeHtml(triggers)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderDualCase(result) {
+      const trace = result.traceResult;
+      const truthTier = result.tiers[result.traceCase.truthIndex];
+      const terminal = trace.terminal;
+      const summary = [
+        ["隐藏品质（调试）", `${truthTier.label} · 客观值 ${number(result.traceCase.trueValue)}`],
+        ["NPC", result.npcProfiles[result.config.npc].label],
+        ["初始开价", trace.initialAsk == null ? "NPC未先开价" : number(trace.initialAsk)],
+        ["终局NPC开价", trace.finalAsk == null ? "仍未报价" : number(trace.finalAsk)],
+        [
+          "客观结算",
+          terminal.deal
+            ? `成交 ${number(terminal.paidPrice)} · 净结果 ${signed(terminal.net)}`
+            : `未成交 · 净结果 ${signed(terminal.net)}`,
+        ],
+      ];
+      byId("dual-case-summary").innerHTML = summary.map(([label, value]) => `
+        <div class="case-summary-item">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </div>
+      `).join("");
+      byId("dual-trace-tag").textContent =
+        `${result.strategies[result.config.strategy]} · seed ${result.config.seed}`;
+    }
+
+    function renderDualPosterior(result) {
+      const trace = result.traceResult;
+      const rows = result.tiers.map((tier, index) => {
+        const player = trace.playerPosterior[index];
+        const npc = trace.npcPosterior[index];
+        return `
+          <div class="posterior-row">
+            <span class="posterior-label">${escapeHtml(tier.label)} · ${number(tier.value)}</span>
+            <div class="posterior-track player" aria-label="玩家认为${escapeHtml(tier.label)}的概率${percent(player)}">
+              <span style="width:${(player * 100).toFixed(3)}%"></span>
+              <em>${percent(player)}</em>
+            </div>
+            <div class="posterior-track npc" aria-label="NPC认为${escapeHtml(tier.label)}的概率${percent(npc)}">
+              <span style="width:${(npc * 100).toFixed(3)}%"></span>
+              <em>${percent(npc)}</em>
+            </div>
+          </div>
+        `;
+      }).join("");
+      byId("dual-posterior-board").innerHTML = `
+        <div class="posterior-board-head">
+          <span>价值假设</span>
+          <span>玩家终局后验</span>
+          <span>NPC终局后验</span>
+        </div>
+        ${rows}
+      `;
+    }
+
+    function renderDualTrace(result) {
+      byId("dual-trace-list").innerHTML = result.traceResult.trace.map((step, index) => {
+        const snapshot = step.snapshot;
+        const stepClass =
+          step.type === "share"
+            ? "is-share"
+            : step.type === "terminal"
+              ? "is-terminal"
+              : step.detail.includes("开价") || step.detail.includes("重估")
+                ? "is-price"
+                : "";
+        return `
+          <li class="trace-step ${stepClass}">
+            <span class="trace-index">${String(index + 1).padStart(2, "0")}</span>
+            <div class="trace-content">
+              <div class="trace-head">
+                <strong>${escapeHtml(step.label)}</strong>
+                <span class="tag">${escapeHtml(step.visibility || "系统")}</span>
+              </div>
+              <p class="trace-detail">${escapeHtml(step.detail)}</p>
+              <div class="trace-numbers">
+                <div class="trace-number"><span>剩余AP</span><strong>${number(snapshot.ap)}</strong></div>
+                <div class="trace-number"><span>玩家不确定性</span><strong>${(snapshot.playerEntropy * 100).toFixed(1)}</strong></div>
+                <div class="trace-number"><span>NPC不确定性</span><strong>${(snapshot.npcEntropy * 100).toFixed(1)}</strong></div>
+                <div class="trace-number"><span>双方Q50</span><strong>${number(snapshot.playerQ50)} / ${number(snapshot.npcQ50)}</strong></div>
+                <div class="trace-number"><span>开价 / 接受线</span><strong>${snapshot.currentAsk == null ? "—" : number(snapshot.currentAsk)} / ${number(snapshot.acceptanceLine)}</strong></div>
+              </div>
+            </div>
+          </li>
+        `;
+      }).join("");
+    }
+
+    function renderDualStrategyTable(result) {
+      byId("dual-strategy-table-body").innerHTML = result.batch.summaries.map((summary) => `
+        <tr${summary.key === result.config.strategy ? ' class="is-highlight"' : ""}>
+          <td><strong>${escapeHtml(summary.label)}</strong></td>
+          <td class="numeric">${percent(summary.dealRate)}</td>
+          <td class="numeric">${percent(summary.lossRateAmongDeals)}</td>
+          <td class="numeric">${signed(summary.meanNet)}</td>
+          <td class="numeric">${signed(summary.medianNet)}</td>
+          <td class="numeric">${summary.judgmentQuality.toFixed(1)} / 100</td>
+          <td class="numeric">${(summary.playerFinalEntropy * 100).toFixed(1)} / 100</td>
+          <td class="numeric">${summary.averageShared.toFixed(2)}</td>
+          <td class="numeric">${summary.testimonyRate.toFixed(2)}</td>
+          <td class="numeric">${summary.repriceRate.toFixed(2)}次</td>
+          <td class="numeric">${signed(summary.trustDelta)}</td>
+        </tr>
+      `).join("");
+      byId("dual-batch-tag").textContent = `${number(result.config.runs)} 组配对案件`;
+    }
+
+    function renderDualMatrix(result) {
+      const strategyEntries = Object.entries(result.strategies);
+      byId("dual-matrix-head").innerHTML = `
+        <tr>
+          <th>NPC类型</th>
+          ${strategyEntries.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join("")}
+        </tr>
+      `;
+      byId("dual-matrix-body").innerHTML = result.matrix.map((row) => {
+        const bestMean = Math.max(...row.summaries.map((summary) => summary.meanNet));
+        const summaryByKey = Object.fromEntries(
+          row.summaries.map((summary) => [summary.key, summary]),
+        );
+        return `
+          <tr>
+            <th>${escapeHtml(row.npcLabel)}</th>
+            ${strategyEntries.map(([key]) => {
+              const summary = summaryByKey[key];
+              return `
+                <td>
+                  <div class="matrix-result${summary.meanNet >= bestMean - 1e-9 ? " best" : ""}">
+                    <strong>${signed(summary.meanNet)}</strong>
+                    <span>成交 ${percent(summary.dealRate, 0)} · 亏损 ${percent(summary.lossRateAmongDeals, 0)}</span>
+                  </div>
+                </td>
+              `;
+            }).join("")}
+          </tr>
+        `;
+      }).join("");
+      byId("dual-matrix-tag").textContent = `每类 ${number(result.matrixRuns)} 组配对seed`;
+    }
+
+    function renderDualValidations(result) {
+      const passed = result.validations.filter((item) => item.level === "pass").length;
+      byId("dual-validation-summary").textContent = `${passed} / ${result.validations.length} 通过`;
+      byId("dual-validation-list").innerHTML = result.validations.map((item) => `
+        <li class="validation-item ${item.level === "pass" ? "" : item.level}">
+          <span class="validation-icon">${item.level === "pass" ? "✓" : item.level === "warn" ? "!" : "×"}</span>
+          <span>
+            <strong>${escapeHtml(item.title)}</strong>
+            <span>${escapeHtml(item.detail)}</span>
+          </span>
+        </li>
+      `).join("");
+    }
+
+    function renderDualInterpretation(result) {
+      const selected = result.batch.summaries.find(
+        (summary) => summary.key === result.config.strategy,
+      );
+      const information = result.batch.summaries.find((summary) => summary.key === "information");
+      const downside = result.batch.summaries.find((summary) => summary.key === "downside");
+      const publicSummary = result.batch.summaries.find((summary) => summary.key === "public");
+      const privateSummary = result.batch.summaries.find((summary) => summary.key === "private");
+      const selectedNpc = result.matrix.find((row) => row.npcKey === result.config.npc);
+      const best = selectedNpc.summaries.reduce(
+        (winner, summary) => summary.meanNet > winner.meanNet ? summary : winner,
+        selectedNpc.summaries[0],
+      );
+      byId("dual-interpretation").innerHTML = `
+        在当前配对seed下，<strong>${escapeHtml(result.npcProfiles[result.config.npc].label)}</strong>中平均净结果最高的是
+        <strong>${escapeHtml(best.label)}</strong>（${signed(best.meanNet)}），但这只是当前参数下的开发诊断。
+        选中的<strong>${escapeHtml(selected.label)}</strong>成交率为${percent(selected.dealRate)}，
+        平均净结果${signed(selected.meanNet)}。全部公开把NPC终局不确定性从
+        ${(privateSummary.npcFinalEntropy * 100).toFixed(1)}降至
+        ${(publicSummary.npcFinalEntropy * 100).toFixed(1)}；信息价值代理相对只公开利空的平均差为
+        ${signed(information.meanNet - downside.meanNet)}。因此本轮应同时看<strong>收益、判断质量、是否教育卖家</strong>，不能只看一个最高数。
+      `;
+    }
+
+    function renderDualResult(result) {
+      dualState.lastResult = result;
+      dualState.dirty = false;
+      const trace = result.traceResult;
+      const information = result.batch.summaries.find((summary) => summary.key === "information");
+      const downside = result.batch.summaries.find((summary) => summary.key === "downside");
+      const buyout = result.batch.summaries.find((summary) => summary.key === "buyout");
+      const npcChange =
+        (trace.finalNpcQ50 - trace.initialNpcQ50) / Math.max(1, trace.initialNpcQ50);
+      byId("dual-run-status").textContent =
+        `已运行 · seed ${result.config.seed} · ${number(result.config.runs)}组配对案件`;
+      byId("dual-metric-player-entropy").textContent =
+        `${(trace.playerEntropy * 100).toFixed(1)} / 100`;
+      byId("dual-metric-reprice").textContent =
+        `${npcChange >= 0 ? "+" : ""}${(npcChange * 100).toFixed(1)}%`;
+      byId("dual-metric-uplift").textContent = signed(information.meanNet - downside.meanNet);
+      byId("dual-metric-buyout").textContent = percent(buyout.riskTransferDealRate);
+      byId("dual-metric-buyout-note").textContent =
+        `${result.npcProfiles[result.config.npc].label} · 无条件立即付款`;
+      renderDualCase(result);
+      renderDualPosterior(result);
+      renderDualTrace(result);
+      renderDualStrategyTable(result);
+      renderDualMatrix(result);
+      renderDualValidations(result);
+      renderDualInterpretation(result);
+    }
+
+    function runDualSimulation() {
+      const errorBox = byId("dual-error-box");
+      errorBox.classList.remove("show");
+      errorBox.textContent = "";
+      let config;
+      try {
+        config = readDualConfig();
+      } catch (error) {
+        errorBox.textContent = error.message;
+        errorBox.classList.add("show");
+        return;
+      }
+      setDualRunning(true);
+      window.setTimeout(() => {
+        try {
+          renderDualResult(Model.runDisclosureExperiment(config));
+        } catch (error) {
+          errorBox.textContent = `双后验实验失败：${error.message}`;
+          errorBox.classList.add("show");
+          console.error(error);
+        } finally {
+          setDualRunning(false);
+        }
+      }, 20);
+    }
+
+    function bindDualEvents() {
+      byId("dual-run-button").addEventListener("click", runDualSimulation);
+      byId("dual-reset-button").addEventListener("click", () => {
+        resetDualDefaults();
+        runDualSimulation();
+      });
+      for (const id of [
+        "dual-npc-select",
+        "dual-strategy-select",
+        "dual-truth-select",
+        "dual-run-count",
+        "dual-seed-input",
+        "dual-ap-input",
+      ]) {
+        byId(id).addEventListener("change", markDualDirty);
+      }
+    }
+
     function bindEvents() {
       byId("run-button").addEventListener("click", runSimulation);
       byId("reset-button").addEventListener("click", () => {
@@ -2938,8 +5402,11 @@ NPC还价让步率以人物“让步基准”为核心，再受信任、压力�
 
     renderParameterRows(state.defaults.tiers);
     renderNpcTable();
+    renderDualEvidenceTable();
     bindEvents();
+    bindDualEvents();
     runSimulation();
+    runDualSimulation();
   })();
   </script>
 </body>

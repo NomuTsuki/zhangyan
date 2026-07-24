@@ -32,10 +32,11 @@ test("numeric lab is a self-contained development surface", async () => {
   const { html } = await loadLab();
 
   assert.match(html, /^<!doctype html>/i);
-  assert.match(html, /<title>掌眼｜定价数值实验台<\/title>/);
+  assert.match(html, /<title>掌眼｜规则与定价数值实验台<\/title>/);
   assert.match(html, /五档价值参数表/);
   assert.match(html, /保守收购上限/);
   assert.match(html, /有限议价：行为分支与可达性/);
+  assert.match(html, /双后验与有代价的信息公开/);
   assert.match(html, /验证门槛/);
   assert.doesNotMatch(html, /<script[^>]+src=/i);
   assert.doesNotMatch(html, /<link[^>]+rel=["']stylesheet["']/i);
@@ -195,4 +196,62 @@ test("NPC flexibility affects counters and directed evidence support stays bound
   const upward = Model.offerSupport(config, scenario, { q50: scenario.priorQ50 * 1.6 });
   assert.ok(downward > 0 && downward <= 1);
   assert.equal(upward, 0);
+});
+
+test("dual-posterior batch is deterministic and all five disclosure policies terminate cleanly", async () => {
+  const { Model } = await loadLab();
+  const config = Model.makeDefaultDisclosureConfig();
+  config.runs = 96;
+  config.seed = "dual-contract-20260724";
+
+  const first = Model.runDisclosureBatch(config);
+  const second = Model.runDisclosureBatch(config);
+  const strategyKeys = Object.keys(Model.DISCLOSURE_STRATEGIES).sort();
+
+  assert.deepEqual(first, second);
+  assert.equal(first.summaries.length, 5);
+  assert.deepEqual(first.summaries.map((summary) => summary.key).sort(), strategyKeys);
+  assert.equal(first.deadlocks, 0);
+  assert.equal(first.duplicateSources, 0);
+  for (const summary of first.summaries) {
+    assert.equal(summary.terminalRate, 1);
+    assert.equal(summary.duplicateSources, 0);
+    assert.ok(summary.dealRate >= 0 && summary.dealRate <= 1);
+    assert.ok(summary.riskTransferDealRate >= 0 && summary.riskTransferDealRate <= 1);
+  }
+});
+
+test("dual-posterior policies keep beliefs normalized, isolate truth, and expose the NPC matrix", async () => {
+  const { Model } = await loadLab();
+  const config = Model.makeDefaultDisclosureConfig();
+  config.runs = 72;
+  config.seed = "dual-matrix-20260724";
+  const experiment = Model.runDisclosureExperiment(config);
+
+  assert.equal(Model.dualTruthIsolationProbe(config), true);
+  assert.deepEqual(
+    experiment.matrix.map((row) => row.npcKey).sort(),
+    Object.keys(Model.DISCLOSURE_NPCS).sort(),
+  );
+
+  for (const strategyKey of Object.keys(Model.DISCLOSURE_STRATEGIES)) {
+    const result = Model.runDisclosurePolicy(experiment.traceCase, config, strategyKey);
+    assert.equal(result.terminalReached, true);
+    assert.equal(result.duplicatePlayerSources, 0);
+    assert.equal(result.duplicateNpcSources, 0);
+
+    for (const posterior of [result.playerPosterior, result.npcPosterior]) {
+      assert.ok(posterior.every((weight) => Number.isFinite(weight) && weight >= 0));
+      assert.ok(Math.abs(posterior.reduce((sum, weight) => sum + weight, 0) - 1) < 1e-10);
+    }
+  }
+
+  for (const row of experiment.matrix) {
+    assert.equal(row.deadlocks, 0);
+    assert.equal(row.summaries.length, 5);
+    const buyout = row.summaries.find((summary) => summary.key === "buyout");
+    assert.ok(buyout);
+    assert.ok(Number.isFinite(buyout.meanNet));
+    assert.ok(buyout.riskTransferDealRate >= 0 && buyout.riskTransferDealRate <= 1);
+  }
 });

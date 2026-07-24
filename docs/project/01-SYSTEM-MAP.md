@@ -37,9 +37,9 @@
 - seed 只影响允许的幸运证据和近分候选扰动，不改变隐藏真相、固定成本或公式；
 - H5 是交付载体描述，不等于必须采用 Unity；微信内网页、微信小游戏与 Unity Web 构建仍是不同发布路线。
 
-### 已批准、尚未实现的双边信息边界
+### 已在开发实验中实现、尚未接入玩家规则核心的双边信息边界
 
-- 后续目标状态在现有真相隔离上增加玩家后验、NPC 后验和共享信息层，见 [DEC-007](decisions/DEC-007-dual-belief-and-strategic-disclosure.md)；
+- 开发侧实验已经在现有真相隔离上增加玩家后验、NPC 后验和共享信息层，见 [DEC-007](decisions/DEC-007-dual-belief-and-strategic-disclosure.md) 与 [EXP-007](evidence/EXP-007-dual-posterior-disclosure-lab.md)；
 - 玩家私有证据只有在用于质询、对峙或共同检测后才进入共享信息；共享后双方按各自专业度重新解释；
 - NPC 允许真诚误记或误判，但不能故意生成与自身已知信息相反的事实陈述；
 - 共享证据负责更新 NPC 主观估值，四状态主要负责改变谈判档位、让步和接受条件；

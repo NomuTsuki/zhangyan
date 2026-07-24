@@ -58,4 +58,5 @@ NPC 开价、底价和还价行为来自 NPC 自己的认知、专业度、性�
 - [EXP-006](../evidence/EXP-006-value-pricing-simulation-lab.md)；
 - [DEC-004](DEC-004-objective-outcome-and-judgment.md)；
 - [DEC-005](DEC-005-separate-object-truth-and-npc-belief.md)；
+- [DEC-007](DEC-007-dual-belief-and-strategic-disclosure.md)；
 - [HYP-002](../hypotheses/HYP-002-mixture-value-and-market-events.md)。

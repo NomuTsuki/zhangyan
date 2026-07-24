@@ -50,4 +50,5 @@ Status: Active
 
 - [DEC-003](DEC-003-integrated-investigation-loop.md)；
 - [DEC-004](DEC-004-objective-outcome-and-judgment.md)；
+- [DEC-007](DEC-007-dual-belief-and-strategic-disclosure.md) 将静态 NPC 认知档案扩展为可被共享证据改变的独立后验，但不改变隐藏真相隔离边界；
 - [EXP-005](../evidence/EXP-005-integrated-loop-and-debug-report.md)。

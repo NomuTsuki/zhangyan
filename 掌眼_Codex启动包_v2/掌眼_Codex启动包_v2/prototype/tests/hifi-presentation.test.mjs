@@ -1,0 +1,212 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import { lacquerBoxCase } from "../content/lacquer-box.ts";
+import {
+  createInitialWorldState,
+  getNpcPricing,
+  resolveTurn,
+} from "../game/resolve-action.ts";
+import {
+  buildEvidenceDisclosure,
+  buildPlayerPresentation,
+  buildPlayerResources,
+  buildSettlementCard,
+  describeNpcAtmosphere,
+  summarizeTurnForPlayer,
+} from "../hifi/presentation.ts";
+
+function start(variant = "restored-genuine") {
+  return createInitialWorldState(lacquerBoxCase, 20260723, variant);
+}
+
+function collectKeys(value, keys = new Set()) {
+  if (!value || typeof value !== "object") return keys;
+  for (const [key, child] of Object.entries(value)) {
+    keys.add(key);
+    collectKeys(child, keys);
+  }
+  return keys;
+}
+
+test("player presentation never exposes hidden truth or exact NPC state fields", () => {
+  const state = start("hidden-treasure");
+  const presentation = buildPlayerPresentation(lacquerBoxCase, state);
+  const keys = collectKeys(presentation);
+  const serialized = JSON.stringify(presentation);
+
+  for (const forbiddenKey of [
+    "truthVariantId",
+    "trueValue",
+    "npcState",
+    "pressure",
+    "trust",
+    "dealIntent",
+    "control",
+    "posterior",
+    "formula",
+    "spindle",
+  ]) {
+    assert.equal(
+      keys.has(forbiddenKey),
+      false,
+      `player presentation leaked ${forbiddenKey}`,
+    );
+  }
+  assert.doesNotMatch(serialized, /hidden-treasure|被低估的珍品/);
+  assert.equal(presentation.settlement, null);
+});
+
+test("NPC atmosphere is qualitative and does not return exact state values", () => {
+  const relaxed = describeNpcAtmosphere(lacquerBoxCase.initialNpcState);
+  const strained = describeNpcAtmosphere({
+    pressure: 82,
+    trust: 28,
+    dealIntent: 24,
+    control: 33,
+    phase: "pressured",
+  });
+
+  assert.deepEqual(relaxed, {
+    level: "open",
+    label: "气氛尚可",
+    detail: "卖家愿意继续说明，交流仍有余地。",
+  });
+  assert.deepEqual(strained, {
+    level: "strained",
+    label: "气氛紧绷",
+    detail: "卖家明显提高戒备，继续施压可能让交易中断。",
+  });
+  assert.equal(
+    Object.values(strained).some((value) => typeof value === "number"),
+    false,
+  );
+});
+
+test("turn summary keeps seller words and public price feedback but omits rule traces", () => {
+  const inspected = resolveTurn(lacquerBoxCase, start(), {
+    kind: "inspect",
+    targetId: "joint",
+  });
+  const challenged = resolveTurn(lacquerBoxCase, inspected, {
+    kind: "dialogue",
+    topicId: "repair-history",
+    tone: "professional",
+    evidenceId: "modern-adhesive-trace",
+  });
+  const summary = summarizeTurnForPlayer(challenged.actionHistory.at(-1));
+  const keys = collectKeys(summary);
+
+  assert.ok(summary);
+  assert.equal(summary.title.length > 0, true);
+  assert.equal(summary.sellerWords.length > 0, true);
+  assert.equal(summary.observations.length > 0, true);
+  assert.equal(summary.newEvidenceCount, 1);
+  assert.equal(keys.has("changes"), false);
+  assert.equal(keys.has("formulaLog"), false);
+  assert.equal(keys.has("spindle"), false);
+  if (summary.priceUpdate) {
+    assert.equal(summary.priceUpdate.reason.length > 0, true);
+    assert.equal(Number.isFinite(summary.priceUpdate.before), true);
+    assert.equal(Number.isFinite(summary.priceUpdate.after), true);
+  }
+});
+
+test("resource cards separate investigation points from bargaining capacity", () => {
+  const initial = start();
+  const initialResources = buildPlayerResources(lacquerBoxCase, initial);
+
+  assert.deepEqual(initialResources.investigation, {
+    id: "investigation",
+    label: "调查行动点",
+    remaining: 6,
+    total: 6,
+    usage: "检查、询问与专项检测使用",
+    status: "available",
+  });
+  assert.deepEqual(initialResources.bargaining, {
+    id: "bargaining",
+    label: "议价容量",
+    remaining: 5,
+    total: 5,
+    usage: "每次正式报价消耗 1 点",
+    status: "preview",
+  });
+
+  const pricing = getNpcPricing(lacquerBoxCase, initial);
+  const negotiated = resolveTurn(lacquerBoxCase, initial, {
+    kind: "discount",
+    offer: pricing.acceptLine - 4,
+  });
+  const afterOffer = buildPlayerResources(lacquerBoxCase, negotiated);
+
+  assert.equal(afterOffer.investigation.remaining, 6);
+  assert.equal(afterOffer.bargaining.remaining, 4);
+  assert.equal(afterOffer.bargaining.total, 5);
+  assert.equal(afterOffer.bargaining.status, "active");
+});
+
+test("evidence disclosure lists concrete discovered evidence as the only shareable unit", () => {
+  const first = resolveTurn(lacquerBoxCase, start(), {
+    kind: "inspect",
+    targetId: "joint",
+  });
+  const second = resolveTurn(lacquerBoxCase, first, {
+    kind: "inspect",
+    targetId: "interior",
+  });
+  const shared = resolveTurn(lacquerBoxCase, second, {
+    kind: "dialogue",
+    topicId: "repair-history",
+    tone: "professional",
+    evidenceId: "modern-adhesive-trace",
+  });
+  const disclosure = buildEvidenceDisclosure(lacquerBoxCase, shared);
+
+  assert.equal(disclosure.unit, "specific-evidence");
+  assert.deepEqual(
+    disclosure.items
+      .filter((item) => item.visibility === "shared")
+      .map((item) => item.id),
+    ["modern-adhesive-trace"],
+  );
+  assert.deepEqual(
+    disclosure.items
+      .filter((item) => item.visibility === "private")
+      .map((item) => item.id),
+    ["restored-interior"],
+  );
+  assert.deepEqual(
+    disclosure.items
+      .filter((item) => item.canDisclose)
+      .map((item) => item.id),
+    ["restored-interior"],
+  );
+  assert.equal(
+    collectKeys(disclosure).has("disclosureFrame"),
+    false,
+  );
+});
+
+test("settlement card exposes D—SSS grades without hidden truth identifiers or values", () => {
+  const settled = resolveTurn(lacquerBoxCase, start("restored-genuine"), {
+    kind: "reject",
+  });
+  const card = buildSettlementCard(settled.settlement);
+  const keys = collectKeys(card);
+
+  assert.ok(card);
+  assert.match(card.overallGrade, /^(D|C|B|A|S|SS|SSS)$/);
+  assert.deepEqual(
+    card.sections.map((section) => section.label),
+    ["器物客观品质", "实际净收益", "议价表现", "判断质量"],
+  );
+  assert.equal(keys.has("truthVariantId"), false);
+  assert.equal(keys.has("trueValue"), false);
+  assert.equal(keys.has("objectiveScore"), false);
+  assert.equal(keys.has("judgmentScore"), false);
+  assert.doesNotMatch(
+    JSON.stringify(card),
+    /restored-genuine|旧胎重修真品/,
+  );
+});

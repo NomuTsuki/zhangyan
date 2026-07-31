@@ -16,6 +16,7 @@ import type {
   SettlementChoice,
   SettlementResult,
   SpindleTrace,
+  StatementRecord,
   StateChange,
   StateSnapshot,
   TruthVariantId,
@@ -1267,7 +1268,7 @@ function resolveDialogue(
   }
 
   const statementSignal = topic.signals[selectedId];
-  const sourceKind =
+  const sourceKind: StatementRecord["sourceKind"] =
     selectedId === "refuse" || selectedId === "exit"
       ? "refusal"
       : selectedId === "counter" || topic.id === "price"
@@ -1281,7 +1282,7 @@ function resolveDialogue(
     refuse: 0.2,
     exit: 0.2,
   }[selectedId];
-  const statement = {
+  const statement: StatementRecord = {
     turn: state.turn + 1,
     topicId: topic.id,
     behaviorId: selectedId,

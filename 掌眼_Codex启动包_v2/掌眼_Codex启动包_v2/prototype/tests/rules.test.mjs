@@ -3,8 +3,10 @@ import test from "node:test";
 
 import { lacquerBoxCase } from "../content/lacquer-box.ts";
 import {
+  calculateNpcPosterior,
   calculatePosterior,
   createInitialWorldState,
+  getNpcPricing,
   getTestConsent,
   replayActions,
   resolveTurn,
@@ -23,6 +25,21 @@ function play(state, actions) {
   );
 }
 
+function assertPosteriorNormalized(posterior, message) {
+  assert.equal(posterior.length, 3, `${message}: expected all truth variants`);
+  for (const entry of posterior) {
+    assert.ok(
+      Number.isFinite(entry.probability) && entry.probability >= 0,
+      `${message}: ${entry.variantId} must have a finite non-negative probability`,
+    );
+  }
+  const total = posterior.reduce((sum, entry) => sum + entry.probability, 0);
+  assert.ok(
+    Math.abs(total - 1) < 1e-10,
+    `${message}: probabilities must sum to one, received ${total}`,
+  );
+}
+
 test("truth is fixed by the case input while seed only changes allowed variation", () => {
   const first = start("restored-genuine", 1);
   const second = start("restored-genuine", 999);
@@ -32,6 +49,28 @@ test("truth is fixed by the case input while seed only changes allowed variation
   assert.notEqual(first.seed, second.seed);
   assert.equal(first.actionPoints, lacquerBoxCase.actionBudget);
   assert.deepEqual(first.npcState, lacquerBoxCase.initialNpcState);
+});
+
+test("private inspection updates the player evidence only and leaves NPC belief and price unchanged", () => {
+  const initial = start();
+  const playerPrior = calculatePosterior(lacquerBoxCase, []);
+  const inspected = resolveTurn(lacquerBoxCase, initial, {
+    kind: "inspect",
+    targetId: "joint",
+  });
+  const playerPosterior = calculatePosterior(
+    lacquerBoxCase,
+    inspected.discoveredEvidenceIds,
+    inspected.statementHistory,
+  );
+
+  assert.ok(inspected.discoveredEvidenceIds.includes("modern-adhesive-trace"));
+  assert.deepEqual(inspected.sharedEvidenceIds, []);
+  assert.notDeepEqual(playerPosterior, playerPrior);
+  assert.deepEqual(inspected.npcPosterior, initial.npcPosterior);
+  assert.equal(inspected.currentPrice, initial.currentPrice);
+  assert.deepEqual(inspected.priceHistory, []);
+  assert.deepEqual(inspected.actionHistory[0].sharedEvidenceAdded ?? [], []);
 });
 
 test("inspection and dialogue share one budget and accumulate evidence and NPC state", () => {
@@ -58,6 +97,8 @@ test("inspection and dialogue share one budget and accumulate evidence and NPC s
   assert.ok(final.discoveredEvidenceIds.includes("modern-adhesive-trace"));
   assert.ok(final.discoveredEvidenceIds.includes("repair-admission"));
   assert.ok(final.discoveredEvidenceIds.includes("restored-interior"));
+  assert.deepEqual(afterInspect.sharedEvidenceIds, []);
+  assert.ok(afterDialogue.sharedEvidenceIds.includes("modern-adhesive-trace"));
   assert.notDeepEqual(afterDialogue.npcState, initial.npcState);
   assert.deepEqual(
     afterDialogue.actionHistory[0].after,
@@ -90,6 +131,59 @@ test("open inquiry is legal and repeated gentle inquiry evolves response and sta
   );
   assert.equal(final.actionHistory[1].redundant, true);
   assert.equal(final.actionHistory[2].redundant, true);
+});
+
+test("first evidence-backed challenge shares and reprices while reuse never double-counts the source", () => {
+  const inspected = resolveTurn(lacquerBoxCase, start(), {
+    kind: "inspect",
+    targetId: "joint",
+  });
+  const action = {
+    kind: "dialogue",
+    topicId: "repair-history",
+    tone: "professional",
+    evidenceId: "modern-adhesive-trace",
+  };
+  const first = resolveTurn(lacquerBoxCase, inspected, action);
+  const firstTurn = first.actionHistory.at(-1);
+  const second = resolveTurn(lacquerBoxCase, first, action);
+  const secondTurn = second.actionHistory.at(-1);
+
+  assert.deepEqual(first.sharedEvidenceIds, ["modern-adhesive-trace"]);
+  assert.deepEqual(firstTurn.sharedEvidenceAdded, ["modern-adhesive-trace"]);
+  assert.notDeepEqual(first.npcPosterior, inspected.npcPosterior);
+  assert.ok(firstTurn.priceChange, "material shared evidence should trigger repricing");
+  assert.notEqual(first.currentPrice, inspected.currentPrice);
+  assert.equal(first.priceHistory.length, 1);
+
+  assert.deepEqual(second.sharedEvidenceIds, first.sharedEvidenceIds);
+  assert.deepEqual(secondTurn.sharedEvidenceAdded, []);
+  assert.deepEqual(second.npcPosterior, first.npcPosterior);
+  assert.equal(second.currentPrice, first.currentPrice);
+  assert.deepEqual(second.priceHistory, first.priceHistory);
+  assert.equal(secondTurn.priceChange, undefined);
+  assert.match(secondTurn.formulaLog.join(" "), /此前已经公开.*不重复计权/);
+});
+
+test("specific evidence selection is the disclosure choice and adds no framing state", () => {
+  const inspected = resolveTurn(lacquerBoxCase, start(), {
+    kind: "inspect",
+    targetId: "interior",
+  });
+  const baseAction = {
+    kind: "dialogue",
+    topicId: "repair-history",
+    tone: "professional",
+    evidenceId: "restored-interior",
+  };
+  const challenged = resolveTurn(lacquerBoxCase, inspected, baseAction);
+
+  assert.deepEqual(challenged.sharedEvidenceIds, ["restored-interior"]);
+  assert.ok(!("disclosureFrame" in challenged.actionHistory.at(-1).action));
+  assert.doesNotMatch(
+    challenged.actionHistory.at(-1).formulaLog.join(" "),
+    /完整陈述|只强调|框架惩罚/,
+  );
 });
 
 test("evidence-backed challenge can trigger one admission but cannot farm it twice", () => {
@@ -186,8 +280,17 @@ test("paid specialist testing costs 2 AP and 10 value points and remains non-ter
   assert.equal(tested.feesPaid, 10);
   assert.equal(tested.status, "active");
   assert.ok(tested.discoveredEvidenceIds.includes("test-modern-adhesive"));
+  assert.deepEqual(tested.sharedEvidenceIds, ["test-modern-adhesive"]);
+  assert.deepEqual(
+    tested.actionHistory[0].sharedEvidenceAdded,
+    ["test-modern-adhesive"],
+  );
+  assert.notDeepEqual(tested.npcPosterior, initial.npcPosterior);
+  assert.equal(tested.priceHistory.length, 1);
+  assert.deepEqual(tested.actionHistory[0].priceChange, tested.priceHistory[0]);
   assert.equal(tested.actionHistory[0].spindle.selectedId, "approve-test");
   assert.match(tested.actionHistory[0].formulaLog.join(" "), /累计检测费 = 0 \+ 10 = 10/);
+  assert.match(tested.actionHistory[0].formulaLog.join(" "), /共同检测/);
   assert.throws(
     () => resolveTurn(lacquerBoxCase, tested, { kind: "test", testId: "adhesive-test" }),
     /本维度已经检测/,
@@ -222,7 +325,7 @@ test("an invalid or unaffordable action fails atomically", () => {
   assert.deepEqual(lowAp, before);
 });
 
-test("zero AP blocks investigation but buy and reject always remain legal", () => {
+test("zero investigation AP blocks investigation while bargaining and terminal choices remain legal", () => {
   const depleted = play(start(), [
     { kind: "inspect", targetId: "surface" },
     { kind: "inspect", targetId: "bottom" },
@@ -242,47 +345,125 @@ test("zero AP blocks investigation but buy and reject always remain legal", () =
     }),
     /行动点不足/,
   );
+  const pricing = getNpcPricing(lacquerBoxCase, depleted);
+  const negotiated = resolveTurn(lacquerBoxCase, depleted, {
+    kind: "discount",
+    offer: pricing.acceptLine - 4,
+  });
+  const buyout = resolveTurn(lacquerBoxCase, depleted, {
+    kind: "buyout",
+    offer: pricing.buyoutLine,
+  });
   const rejected = resolveTurn(lacquerBoxCase, depleted, { kind: "reject" });
   const bought = resolveTurn(lacquerBoxCase, depleted, { kind: "buy" });
+  assert.equal(negotiated.actionPoints, 0);
+  assert.equal(negotiated.negotiation.remainingCapacity, 4);
+  assert.equal(buyout.actionPoints, 0);
   assert.equal(rejected.status, "settled");
   assert.equal(bought.status, "settled");
   assert.equal(rejected.actionPoints, 0);
   assert.equal(bought.actionPoints, 0);
 });
 
-test("discount is a costed negotiation action and accepted result uses final price", () => {
-  const final = replayActions(
-    lacquerBoxCase,
-    [
-      { kind: "inspect", targetId: "joint" },
-      {
-        kind: "dialogue",
-        topicId: "repair-history",
-        tone: "professional",
-        evidenceId: "modern-adhesive-trace",
-      },
-      { kind: "discount", offer: 60 },
-    ],
-    seed,
-    "restored-genuine",
-  );
+test("player-chosen discount uses the current NPC posterior acceptance line", () => {
+  const initial = start();
+  const initialPricing = getNpcPricing(lacquerBoxCase, initial);
+  const inspected = resolveTurn(lacquerBoxCase, initial, {
+    kind: "inspect",
+    targetId: "joint",
+  });
+  const challenged = resolveTurn(lacquerBoxCase, inspected, {
+    kind: "dialogue",
+    topicId: "repair-history",
+    tone: "professional",
+    evidenceId: "modern-adhesive-trace",
+  });
+  const currentPricing = getNpcPricing(lacquerBoxCase, challenged);
+  const offer = currentPricing.acceptLine;
+  const final = resolveTurn(lacquerBoxCase, challenged, {
+    kind: "discount",
+    offer,
+  });
 
+  assert.notEqual(
+    currentPricing.acceptLine,
+    initialPricing.acceptLine,
+    "shared evidence should be able to move the dynamic acceptance line",
+  );
+  assert.ok(offer > 0 && offer < challenged.currentPrice);
   assert.equal(final.status, "settled");
-  assert.equal(final.actionPoints, 3);
+  assert.equal(final.actionPoints, challenged.actionPoints);
+  assert.equal(final.negotiation.initialCapacity, 5);
+  assert.equal(final.negotiation.remainingCapacity, 4);
+  assert.equal(final.actionHistory.at(-1).actionPointCost, 0);
+  assert.equal(final.actionHistory.at(-1).negotiationCapacityCost, 1);
   assert.equal(final.settlement.choice, "discount-buy");
-  assert.equal(final.settlement.paidPrice, 60);
-  assert.equal(final.settlement.actualNet, 5);
-  assert.equal(final.settlement.objectiveScore, 100);
-  assert.equal(final.settlement.objectiveSuccess, true);
-  assert.equal(final.settlement.oracleBestNet, 5);
+  assert.equal(final.settlement.paidPrice, offer);
+  assert.equal(
+    final.settlement.actualNet,
+    lacquerBoxCase.truthVariants["restored-genuine"].trueValue - offer,
+  );
+  assert.equal(final.settlement.qualityGrade, "A");
+  assert.ok(["C", "B", "A", "S", "SS", "SSS"].includes(
+    final.settlement.netGrade,
+  ));
+  assert.ok(!("objectiveScore" in final.settlement));
+  assert.equal(
+    final.settlement.oracleBestNet,
+    lacquerBoxCase.truthVariants["restored-genuine"].trueValue
+      - currentPricing.buyoutLine,
+  );
+  assert.equal(
+    final.settlement.regret,
+    offer - currentPricing.buyoutLine,
+  );
   assert.match(
     final.settlement.objectiveFormula.join(" "),
-    /界面可用的60点折价并成交/,
+    new RegExp(`按${currentPricing.buyoutLine}点最低可达买断线成交`),
   );
+  assert.ok(final.settlement.gradeFormula.length >= 5);
   assert.ok(final.actionHistory.at(-1).spindle.candidates.length >= 3);
+  assert.match(
+    final.actionHistory.at(-1).formulaLog.join(" "),
+    new RegExp(`普通接受线.*= ${currentPricing.acceptLine}`),
+  );
 });
 
-test("NPC knowledge and reservation are independent from hidden object truth", () => {
+test("buyout at the dynamic line succeeds and a lower final offer is rejected, both use one bargaining capacity", () => {
+  const initial = start();
+  const pricing = getNpcPricing(lacquerBoxCase, initial);
+  const accepted = resolveTurn(lacquerBoxCase, initial, {
+    kind: "buyout",
+    offer: pricing.buyoutLine,
+  });
+  const rejected = resolveTurn(lacquerBoxCase, initial, {
+    kind: "buyout",
+    offer: pricing.buyoutLine - 1,
+  });
+
+  assert.ok(pricing.buyoutLine < initial.currentPrice);
+  assert.ok(pricing.buyoutLine <= pricing.acceptLine);
+  assert.equal(accepted.status, "settled");
+  assert.equal(rejected.status, "settled");
+  assert.equal(accepted.actionPoints, initial.actionPoints);
+  assert.equal(rejected.actionPoints, initial.actionPoints);
+  assert.equal(accepted.actionHistory[0].actionPointCost, 0);
+  assert.equal(rejected.actionHistory[0].actionPointCost, 0);
+  assert.equal(accepted.actionHistory[0].negotiationCapacityCost, 1);
+  assert.equal(rejected.actionHistory[0].negotiationCapacityCost, 1);
+  assert.equal(accepted.negotiation.remainingCapacity, 4);
+  assert.equal(rejected.negotiation.remainingCapacity, 4);
+  assert.equal(accepted.settlement.choice, "buyout-buy");
+  assert.equal(accepted.settlement.paidPrice, pricing.buyoutLine);
+  assert.equal(rejected.settlement.choice, "buyout-rejected");
+  assert.equal(rejected.settlement.paidPrice, 0);
+  assert.equal(accepted.actionHistory[0].spindle.selectedId, "accept-buyout");
+  assert.equal(rejected.actionHistory[0].spindle.selectedId, "reject-buyout");
+  assert.match(accepted.actionHistory[0].formulaLog.join(" "), /买断判定/);
+  assert.match(rejected.actionHistory[0].description, /不再继续议价/);
+});
+
+test("NPC initial belief and dynamic negotiation are independent from hidden object truth", () => {
   const variants = ["counterfeit", "restored-genuine", "hidden-treasure"];
   const dialogueStates = variants.map((variant) =>
     resolveTurn(lacquerBoxCase, start(variant), {
@@ -302,10 +483,11 @@ test("NPC knowledge and reservation are independent from hidden object truth", (
     dialogueStates.map((state) => JSON.stringify(state.npcState)),
   ).size, 1);
 
+  const offer = getNpcPricing(lacquerBoxCase, start()).acceptLine;
   const discounted = variants.map((variant) =>
     resolveTurn(lacquerBoxCase, start(variant), {
       kind: "discount",
-      offer: 60,
+      offer,
     }),
   );
   assert.ok(discounted.every(
@@ -317,6 +499,78 @@ test("NPC knowledge and reservation are independent from hidden object truth", (
   assert.equal(new Set(
     discounted.map((state) => state.settlement.actualNet),
   ).size, 3);
+});
+
+test("same visible shared evidence produces the same NPC posterior, repricing, and response across truths", () => {
+  const inspected = resolveTurn(lacquerBoxCase, start(), {
+    kind: "inspect",
+    targetId: "joint",
+  });
+  const action = {
+    kind: "dialogue",
+    topicId: "repair-history",
+    tone: "professional",
+    evidenceId: "modern-adhesive-trace",
+  };
+  const variants = ["counterfeit", "restored-genuine", "hidden-treasure"];
+  const results = variants.map((truthVariantId) =>
+    resolveTurn(
+      lacquerBoxCase,
+      { ...structuredClone(inspected), truthVariantId },
+      action,
+    ),
+  );
+
+  assert.equal(
+    new Set(results.map((state) => JSON.stringify(state.npcPosterior))).size,
+    1,
+  );
+  assert.equal(new Set(results.map((state) => state.currentPrice)).size, 1);
+  assert.equal(
+    new Set(results.map((state) => JSON.stringify(state.priceHistory))).size,
+    1,
+  );
+  assert.equal(
+    new Set(results.map(
+      (state) => state.actionHistory.at(-1).spindle.selectedId,
+    )).size,
+    1,
+  );
+  assert.equal(
+    new Set(results.map((state) => state.statementHistory.at(-1).text)).size,
+    1,
+  );
+});
+
+test("player and NPC posteriors stay normalized and duplicate source ids are idempotent", () => {
+  const inspected = resolveTurn(lacquerBoxCase, start(), {
+    kind: "inspect",
+    targetId: "joint",
+  });
+  const challenged = resolveTurn(lacquerBoxCase, inspected, {
+    kind: "dialogue",
+    topicId: "repair-history",
+    tone: "professional",
+    evidenceId: "modern-adhesive-trace",
+  });
+  const playerPosterior = calculatePosterior(
+    lacquerBoxCase,
+    challenged.discoveredEvidenceIds,
+    challenged.statementHistory,
+  );
+  const npcSingle = calculateNpcPosterior(
+    lacquerBoxCase,
+    ["modern-adhesive-trace"],
+  );
+  const npcDuplicate = calculateNpcPosterior(
+    lacquerBoxCase,
+    ["modern-adhesive-trace", "modern-adhesive-trace"],
+  );
+
+  assertPosteriorNormalized(playerPosterior, "player posterior");
+  assertPosteriorNormalized(challenged.npcPosterior, "NPC posterior");
+  assert.deepEqual(challenged.npcPosterior, npcSingle);
+  assert.deepEqual(npcDuplicate, npcSingle);
 });
 
 test("NPC statements update judgment but never read the hidden truth", () => {
@@ -344,7 +598,7 @@ test("NPC statements update judgment but never read the hidden truth", () => {
     informedResults.map((result) => JSON.stringify(result.posterior)),
   ).size, 1);
   assert.equal(new Set(
-    informedResults.map((result) => result.objectiveScore),
+    informedResults.map((result) => result.qualityGrade),
   ).size, 3);
 });
 
@@ -368,11 +622,12 @@ test("objective outcome and judgment quality distinguish luck from skill", () =>
   assert.equal(fakeBuy.actualNet, -60);
   assert.equal(fakeBuy.endingTitle, "看走眼");
   assert.equal(treasureBuy.actualNet, 50);
-  assert.equal(treasureBuy.endingTitle, "侥幸得手");
+  assert.equal(treasureBuy.endingTitle, "险中得手");
   assert.equal(treasureReject.actualNet, 0);
-  assert.equal(treasureReject.endingTitle, "判断合理，但客观失手");
+  assert.equal(treasureReject.endingTitle, "判断有据，仍错过机会");
   assert.equal(fakeBuy.judgmentScore, treasureBuy.judgmentScore);
-  assert.notEqual(fakeBuy.objectiveScore, treasureBuy.objectiveScore);
+  assert.notEqual(fakeBuy.qualityGrade, treasureBuy.qualityGrade);
+  assert.notEqual(fakeBuy.netGrade, treasureBuy.netGrade);
 });
 
 test("same truth and transaction preserve objective result while evidence changes judgment", () => {
@@ -393,7 +648,9 @@ test("same truth and transaction preserve objective result while evidence change
   ).settlement;
 
   assert.equal(blind.actualNet, informed.actualNet);
-  assert.equal(blind.objectiveScore, informed.objectiveScore);
+  assert.equal(blind.qualityGrade, informed.qualityGrade);
+  assert.equal(blind.netGrade, informed.netGrade);
+  assert.equal(blind.bargainingGrade, informed.bargainingGrade);
   assert.ok(informed.judgmentScore > blind.judgmentScore);
 });
 
@@ -535,4 +792,5 @@ test("complete replay is deterministic and trace snapshots are internally consis
   }
   assert.ok(first.settlement.objectiveFormula.length >= 4);
   assert.ok(first.settlement.judgmentFormula.length >= 4);
+  assert.ok(first.settlement.gradeFormula.length >= 5);
 });

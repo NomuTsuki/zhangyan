@@ -3,13 +3,17 @@
 import { useMemo, useState } from "react";
 import { lacquerBoxCase } from "../content/lacquer-box";
 import {
+  calculatePosterior,
   createInitialWorldState,
   getDiscoveredEvidence,
+  getNpcPricing,
+  getPlayerReferenceOffer,
   getStateLabels,
   getTestConsent,
   getTruthForDebug,
   resolveTurn,
 } from "../game/resolve-action";
+import { calculateNegotiationCapacity } from "../game/negotiation";
 import type {
   ActionTone,
   EvidenceDefinition,
@@ -42,6 +46,14 @@ const phaseLabels: Record<NPCPhase, string> = {
   pressured: "受压",
   negotiating: "议价",
   exited: "离场",
+};
+
+const observablePhaseLabels: Record<NPCPhase, string> = {
+  relaxed: "语气仍然放松",
+  cautious: "回答变得谨慎",
+  pressured: "明显感到受压",
+  negotiating: "开始认真议价",
+  exited: "结束交谈并离场",
 };
 
 const toneOptions: Array<{
@@ -79,6 +91,10 @@ const stateColors = {
 } as const;
 
 const stateLabelMap = getStateLabels();
+const evidenceCatalog = lacquerBoxCase.evidence as Record<
+  string,
+  EvidenceDefinition
+>;
 
 function MockBadge() {
   return <span className="mock-badge">规则样片</span>;
@@ -241,23 +257,63 @@ function StateTimelineChart({ state }: { state: WorldState }) {
 
 function EvidenceMiniCard({
   evidenceId,
+  state,
 }: {
   evidenceId: string;
+  state: WorldState;
 }) {
-  const evidence = (
-    lacquerBoxCase.evidence as Record<string, EvidenceDefinition>
-  )[evidenceId];
+  const evidence = evidenceCatalog[evidenceId];
+  const isShared = state.sharedEvidenceIds.includes(evidenceId);
+  const visibility =
+    evidence.kind === "statement"
+      ? { label: "卖家陈述", className: "is-statement" }
+      : evidence.kind === "test"
+        ? { label: "共同检测", className: "is-test" }
+        : isShared
+          ? { label: "双方已知", className: "is-shared" }
+          : { label: "仅你掌握", className: "is-private" };
   return (
     <article className="evidence-list-card">
       <div className="card-topline">
         <span>{evidence.kind === "statement" ? "陈述证据" : evidence.kind === "test" ? "检测证据" : "器物证据"}</span>
         <strong>{evidence.strength}</strong>
       </div>
+      <span className={`evidence-visibility ${visibility.className}`}>
+        {visibility.label}
+      </span>
       <h3>{evidence.name}</h3>
       <p><strong>观察事实：</strong>{evidence.detail}</p>
       <p><strong>可能含义：</strong>{evidence.inference}</p>
       <small><strong>温和导向：</strong>{evidence.lead}</small>
     </article>
+  );
+}
+
+function StatementSourceBadge({
+  sourceKind,
+  confidence,
+}: {
+  sourceKind: "memory" | "judgment" | "refusal";
+  confidence: number;
+}) {
+  const sourceLabel =
+    sourceKind === "memory"
+      ? "个人回忆"
+      : sourceKind === "judgment"
+        ? "主观判断"
+        : "拒绝回答";
+  const confidenceLabel =
+    sourceKind === "refusal"
+      ? "未提供信息"
+      : confidence >= 0.75
+        ? "把握较高"
+        : confidence >= 0.45
+          ? "把握一般"
+          : "把握较低";
+  return (
+    <span className={`statement-source-badge is-${sourceKind}`}>
+      {sourceLabel} · {confidenceLabel}
+    </span>
   );
 }
 
@@ -364,6 +420,16 @@ function DebugRail({
 }) {
   const revealSecrets = state.status === "settled";
   const truth = revealSecrets ? getTruthForDebug(lacquerBoxCase, state) : null;
+  const playerPosterior = calculatePosterior(
+    lacquerBoxCase,
+    state.discoveredEvidenceIds,
+    state.statementHistory,
+  );
+  const npcPricing = getNpcPricing(lacquerBoxCase, state);
+  const playerReference = getPlayerReferenceOffer(lacquerBoxCase, state);
+  const sharedEvidence = state.sharedEvidenceIds
+    .map((evidenceId) => evidenceCatalog[evidenceId])
+    .filter((evidence): evidence is EvidenceDefinition => Boolean(evidence));
   const lastTurn = state.actionHistory.at(-1);
   const settlement = state.settlement;
   const pageLabel =
@@ -402,6 +468,83 @@ function DebugRail({
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="debug-panel">
+        <div className="debug-panel-title">
+          <h3>双后验与信息账本</h3>
+          <span>仅开发侧可见</span>
+        </div>
+        <div className="dual-posterior-debug">
+          {playerPosterior.map((playerEntry) => {
+            const npcEntry = state.npcPosterior.find(
+              (entry) => entry.variantId === playerEntry.variantId,
+            );
+            return (
+              <div key={playerEntry.variantId}>
+                <strong>{playerEntry.label}</strong>
+                <span>玩家 {(playerEntry.probability * 100).toFixed(1)}%</span>
+                <span>NPC {((npcEntry?.probability ?? 0) * 100).toFixed(1)}%</span>
+              </div>
+            );
+          })}
+        </div>
+        <div className="debug-ledger">
+          <strong>双方共享账本 · {sharedEvidence.length} 条</strong>
+          {sharedEvidence.length > 0 ? (
+            <ul>
+              {sharedEvidence.map((evidence) => (
+                <li key={evidence.id}>{evidence.name} · {evidence.topic}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>尚无共享物证；观察结果仍只在玩家证据簿中。</p>
+          )}
+        </div>
+        <div className="debug-private-ledger">
+          <strong>NPC初始私有信号</strong>
+          <ul>
+            {lacquerBoxCase.npcProfile.privateSignals.map((signal) => (
+              <li key={signal.id}>
+                {signal.label} · {signal.kind === "memory" ? "记忆" : "判断"}
+                {" · "}置信 {signal.confidence}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="debug-panel">
+        <div className="debug-panel-title">
+          <h3>NPC主观定价</h3>
+          <span>接受线 {npcPricing.acceptLine}</span>
+        </div>
+        <dl className="debug-snapshot">
+          <div><dt>NPC Q10 / Q50 / Q75</dt><dd>{npcPricing.q10} / {npcPricing.q50} / {npcPricing.q75}</dd></div>
+          <div><dt>主观期望值</dt><dd>{npcPricing.expectedValue.toFixed(1)}</dd></div>
+          <div><dt>风险厌恶 / 急迫度</dt><dd>{lacquerBoxCase.npcProfile.riskAversion} / {lacquerBoxCase.npcProfile.urgency}</dd></div>
+          <div><dt>专业度 / 真诚敏感</dt><dd>{lacquerBoxCase.npcProfile.expertise} / {lacquerBoxCase.npcProfile.honestySensitivity}</dd></div>
+          <div><dt>立场</dt><dd>{npcPricing.stance} · {npcPricing.stanceScore}</dd></div>
+          <div><dt>普通接受线</dt><dd>{npcPricing.acceptLine}</dd></div>
+          <div><dt>无条件买断线</dt><dd>{npcPricing.buyoutLine}</dd></div>
+          <div><dt>目标要价</dt><dd>{npcPricing.targetAsk}</dd></div>
+          <div><dt>玩家谨慎参考</dt><dd>{playerReference.suggestedOffer}</dd></div>
+        </dl>
+        <div className="debug-formula-stack">
+          {npcPricing.formula.map((line) => <code key={line}>{line}</code>)}
+          <code>{playerReference.formula}</code>
+        </div>
+        {state.priceHistory.length > 0 && (
+          <div className="debug-price-history">
+            <strong>正式重估记录</strong>
+            {state.priceHistory.map((entry) => (
+              <p key={`${entry.turn}-${entry.before}-${entry.after}`}>
+                第 {entry.turn} 轮 · {entry.before} → {entry.after}
+                <small>{entry.reasons.join("；")}</small>
+              </p>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="debug-panel">
@@ -446,8 +589,9 @@ function DebugRail({
           </section>
 
           <section className="debug-panel debug-report">
-            <div className="debug-panel-title"><h3>客观结果公式</h3><span>{settlement.objectiveScore} / 100</span></div>
+            <div className="debug-panel-title"><h3>成果等级公式</h3><span>{settlement.overallGrade}</span></div>
             <div className="debug-formula-stack">
+              {settlement.gradeFormula.map((line) => <code key={line}>{line}</code>)}
               {settlement.objectiveFormula.map((line) => <code key={line}>{line}</code>)}
             </div>
           </section>
@@ -482,6 +626,11 @@ function DebugRail({
   );
 }
 
+function defaultOfferForState(state: WorldState) {
+  const reference = getPlayerReferenceOffer(lacquerBoxCase, state);
+  return Math.max(1, Math.min(reference.suggestedOffer, state.currentPrice - 1));
+}
+
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("home");
   const [worldState, setWorldState] = useState<WorldState>(() =>
@@ -492,6 +641,12 @@ export default function Home() {
   const [selectedTone, setSelectedTone] =
     useState<ActionTone>("professional");
   const [selectedEvidenceId, setSelectedEvidenceId] = useState("");
+  const [offerInput, setOfferInput] = useState(() =>
+    String(defaultOfferForState(worldState)),
+  );
+  const [buyoutInput, setBuyoutInput] = useState(() =>
+    String(defaultOfferForState(worldState)),
+  );
   const [evidenceReturnScreen, setEvidenceReturnScreen] =
     useState<"investigate" | "trade">("investigate");
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -500,6 +655,47 @@ export default function Home() {
     () => getDiscoveredEvidence(lacquerBoxCase, worldState),
     [worldState],
   );
+  const privateEvidence = discoveredEvidence.filter(
+    (evidence) =>
+      evidence.kind !== "statement"
+      && !worldState.sharedEvidenceIds.includes(evidence.id),
+  );
+  const sharedEvidence = discoveredEvidence.filter(
+    (evidence) => worldState.sharedEvidenceIds.includes(evidence.id),
+  );
+  const statementEvidence = discoveredEvidence.filter(
+    (evidence) => evidence.kind === "statement",
+  );
+  const selectedEvidence = discoveredEvidence.find(
+    (evidence) => evidence.id === selectedEvidenceId,
+  );
+  const selectedEvidenceIsShared = selectedEvidence
+    ? worldState.sharedEvidenceIds.includes(selectedEvidence.id)
+    : false;
+  const selectedEvidenceRequiresDisclosure =
+    Boolean(selectedEvidence)
+    && selectedEvidence?.kind !== "statement"
+    && !selectedEvidenceIsShared;
+  const playerReference = useMemo(
+    () => getPlayerReferenceOffer(lacquerBoxCase, worldState),
+    [worldState],
+  );
+  const negotiationPreview = useMemo(
+    () => calculateNegotiationCapacity(worldState.npcState),
+    [worldState.npcState],
+  );
+  const bargainingRemaining =
+    worldState.negotiation?.remainingCapacity ?? negotiationPreview.capacity;
+  const offer = Number(offerInput);
+  const buyoutOffer = Number(buyoutInput);
+  const offerIsValid =
+    Number.isInteger(offer)
+    && offer > 0
+    && offer < worldState.currentPrice;
+  const buyoutIsValid =
+    Number.isInteger(buyoutOffer)
+    && buyoutOffer > 0
+    && buyoutOffer < worldState.currentPrice;
   const lastTurn = worldState.actionHistory.at(-1);
   const selectedTarget = lacquerBoxCase.observationTargets.find(
     (item) => item.id === selectedTargetId,
@@ -535,6 +731,9 @@ export default function Home() {
     try {
       const next = resolveTurn(lacquerBoxCase, worldState, action);
       setWorldState(next);
+      const nextDefaultOffer = String(defaultOfferForState(next));
+      setOfferInput(nextDefaultOffer);
+      setBuyoutInput(nextDefaultOffer);
       setFeedback(null);
       setScreen(next.status === "settled" ? "review" : "response");
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -544,12 +743,16 @@ export default function Home() {
   }
 
   function resetPrototype() {
+    const resetState = createInitialWorldState(lacquerBoxCase);
     setScreen("home");
-    setWorldState(createInitialWorldState(lacquerBoxCase));
+    setWorldState(resetState);
     setSelectedTargetId("surface");
     setSelectedTopicId("repair-history");
     setSelectedTone("professional");
     setSelectedEvidenceId("");
+    const resetOffer = String(defaultOfferForState(resetState));
+    setOfferInput(resetOffer);
+    setBuyoutInput(resetOffer);
     setEvidenceReturnScreen("investigate");
     setFeedback(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -634,9 +837,21 @@ export default function Home() {
                   <blockquote key={claim.id}>“{claim.text}”</blockquote>
                 ))}
               </section>
+              <section className="seller-cue-card">
+                <div className="section-title">
+                  <h2>来客印象</h2>
+                  <span>从言行观察</span>
+                </div>
+                <div className="public-trait-row">
+                  {lacquerBoxCase.npcProfile.publicTraits.map((trait) => (
+                    <span key={trait}>{trait}</span>
+                  ))}
+                </div>
+                <p>{lacquerBoxCase.seller.summary}</p>
+              </section>
               <div className="price-row">
-                <div><span>卖家开价</span><strong>{lacquerBoxCase.seller.openingPrice} 价值点</strong></div>
-                <small>游戏内量化值，不对应真实市场人民币</small>
+                <div><span>卖家暂时报价</span><strong>{lacquerBoxCase.seller.openingPrice} 价值点</strong></div>
+                <small>这是刘先生基于现有认识的报价，不是鉴定结论；游戏数值不对应人民币。</small>
               </div>
               <div className="button-stack">
                 <button className="primary-button" onClick={() => go("investigate")}>进入调查循环</button>
@@ -650,13 +865,13 @@ export default function Home() {
               <ScreenHeading
                 eyebrow="P2 · 交叉调查"
                 title="边看边问，把线索连成证据"
-                description="检查、询问、追问和议价共用行动点；交易入口始终保留。"
+                description="检查、询问与共同检测消耗调查行动点；正式报价另用议价容量，交易入口始终保留。"
               />
 
               <div className="resource-row resource-triple">
-                <div><span>行动点</span><strong>{worldState.actionPoints} / {lacquerBoxCase.actionBudget}</strong></div>
-                <div><span>证据</span><strong>{discoveredEvidence.length}</strong></div>
-                <div><span>当前价</span><strong>{worldState.currentPrice}</strong></div>
+                <div><span>调查行动点</span><strong>{worldState.actionPoints} / {lacquerBoxCase.actionBudget}</strong></div>
+                <div><span>证据账本</span><strong>{privateEvidence.length} 私有 · {sharedEvidence.length} 共享</strong></div>
+                <div><span>暂时报价</span><strong>{worldState.currentPrice}</strong></div>
               </div>
 
               {worldState.actionPoints === 0 && (
@@ -693,6 +908,10 @@ export default function Home() {
                 <div className="soft-guidance">
                   <strong>背景提示</strong>
                   <p>{selectedTarget.knowledgeHint}</p>
+                </div>
+                <div className="private-observation-note">
+                  <strong>观察结果默认仅你掌握</strong>
+                  <p>刘先生知道你检查过这个位置，但在你主动出示前，他不知道你的观察结论。</p>
                 </div>
                 <button
                   className="primary-button"
@@ -731,13 +950,56 @@ export default function Home() {
                     onChange={(event) => setSelectedEvidenceId(event.target.value)}
                   >
                     <option value="">不出示证据，先固定说法</option>
-                    {discoveredEvidence.map((evidence) => (
-                      <option value={evidence.id} key={evidence.id}>
-                        {evidence.name} · {evidence.topic}
-                      </option>
-                    ))}
+                    {privateEvidence.length > 0 && (
+                      <optgroup label="仅你掌握 · 本次出示后双方已知">
+                        {privateEvidence.map((evidence) => (
+                          <option value={evidence.id} key={evidence.id}>
+                            {evidence.name} · {evidence.topic}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
+                    {sharedEvidence.length > 0 && (
+                      <optgroup label="双方已经知道">
+                        {sharedEvidence.map((evidence) => (
+                          <option value={evidence.id} key={evidence.id}>
+                            {evidence.name} · {evidence.topic}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
+                    {statementEvidence.length > 0 && (
+                      <optgroup label="卖家此前陈述">
+                        {statementEvidence.map((evidence) => (
+                          <option value={evidence.id} key={evidence.id}>
+                            {evidence.name} · {evidence.topic}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
                   </select>
                 </label>
+
+                {selectedEvidence && (
+                  <div
+                    className={`disclosure-preview ${
+                      selectedEvidenceRequiresDisclosure
+                        ? "will-share"
+                        : "already-shared"
+                    }`}
+                  >
+                    <strong>
+                      {selectedEvidenceRequiresDisclosure
+                        ? "本次质询会公开这条证据"
+                        : "这条信息已经为双方所知"}
+                    </strong>
+                    <p>
+                      {selectedEvidenceRequiresDisclosure
+                        ? `出示「${selectedEvidence.name}」后，刘先生也会掌握这项事实；它可能补足口供，也可能触发重新估价。`
+                        : "再次引用不会重复提高信息权重；问题与语气仍会影响对方的回应。"}
+                    </p>
+                  </div>
+                )}
 
                 <p className="builder-label">3. 选择表达方式</p>
                 <div className="tone-compact">
@@ -764,7 +1026,11 @@ export default function Home() {
                     evidenceId: selectedEvidenceId || undefined,
                   })}
                 >
-                  {selectedEvidenceId ? "引用证据追问（-1 行动点）" : "开放询问（-1 行动点）"}
+                  {selectedEvidenceId
+                    ? selectedEvidenceRequiresDisclosure
+                      ? `出示「${selectedEvidence?.name}」并追问（-1 行动点）`
+                      : "引用双方已知信息追问（-1 行动点）"
+                    : "不出示证据，直接询问（-1 行动点）"}
                 </button>
               </section>
 
@@ -797,10 +1063,19 @@ export default function Home() {
                 title="事实、解释和导向分开记录"
                 description="证据簿只保存信息，不在这里直接发起行动。"
               />
+              <div className="evidence-ledger-summary">
+                <div><span>仅你掌握</span><strong>{privateEvidence.length}</strong></div>
+                <div><span>双方已知</span><strong>{sharedEvidence.length}</strong></div>
+                <p>“双方已知”只表示事实已经公开，不表示双方会作出相同判断。</p>
+              </div>
               {discoveredEvidence.length > 0 ? (
                 <div className="evidence-list">
                   {discoveredEvidence.map((evidence) => (
-                    <EvidenceMiniCard evidenceId={evidence.id} key={evidence.id} />
+                    <EvidenceMiniCard
+                      evidenceId={evidence.id}
+                      state={worldState}
+                      key={evidence.id}
+                    />
                   ))}
                 </div>
               ) : (
@@ -811,13 +1086,28 @@ export default function Home() {
               )}
 
               <section className="statement-log">
-                <div className="section-title"><h2>NPC陈述历史</h2><span>{worldState.statementHistory.length} 条</span></div>
-                {worldState.statementHistory.length > 0 ? worldState.statementHistory.map((statement) => (
+                <div className="section-title">
+                  <h2>NPC陈述历史</h2>
+                  <span>{lacquerBoxCase.claims.length + worldState.statementHistory.length} 条</span>
+                </div>
+                {lacquerBoxCase.claims.map((claim) => (
+                  <div className="statement-record is-initial" key={claim.id}>
+                    <span>来客页 · 初始说法 · 尚未核验</span>
+                    <blockquote>“{claim.text}”</blockquote>
+                  </div>
+                ))}
+                {worldState.statementHistory.map((statement) => (
                   <div key={`${statement.turn}-${statement.topicId}`}>
-                    <span>第 {statement.turn} 轮 · {lacquerBoxCase.dialogueTopics.find((topic) => topic.id === statement.topicId)?.label}</span>
+                    <span>
+                      第 {statement.turn} 轮 · {lacquerBoxCase.dialogueTopics.find((topic) => topic.id === statement.topicId)?.label}
+                    </span>
+                    <StatementSourceBadge
+                      sourceKind={statement.sourceKind}
+                      confidence={statement.confidence}
+                    />
                     <blockquote>“{statement.text}”</blockquote>
                   </div>
-                )) : <p>初始陈述已记录；后续询问会在这里形成时间线。</p>}
+                ))}
               </section>
 
               <button className="secondary-button" onClick={() => go(evidenceReturnScreen)}>
@@ -834,12 +1124,10 @@ export default function Home() {
                 description={lastTurn.actionLabel}
               />
 
-              {lastTurn.changes.length > 0 && (
-                <div className="phase-change">
-                  <span>{phaseLabels[lastTurn.before.npcState.phase]}</span>
-                  <i aria-hidden="true">→</i>
-                  <strong>{phaseLabels[lastTurn.after.npcState.phase]}</strong>
-                  <MockBadge />
+              {lastTurn.before.npcState.phase !== lastTurn.after.npcState.phase && (
+                <div className="observable-attitude-change">
+                  <span>可观察反应</span>
+                  <strong>{observablePhaseLabels[lastTurn.after.npcState.phase]}</strong>
                 </div>
               )}
 
@@ -849,15 +1137,55 @@ export default function Home() {
                   <strong>行动点 -{lastTurn.actionPointCost}</strong>
                 </div>
                 {lastTurn.statement
-                  ? <blockquote>“{lastTurn.statement.text}”</blockquote>
+                  ? (
+                    <>
+                      <StatementSourceBadge
+                        sourceKind={lastTurn.statement.sourceKind}
+                        confidence={lastTurn.statement.confidence}
+                      />
+                      <blockquote>“{lastTurn.statement.text}”</blockquote>
+                    </>
+                  )
                   : <p>{lastTurn.description}</p>}
               </section>
+
+              {(lastTurn.sharedEvidenceAdded?.length ?? 0) > 0 && (
+                <section className="shared-evidence-notice">
+                  <div className="section-title">
+                    <h2>信息已公开</h2>
+                    <span>双方共享</span>
+                  </div>
+                  <p>
+                    {lastTurn.sharedEvidenceAdded
+                      ?.map((evidenceId) => evidenceCatalog[evidenceId]?.name)
+                      .filter(Boolean)
+                      .join("、")}
+                    已进入双方共享账本。刘先生现在也能依据这些事实重新判断器物。
+                  </p>
+                </section>
+              )}
+
+              {lastTurn.priceChange && (
+                <section className="reprice-notice" role="status">
+                  <span>卖家正式重新估价</span>
+                  <div>
+                    <strong>{lastTurn.priceChange.before}</strong>
+                    <i aria-hidden="true">→</i>
+                    <strong>{lastTurn.priceChange.after}</strong>
+                  </div>
+                  <p>{lastTurn.priceChange.publicReason}</p>
+                </section>
+              )}
 
               {lastTurn.evidenceAdded.length > 0 && (
                 <section className="new-evidence-stack">
                   <div className="section-title"><h2>本轮新增证据</h2><span>{lastTurn.evidenceAdded.length} 条</span></div>
                   {lastTurn.evidenceAdded.map((evidenceId) => (
-                    <EvidenceMiniCard evidenceId={evidenceId} key={evidenceId} />
+                    <EvidenceMiniCard
+                      evidenceId={evidenceId}
+                      state={worldState}
+                      key={evidenceId}
+                    />
                   ))}
                 </section>
               )}
@@ -870,14 +1198,25 @@ export default function Home() {
               )}
 
               <div className="button-stack">
-                <button
-                  className="primary-button"
-                  onClick={() => go(worldState.actionPoints > 0 ? "investigate" : "trade")}
-                >
-                  {worldState.actionPoints > 0 ? "继续调查" : "行动点耗尽，进入交易"}
-                </button>
-                <button className="secondary-button" onClick={() => go("trade")}>现在进入交易</button>
-                <button className="text-button" onClick={() => openEvidence("investigate")}>查看证据簿</button>
+                {lastTurn.action.kind === "inspect" ? (
+                  <button
+                    className="primary-button"
+                    onClick={() => go("investigate")}
+                  >
+                    收进证据簿，返回调查
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      className="primary-button"
+                      onClick={() => go(worldState.negotiation ? "trade" : "investigate")}
+                    >
+                      {worldState.negotiation ? "返回议价" : "继续调查"}
+                    </button>
+                    <button className="secondary-button" onClick={() => go("trade")}>现在进入交易</button>
+                    <button className="text-button" onClick={() => openEvidence("investigate")}>查看证据簿</button>
+                  </>
+                )}
               </div>
             </>
           )}
@@ -886,18 +1225,50 @@ export default function Home() {
             <>
               <ScreenHeading
                 eyebrow="P3 · 交易处置"
-                title="结束、议价，还是付费补证"
-                description="买下和拒绝是终局；折价与专项检测有真实代价，也可能失败。"
+                title="接受、报价，还是接走风险"
+                description="暂时报价与谨慎参考只是两个不同立场的信号；最终价格由你决定。"
               />
 
               <div className="resource-row resource-triple">
-                <div><span>行动点</span><strong>{worldState.actionPoints}</strong></div>
-                <div><span>当前价</span><strong>{worldState.currentPrice}</strong></div>
-                <div><span>检测费</span><strong>{worldState.feesPaid}</strong></div>
+                <div><span>调查行动点</span><strong>{worldState.actionPoints}</strong></div>
+                <div><span>议价容量</span><strong>{bargainingRemaining} / {worldState.negotiation?.initialCapacity ?? negotiationPreview.capacity}</strong></div>
+                <div><span>卖家暂时报价</span><strong>{worldState.currentPrice}</strong></div>
               </div>
 
+              <section className="conservative-reference-card">
+                <div>
+                  <span>参考簿 · 谨慎收购参考</span>
+                  <strong>{playerReference.suggestedOffer} 点</strong>
+                </div>
+                <p>
+                  只依据你目前掌握的证据形成，偏向控制损失；不保证卖家接受，也不代表器物真实价值。
+                </p>
+                <button
+                  className="reference-fill-button"
+                  disabled={playerReference.suggestedOffer >= worldState.currentPrice}
+                  onClick={() => {
+                    const referenceOffer = String(
+                      Math.max(
+                        1,
+                        Math.min(
+                          playerReference.suggestedOffer,
+                          worldState.currentPrice - 1,
+                        ),
+                      ),
+                    );
+                    setOfferInput(referenceOffer);
+                    setBuyoutInput(referenceOffer);
+                  }}
+                >
+                  填入报价框
+                </button>
+              </section>
+
               <div className="risk-summary">
-                <div><span>已知证据</span><strong>{discoveredEvidence.length} 条</strong></div>
+                <div>
+                  <span>你的证据簿</span>
+                  <strong>{privateEvidence.length} 私有 · {sharedEvidence.length} 共享</strong>
+                </div>
                 <ul>
                   {discoveredEvidence.slice(-3).map((evidence) => (
                     <li key={evidence.id}>{evidence.name}：{evidence.inference}</li>
@@ -908,28 +1279,97 @@ export default function Home() {
 
               <div className="trade-actions">
                 <button onClick={() => performAction({ kind: "buy" })}>
-                  <span><strong>按当前价买下</strong><em>终局</em></span>
-                  <small>支付 {worldState.currentPrice} 价值点，直接承担真伪与价值结果。</small>
+                  <span><strong>按当前要价购买</strong><em>0 AP · 终局</em></span>
+                  <small>支付 {worldState.currentPrice} 价值点，接受卖家当前条件并立即成交。</small>
                 </button>
-                <button
-                  disabled={worldState.actionPoints < 1 || worldState.currentPrice <= lacquerBoxCase.suggestedDiscount}
-                  onClick={() => performAction({ kind: "discount", offer: lacquerBoxCase.suggestedDiscount })}
-                >
-                  <span><strong>提出 {lacquerBoxCase.suggestedDiscount} 点折价</strong><em>-1 AP</em></span>
-                  <small>NPC可能接受、还价、拒绝或离场；不是必定成功的按钮。</small>
-                </button>
+
+                <section className="custom-offer-panel">
+                  <div className="trade-action-heading">
+                    <span><strong>自主报价</strong><em>-1 议价容量</em></span>
+                    <small>只谈价格；卖家可能接受、还价、拒绝或离场。</small>
+                  </div>
+                  <label>
+                    <span>你的整数报价</span>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      min="1"
+                      max={Math.max(1, worldState.currentPrice - 1)}
+                      step="1"
+                      value={offerInput}
+                      onChange={(event) => setOfferInput(event.target.value)}
+                    />
+                  </label>
+                  {!offerIsValid && (
+                    <small className="input-guidance">
+                      报价必须是低于 {worldState.currentPrice} 的正整数。
+                    </small>
+                  )}
+                  <button
+                    disabled={bargainingRemaining < 1 || !offerIsValid}
+                    onClick={() => performAction({ kind: "discount", offer })}
+                  >
+                    提交 {offerIsValid ? `${offer} 点` : ""}普通报价
+                  </button>
+                </section>
+
+                <section className="unconditional-buyout-panel">
+                  <div className="trade-action-heading">
+                    <span><strong>提出无条件买断</strong><em>-1 议价容量 · 终局</em></span>
+                    <small>用确定成交替卖家接走剩余的鉴定与价格波动风险。</small>
+                  </div>
+                  <div className="buyout-commitment">
+                    <strong>你的承诺</strong>
+                    <p>不再检测、不追加来源或修复条件；对方拒绝也立即结束本局。</p>
+                  </div>
+                  <label>
+                    <span>一次性最终价</span>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      min="1"
+                      max={Math.max(1, worldState.currentPrice - 1)}
+                      step="1"
+                      value={buyoutInput}
+                      onChange={(event) => setBuyoutInput(event.target.value)}
+                    />
+                  </label>
+                  {!buyoutIsValid && (
+                    <small className="input-guidance">
+                      买断价必须是低于 {worldState.currentPrice} 的正整数。
+                    </small>
+                  )}
+                  <button
+                    disabled={bargainingRemaining < 1 || !buyoutIsValid}
+                    onClick={() => performAction({ kind: "buyout", offer: buyoutOffer })}
+                  >
+                    以 {buyoutIsValid ? `${buyoutOffer} 点` : "当前输入"}提出最终买断
+                  </button>
+                </section>
+
                 <button
                   disabled={!testConsent.allowed}
                   onClick={() => performAction({ kind: "test", testId: lacquerBoxCase.test.id })}
                 >
-                  <span><strong>{lacquerBoxCase.test.label}</strong><em>-2 AP / -10价值</em></span>
-                  <small>{lacquerBoxCase.test.description} 检测后仍需交易决策。</small>
+                  <span>
+                    <strong>共同检测：{lacquerBoxCase.test.label}</strong>
+                    <em>-{lacquerBoxCase.test.actionPointCost} AP / -{lacquerBoxCase.test.valueCost}价值</em>
+                  </span>
+                  <small>
+                    {lacquerBoxCase.test.description} 结果会进入双方共享账本，可能触发卖家重新估价。
+                  </small>
                 </button>
                 <button onClick={() => performAction({ kind: "reject" })}>
-                  <span><strong>拒绝交易</strong><em>终局</em></span>
+                  <span><strong>拒绝交易</strong><em>0 AP · 终局</em></span>
                   <small>避免继续承担价格风险，但可能错失被低估的珍品。</small>
                 </button>
               </div>
+
+              {bargainingRemaining === 0 && (
+                <div className="strategy-feedback" role="status">
+                  议价容量已耗尽，不能继续自主报价；你仍可按当前要价购买或拒绝交易。
+                </div>
+              )}
 
               {!testConsent.allowed && (
                 <div className="strategy-feedback">
@@ -946,10 +1386,10 @@ export default function Home() {
               </button>
               <button
                 className="text-button"
-                disabled={worldState.actionPoints === 0}
+                disabled={Boolean(worldState.negotiation)}
                 onClick={() => go("investigate")}
               >
-                {worldState.actionPoints > 0 ? "返回调查" : "行动点耗尽，只能买下或拒绝"}
+                {worldState.negotiation ? "正式议价已开始，调查已锁定" : "返回调查"}
               </button>
             </>
           )}
@@ -959,13 +1399,13 @@ export default function Home() {
               <ScreenHeading
                 eyebrow="P4 · 双层结算"
                 title={settlement.endingTitle}
-                description="客观结果决定本局事实上的成败；判断质量解释你当时是否有理有据。"
+                description="综合等级同时看器物品质、实际收益、议价表现与判断质量，不再使用单一百分制阈值。"
               />
 
-              <div className={`outcome-banner ${settlement.objectiveSuccess ? "success" : "failure"}`}>
+              <div className={`outcome-banner ${settlement.actualNet >= 0 ? "success" : "failure"}`}>
                 <span>最终处置</span>
                 <h2>{settlement.choiceLabel}</h2>
-                <p>{settlement.objectiveLabel} · {settlement.judgmentLabel}</p>
+                <p>{settlement.outcomeLabel} · 综合等级 {settlement.overallGrade}</p>
               </div>
 
               <section className="truth-panel">
@@ -979,21 +1419,66 @@ export default function Home() {
               </section>
 
               <section className="score-panel score-panel-large">
-                <div><span>客观结果分</span><strong>{settlement.objectiveScore}</strong><small>{settlement.objectiveLabel}</small></div>
-                <div><span>判断质量分</span><strong>{settlement.judgmentScore}</strong><small>{settlement.judgmentLabel}</small></div>
+                <div><span>综合成果</span><strong>{settlement.overallGrade}</strong><small>{settlement.outcomeLabel}</small></div>
+                <div><span>物品品质</span><strong>{settlement.qualityGrade}</strong><small>本局综合等级上限 {settlement.qualityCap}</small></div>
+                <div><span>议价表现</span><strong>{settlement.bargainingGrade}</strong><small>相对入场价格与底价</small></div>
+                <div><span>判断质量</span><strong>{settlement.judgmentGrade}</strong><small>{settlement.judgmentLabel}</small></div>
                 <div><span>实际净结果</span><strong>{settlement.actualNet > 0 ? "+" : ""}{settlement.actualNet}</strong><small>价值 - 成交 - 检测费</small></div>
                 <div><span>机会损失</span><strong>{settlement.regret}</strong><small>最佳可能 - 实际结果</small></div>
               </section>
 
               <div className="review-evidence">
                 <div><span>本局发现</span><strong>{discoveredEvidence.length} 条证据</strong></div>
+                <div><span>信息公开</span><strong>{worldState.sharedEvidenceIds.length} 条共享</strong></div>
                 <div><span>有成本行动</span><strong>{worldState.actionHistory.filter((turn) => turn.actionPointCost > 0).length} 次</strong></div>
                 <div><span>检测费用</span><strong>{worldState.feesPaid} 点</strong></div>
               </div>
 
+              <section className="review-causal-timeline">
+                <div className="section-title">
+                  <h2>本局信息与交易拐点</h2>
+                  <span>玩家可见复盘</span>
+                </div>
+                <ol>
+                  {worldState.actionHistory.map((turn) => {
+                    const newlyPrivateEvidence = turn.evidenceAdded
+                      .filter((evidenceId) => !turn.sharedEvidenceAdded?.includes(evidenceId))
+                      .map((evidenceId) => evidenceCatalog[evidenceId]?.name)
+                      .filter(Boolean);
+                    const newlySharedEvidence = (turn.sharedEvidenceAdded ?? [])
+                      .map((evidenceId) => evidenceCatalog[evidenceId]?.name)
+                      .filter(Boolean);
+                    return (
+                      <li key={turn.turn}>
+                        <span>第 {turn.turn} 轮</span>
+                        <strong>{turn.actionLabel}</strong>
+                        {newlyPrivateEvidence.length > 0 && (
+                          <p>仅收进你的证据簿：{newlyPrivateEvidence.join("、")}</p>
+                        )}
+                        {newlySharedEvidence.length > 0 && (
+                          <p>向卖家公开：{newlySharedEvidence.join("、")}</p>
+                        )}
+                        {turn.statement && (
+                          <p>
+                            获得{turn.statement.sourceKind === "memory" ? "个人回忆" : turn.statement.sourceKind === "judgment" ? "主观判断" : "拒答记录"}：
+                            “{turn.statement.text}”
+                          </p>
+                        )}
+                        {turn.priceChange && (
+                          <p>
+                            卖家报价 {turn.priceChange.before} → {turn.priceChange.after}：
+                            {turn.priceChange.publicReason}
+                          </p>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ol>
+              </section>
+
               <div className="prototype-callout">
                 <MockBadge />
-                <p>桌面右侧已经展开四项状态曲线、每轮公式、候选行为评分、后验概率和结算公式。</p>
+                <p>桌面右侧已经展开双后验、共享账本、NPC定价线、四项状态曲线和完整结算公式。</p>
               </div>
 
               <button className="primary-button" onClick={resetPrototype}>重新体验</button>

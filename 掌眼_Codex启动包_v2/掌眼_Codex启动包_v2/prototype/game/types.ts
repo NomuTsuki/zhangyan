@@ -13,6 +13,25 @@ export const TRUTH_VARIANT_IDS = [
 
 export type NPCStateKey = (typeof NPC_STATE_KEYS)[number];
 export type TruthVariantId = (typeof TRUTH_VARIANT_IDS)[number];
+export type OutcomeGrade = "D" | "C" | "B" | "A" | "S" | "SS" | "SSS";
+export type OutcomeTag =
+  | "profitable"
+  | "break-even"
+  | "loss"
+  | "correct-avoidance"
+  | "missed-opportunity";
+export type OutcomeGrades = {
+  overallGrade: OutcomeGrade;
+  qualityGrade: OutcomeGrade;
+  qualityCap: OutcomeGrade;
+  netGrade: OutcomeGrade;
+  bargainingGrade: OutcomeGrade;
+  judgmentGrade: OutcomeGrade;
+  outcomeTag: OutcomeTag;
+  rawOverallIndex: number;
+  cappedOverallIndex: number;
+  formula: string[];
+};
 export type NPCPhase =
   | "relaxed"
   | "cautious"
@@ -53,6 +72,11 @@ export type BuyAction = {
   kind: "buy";
 };
 
+export type BuyoutAction = {
+  kind: "buyout";
+  offer: number;
+};
+
 export type RejectAction = {
   kind: "reject";
 };
@@ -63,6 +87,7 @@ export type PlayerAction =
   | TestAction
   | DiscountAction
   | BuyAction
+  | BuyoutAction
   | RejectAction;
 
 export type EvidenceLikelihoods = Record<TruthVariantId, number>;
@@ -85,6 +110,8 @@ export type TruthVariant = {
   label: string;
   summary: string;
   trueValue: number;
+  qualityGrade: OutcomeGrade;
+  overallGradeCap: OutcomeGrade;
   facts: string[];
 };
 
@@ -135,7 +162,22 @@ export type NPCProfile = {
   id: string;
   label: string;
   beliefSummary: string;
-  reservationPrice: number;
+  personalitySummary: string;
+  publicTraits: string[];
+  expertise: number;
+  honestySensitivity: number;
+  openness: number;
+  riskAversion: number;
+  urgency: number;
+  markup: number;
+  outsideOption: number;
+  privateSignals: Array<{
+    id: string;
+    label: string;
+    kind: "memory" | "judgment";
+    confidence: number;
+    likelihoods: EvidenceLikelihoods;
+  }>;
 };
 
 export type KnowledgeCard = {
@@ -214,18 +256,32 @@ export type SpindleTrace = {
   convergence: string[];
 };
 
+export type NegotiationState = {
+  started: true;
+  initialCapacity: number;
+  remainingCapacity: number;
+  entryAsk: number;
+  entryFloor: number;
+  offersMade: number;
+};
+
 export type StateSnapshot = {
   actionPoints: number;
   feesPaid: number;
   currentPrice: number;
   npcState: NPCState;
+  negotiation: NegotiationState | null;
   evidenceCount: number;
+  sharedEvidenceCount: number;
+  npcPosterior: PosteriorEntry[];
 };
 
 export type StatementRecord = {
   turn: number;
   topicId: string;
   behaviorId: string;
+  sourceKind: "memory" | "judgment" | "refusal";
+  confidence: number;
   text: string;
   signalId: string;
   signalLabel: string;
@@ -237,10 +293,13 @@ export type TurnRecord = {
   action: PlayerAction;
   actionLabel: string;
   actionPointCost: number;
+  negotiationCapacityCost: number;
   before: StateSnapshot;
   after: StateSnapshot;
   changes: StateChange[];
   evidenceAdded: string[];
+  sharedEvidenceAdded?: string[];
+  priceChange?: PriceChange;
   statement?: StatementRecord;
   title: string;
   description: string;
@@ -259,8 +318,18 @@ export type PosteriorEntry = {
 export type SettlementChoice =
   | "buy"
   | "discount-buy"
+  | "buyout-buy"
+  | "buyout-rejected"
   | "reject"
   | "seller-exited";
+
+export type PriceChange = {
+  turn: number;
+  before: number;
+  after: number;
+  publicReason: string;
+  reasons: string[];
+};
 
 export type SettlementResult = {
   choice: SettlementChoice;
@@ -274,9 +343,16 @@ export type SettlementResult = {
   oracleBestNet: number;
   regret: number;
   stakes: number;
-  objectiveScore: number;
-  objectiveSuccess: boolean;
-  objectiveLabel: string;
+  overallGrade: OutcomeGrade;
+  qualityGrade: OutcomeGrade;
+  qualityCap: OutcomeGrade;
+  netGrade: OutcomeGrade;
+  bargainingGrade: OutcomeGrade;
+  judgmentGrade: OutcomeGrade;
+  outcomeTag: OutcomeTag;
+  outcomeLabel: string;
+  rawOverallIndex: number;
+  cappedOverallIndex: number;
   posterior: PosteriorEntry[];
   expectedValue: number;
   chosenExpectedNet: number;
@@ -287,6 +363,7 @@ export type SettlementResult = {
   endingTitle: string;
   objectiveFormula: string[];
   judgmentFormula: string[];
+  gradeFormula: string[];
 };
 
 export type WorldState = {
@@ -297,10 +374,14 @@ export type WorldState = {
   status: CaseStatus;
   turn: number;
   actionPoints: number;
+  negotiation: NegotiationState | null;
   feesPaid: number;
   currentPrice: number;
   npcState: NPCState;
   discoveredEvidenceIds: string[];
+  sharedEvidenceIds: string[];
+  npcPosterior: PosteriorEntry[];
+  priceHistory: PriceChange[];
   inspectedTargetIds: string[];
   completedTestIds: string[];
   statementHistory: StatementRecord[];

@@ -30,6 +30,8 @@ test("standalone teacher demo contains the integrated loop and stays self-contai
   assert.match(html, /function resolveDialogue\(/);
   assert.match(html, /function resolveTest\(/);
   assert.match(html, /function resolveDiscount\(/);
+  assert.match(html, /function resolveBuyout\(/);
+  assert.match(html, /function calculateNpcPosterior\(/);
   assert.match(html, /function calculateSettlement\(/);
   assert.match(html, /function renderInvestigate\(/);
   assert.match(html, /function renderEvidence\(/);
@@ -43,6 +45,15 @@ test("standalone teacher demo contains the integrated loop and stays self-contai
   assert.match(html, /整局状态变化图/);
   assert.match(html, /定价评分分项：局末解锁/);
   assert.match(html, /同源陈述卡不重复计权/);
+  assert.match(html, /sharedEvidenceIds/);
+  assert.match(html, /npcPosterior/);
+  assert.match(html, /只强调不利部分/);
+  assert.match(html, /谨慎参考/);
+  assert.match(html, /按输入值提出普通报价/);
+  assert.match(html, /无条件买断/);
+  assert.match(html, /收进证据簿，返回调查/);
+  assert.match(html, /publicReason/);
+  assert.doesNotMatch(html, /reservationPrice/);
   assert.doesNotMatch(html, /<script[^>]+src=/i);
   assert.doesNotMatch(html, /<link[^>]+rel=["']stylesheet["']/i);
 
@@ -53,7 +64,12 @@ test("standalone teacher demo contains the integrated loop and stays self-contai
   assert.match(page, /function StateTimelineChart/);
   assert.match(page, /function DebugTurnDetails/);
   assert.match(page, /function DebugRail/);
-  assert.match(page, /客观结果公式/);
+  assert.match(page, /getPlayerReferenceOffer/);
+  assert.doesNotMatch(page, /selectedDisclosureFrame/);
+  assert.match(page, /kind: "buyout"/);
+  assert.match(page, /review-causal-timeline/);
+  assert.match(page, /lastTurn\.priceChange\.publicReason/);
+  assert.match(page, /成果等级公式/);
   assert.match(page, /判断质量公式/);
   assert.match(page, /className="debug-rail"/);
   assert.match(page, /<\/section>\s*<DebugRail/);
@@ -61,8 +77,12 @@ test("standalone teacher demo contains the integrated loop and stays self-contai
   assert.doesNotMatch(page, /送检后付款/);
 
   assert.match(client, /function resolveAction\(/);
+  assert.match(client, /function calculateNpcPosterior\(/);
+  assert.match(client, /function resolveBuyout\(/);
   assert.match(client, /function renderDebug\(/);
   assert.match(client, /kind !== "statement"/);
+  assert.match(client, /sharedEvidenceIds/);
+  assert.match(client, /playerReferenceOffer/);
   assert.match(client, /hidePricingTrace/);
   assert.match(client, /window\.__ZHANGYAN_DEBUG__/);
 

@@ -12,10 +12,14 @@ export const lacquerBoxCase = {
   seed: 20260723,
   suggestedDiscount: 60,
   claims: [
-    { id: "claim-inherited", text: "这是家里祖传下来的。", topic: "来源" },
+    {
+      id: "claim-inherited",
+      text: "这是父亲留下的家中旧物，我以前一直把它当成家传。",
+      topic: "来源",
+    },
     {
       id: "claim-never-restored",
-      text: "这件东西从来没有修过。",
+      text: "我接手以后没修过；更早有没有动过，我记不准。",
       topic: "修复历史",
     },
     {
@@ -33,9 +37,30 @@ export const lacquerBoxCase = {
   },
   npcProfile: {
     id: "family-resale-uncertain",
-    label: "把家中旧物当普通老盒出售",
-    beliefSummary: "卖家知道来源说法并不严谨，也不确定是否维修过，但不知道器物的客观真伪与准确价值。",
-    reservationPrice: 55,
+    label: "急售、重真诚的普通藏家",
+    beliefSummary: "卖家真心相信这是一件有年头的家中旧物，但对父辈购入时间、维修史与准确价值都没有把握。",
+    personalitySummary: "希望尽快成交，也很在意对方是否完整说明证据；专业能力有限，容易把家族记忆当成价值依据。",
+    publicTraits: ["急于出手", "看重诚意", "经验一般"],
+    expertise: 0.62,
+    honestySensitivity: 0.9,
+    openness: 0.75,
+    riskAversion: 0.72,
+    urgency: 0.68,
+    markup: 0.08,
+    outsideOption: 15,
+    privateSignals: [
+      {
+        id: "seller-family-impression",
+        label: "家中旧物与“从未大修”的综合印象",
+        kind: "memory",
+        confidence: 0.78,
+        likelihoods: {
+          counterfeit: 0.28,
+          "restored-genuine": 0.18,
+          "hidden-treasure": 0.54,
+        },
+      },
+    ],
   },
   truthVariants: {
     counterfeit: {
@@ -43,6 +68,8 @@ export const lacquerBoxCase = {
       label: "现代仿制品",
       summary: "木胎、漆层、五金与做旧痕迹均为现代制作。",
       trueValue: 20,
+      qualityGrade: "C",
+      overallGradeCap: "C",
       facts: [
         "木胎为现代机制板材",
         "漆层使用人工做旧工艺",
@@ -55,6 +82,8 @@ export const lacquerBoxCase = {
       label: "旧胎重修真品",
       summary: "主体为民国晚期旧物，但经历现代翻修、后配与后刻。",
       trueValue: 65,
+      qualityGrade: "A",
+      overallGradeCap: "A",
       facts: [
         "木胎为民国晚期旧物",
         "表面经过现代翻修",
@@ -67,6 +96,8 @@ export const lacquerBoxCase = {
       label: "被低估的珍品",
       summary: "器物整体年代、工艺与款识能够互相印证，保存状态罕见。",
       trueValue: 130,
+      qualityGrade: "SSS",
+      overallGradeCap: "SSS",
       facts: [
         "木胎与漆层均符合清末至民国早期工艺",
         "接口使用老化动物胶，未见现代拆修",
@@ -374,7 +405,7 @@ export const lacquerBoxCase = {
       label: "修复历史",
       evidenceTopics: ["修复历史"],
       prompt: "这件东西过去是否维修、换件或重新上漆？",
-      initialClaim: "这件东西从来没有修过。",
+      initialClaim: "我接手以后没修过；更早有没有动过，我记不准。",
       responseEvidenceId: "repair-admission",
       responses: {
         cooperate: "我父亲买来时可能收拾过，我接手以后没有再修。",
@@ -422,7 +453,7 @@ export const lacquerBoxCase = {
       label: "来源经历",
       evidenceTopics: ["来源"],
       prompt: "它最早从哪里得到，有没有票据或家族记录？",
-      initialClaim: "这是家里祖传下来的。",
+      initialClaim: "这是父亲留下的家中旧物，我以前一直把它当成家传。",
       responses: {
         cooperate: "父亲大概九十年代从旧货市场买的，票据早找不到了。",
         deflect: "是父亲留下的，我一直习惯说成家里传下来的。",

@@ -5,12 +5,14 @@ import type {
   DialogueAction,
   EvidenceDefinition,
   EvidenceStrength,
+  NegotiationState,
   NPCBehaviorId,
   NPCPhase,
   NPCState,
   NPCStateKey,
   PlayerAction,
   PosteriorEntry,
+  PriceChange,
   SettlementChoice,
   SettlementResult,
   SpindleTrace,
@@ -20,6 +22,8 @@ import type {
   TurnRecord,
   WorldState,
 } from "./types";
+import { calculateNegotiationCapacity } from "./negotiation.ts";
+import { calculateOutcomeGrades, gradeIndex } from "./outcome-grades.ts";
 
 const truthVariantIds: TruthVariantId[] = [
   "counterfeit",
@@ -101,7 +105,14 @@ function cloneState(state: WorldState): WorldState {
   return {
     ...state,
     npcState: cloneNpcState(state.npcState),
+    negotiation: state.negotiation ? { ...state.negotiation } : null,
     discoveredEvidenceIds: [...state.discoveredEvidenceIds],
+    sharedEvidenceIds: [...state.sharedEvidenceIds],
+    npcPosterior: state.npcPosterior.map((item) => ({ ...item })),
+    priceHistory: state.priceHistory.map((item) => ({
+      ...item,
+      reasons: [...item.reasons],
+    })),
     inspectedTargetIds: [...state.inspectedTargetIds],
     completedTestIds: [...state.completedTestIds],
     statementHistory: state.statementHistory.map((item) => ({
@@ -116,6 +127,7 @@ function cloneState(state: WorldState): WorldState {
           posterior: state.settlement.posterior.map((item) => ({ ...item })),
           objectiveFormula: [...state.settlement.objectiveFormula],
           judgmentFormula: [...state.settlement.judgmentFormula],
+          gradeFormula: [...state.settlement.gradeFormula],
         }
       : undefined,
   };
@@ -127,7 +139,10 @@ function snapshot(state: WorldState): StateSnapshot {
     feesPaid: state.feesPaid,
     currentPrice: state.currentPrice,
     npcState: cloneNpcState(state.npcState),
+    negotiation: state.negotiation ? { ...state.negotiation } : null,
     evidenceCount: state.discoveredEvidenceIds.length,
+    sharedEvidenceCount: state.sharedEvidenceIds.length,
+    npcPosterior: state.npcPosterior.map((item) => ({ ...item })),
   };
 }
 
@@ -195,7 +210,12 @@ function applyChanges(
 function appendTurn(
   before: WorldState,
   next: WorldState,
-  input: Omit<TurnRecord, "turn" | "before" | "after">,
+  input: Omit<
+    TurnRecord,
+    "turn" | "before" | "after" | "negotiationCapacityCost"
+  > & {
+    negotiationCapacityCost?: number;
+  },
 ) {
   const turn = before.turn + 1;
   const record: TurnRecord = {
@@ -203,16 +223,25 @@ function appendTurn(
     before: snapshot(before),
     after: snapshot(next),
     ...input,
+    negotiationCapacityCost: input.negotiationCapacityCost ?? 0,
   };
   next.turn = turn;
   next.actionHistory = [...before.actionHistory, record];
   return next;
 }
 
-function actionPointCost(action: PlayerAction, caseDefinition: CaseDefinition) {
+function investigationPointCost(
+  action: PlayerAction,
+  caseDefinition: CaseDefinition,
+) {
   if (action.kind === "buy" || action.kind === "reject") return 0;
+  if (action.kind === "discount" || action.kind === "buyout") return 0;
   if (action.kind === "test") return caseDefinition.test.actionPointCost;
   return 1;
+}
+
+function negotiationCapacityCost(action: PlayerAction) {
+  return action.kind === "discount" || action.kind === "buyout" ? 1 : 0;
 }
 
 function ensureActionAllowed(
@@ -222,9 +251,30 @@ function ensureActionAllowed(
 ) {
   if (state.status !== "active") throw new Error("本局已经结束");
   if (state.npcState.phase === "exited") throw new Error("卖家已经离场");
-  const cost = actionPointCost(action, caseDefinition);
-  if (state.actionPoints < cost) {
-    throw new Error(`行动点不足：需要 ${cost}，当前 ${state.actionPoints}`);
+  if (
+    state.negotiation
+    && (
+      action.kind === "inspect"
+      || action.kind === "dialogue"
+      || action.kind === "test"
+    )
+  ) {
+    throw new Error("正式议价已经开始，不能返回调查");
+  }
+  const investigationCost = investigationPointCost(action, caseDefinition);
+  if (state.actionPoints < investigationCost) {
+    throw new Error(
+      `行动点不足：需要 ${investigationCost}，当前 ${state.actionPoints}`,
+    );
+  }
+  const bargainingCost = negotiationCapacityCost(action);
+  const bargainingRemaining =
+    state.negotiation?.remainingCapacity
+    ?? calculateNegotiationCapacity(state.npcState).capacity;
+  if (bargainingRemaining < bargainingCost) {
+    throw new Error(
+      `议价容量不足：需要 ${bargainingCost}，当前 ${bargainingRemaining}`,
+    );
   }
 }
 
@@ -238,14 +288,14 @@ function getEvidence(
   return evidence;
 }
 
-function calculatePosterior(
+export function calculatePosterior(
   caseDefinition: CaseDefinition,
   evidenceIds: string[],
   statementHistory: WorldState["statementHistory"] = [],
 ): PosteriorEntry[] {
   // NPC 回应可以同时生成一张便于阅读的“陈述卡”和一个结构化陈述信号。
   // 两者来自同一次事件，因此陈述卡只负责展示，后验只计算结构化信号一次。
-  const independentEvidenceIds = evidenceIds.filter(
+  const independentEvidenceIds = [...new Set(evidenceIds)].filter(
     (evidenceId) => caseDefinition.evidence[evidenceId]?.kind !== "statement",
   );
   const uniqueStatementSignals = [
@@ -260,7 +310,11 @@ function calculatePosterior(
     }, 1 / truthVariantIds.length);
     const statementLikelihood = uniqueStatementSignals.reduce(
       (product, statement) =>
-        product * (statement.likelihoods[variantId] ?? 1),
+        product
+        * Math.pow(
+          Math.max(0.0001, statement.likelihoods[variantId] ?? 1),
+          statement.confidence,
+        ),
       1,
     );
     return {
@@ -281,28 +335,293 @@ function calculatePosterior(
   });
 }
 
-function discountThreshold(
+function normalizedPosterior(
   caseDefinition: CaseDefinition,
-  npcState: NPCState,
+  rawWeights: Array<{ variantId: TruthVariantId; weight: number }>,
 ) {
-  const trustPremium =
-    npcState.trust < 45
-      ? Math.ceil((45 - npcState.trust) * 0.15)
+  const total = rawWeights.reduce((sum, entry) => sum + entry.weight, 0) || 1;
+  return rawWeights.map(({ variantId, weight }) => ({
+    variantId,
+    label: caseDefinition.truthVariants[variantId].label,
+    probability: weight / total,
+    trueValue: caseDefinition.truthVariants[variantId].trueValue,
+  }));
+}
+
+export function calculateNpcPosterior(
+  caseDefinition: CaseDefinition,
+  sharedEvidenceIds: string[],
+): PosteriorEntry[] {
+  const uniqueSharedEvidenceIds = [...new Set(sharedEvidenceIds)].filter(
+    (evidenceId) => caseDefinition.evidence[evidenceId]?.kind !== "statement",
+  );
+  const rawWeights = truthVariantIds.map((variantId) => {
+    const privateWeight = caseDefinition.npcProfile.privateSignals.reduce(
+      (product, signal) =>
+        product
+        * Math.pow(
+          Math.max(0.0001, signal.likelihoods[variantId]),
+          signal.confidence,
+        ),
+      1 / truthVariantIds.length,
+    );
+    const sharedWeight = uniqueSharedEvidenceIds.reduce((product, evidenceId) => {
+      const likelihood =
+        caseDefinition.evidence[evidenceId]?.likelihoods[variantId] ?? 1;
+      return product
+        * Math.pow(
+          Math.max(0.0001, likelihood),
+          caseDefinition.npcProfile.expertise,
+        );
+    }, 1);
+    return {
+      variantId,
+      weight: privateWeight * sharedWeight,
+    };
+  });
+  return normalizedPosterior(caseDefinition, rawWeights);
+}
+
+function posteriorExpectedValue(posterior: PosteriorEntry[]) {
+  return posterior.reduce(
+    (sum, entry) => sum + entry.probability * entry.trueValue,
+    0,
+  );
+}
+
+function posteriorQuantile(posterior: PosteriorEntry[], quantile: number) {
+  const ordered = [...posterior].sort(
+    (left, right) => left.trueValue - right.trueValue,
+  );
+  let cumulative = 0;
+  for (const entry of ordered) {
+    cumulative += entry.probability;
+    if (cumulative >= quantile) return entry.trueValue;
+  }
+  return ordered.at(-1)?.trueValue ?? 0;
+}
+
+function posteriorEntropy(posterior: PosteriorEntry[]) {
+  return posterior.reduce(
+    (sum, entry) =>
+      entry.probability > 0
+        ? sum - entry.probability * Math.log2(entry.probability)
+        : sum,
+    0,
+  );
+}
+
+function roundToTick(value: number, tick = 5) {
+  return Math.max(tick, Math.round(value / tick) * tick);
+}
+
+function ceilToTick(value: number, tick = 5) {
+  return Math.max(tick, Math.ceil(value / tick) * tick);
+}
+
+function floorToTick(value: number, tick = 5) {
+  return Math.max(tick, Math.floor(value / tick) * tick);
+}
+
+export type NpcStance =
+  | "cooperative"
+  | "neutral"
+  | "guarded"
+  | "resistant";
+
+export function getNpcStance(npcState: NPCState) {
+  const controlFit = 100 - Math.abs(npcState.control - 50);
+  const score = round1(
+    npcState.trust * 0.4
+      + npcState.dealIntent * 0.35
+      + (100 - npcState.pressure) * 0.15
+      + controlFit * 0.1,
+  );
+  const stance: NpcStance =
+    score >= 68
+      ? "cooperative"
+      : score >= 52
+        ? "neutral"
+        : score >= 38
+          ? "guarded"
+          : "resistant";
+  return { stance, score };
+}
+
+export function getNpcPricing(
+  caseDefinition: CaseDefinition,
+  state: WorldState,
+) {
+  const posterior = state.npcPosterior;
+  const q10 = posteriorQuantile(posterior, 0.1);
+  const q25 = posteriorQuantile(posterior, 0.25);
+  const q50 = posteriorQuantile(posterior, 0.5);
+  const q75 = posteriorQuantile(posterior, 0.75);
+  const expectedValue = posteriorExpectedValue(posterior);
+  const subjectiveCenter = q50 * 0.6 + expectedValue * 0.4;
+  const spread = Math.max(0, (q75 - q25) / 2);
+  const profile = caseDefinition.npcProfile;
+  const outsideOption = Math.max(profile.outsideOption, q10 * 0.8);
+  const certaintyEquivalent = Math.max(
+    outsideOption,
+    subjectiveCenter
+      - profile.riskAversion * 0.25 * spread
+      - profile.urgency * 0.06 * subjectiveCenter,
+  );
+  const { stance, score: stanceScore } = getNpcStance(state.npcState);
+  const stanceMultiplier: Record<NpcStance, number> = {
+    cooperative: 0.94,
+    neutral: 1,
+    guarded: 1.08,
+    resistant: 1.2,
+  };
+  const uncappedAcceptLine = ceilToTick(
+    Math.max(outsideOption, certaintyEquivalent * stanceMultiplier[stance]),
+  );
+  const acceptLine = Math.min(state.currentPrice, uncappedAcceptLine);
+  const certaintyDiscount =
+    profile.riskAversion
+    * profile.urgency
+    * Math.max(0, q75 - q25)
+    * 0.08;
+  const buyoutLine = Math.min(
+    acceptLine,
+    floorToTick(Math.max(outsideOption, acceptLine - certaintyDiscount)),
+  );
+  const targetAsk = Math.max(
+    acceptLine,
+    roundToTick(
+      Math.max(
+        outsideOption,
+        subjectiveCenter * (1 + profile.markup) * stanceMultiplier[stance],
+      ),
+    ),
+  );
+  return {
+    posterior,
+    q10,
+    q25,
+    q50,
+    q75,
+    expectedValue,
+    subjectiveCenter,
+    spread,
+    entropy: posteriorEntropy(posterior),
+    outsideOption,
+    certaintyEquivalent,
+    stance,
+    stanceScore,
+    stanceMultiplier: stanceMultiplier[stance],
+    acceptLine,
+    buyoutLine,
+    targetAsk,
+    formula: [
+      `主观中枢 = 0.6×Q50(${q50}) + 0.4×期望值(${round1(expectedValue)}) = ${round1(subjectiveCenter)}`,
+      `确定性等价 = max(外部选项${round1(outsideOption)}, 主观中枢${round1(subjectiveCenter)} - 风险折减${round1(profile.riskAversion * 0.25 * spread)} - 急售折减${round1(profile.urgency * 0.06 * subjectiveCenter)}) = ${round1(certaintyEquivalent)}`,
+      `普通接受线 = min(当前报价${state.currentPrice}, 向上取整5(max(外部选项, 确定性等价×立场${stanceMultiplier[stance]}))) = ${acceptLine}`,
+      `无条件买断线 = 向下取整5(max(外部选项, 普通线 - 风险转移折价${round1(certaintyDiscount)})) = ${buyoutLine}`,
+    ],
+  };
+}
+
+export function getPlayerReferenceOffer(
+  caseDefinition: CaseDefinition,
+  state: WorldState,
+) {
+  const posterior = calculatePosterior(
+    caseDefinition,
+    state.discoveredEvidenceIds,
+    state.statementHistory,
+  );
+  const q20 = posteriorQuantile(posterior, 0.2);
+  const q50 = posteriorQuantile(posterior, 0.5);
+  const expectedValue = posteriorExpectedValue(posterior);
+  const safetyMargin = Math.max(5, q50 * 0.08);
+  const suggestedOffer = floorToTick(
+    Math.max(5, q20 - state.feesPaid - safetyMargin),
+  );
+  return {
+    posterior,
+    q20,
+    q50,
+    expectedValue,
+    entropy: posteriorEntropy(posterior),
+    safetyMargin,
+    suggestedOffer,
+    formula: `谨慎参考 = 向下取整5(max(5, 后验Q20(${q20}) - 已付检测费${state.feesPaid} - 安全垫${round1(safetyMargin)})) = ${suggestedOffer}`,
+  };
+}
+
+function dominantVariant(posterior: PosteriorEntry[]) {
+  return [...posterior].sort(
+    (left, right) => right.probability - left.probability,
+  )[0]?.variantId;
+}
+
+function refreshNpcPricing(
+  caseDefinition: CaseDefinition,
+  before: WorldState,
+  next: WorldState,
+  force = false,
+): PriceChange | undefined {
+  if (next.priceHistory.length >= 2) return undefined;
+  const beforeExpected = posteriorExpectedValue(before.npcPosterior);
+  const afterExpected = posteriorExpectedValue(next.npcPosterior);
+  const relativeShift =
+    beforeExpected > 0
+      ? Math.abs(afterExpected / beforeExpected - 1)
       : 0;
-  const pressurePremium =
-    npcState.pressure > 75
-      ? Math.ceil((npcState.pressure - 75) * 0.2)
-      : 0;
-  const intentDiscount =
-    npcState.dealIntent > 75
-      ? Math.min(5, Math.round((npcState.dealIntent - 75) * 0.15))
-      : 0;
-  const threshold =
-    caseDefinition.npcProfile.reservationPrice
-    + trustPremium
-    + pressurePremium
-    - intentDiscount;
-  return { threshold, trustPremium, pressurePremium, intentDiscount };
+  const beforeMedian = posteriorQuantile(before.npcPosterior, 0.5);
+  const afterMedian = posteriorQuantile(next.npcPosterior, 0.5);
+  const dominantChanged =
+    dominantVariant(before.npcPosterior) !== dominantVariant(next.npcPosterior);
+  const beforeStance = getNpcStance(before.npcState).stance;
+  const afterStance = getNpcStance(next.npcState).stance;
+  const stanceChanged = beforeStance !== afterStance;
+  if (
+    !force
+    && relativeShift < 0.08
+    && beforeMedian === afterMedian
+    && !dominantChanged
+    && !stanceChanged
+  ) {
+    return undefined;
+  }
+
+  const pricing = getNpcPricing(caseDefinition, next);
+  const repriced = roundToTick(
+    next.currentPrice * 0.1 + pricing.targetAsk * 0.9,
+  );
+  if (repriced === next.currentPrice) return undefined;
+  const reasons: string[] = [];
+  if (force) reasons.push("共同检测产生了双方都能核验的新事实");
+  if (relativeShift >= 0.08) {
+    reasons.push(
+      `共享信息使卖家主观估值移动${round1(relativeShift * 100)}%`,
+    );
+  }
+  if (dominantChanged || beforeMedian !== afterMedian) {
+    reasons.push("卖家对器物最可能类型的判断发生跨档变化");
+  }
+  if (stanceChanged) {
+    reasons.push(`谈判立场由${beforeStance}转为${afterStance}`);
+  }
+  const event: PriceChange = {
+    turn: before.turn + 1,
+    before: next.currentPrice,
+    after: repriced,
+    publicReason: force
+      ? "共同检测出现了双方都能核验的新事实，卖家据此重新估价。"
+      : afterExpected < beforeExpected
+        ? "你公开的新事实让卖家重新考虑修复与价值风险。"
+        : afterExpected > beforeExpected
+          ? "你公开的新事实让卖家重新评估器物的年代与价值。"
+          : "谈判立场发生变化，卖家重新表明当前报价。",
+    reasons,
+  };
+  next.currentPrice = repriced;
+  next.priceHistory.push(event);
+  return event;
 }
 
 function settlementResult(
@@ -310,14 +629,16 @@ function settlementResult(
   state: WorldState,
   choice: SettlementChoice,
   paidPrice: number,
+  oracleDealFloor: number,
 ): SettlementResult {
   const truth = caseDefinition.truthVariants[state.truthVariantId];
-  const acquired = choice === "buy" || choice === "discount-buy";
-  const actualNet = (acquired ? truth.trueValue - paidPrice : 0) - state.feesPaid;
-  const initialDiscount = discountThreshold(
-    caseDefinition,
-    caseDefinition.initialNpcState,
-  );
+  const acquired =
+    choice === "buy"
+    || choice === "discount-buy"
+    || choice === "buyout-buy";
+  const actualNet = acquired
+    ? truth.trueValue - paidPrice - state.feesPaid
+    : 0;
   const oracleOptions = [
     {
       label: "开局直接拒绝",
@@ -328,28 +649,15 @@ function settlementResult(
       net: truth.trueValue - caseDefinition.seller.openingPrice,
     },
   ];
-  if (
-    caseDefinition.suggestedDiscount < caseDefinition.seller.openingPrice
-    && caseDefinition.suggestedDiscount >= initialDiscount.threshold
-  ) {
+  if (oracleDealFloor < caseDefinition.seller.openingPrice) {
     oracleOptions.push({
-      label: `提出界面可用的${caseDefinition.suggestedDiscount}点折价并成交`,
-      net: truth.trueValue - caseDefinition.suggestedDiscount,
+      label: `完全知情时按${oracleDealFloor}点最低可达买断线成交`,
+      net: truth.trueValue - oracleDealFloor,
     });
   }
   const oracleBestNet = Math.max(...oracleOptions.map((option) => option.net));
   const regret = Math.max(0, oracleBestNet - actualNet);
   const stakes = Math.max(caseDefinition.seller.openingPrice, truth.trueValue);
-  const objectiveScore = clamp(Math.round(100 - (regret / stakes) * 100));
-  const objectiveSuccess = objectiveScore >= 70;
-  const objectiveLabel =
-    objectiveScore >= 85
-      ? "客观成功"
-      : objectiveScore >= 70
-        ? "基本成功"
-        : objectiveScore >= 40
-          ? "客观失手"
-          : "重大损失";
 
   const posterior = calculatePosterior(
     caseDefinition,
@@ -404,18 +712,52 @@ function settlementResult(
         : judgmentScore >= 50
           ? "依据偏弱"
           : "判断失准";
-  const judgmentHigh = judgmentScore >= 70;
-  const endingTitle = objectiveSuccess
-    ? judgmentHigh
-      ? "真正掌眼"
-      : "侥幸得手"
-    : judgmentHigh
-      ? "判断合理，但客观失手"
-      : "看走眼";
+  const entryAsk = state.negotiation?.entryAsk ?? state.currentPrice;
+  const entryFloor =
+    state.negotiation?.entryFloor
+    ?? getNpcPricing(caseDefinition, state).acceptLine;
+  const grades = calculateOutcomeGrades({
+    qualityGrade: truth.qualityGrade,
+    qualityCap: truth.overallGradeCap,
+    acquired,
+    trueValue: truth.trueValue,
+    actualNet,
+    paidPrice,
+    entryAsk,
+    entryFloor,
+    judgmentScore,
+  });
+  const outcomeLabel = {
+    profitable: "盈利成交",
+    "break-even": "持平成交",
+    loss: "客观亏损",
+    "correct-avoidance": "正确避损",
+    "missed-opportunity": "错失机会",
+  }[grades.outcomeTag];
+  const judgmentHigh =
+    gradeIndex(grades.judgmentGrade) >= gradeIndex("A");
+  const endingTitle =
+    grades.outcomeTag === "profitable"
+      ? judgmentHigh
+        ? "真正掌眼"
+        : "险中得手"
+      : grades.outcomeTag === "correct-avoidance"
+        ? "识险止损"
+        : grades.outcomeTag === "break-even"
+          ? "保本收场"
+          : grades.outcomeTag === "missed-opportunity"
+            ? judgmentHigh
+              ? "判断有据，仍错过机会"
+              : "线索尚未收束"
+            : judgmentHigh
+              ? "判断有据，交易失手"
+              : "看走眼";
 
   const choiceLabel = {
     buy: "按当前价格买下",
     "discount-buy": "折价成交",
+    "buyout-buy": "无条件买断成交",
+    "buyout-rejected": "无条件买断被拒",
     reject: "拒绝交易",
     "seller-exited": "卖家离场",
   }[choice];
@@ -432,9 +774,16 @@ function settlementResult(
     oracleBestNet,
     regret,
     stakes,
-    objectiveScore,
-    objectiveSuccess,
-    objectiveLabel,
+    overallGrade: grades.overallGrade,
+    qualityGrade: grades.qualityGrade,
+    qualityCap: grades.qualityCap,
+    netGrade: grades.netGrade,
+    bargainingGrade: grades.bargainingGrade,
+    judgmentGrade: grades.judgmentGrade,
+    outcomeTag: grades.outcomeTag,
+    outcomeLabel,
+    rawOverallIndex: grades.rawOverallIndex,
+    cappedOverallIndex: grades.cappedOverallIndex,
     posterior,
     expectedValue,
     chosenExpectedNet,
@@ -444,12 +793,13 @@ function settlementResult(
     judgmentLabel,
     endingTitle,
     objectiveFormula: [
-      `实际净结果 = ${acquired ? `${truth.trueValue}（真实价值）- ${paidPrice}（成交价）` : "0（未持有器物）"} - ${state.feesPaid}（检测费） = ${actualNet}`,
+      acquired
+        ? `实际净结果 = ${truth.trueValue}（真实价值）- ${paidPrice}（成交价）- ${state.feesPaid}（检测费） = ${actualNet}`
+        : `未成交净结果 = 0；已发生检测费 ${state.feesPaid} 在调试成本中单列`,
       `完全知情可达方案 = ${oracleOptions.map((option) => `${option.label}:${option.net}`).join("；")}`,
       `完全知情最佳净结果 = max(${oracleOptions.map((option) => option.net).join(", ")}) = ${oracleBestNet}`,
       `机会损失 = max(0, ${oracleBestNet} - ${actualNet}) = ${regret}`,
-      `客观分 = clamp(round(100 - ${regret} ÷ ${stakes} × 100), 0, 100) = ${objectiveScore}`,
-      `客观胜利阈值：${objectiveScore} ${objectiveSuccess ? "≥" : "<"} 70`,
+      "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
     ],
     judgmentFormula: [
       `玩家可见信号 = ${independentEvidenceCount}条物证/检测 + ${uniqueStatementSignalCount}类NPC陈述（同源陈述卡不重复计权）`,
@@ -459,6 +809,7 @@ function settlementResult(
       `判断分 = 100 - 效用差×3 - 不确定性${uncertaintyPenalty} - 无依据风险${unsupportedRiskPenalty} - 重复行动${redundantPenalty} - 离场${exitPenalty} = ${judgmentScore}`,
       "判断质量只读取玩家已发现的物证、检测与NPC陈述信号，不读取本局隐藏真相。",
     ],
+    gradeFormula: grades.formula,
   };
 }
 
@@ -467,10 +818,17 @@ function settle(
   state: WorldState,
   choice: SettlementChoice,
   paidPrice: number,
+  oracleDealFloor: number,
 ) {
   const next = cloneState(state);
   next.status = "settled";
-  next.settlement = settlementResult(caseDefinition, next, choice, paidPrice);
+  next.settlement = settlementResult(
+    caseDefinition,
+    next,
+    choice,
+    paidPrice,
+    oracleDealFloor,
+  );
   return next;
 }
 
@@ -484,6 +842,7 @@ export function createInitialWorldState(
     throw new Error(`未知真相变体：${truthVariantId}`);
   }
 
+  const npcPosterior = calculateNpcPosterior(caseDefinition, []);
   return {
     caseId: caseDefinition.id,
     seed,
@@ -492,10 +851,14 @@ export function createInitialWorldState(
     status: "active",
     turn: 0,
     actionPoints: caseDefinition.actionBudget,
+    negotiation: null,
     feesPaid: 0,
     currentPrice: caseDefinition.seller.openingPrice,
     npcState: cloneNpcState(caseDefinition.initialNpcState),
     discoveredEvidenceIds: [],
+    sharedEvidenceIds: [],
+    npcPosterior,
+    priceHistory: [],
     inspectedTargetIds: [],
     completedTestIds: [],
     statementHistory: [],
@@ -794,9 +1157,9 @@ function resolveDialogue(
   const pressureDelta = clamp(Math.round(pressureRaw), 0, 28);
   const trustDelta = clamp(
     { gentle: 6, professional: 2, firm: -7 }[action.tone]
-      + (evidence ? 0 : { gentle: 2, professional: 1, firm: -2 }[action.tone])
-      + (evidence && !relevant ? -3 : 0)
-      - repeatCount * 2,
+       + (evidence ? 0 : { gentle: 2, professional: 1, firm: -2 }[action.tone])
+       + (evidence && !relevant ? -3 : 0)
+       - repeatCount * 2,
     -15,
     10,
   );
@@ -875,6 +1238,19 @@ function resolveDialogue(
   const next = cloneState(state);
   next.actionPoints -= 1;
   next.npcState = resolved.next;
+  const sharedEvidenceAdded: string[] = [];
+  if (
+    evidence
+    && evidence.kind !== "statement"
+    && !next.sharedEvidenceIds.includes(evidence.id)
+  ) {
+    next.sharedEvidenceIds.push(evidence.id);
+    sharedEvidenceAdded.push(evidence.id);
+    next.npcPosterior = calculateNpcPosterior(
+      caseDefinition,
+      next.sharedEvidenceIds,
+    );
+  }
   const changes = [...resolved.changes];
 
   if (selectedId === "exit") {
@@ -891,10 +1267,26 @@ function resolveDialogue(
   }
 
   const statementSignal = topic.signals[selectedId];
+  const sourceKind =
+    selectedId === "refuse" || selectedId === "exit"
+      ? "refusal"
+      : selectedId === "counter" || topic.id === "price"
+        ? "judgment"
+        : "memory";
+  const statementConfidence = {
+    cooperate: 0.65,
+    deflect: 0.45,
+    "partial-admit": 0.72,
+    counter: 0.55,
+    refuse: 0.2,
+    exit: 0.2,
+  }[selectedId];
   const statement = {
     turn: state.turn + 1,
     topicId: topic.id,
     behaviorId: selectedId,
+    sourceKind,
+    confidence: statementConfidence,
     text: topic.responses[selectedId],
     signalId: statementSignal.id,
     signalLabel: statementSignal.label,
@@ -915,6 +1307,11 @@ function resolveDialogue(
     }
   }
 
+  const priceChange =
+    selectedId === "exit"
+      ? undefined
+      : refreshNpcPricing(caseDefinition, state, next);
+
   const spindle: SpindleTrace = {
     expansion: [
       `问题：${topic.label}`,
@@ -934,20 +1331,31 @@ function resolveDialogue(
         : "未命中事实承认Storylet",
       `收敛为有限模板：${statement.text}`,
       `写入可见陈述信号：${statement.signalLabel}`,
+      priceChange
+        ? `共享信息触发正式重估：${priceChange.before} → ${priceChange.after}`
+        : "本轮没有达到正式重估阈值",
     ],
   };
 
   let completed = next;
   if (selectedId === "exit") {
-    completed = settle(caseDefinition, next, "seller-exited", 0);
+    completed = settle(
+      caseDefinition,
+      next,
+      "seller-exited",
+      0,
+      getNpcPricing(caseDefinition, state).buyoutLine,
+    );
   }
 
   return appendTurn(state, completed, {
     action: { ...action },
-    actionLabel: `${evidence ? "引用证据追问" : "开放询问"} · ${topic.label} · ${toneLabels[action.tone]}`,
+    actionLabel: `${evidence ? `引用「${evidence.name}」追问` : "开放询问"} · ${topic.label} · ${toneLabels[action.tone]}`,
     actionPointCost: 1,
     changes,
     evidenceAdded,
+    sharedEvidenceAdded,
+    priceChange,
     statement,
     title: dialogueTitle(selectedId),
     description: statement.text,
@@ -955,6 +1363,12 @@ function resolveDialogue(
       `行动点 = ${state.actionPoints} - 1 = ${next.actionPoints}`,
       ...changes.map((change) => `${change.label}：${change.formula}`),
       `陈述信号：${statement.signalLabel}；似然 ${truthVariantIds.map((variantId) => `${variantId}=${statement.likelihoods[variantId]}`).join(" / ")}`,
+      evidence
+        ? `信息可见性：${evidence.kind === "statement" ? `「${evidence.name}」来自卖家既有陈述，不重复写入NPC账本` : sharedEvidenceAdded.length ? `首次公开「${evidence.name}」，写入双方共享账本` : `「${evidence.name}」此前已经公开，本轮不重复计权`}`
+        : "信息可见性：未出示物证，NPC后验不读取玩家私有证据",
+      priceChange
+        ? `正式重估：${priceChange.before} → ${priceChange.after}；${priceChange.reasons.join("；")}`
+        : "正式重估：未触发或目标价未跨越5点档位",
       `候选行为 = 过滤合法性后取最高分；seed扰动范围 [-1.5, +1.5]`,
     ],
     spindle,
@@ -976,6 +1390,7 @@ export function getTestConsent(
   const reasons: string[] = [];
   if (state.completedTestIds.includes(test.id)) reasons.push("本维度已经检测");
   if (state.actionPoints < test.actionPointCost) reasons.push("行动点不足");
+  if (state.negotiation) reasons.push("正式议价已经开始");
   if (state.npcState.phase === "exited") reasons.push("卖家已经离场");
   if (consentScore < 50) reasons.push(`NPC同意分 ${consentScore} < 50`);
   return {
@@ -1039,6 +1454,16 @@ function resolveTest(
   if (!next.discoveredEvidenceIds.includes(evidenceId)) {
     next.discoveredEvidenceIds.push(evidenceId);
   }
+  const sharedEvidenceAdded: string[] = [];
+  if (!next.sharedEvidenceIds.includes(evidenceId)) {
+    next.sharedEvidenceIds.push(evidenceId);
+    sharedEvidenceAdded.push(evidenceId);
+    next.npcPosterior = calculateNpcPosterior(
+      caseDefinition,
+      next.sharedEvidenceIds,
+    );
+  }
+  const priceChange = refreshNpcPricing(caseDefinition, state, next, true);
 
   const spindle: SpindleTrace = {
     expansion: [
@@ -1076,7 +1501,10 @@ function resolveTest(
     convergence: [
       "NPC同意把一个维度交给第三方核验",
       `检测只新增「${evidence.name}」，不直接给出整件器物价值`,
-      "检测后案件继续，玩家仍需购买、折价或拒绝",
+      "共同检测结果自动进入双方账本，可能触发卖家重估",
+      priceChange
+        ? `卖家正式重估：${priceChange.before} → ${priceChange.after}`
+        : "结果未令报价跨越5点档位",
     ],
   };
 
@@ -1086,17 +1514,43 @@ function resolveTest(
     actionPointCost: test.actionPointCost,
     changes: resolved.changes,
     evidenceAdded: [evidenceId],
+    sharedEvidenceAdded,
+    priceChange,
     title: `检测完成：${evidence.name}`,
     description: `${evidence.detail} ${evidence.inference}`,
     formulaLog: [
       `行动点 = ${state.actionPoints} - ${test.actionPointCost} = ${next.actionPoints}`,
       `累计检测费 = ${state.feesPaid} + ${test.valueCost} = ${next.feesPaid}`,
       `NPC同意判定：${consent.formula}，达到阈值50`,
+      `共同检测：${evidence.name}同时进入玩家证据簿与双方共享账本`,
+      priceChange
+        ? `正式重估：${priceChange.before} → ${priceChange.after}；${priceChange.reasons.join("；")}`
+        : "正式重估：目标价未跨越5点档位",
       ...resolved.changes.map((change) => `${change.label}：${change.formula}`),
     ],
     spindle,
     redundant: false,
   });
+}
+
+function beginOrAdvanceNegotiation(
+  state: WorldState,
+  entryFloor: number,
+): NegotiationState {
+  const preview = calculateNegotiationCapacity(state.npcState);
+  const session = state.negotiation ?? {
+    started: true,
+    initialCapacity: preview.capacity,
+    remainingCapacity: preview.capacity,
+    entryAsk: state.currentPrice,
+    entryFloor,
+    offersMade: 0,
+  };
+  return {
+    ...session,
+    remainingCapacity: session.remainingCapacity - 1,
+    offersMade: session.offersMade + 1,
+  };
 }
 
 function resolveDiscount(
@@ -1111,12 +1565,8 @@ function resolveDiscount(
     throw new Error("折价报价必须低于当前价格");
   }
 
-  const {
-    threshold: acceptanceThreshold,
-    trustPremium,
-    pressurePremium,
-    intentDiscount,
-  } = discountThreshold(caseDefinition, state.npcState);
+  const pricing = getNpcPricing(caseDefinition, state);
+  const acceptanceThreshold = pricing.acceptLine;
   const gap = acceptanceThreshold - action.offer;
   const lowOffer = Math.max(0, state.currentPrice - action.offer);
   const resolved = applyChanges(state.npcState, [
@@ -1147,7 +1597,10 @@ function resolveDiscount(
   ]);
 
   const next = cloneState(state);
-  next.actionPoints -= 1;
+  next.negotiation = beginOrAdvanceNegotiation(
+    state,
+    pricing.acceptLine,
+  );
   next.npcState = { ...resolved.next, phase: "negotiating" };
 
   const exitEligible =
@@ -1205,7 +1658,13 @@ function resolveDiscount(
     title = `卖家接受 ${action.offer} 点报价`;
     description = "折价成交，进入客观结果与判断质量结算。";
     completed.currentPrice = action.offer;
-    completed = settle(caseDefinition, completed, "discount-buy", action.offer);
+    completed = settle(
+      caseDefinition,
+      completed,
+      "discount-buy",
+      action.offer,
+      pricing.buyoutLine,
+    );
   } else if (selected.id === "counter-offer") {
     const counterPrice = Math.max(
       acceptanceThreshold,
@@ -1213,7 +1672,7 @@ function resolveDiscount(
     );
     completed.currentPrice = counterPrice;
     title = `卖家还价至 ${counterPrice} 点`;
-    description = "新的当前价格已经记录，可以继续调查、接受现价或拒绝。";
+    description = "新的当前价格已经记录，可以继续报价、接受现价或拒绝。";
   } else if (selected.id === "exit") {
     completed.npcState = {
       ...completed.npcState,
@@ -1222,22 +1681,29 @@ function resolveDiscount(
     };
     title = "过低报价触发卖家离场";
     description = "案件进入复盘，不会停在无法操作的页面。";
-    completed = settle(caseDefinition, completed, "seller-exited", 0);
+    completed = settle(
+      caseDefinition,
+      completed,
+      "seller-exited",
+      0,
+      pricing.buyoutLine,
+    );
   }
 
   const spindle: SpindleTrace = {
     expansion: [
       `玩家报价：${action.offer}`,
       `NPC认知档案：${caseDefinition.npcProfile.label}`,
-      `卖家底价：${caseDefinition.npcProfile.reservationPrice}（局末调试解锁）`,
-      `信任溢价：${trustPremium}；压力溢价：${pressurePremium}；高成交减让：${intentDiscount}`,
+      `NPC后验：${pricing.posterior.map((entry) => `${entry.label}${round1(entry.probability * 100)}%`).join(" / ")}`,
+      `后验Q25/Q50/Q75：${pricing.q25} / ${pricing.q50} / ${pricing.q75}`,
+      `风险厌恶：${caseDefinition.npcProfile.riskAversion}；急迫度：${caseDefinition.npcProfile.urgency}；外部选项：${round1(pricing.outsideOption)}`,
       `当前NPC状态：压力${state.npcState.pressure} / 信任${state.npcState.trust} / 成交${state.npcState.dealIntent} / 控制${state.npcState.control}`,
     ],
     candidates,
     selectedId: selected.id,
     selectedLabel: selected.label,
     convergence: [
-      `接受线 = ${caseDefinition.npcProfile.reservationPrice} + ${trustPremium} + ${pressurePremium} - ${intentDiscount} = ${acceptanceThreshold}`,
+      ...pricing.formula,
       `报价差额 = ${acceptanceThreshold} - ${action.offer} = ${gap}`,
       `收敛结果：${selected.label}`,
     ],
@@ -1246,20 +1712,125 @@ function resolveDiscount(
   return appendTurn(state, completed, {
     action: { ...action },
     actionLabel: `提出折价 · ${action.offer} 点`,
-    actionPointCost: 1,
+    actionPointCost: 0,
+    negotiationCapacityCost: 1,
     changes: resolved.changes,
     evidenceAdded: [],
     title,
     description,
     formulaLog: [
-      `行动点 = ${state.actionPoints} - 1 = ${next.actionPoints}`,
-      `接受线 = 底价${caseDefinition.npcProfile.reservationPrice} + 信任溢价${trustPremium} + 压力溢价${pressurePremium} - 高成交减让${intentDiscount} = ${acceptanceThreshold}`,
+      `调查行动点保持 ${state.actionPoints}`,
+      `议价容量 = ${next.negotiation.initialCapacity} - ${next.negotiation.offersMade} = ${next.negotiation.remainingCapacity}`,
+      ...pricing.formula,
       ...resolved.changes.map((change) => `${change.label}：${change.formula}`),
     ],
     spindle,
     redundant: state.actionHistory.some(
       (turn) => turn.action.kind === "discount" && turn.action.offer === action.offer,
     ),
+  });
+}
+
+function resolveBuyout(
+  caseDefinition: CaseDefinition,
+  state: WorldState,
+  action: Extract<PlayerAction, { kind: "buyout" }>,
+) {
+  if (!Number.isInteger(action.offer) || action.offer <= 0) {
+    throw new Error("无条件买断报价必须是正整数");
+  }
+  if (action.offer >= state.currentPrice) {
+    throw new Error("无条件买断价必须低于当前报价；按当前价成交请直接购买");
+  }
+  const pricing = getNpcPricing(caseDefinition, state);
+  const accepted = action.offer >= pricing.buyoutLine;
+  const candidates = [
+    fixedCandidate(
+      "accept-buyout",
+      "接受无条件买断",
+      accepted,
+      [
+        { label: "报价", value: action.offer },
+        { label: "风险转移价值", value: pricing.acceptLine - pricing.buyoutLine },
+      ],
+      [
+        accepted
+          ? `报价达到无条件买断线${pricing.buyoutLine}`
+          : `报价未达到无条件买断线${pricing.buyoutLine}`,
+      ],
+    ),
+    fixedCandidate(
+      "reject-buyout",
+      "拒绝并结束交易",
+      !accepted,
+      [
+        { label: "买断线", value: pricing.buyoutLine },
+        { label: "报价差额", value: action.offer - pricing.buyoutLine },
+      ],
+      [
+        accepted
+          ? "买断报价已经达到接受条件"
+          : "一次性最终报价不足，卖家不再继续协商",
+      ],
+    ),
+  ];
+  const next = cloneState(state);
+  next.negotiation = beginOrAdvanceNegotiation(
+    state,
+    pricing.acceptLine,
+  );
+  if (accepted) next.currentPrice = action.offer;
+  const choice: SettlementChoice = accepted
+    ? "buyout-buy"
+    : "buyout-rejected";
+  const completed = settle(
+    caseDefinition,
+    next,
+    choice,
+    accepted ? action.offer : 0,
+    pricing.buyoutLine,
+  );
+  const settlement = completed.settlement!;
+  const selected = candidates.find((candidate) => candidate.eligible)!;
+  const spindle: SpindleTrace = {
+    expansion: [
+      `玩家最终报价：${action.offer}`,
+      "承诺：不再检测、不追加条件，成交后由玩家承担器物风险",
+      `卖家风险厌恶${caseDefinition.npcProfile.riskAversion} / 急迫度${caseDefinition.npcProfile.urgency}`,
+      `普通接受线${pricing.acceptLine} / 无条件买断线${pricing.buyoutLine}`,
+    ],
+    candidates,
+    selectedId: selected.id,
+    selectedLabel: selected.label,
+    convergence: [
+      ...pricing.formula,
+      `最终报价${action.offer} ${accepted ? "≥" : "<"} 买断线${pricing.buyoutLine}`,
+      "无条件买断无还价、无追加检测；无论接受或拒绝，本局立即结算",
+    ],
+  };
+  return appendTurn(state, completed, {
+    action: { ...action },
+    actionLabel: `提出无条件买断 · ${action.offer}点`,
+    actionPointCost: 0,
+    negotiationCapacityCost: 1,
+    changes: [],
+    evidenceAdded: [],
+    title: accepted
+      ? `卖家接受 ${action.offer} 点无条件买断`
+      : "卖家拒绝最终报价并结束交易",
+    description: accepted
+      ? "你以放弃追加检测和条件换取确定成交，器物的剩余风险由你承担。"
+      : "一次性最终报价没有达到卖家当前买断线，本局不再继续议价。",
+    formulaLog: [
+      `调查行动点保持 ${state.actionPoints}`,
+      `议价容量 = ${next.negotiation.initialCapacity} - ${next.negotiation.offersMade} = ${next.negotiation.remainingCapacity}`,
+      ...pricing.formula,
+      `买断判定：${action.offer} ${accepted ? "≥" : "<"} ${pricing.buyoutLine}`,
+      ...settlement.objectiveFormula,
+      ...settlement.judgmentFormula,
+    ],
+    spindle,
+    redundant: false,
   });
 }
 
@@ -1270,7 +1841,13 @@ function resolveTerminal(
 ) {
   const choice: SettlementChoice = action.kind;
   const paidPrice = action.kind === "buy" ? state.currentPrice : 0;
-  const next = settle(caseDefinition, cloneState(state), choice, paidPrice);
+  const next = settle(
+    caseDefinition,
+    cloneState(state),
+    choice,
+    paidPrice,
+    getNpcPricing(caseDefinition, state).buyoutLine,
+  );
   const settlement = next.settlement!;
   return appendTurn(state, next, {
     action: { ...action },
@@ -1279,7 +1856,7 @@ function resolveTerminal(
     changes: [],
     evidenceAdded: [],
     title: settlement.endingTitle,
-    description: `${settlement.objectiveLabel}；${settlement.judgmentLabel}。`,
+    description: `${settlement.outcomeLabel}；判断质量 ${settlement.judgmentGrade}。`,
     formulaLog: [
       "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
       ...settlement.objectiveFormula,
@@ -1306,6 +1883,9 @@ export function resolveTurn(
   }
   if (action.kind === "discount") {
     return resolveDiscount(caseDefinition, state, action);
+  }
+  if (action.kind === "buyout") {
+    return resolveBuyout(caseDefinition, state, action);
   }
   return resolveTerminal(caseDefinition, state, action);
 }
@@ -1341,5 +1921,3 @@ export function getTruthForDebug(
 ) {
   return caseDefinition.truthVariants[state.truthVariantId];
 }
-
-export { calculatePosterior };

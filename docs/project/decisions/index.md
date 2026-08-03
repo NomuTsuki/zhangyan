@@ -11,5 +11,7 @@
 | DEC-007 | 双方有限认知与具体证据披露 | Active | 2026-07-31 | [DEC-007](DEC-007-dual-belief-and-strategic-disclosure.md) |
 | DEC-008 | 采用普通网页 H5 作为最终载体 | Active | 2026-07-31 | [DEC-008](DEC-008-standard-web-h5-delivery.md) |
 | DEC-009 | 二维器物插画定位，文字承担鉴定事实 | Active | 2026-07-31 | [DEC-009](DEC-009-illustrated-object-textual-inspection.md) |
+| DEC-010 | V1 先做最小交付修正，再正式封存 | Active | 2026-08-03 | [DEC-010](DEC-010-v1-minimal-fix-and-freeze.md) |
+| DEC-011 | V2 启动先审查仓库，再提醒并统一数值权威源 | Active | 2026-08-03 | [DEC-011](DEC-011-v2-startup-audit-and-numeric-authority.md) |
 
 状态使用：`Active`、`Experimental`、`Superseded`、`Archived`。

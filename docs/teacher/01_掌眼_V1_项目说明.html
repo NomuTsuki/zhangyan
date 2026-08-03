@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:,">
+  <title>《掌眼》V1 项目说明</title>
+  <style>
+    :root {
+      --ink: #17231f;
+      --muted: #5f6c67;
+      --paper: #f7f3ea;
+      --paper-strong: #fffdf7;
+      --pine: #23483f;
+      --pine-deep: #16352f;
+      --jade: #dce9e2;
+      --gold: #b88a3e;
+      --gold-soft: #efe1c3;
+      --brick: #974b3a;
+      --line: #d8d0c1;
+      --shadow: 0 22px 70px rgba(34, 47, 42, .12);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(184, 138, 62, .14), transparent 32rem),
+        linear-gradient(180deg, #e8e5dc 0, #f3f0e8 28rem, #ece9e1 100%);
+      font-family: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 99;
+      left: 1rem;
+      top: 1rem;
+      padding: .7rem 1rem;
+      color: white;
+      background: var(--pine-deep);
+      border-radius: 999px;
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: 28px auto 64px;
+      background: rgba(255, 253, 247, .94);
+      border: 1px solid rgba(112, 101, 82, .18);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 430px;
+      padding: 64px clamp(28px, 7vw, 88px) 52px;
+      color: #f8f4e9;
+      background:
+        linear-gradient(120deg, rgba(17, 46, 39, .98), rgba(37, 76, 66, .94)),
+        var(--pine);
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(240, 214, 159, .24);
+      border-radius: 50%;
+    }
+
+    .hero::before { width: 320px; height: 320px; right: -90px; top: -120px; }
+    .hero::after { width: 190px; height: 190px; right: 70px; top: 40px; }
+
+    .kicker,
+    .section-kicker {
+      margin: 0 0 .7rem;
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .hero .kicker { color: #e5c984; }
+
+    .hero h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      max-width: 780px;
+      font-family: "STKaiti", "KaiTi", serif;
+      font-size: clamp(3rem, 8vw, 6.8rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: .08em;
+    }
+
+    .hero h1 span {
+      display: block;
+      margin-top: .8rem;
+      font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      font-size: clamp(.95rem, 2vw, 1.2rem);
+      font-weight: 600;
+      letter-spacing: .16em;
+      color: #d8e6df;
+    }
+
+    .hero-lead {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 2rem 0 0;
+      font-size: clamp(1.08rem, 2.2vw, 1.34rem);
+      color: #eef3ef;
+    }
+
+    .hero-meta {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+      margin-top: 2rem;
+    }
+
+    .hero-meta span {
+      padding: .45rem .8rem;
+      border: 1px solid rgba(255, 255, 255, .26);
+      border-radius: 999px;
+      color: #e8efe9;
+      font-size: .86rem;
+    }
+
+    .toc {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      display: flex;
+      gap: .4rem;
+      padding: .85rem clamp(18px, 4vw, 48px);
+      overflow-x: auto;
+      background: rgba(255, 253, 247, .94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .toc a {
+      flex: none;
+      padding: .5rem .72rem;
+      color: #4b5b55;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: .86rem;
+      font-weight: 700;
+    }
+
+    .toc a:hover,
+    .toc a:focus-visible { color: var(--pine-deep); background: var(--jade); }
+
+    main { padding: 22px clamp(22px, 6vw, 76px) 64px; }
+
+    section {
+      padding: 48px 0;
+      border-bottom: 1px solid var(--line);
+      scroll-margin-top: 72px;
+    }
+
+    section:last-child { border-bottom: 0; }
+
+    h2 {
+      margin: 0 0 1.2rem;
+      font-size: clamp(1.75rem, 4vw, 2.65rem);
+      line-height: 1.25;
+      letter-spacing: -.025em;
+    }
+
+    h3 { margin: 1.6rem 0 .6rem; font-size: 1.14rem; }
+    p { margin: .7rem 0; }
+    ul, ol { padding-left: 1.3rem; }
+    li + li { margin-top: .45rem; }
+    code { font-family: ui-monospace, "Cascadia Mono", monospace; }
+
+    .lede {
+      max-width: 850px;
+      color: #35443f;
+      font-size: 1.1rem;
+    }
+
+    .summary-grid,
+    .card-grid,
+    .status-grid,
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 1.6rem;
+    }
+
+    .summary-card,
+    .card,
+    .resource,
+    .status-card {
+      padding: 1.25rem 1.35rem;
+      background: #fffef9;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .summary-card span,
+    .card span,
+    .resource span,
+    .status-card > span {
+      display: block;
+      margin-bottom: .35rem;
+      color: var(--brick);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .summary-card strong { display: block; font-size: 1.12rem; }
+    .summary-card p, .card p, .resource p, .status-card p { color: var(--muted); }
+
+    .callout {
+      margin: 1.7rem 0;
+      padding: 1.25rem 1.4rem;
+      background: var(--jade);
+      border-left: 5px solid var(--pine);
+      border-radius: 4px 16px 16px 4px;
+    }
+
+    .callout strong { color: var(--pine-deep); }
+
+    .callout.is-warning {
+      background: #f5ead7;
+      border-left-color: var(--gold);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin: 2rem 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: flow;
+    }
+
+    .flow li {
+      position: relative;
+      min-height: 142px;
+      padding: 1.1rem;
+      background: #f2eee3;
+      border-radius: 14px;
+      counter-increment: flow;
+    }
+
+    .flow li::before {
+      content: "0" counter(flow);
+      display: block;
+      margin-bottom: .55rem;
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .flow strong { display: block; margin-bottom: .35rem; }
+    .flow span { color: var(--muted); font-size: .88rem; }
+
+    .layer-table,
+    .scope-table {
+      width: 100%;
+      margin-top: 1.4rem;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .layer-table th,
+    .layer-table td,
+    .scope-table th,
+    .scope-table td {
+      padding: .9rem 1rem;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .layer-table th,
+    .scope-table th { color: var(--pine-deep); background: #edf1eb; }
+    .layer-table tr:last-child th,
+    .layer-table tr:last-child td,
+    .scope-table tr:last-child td { border-bottom: 0; }
+
+    .resource strong { font-size: 1.35rem; color: var(--pine-deep); }
+
+    .status-card ul { margin-bottom: 0; color: var(--muted); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: .2rem .65rem;
+      border-radius: 999px;
+      font-size: .76rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge.done { color: #204d40; background: #dcebe3; }
+    .badge.checked { color: #66501e; background: #f0e4c8; }
+    .badge.open { color: #7b3c30; background: #f3ddd7; }
+    .badge.future { color: #47556d; background: #e2e7ef; }
+
+    .status-list {
+      display: grid;
+      gap: .7rem;
+      margin-top: 1.2rem;
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: 105px 1fr;
+      gap: 1rem;
+      align-items: start;
+      padding: .95rem 0;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .status-row:last-child { border-bottom: 0; }
+
+    .number-line {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 1.4rem 0;
+    }
+
+    .number-line div {
+      padding: 1rem;
+      text-align: center;
+      color: white;
+      background: var(--pine);
+      border-radius: 14px;
+    }
+
+    .number-line strong { display: block; font-size: 1.5rem; }
+    .number-line span { font-size: .78rem; color: #dce9e3; }
+
+    .spoiler {
+      padding: 34px clamp(18px, 4vw, 42px);
+      background: #f4eee1;
+      border: 1px solid #ddcba8;
+      border-radius: 22px;
+    }
+
+    .spoiler-tag {
+      display: inline-block;
+      padding: .25rem .65rem;
+      color: #684c19;
+      background: #ead8b4;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .footer {
+      padding: 24px clamp(22px, 6vw, 76px) 34px;
+      color: #dbe7e1;
+      background: var(--pine-deep);
+      font-size: .86rem;
+    }
+
+    .footer strong { color: white; }
+
+    @media (max-width: 840px) {
+      .page { width: 100%; margin: 0; border: 0; border-radius: 0; }
+      .hero { min-height: 390px; padding-top: 52px; }
+      .summary-grid, .card-grid, .status-grid, .resource-grid { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .flow li { min-height: auto; }
+      .number-line { grid-template-columns: repeat(2, 1fr); }
+      .layer-table, .scope-table { display: block; overflow-x: auto; }
+    }
+
+    @media (max-width: 520px) {
+      .hero h1 { font-size: 3.2rem; }
+      .toc { position: static; }
+      main { padding-inline: 18px; }
+      section { padding: 38px 0; }
+      .status-row { grid-template-columns: 1fr; gap: .45rem; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 15mm; }
+      body { background: white; color: black; font-size: 10.5pt; }
+      .page { width: auto; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+      .hero { min-height: auto; padding: 18mm 12mm 14mm; print-color-adjust: exact; }
+      .hero h1 { font-size: 40pt; }
+      .toc, .skip-link { display: none; }
+      main { padding: 0; }
+      section { padding: 9mm 0; }
+      h2 { font-size: 19pt; }
+      .flow { grid-template-columns: repeat(5, 1fr); }
+      .flow li { min-height: 36mm; padding: 3mm; }
+      .summary-card, .card, .resource, .status-card, .spoiler, table { break-inside: avoid; }
+      .footer { margin-top: 8mm; padding: 7mm; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <article class="page">
+    <header class="hero">
+      <p class="kicker">V1 · Teacher Handoff</p>
+      <h1>掌眼<span>古玩鉴定 × 信息不对称 × 交易决策</span></h1>
+      <p class="hero-lead">玩家要做的不是猜“真或假”，而是在有限行动与双方有限认知中，把局部线索组织成证据，再把判断写进一笔有代价的交易。</p>
+      <div class="hero-meta" aria-label="版本摘要">
+        <span>正式主体：离线单文件 H5</span>
+        <span>当前内容：一局低级场教学案</span>
+        <span>平台方向：普通网页链接</span>
+        <span>状态：V1 教师交付版</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="本页目录">
+      <a href="#overview">项目结论</a>
+      <a href="#experience">核心体验</a>
+      <a href="#information">信息模型</a>
+      <a href="#systems">资源与 NPC</a>
+      <a href="#settlement">交易与结算</a>
+      <a href="#case">演示案例</a>
+      <a href="#delivery">技术与交付</a>
+      <a href="#status">完成边界</a>
+      <a href="#v2">后续计划</a>
+    </nav>
+
+    <main id="main">
+      <section id="overview">
+        <p class="section-kicker">01 · 先看结论</p>
+        <h2>这是一个可运行的玩法切片，不是一张界面效果图</h2>
+        <p class="lede">《掌眼》希望把古玩鉴定中的“观察、追问、保留、公开与议价”组织成可复盘的游戏决策。V1 已经能够从来客接待走到最终交易和多维结算；当前教师版本的任务，是说明这套内核如何运作，并展示它已被实现到什么程度。</p>
+
+        <div class="summary-grid">
+          <article class="summary-card">
+            <span>唯一正式入口</span>
+            <strong>03_掌眼_V1_教师演示.html</strong>
+            <p>自包含、可离线双击打开。低保真原型与数值实验台均不是本包的正式运行主体。</p>
+          </article>
+          <article class="summary-card">
+            <span>最终载体</span>
+            <strong>普通响应式 Web / H5</strong>
+            <p>目标是通过微信聊天或公众号中的网页链接打开，不是需要 AppID 和提审流程的微信小游戏。</p>
+          </article>
+          <article class="summary-card">
+            <span>项目优先级</span>
+            <strong>玩法 → 视觉 → 技术 → 文化内容</strong>
+            <p>先让核心循环自洽、可玩、可解释，再逐层增加正式美术、工程能力与文化内容。</p>
+          </article>
+          <article class="summary-card">
+            <span>V1 的证据边界</span>
+            <strong>证明闭环可运行，不证明长期平衡</strong>
+            <p>一局教学案无法代表多案件、长期经济、不同难度和一般玩家体验已经成立。</p>
+          </article>
+        </div>
+
+        <div class="callout">
+          <strong>验收主体仍是游戏本体。</strong> 项目说明与演示说明用于帮助理解，不替代游戏本身；老师提供建议和指导，项目从设计到开发由项目组负责。
+        </div>
+      </section>
+
+      <section id="experience">
+        <p class="section-kicker">02 · 核心体验</p>
+        <h2>从局部证据，走到一笔有代价的决定</h2>
+        <p class="lede">游戏不强制“先检测完、再和 NPC 对话”。玩家可以边看器物边询问，用新证据反过来核验陈述；但每一次调查都消耗同一套有限预算，所以“还要看哪里、要不要现在公开、何时停止调查”本身就是玩法。</p>
+
+        <ol class="flow" aria-label="核心玩法循环">
+          <li><strong>接待来客</strong><span>听取卖家陈述、初始开价与公开人物线索。</span></li>
+          <li><strong>交叉调查</strong><span>观察器物、询问、带证据追问或共同检测。</span></li>
+          <li><strong>管理信息</strong><span>证据先归玩家私有，是否公开由玩家决定。</span></li>
+          <li><strong>有限议价</strong><span>把判断写进报价；卖家依据自己的认知与状态回应。</span></li>
+          <li><strong>双层复盘</strong><span>同时看客观得失和当时信息下的判断质量。</span></li>
+        </ol>
+
+        <div class="card-grid">
+          <article class="card">
+            <span>证据簿的职责</span>
+            <h3>只读的信息仓库</h3>
+            <p>证据簿负责收纳和复查信息，不在簿内提供询问或交易动作。玩家关闭证据簿后，回到当前页面决定下一步。</p>
+          </article>
+          <article class="card">
+            <span>态度的职责</span>
+            <h3>修饰行动，不替代行动</h3>
+            <p>“温和求证、专业核验、直接质疑”影响关系与回应方式；真正的问题仍是问了什么、公开了哪条证据、处于怎样的历史和状态。</p>
+          </article>
+          <article class="card">
+            <span>调查的职责</span>
+            <h3>降低不确定性，但不会免费给答案</h3>
+            <p>证据可能只指向下一步，也可能互相冲突。专项检测还需要 NPC 同意，并同时支付调查行动和价值成本。</p>
+          </article>
+          <article class="card">
+            <span>交易的职责</span>
+            <h3>让判断承担后果</h3>
+            <p>接受、报价、拒绝都不是脱离调查的独立小游戏；它们把此前证据、卖家认知和风险判断落实为客观结果。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="information">
+        <p class="section-kicker">03 · 信息模型</p>
+        <h2>真相、玩家认知、NPC 认知与共享事实彼此分离</h2>
+        <p class="lede">系统不会让 NPC 偷看隐藏真相，也不会用“随时说谎”制造不可核验的不确定性。双方都可能信息不足，也都可能选择不说；但被客观证据确认并公开的事实会进入共享层。</p>
+
+        <table class="layer-table">
+          <thead>
+            <tr><th>信息层</th><th>它决定什么</th><th>谁能读取</th></tr>
+          </thead>
+          <tbody>
+            <tr><th>器物客观真相</th><td>观察与检测结果、真实价值、局末客观结算。</td><td>运行规则；局末才向玩家揭示。</td></tr>
+            <tr><th>玩家私有认知</th><td>玩家已发现但尚未公开的证据，以及据此形成的后验判断。</td><td>玩家与判断质量系统。</td></tr>
+            <tr><th>NPC 私有认知</th><td>卖家的经历、专业程度、记忆、误判、动机与当前估值。</td><td>NPC 行为与定价规则。</td></tr>
+            <tr><th>双方共享信息</th><td>已公开物证、共同检测结果和可核验的补充口供。</td><td>玩家与 NPC；双方仍可作不同解释。</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <strong>允许“真诚但错误”，不允许凭空捏造。</strong> NPC 可以把家族记忆误当作可靠来源，也可以回答“不知道”或拒答；玩家可以只公开对自己有利的证据，但不能生成并不存在的物证。对专业、重真诚的 NPC，明显的选择性披露也可能损伤信任和成交意愿。
+        </div>
+
+        <p>这套边界让同一件器物能够形成多条演绎路径：某条路信息增长慢但不教育卖家；另一条路公开关键证据后能快速补足证据链，却也可能让 NPC 重新估价。信息公开因此既是验证手段，也是有代价的交易行为。</p>
+      </section>
+
+      <section id="systems">
+        <p class="section-kicker">04 · 资源、人物与叙事</p>
+        <h2>线性减少的资源，持续变化的证据和 NPC</h2>
+
+        <div class="resource-grid">
+          <article class="resource">
+            <span>调查行动</span>
+            <strong>首案 6 点</strong>
+            <p>观察、普通询问、带证据询问与共同检测使用同一调查预算。它只减不增，用来制造调查顺序的机会成本。</p>
+          </article>
+          <article class="resource">
+            <span>议价容量</span>
+            <strong>独立计算</strong>
+            <p>正式报价使用独立容量，由 NPC 人物、演绎结果和当前状态共同决定。一次报价消耗 1 点，NPC 同轮还价不重复收费。</p>
+          </article>
+        </div>
+
+        <p>首次正式报价会锁定调查，使流程从探索收束到成交；在此之前可以暂离交易页返回调查。无论调查行动或议价容量是否耗尽，“按当前要价买下”和“拒绝交易”始终可用，因此不会出现无法结束一局的死锁。</p>
+
+        <h3>NPC 的四个动态状态</h3>
+        <div class="status-grid">
+          <article class="status-card"><span>压力</span><p>表示被逼迫、时间与冲突造成的张力。过高并不等于自动让价，可能触发抵触。</p></article>
+          <article class="status-card"><span>信任</span><p>影响卖家是否愿意补充信息、接受解释和承担合作风险。</p></article>
+          <article class="status-card"><span>成交意愿</span><p>表示继续谈成这笔交易的动力，与急迫度、外部选择和互动历史有关。</p></article>
+          <article class="status-card"><span>控制感</span><p>表示卖家是否仍认为自己掌握谈判节奏，影响让步方式和候选行为。</p></article>
+        </div>
+
+        <h3>“纺锤形”回应结构</h3>
+        <p>每轮行动先根据证据、问题、表达方式、人物档案和历史生成多个候选反应，再用硬条件过滤并按状态评分，最后收敛为一个结构化结果和一段可读回复。这样既保留剧情演绎的差异，又避免分支无限发散到无法测试。</p>
+      </section>
+
+      <section id="settlement">
+        <p class="section-kicker">05 · 定价与胜负</p>
+        <h2>“买到什么”与“为什么这样决定”必须同时成立</h2>
+        <p class="lede">NPC 的最初开价不是物品真值，也不是唯一价格锚点。卖家可能高估赝品，也可能低估珍品；玩家的参考簿同样只读取玩家当前可见信息，提供偏保守的后验参考，而不是系统泄露的正确答案。</p>
+
+        <div class="card-grid">
+          <article class="card">
+            <span>客观交易结果</span>
+            <h3>按隐藏真相结算</h3>
+            <p>器物真实价值、成交价格与检测等额外成本共同形成实际净结果；拒绝交易不会凭空获得物品价值。</p>
+          </article>
+          <article class="card">
+            <span>判断质量</span>
+            <h3>只看当时可见信息</h3>
+            <p>评价玩家是否依据已掌握证据作出合理判断，不读取隐藏真相，因此能区分“幸运蒙对”和“有据判断”。</p>
+          </article>
+          <article class="card">
+            <span>议价表现</span>
+            <h3>衡量价格执行</h3>
+            <p>参考入场价、实际成交价和当局可达谈判区间，观察玩家是否把已有判断有效转化为交易条件。</p>
+          </article>
+          <article class="card">
+            <span>综合成果</span>
+            <h3>D — SSS 等级</h3>
+            <p>由物品品质、净收益、议价表现和判断质量共同构成；物品品质提供综合等级的基础区间与上限。</p>
+          </article>
+        </div>
+
+        <div class="callout is-warning">
+          <strong>V1 已移除旧的 0—100“客观总分”。</strong> 单一分数会把真实价值、压价能力、风险与判断依据混在一起，甚至让任何盈利成交看起来都是满分。现在玩家先看四个可解释分项，再看综合等级。
+        </div>
+
+        <p>判断质量内部仍使用决策合理性、后验确定性、证据链稳健度与合成判断四个调试维度。单条强证据不能直接得到最高等级；交叉来源验证或真正决定性的证据，才有资格进入最高档。精确过程只在局末开发复盘中显示，不进入普通玩家界面。</p>
+      </section>
+
+      <section id="case" class="spoiler">
+        <span class="spoiler-tag">建议完成演示后阅读 · 含案例答案</span>
+        <p class="section-kicker">06 · 首案剖面</p>
+        <h2>“民国漆木首饰盒”是一局低级场教学案</h2>
+        <p>卖家刘先生急于出售、看重诚意、经验一般，最初开价 80 点。当前正式演示固定的客观真相是“旧胎重修真品”：木胎为民国晚期旧物，但表面经过现代翻修，锁扣后配、底款后刻，真实价值为 65 点。</p>
+
+        <div class="number-line" aria-label="演示路线关键数字">
+          <div><strong>80</strong><span>卖家初始要价</span></div>
+          <div><strong>65</strong><span>公开证据后重估</span></div>
+          <div><strong>50</strong><span>演示中的玩家报价</span></div>
+          <div><strong>58</strong><span>本路线 NPC 还价</span></div>
+        </div>
+
+        <p>推荐演示先检查“接口”，得到“现代胶痕”，再在“修复历史”问题中公开该证据。卖家据此将要价从 80 正式重估到 65；玩家报价 50 后，NPC 在本路线中还价 58。若按 58 买下且没有额外检测费，客观净结果为 <strong>65 − 58 = +7</strong>。</p>
+
+        <div class="callout is-warning">
+          <strong>80 → 65 → 58 只是稳定复现因果链的演示路线，不是唯一正确玩法。</strong> 观察其他位置、换问题、保留证据、改变表达方式、继续补证或拒绝交易，都会形成不同证据链与状态变化。当前案例故意较简单，也不能说明锚点级证据每局都会出现或被找到。
+        </div>
+
+        <p>内容系统为同一器物预留了“现代仿制品、旧胎重修真品、被低估的珍品”三类客观真相，用于测试真相隔离与价值跨度；教师演示只固定其中一类。后续低级场应以稳定判断和缓慢积累为主，中高级场再逐步提高信息风险、额外检测价值和收益方差，不能让新手开局就退化成买彩票。</p>
+      </section>
+
+      <section id="art">
+        <p class="section-kicker">07 · 视觉与内容表达</p>
+        <h2>插画负责定位，文字负责鉴定事实</h2>
+        <p>器物当前采用非写实二维插画，帮助玩家建立正面、底部、接口、锁扣和内腔等空间位置；胶痕、细纹、刻款、氧化与锁扣结构等微观事实由文字证据准确陈述。这样不会要求玩家从风格化像素中猜一个并未真正画出的细节，也便于规则测试和后续专家校订。</p>
+        <p>低价值首案暂不制作高成本写实资产。后续精品、珍品可以在结算后加入一张更写实的器物讲解图，用于文化知识和真实特征说明；该方向已经记录，但不属于 V1 已实现内容。</p>
+        <div class="callout">
+          <strong>界面边界：</strong>中间手机画布是玩家界面。桌面左侧教师说明、右侧可展开开发复盘只用于展示和调试；手机视口会隐藏这些区域，精确 NPC 数值和隐藏真相也只在局末解锁。
+        </div>
+      </section>
+
+      <section id="delivery">
+        <p class="section-kicker">08 · 技术与交付</p>
+        <h2>标准 Web 已覆盖当前核心，不需要先进入 Unity</h2>
+        <p>当前实现使用 React、TypeScript、CSS 与内联 SVG，正式教师演示由构建流程生成一个包含全部样式、程序和插画的 HTML 文件。它可以离线双击打开；未来公开版本再部署到 HTTPS 静态地址，通过微信聊天或公众号链接访问。</p>
+
+        <table class="scope-table">
+          <thead><tr><th>当前已经选择</th><th>当前没有选择</th><th>未来需要再验证</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>普通响应式 H5、标准浏览器技术、单文件教师演示。</td>
+              <td>微信小游戏工程、小游戏 AppID 与提审、Unity 或团结引擎迁移。</td>
+              <td>HTTPS 托管、微信内置浏览器、Safari、真实设备安全区与软键盘。</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>教师演示包与完整源码包分开交付：前者只保留五个经白名单审定的阅读和运行文件，避免把历史原型或研发资料误当作正式入口；后者从同一个冻结版本导出受跟踪仓库，用于完整保存和审阅。</p>
+      </section>
+
+      <section id="status">
+        <p class="section-kicker">09 · 完成与验证边界</p>
+        <h2>实现、验证与尚未证明的事情分开陈述</h2>
+
+        <div class="status-list">
+          <div class="status-row"><span class="badge done">已实现</span><div>来客、交叉调查、证据簿、具体证据公开、NPC 正式重估、独立议价容量、交易锁定、买下或拒绝、多维等级复盘，以及桌面教师/开发信息分区。</div></div>
+          <div class="status-row"><span class="badge checked">已技术验证</span><div>规则与界面回归、TypeScript 类型检查、代码规范检查、自包含构建，以及桌面与 390 × 844 手机视口的真实 Chrome 核心路径、焦点、触控尺寸、无横向溢出和控制台检查。冻结版本的最终命令结果与文件哈希以“04_版本与校验.txt”为准。</div></div>
+          <div class="status-row"><span class="badge checked">已确认边界</span><div>老师能够找到关键入口、理解证据公开并完成交易，这一基本理解由项目负责人确认；它只覆盖当前老师与演示闭环，不能外推成一般目标玩家验证。</div></div>
+          <div class="status-row"><span class="badge open">尚未验证</span><div>具体数值是否平衡、长期是否有趣、多案件信息披露是否自洽、中高级场与厚尾价值体验、一般玩家认知负担、公开 H5 托管和真实微信环境兼容。</div></div>
+          <div class="status-row"><span class="badge open">已知限制</span><div>当前只有一局较简单的低级场教学案；器物插画不是最终正式美术；参考报价、NPC 权重、议价容量、等级阈值和检测成本仍是工作参数。</div></div>
+        </div>
+
+        <p>自动测试的职责是防止已确认行为在改代码时意外退化，例如行动成本、隐藏真相隔离、单条证据封顶、交易不会死锁、自包含文件和玩家/开发信息边界。测试通过说明“实现仍符合当前规则”，不说明“这套规则已经平衡、有趣或得到玩家认可”。</p>
+      </section>
+
+      <section id="v2">
+        <p class="section-kicker">10 · V1 封存之后</p>
+        <h2>V2 先统一权威来源，再扩内容和降低门槛</h2>
+        <p>V1 本轮只做教师交付所需的最小收口，不把结构性重构混进冻结版本。V2 启动时会先核对 V1 冻结版本、现有数值定义与实现边界，再执行已经批准的第一项核心产品工程：统一数值权威源。</p>
+
+        <ol>
+          <li><strong>统一数值与规则来源：</strong>让生产规则、实验台、单文件和测试通过明确接口读取同一套权威模型，区分生产参数与实验参数。</li>
+          <li><strong>建立可调案件与自动模拟：</strong>在不同真相、NPC 人物和成本配置中寻找支配策略、死局和异常评分，再安排有代表性的人类试玩。</li>
+          <li><strong>扩展多难度案件：</strong>低级场强调稳定学习，中级场提高成本与方差，高级场强化人物辨认、熟练检测与风险承担。</li>
+          <li><strong>逐步降低认知门槛：</strong>在玩法内核完整后，再将提示、推荐、半自动或自动化作为可选择的上层辅助，不让它改写底层真相。</li>
+          <li><strong>补充正式内容与发布验证：</strong>开展文化与器物知识校订、正式美术、真实设备和微信网页环境验证。</li>
+        </ol>
+
+        <div class="callout">
+          <strong>V1 应怎样被评价：</strong>请重点看核心循环是否能表达“证据—认知—交易—复盘”的因果关系，玩家与开发信息是否分离，以及项目是否诚实标明未完成部分。请不要把演示路线的顺利成交误解为完整数值平衡已经成立。
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <strong>《掌眼》V1 教师提交版</strong><br>
+      本文可离线阅读与打印。实际运行请打开“03_掌眼_V1_教师演示.html”；具体冻结版本、校验值与最终测试结果请查看“04_版本与校验.txt”。
+    </footer>
+  </article>
+</body>
+</html>

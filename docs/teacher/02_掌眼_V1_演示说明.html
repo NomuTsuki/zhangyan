@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:,">
+  <title>《掌眼》V1 演示说明</title>
+  <style>
+    :root {
+      --ink: #18241f;
+      --muted: #64706b;
+      --pine: #21483e;
+      --pine-deep: #15352f;
+      --jade: #dce9e2;
+      --paper: #fffdf7;
+      --ground: #ece9e0;
+      --gold: #b4873d;
+      --brick: #974936;
+      --line: #dad2c4;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(255,255,255,.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.22) 1px, transparent 1px),
+        var(--ground);
+      background-size: 36px 36px;
+      font-family: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .sheet {
+      width: min(1080px, calc(100% - 36px));
+      margin: 28px auto 64px;
+      background: rgba(255, 253, 247, .97);
+      border: 1px solid rgba(99, 88, 69, .2);
+      border-radius: 28px;
+      box-shadow: 0 24px 80px rgba(34, 44, 39, .14);
+      overflow: hidden;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: end;
+      padding: 56px clamp(24px, 7vw, 72px) 44px;
+      color: white;
+      background: linear-gradient(128deg, var(--pine-deep), #2d5a4f);
+    }
+
+    .kicker {
+      margin: 0 0 .6rem;
+      color: #e3c679;
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "STKaiti", "KaiTi", serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 1.08;
+      letter-spacing: .04em;
+    }
+
+    .hero-copy {
+      max-width: 690px;
+      margin: 1rem 0 0;
+      color: #e4ede8;
+      font-size: 1.05rem;
+    }
+
+    .duration {
+      min-width: 150px;
+      padding: 1.1rem 1.25rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 18px;
+      background: rgba(255,255,255,.08);
+    }
+
+    .duration strong { display: block; font-size: 2rem; }
+    .duration span { color: #d6e5de; font-size: .82rem; }
+
+    main { padding: 20px clamp(20px, 6vw, 64px) 58px; }
+
+    section {
+      padding: 42px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    section:last-child { border-bottom: 0; }
+    h2 { margin: 0 0 1rem; font-size: clamp(1.65rem, 4vw, 2.35rem); line-height: 1.3; }
+    h3 { margin: 0 0 .5rem; font-size: 1.08rem; }
+    p { margin: .65rem 0; }
+    ul, ol { padding-left: 1.3rem; }
+    li + li { margin-top: .42rem; }
+
+    .intro-grid,
+    .watch-grid,
+    .branch-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 1.4rem;
+    }
+
+    .intro-card,
+    .watch-card,
+    .branch-card {
+      padding: 1.2rem 1.3rem;
+      background: #fffef9;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .intro-card span,
+    .watch-card span,
+    .branch-card span {
+      display: block;
+      margin-bottom: .4rem;
+      color: var(--brick);
+      font-size: .77rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .intro-card p,
+    .watch-card p,
+    .branch-card p { color: var(--muted); }
+
+    .notice {
+      margin: 1.4rem 0;
+      padding: 1.15rem 1.35rem;
+      background: var(--jade);
+      border-left: 5px solid var(--pine);
+      border-radius: 5px 16px 16px 5px;
+    }
+
+    .notice strong { color: var(--pine-deep); }
+
+    .notice.is-critical {
+      background: #f4e4cc;
+      border-left-color: var(--gold);
+    }
+
+    .timeline {
+      position: relative;
+      margin: 2rem 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 27px;
+      top: 20px;
+      bottom: 20px;
+      width: 2px;
+      background: #c8d7d0;
+    }
+
+    .timeline > li {
+      position: relative;
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 16px;
+      margin: 0 0 14px;
+      counter-increment: step;
+    }
+
+    .timeline > li::before {
+      content: counter(step);
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      color: white;
+      background: var(--pine);
+      border: 6px solid #f5f3ea;
+      border-radius: 50%;
+      font-weight: 900;
+    }
+
+    .step-body {
+      padding: 1.1rem 1.25rem 1.2rem;
+      background: #f6f3ea;
+      border: 1px solid #e0d9cc;
+      border-radius: 16px;
+    }
+
+    .step-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: .45rem;
+    }
+
+    .step-meta span {
+      padding: .15rem .55rem;
+      color: #6f531f;
+      background: #eadbbd;
+      border-radius: 999px;
+      font-size: .74rem;
+      font-weight: 800;
+    }
+
+    .actions {
+      margin: .75rem 0 0;
+      padding-left: 1.15rem;
+    }
+
+    .actions strong { color: var(--pine-deep); }
+
+    .number-chain {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+      margin: 1.3rem 0;
+    }
+
+    .number-chain div {
+      flex: 1;
+      padding: .9rem .5rem;
+      text-align: center;
+      color: white;
+      background: var(--pine);
+      border-radius: 12px;
+    }
+
+    .number-chain strong { display: block; font-size: 1.45rem; }
+    .number-chain span { font-size: .72rem; color: #d9e7e1; }
+    .number-chain i { align-self: center; color: var(--gold); font-style: normal; font-weight: 900; }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .75rem 1.25rem;
+      margin: 1.2rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      position: relative;
+      padding-left: 1.8rem;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: .05rem;
+      display: grid;
+      place-items: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      color: white;
+      background: var(--pine);
+      border-radius: 50%;
+      font-size: .76rem;
+      font-weight: 900;
+    }
+
+    .question-list {
+      display: grid;
+      gap: .75rem;
+      margin: 1.2rem 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: question;
+    }
+
+    .question-list li {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: .8rem;
+      align-items: start;
+      counter-increment: question;
+    }
+
+    .question-list li::before {
+      content: "Q" counter(question);
+      color: var(--brick);
+      font-size: .78rem;
+      font-weight: 900;
+      padding-top: .17rem;
+    }
+
+    .trouble-table {
+      width: 100%;
+      margin-top: 1.2rem;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .trouble-table th,
+    .trouble-table td {
+      padding: .85rem 1rem;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .trouble-table th { width: 34%; color: var(--pine-deep); background: #edf1eb; }
+    .trouble-table tr:last-child th,
+    .trouble-table tr:last-child td { border-bottom: 0; }
+
+    footer {
+      padding: 26px clamp(20px, 6vw, 64px) 34px;
+      color: #dce8e2;
+      background: var(--pine-deep);
+      font-size: .86rem;
+    }
+
+    footer strong { color: white; }
+
+    @media (max-width: 720px) {
+      .sheet { width: 100%; margin: 0; border: 0; border-radius: 0; }
+      header { grid-template-columns: 1fr; align-items: start; padding-top: 44px; }
+      .duration { width: 160px; }
+      .intro-grid, .watch-grid, .branch-grid, .checklist { grid-template-columns: 1fr; }
+      .number-chain { display: grid; grid-template-columns: repeat(2, 1fr); }
+      .number-chain i { display: none; }
+      .trouble-table { display: block; overflow-x: auto; }
+    }
+
+    @media (max-width: 460px) {
+      main { padding-inline: 16px; }
+      .timeline::before { left: 20px; }
+      .timeline > li { grid-template-columns: 42px 1fr; gap: 10px; }
+      .timeline > li::before { width: 42px; height: 42px; border-width: 4px; }
+      .step-body { padding: .95rem; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 15mm; }
+      body { background: white; color: black; font-size: 10.5pt; }
+      .sheet { width: auto; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+      header { padding: 14mm 10mm; print-color-adjust: exact; }
+      h1 { font-size: 34pt; }
+      main { padding: 0; }
+      section { padding: 8mm 0; }
+      .timeline > li, .intro-card, .watch-card, .branch-card, .notice, .trouble-table { break-inside: avoid; }
+      footer { padding: 6mm; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <article class="sheet">
+    <header>
+      <div>
+        <p class="kicker">V1 · Demonstration Guide</p>
+        <h1>教师演示说明</h1>
+        <p class="hero-copy">请在一局内观察“器物证据如何成为双方共享事实，并进一步改变价格与结算”。这是一条稳定复现的讲解路线，不是唯一正确答案。</p>
+      </div>
+      <div class="duration" aria-label="建议演示时长">
+        <strong>10—15</strong>
+        <span>分钟建议时长</span>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h2>开始前：只需要打开一个文件</h2>
+        <div class="intro-grid">
+          <article class="intro-card">
+            <span>正式运行主体</span>
+            <h3>03_掌眼_V1_教师演示.html</h3>
+            <p>双击后用最新版 Chrome 或 Edge 打开即可。无需联网，也无需 Node.js、Unity 或微信开发者工具。</p>
+          </article>
+          <article class="intro-card">
+            <span>推荐展示环境</span>
+            <h3>先用桌面宽屏，再缩到手机宽度</h3>
+            <p>桌面可以同时看到教师说明、玩家手机画布和开发入口；手机宽度会只保留玩家画布。</p>
+          </article>
+        </div>
+
+        <div class="notice">
+          <strong>演示前不要展开右侧“开发复盘”。</strong> 它可能显示精确 NPC 状态与局末真相，只用于解释系统，不属于普通玩家界面。建议完成交易后再展开。
+        </div>
+
+        <ul class="checklist">
+          <li>浏览器页面能够正常显示“掌眼”与来客卡片。</li>
+          <li>中间手机画布内的按钮可正常点击。</li>
+          <li>若曾操作过本案，先在复盘页点“重新开始本案”。</li>
+          <li>本路线从卖家初始要价 80 点开始。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>推荐路线：完整走一遍证据、公开、重估与交易</h2>
+
+        <ol class="timeline">
+          <li>
+            <div class="step-body">
+              <div class="step-meta"><span>约 1 分钟</span><span>来客</span></div>
+              <h3>先读卖家，而不是先猜器物答案</h3>
+              <p>观察来客刘先生的最初陈述、公开性格标签与 80 点开价。留意页面已经明确提示：开价只是卖家的当前判断，不代表真实价值。</p>
+              <ul class="actions"><li>点击 <strong>“把器物请上鉴台”</strong>。</li></ul>
+            </div>
+          </li>
+
+          <li>
+            <div class="step-body">
+              <div class="step-meta"><span>约 2 分钟</span><span>器物查验</span></div>
+              <h3>用插画定位，用文字读取事实</h3>
+              <p>在器物插画上选择 <strong>“接口”</strong>。插画负责告诉玩家位置；右侧或下方文字说明负责准确表达可观察内容。</p>
+              <ul class="actions">
+                <li>确认调查行动显示为首案总预算的一部分。</li>
+                <li>点击 <strong>“检查接口 · 消耗 1 点”</strong>。</li>
+                <li>结果页应出现强证据 <strong>“现代胶痕”</strong>。</li>
+              </ul>
+            </div>
+          </li>
+
+          <li>
+            <div class="step-body">
+              <div class="step-meta"><span>约 1 分钟</span><span>证据归档</span></div>
+              <h3>收证后自动回到调查，而不是在证据页直接行动</h3>
+              <p>结果页说明“器物观察默认只有你知道”。此时 NPC 尚未获得这条信息。</p>
+              <ul class="actions">
+                <li>点击 <strong>“收进证据簿，继续调查”</strong>。</li>
+                <li>可点顶部 <strong>“证据簿”</strong>，确认“现代胶痕”处于仅你掌握状态。</li>
+                <li>关闭证据簿，返回调查；证据簿内没有询问或交易按钮。</li>
+              </ul>
+            </div>
+          </li>
+
+          <li>
+            <div class="step-body">
+              <div class="step-meta"><span>约 2 分钟</span><span>具体证据公开</span></div>
+              <h3>把私有物证变成双方都知道的事实</h3>
+              <p>切换到 <strong>“询问来客”</strong>，选择问题 <strong>“修复历史”</strong>；在证据下拉框中选择 <strong>“出示『现代胶痕』”</strong>，表达方式使用默认的 <strong>“专业核验”</strong>。</p>
+              <ul class="actions">
+                <li>点击 <strong>“提问 · 消耗 1 点调查行动”</strong>。</li>
+                <li>阅读卖家补充回答、本轮变化和紧邻的正式重估原因。</li>
+                <li>确认要价显示 <strong>80 → 65</strong>，而不是无理由跳价。</li>
+              </ul>
+            </div>
+          </li>
+
+          <li>
+            <div class="step-body">
+              <div class="step-meta"><span>约 2 分钟</span><span>有限议价</span></div>
+              <h3>调查预算与议价容量分账</h3>
+              <p>点击 <strong>“进入交易”</strong>。此时可以看到议价容量、当前要价、已付检测费与参考簿的谨慎报价。参考价只是基于玩家可见信息的保守辅助，并不保证 NPC 接受。</p>
+              <ul class="actions">
+                <li>把“你的报价”改成 <strong>50</strong>。</li>
+                <li>点击 <strong>“正式报价 50 点 · 消耗 1 容量”</strong>。</li>
+                <li>确认调查已锁定，NPC 在本路线中还价到 <strong>58</strong>。</li>
+                <li>留意 NPC 的同轮还价不会再扣一次议价容量。</li>
+              </ul>
+            </div>
+          </li>
+
+          <li>
+            <div class="step-body">
+              <div class="step-meta"><span>约 2 分钟</span><span>终局与复盘</span></div>
+              <h3>把判断落实为客观结果</h3>
+              <p>点击 <strong>“按当前要价买下”</strong>，以 58 点成交。系统会进入复盘，揭示器物客观真相、真实价值、成交价、实际净结果，以及物品品质、议价表现、判断质量和收益结果。</p>
+              <ul class="actions">
+                <li>对照真实价值 65 与成交价 58，确认本路线未支付检测费时净结果为 +7。</li>
+                <li>查看证据链和行动回放，确认结算能追溯到本局历史。</li>
+                <li>最后再展开桌面右侧 <strong>“开发复盘”</strong>，查看精确 NPC 状态、规则过程与调试维度。</li>
+              </ul>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>这组数字应该怎样理解</h2>
+        <div class="number-chain" aria-label="演示路线数字因果">
+          <div><strong>80</strong><span>卖家起始判断</span></div><i>→</i>
+          <div><strong>65</strong><span>共享证据后重估</span></div><i>→</i>
+          <div><strong>50</strong><span>玩家正式报价</span></div><i>→</i>
+          <div><strong>58</strong><span>本路线还价</span></div>
+        </div>
+
+        <div class="notice is-critical">
+          <strong>80 → 65 → 58 不是“标准答案”，也不是系统替玩家自动选出的最优价。</strong> 它只是为了在教师演示中稳定复现一条可解释的因果链：卖家的初始判断，被公开证据修正；玩家再用自己的价格试探 NPC 的接受区间。
+        </div>
+
+        <p>若从其他位置开始观察、使用不同问题与表达方式、不公开这条证据、先补第二条独立证据、接受 65、继续报价或直接拒绝，证据链、NPC 状态、价格和结算都会不同。当前只有一个较简单的教学案例，因此这条路线不能用于证明全局平衡或唯一最优策略。</p>
+      </section>
+
+      <section>
+        <h2>演示时建议重点观察四件事</h2>
+        <div class="watch-grid">
+          <article class="watch-card">
+            <span>观察 1 · 信息边界</span>
+            <h3>发现证据不等于 NPC 自动知道</h3>
+            <p>“现代胶痕”先进入玩家私有证据；只有在询问中主动出示，才进入双方共享信息。</p>
+          </article>
+          <article class="watch-card">
+            <span>观察 2 · 可解释重估</span>
+            <h3>价格跳变必须有事件和原因</h3>
+            <p>80 → 65 紧邻显示共享证据与卖家补充认知，不是由 UI 直接改价，也不是跟随每个细小状态连续抖动。</p>
+          </article>
+          <article class="watch-card">
+            <span>观察 3 · 资源不死锁</span>
+            <h3>报价与调查使用不同资源</h3>
+            <p>正式报价只扣议价容量；接受当前价和拒绝始终可用，即使容量耗尽也能完成一局。</p>
+          </article>
+          <article class="watch-card">
+            <span>观察 4 · 双层成败</span>
+            <h3>结果不是一个 100 分</h3>
+            <p>系统同时展示买到的客观价值、实际收益、议价执行和当时信息下的判断质量。</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>有余裕时，可再试两个正常分支</h2>
+        <div class="branch-grid">
+          <article class="branch-card">
+            <span>分支 A · 只拿一条证据就结束</span>
+            <h3>验证判断质量不会因单点证据直接登顶</h3>
+            <p>重新开始后，只检查一个位置便进入交易并结束。复盘应说明“方向可能合理，但仍缺独立佐证”；单条普通强证据不能直接得到 SSS。</p>
+          </article>
+          <article class="branch-card">
+            <span>分支 B · 在 58 点拒绝</span>
+            <h3>比较客观结果与判断质量</h3>
+            <p>走到 NPC 还价 58 后选择“拒绝交易”。拒绝会保留资金并结束本局；客观未成交结果和依据当时信息的判断质量会分别呈现。</p>
+          </article>
+        </div>
+        <p>这些分支用于理解规则差异，不要求在 10—15 分钟主演示中全部完成。</p>
+      </section>
+
+      <section>
+        <h2>演示后可以讨论的问题</h2>
+        <ol class="question-list">
+          <li>“证据先私有、公开后共享”的区别是否一眼可理解？公开证据带来的认知收益与议价代价是否足够清楚？</li>
+          <li>插画定位与文字鉴定事实的分工是否合适？哪些位置仍让人误以为需要从画面猜微观细节？</li>
+          <li>调查行动与议价容量分账后，玩家是否理解何时仍可返回调查、何时已经锁定交易？</li>
+          <li>物品品质、净收益、议价表现和判断质量四项，是否比旧的单一总分更能说明本局成败？</li>
+          <li>作为低级场教学案，它是否足够清楚而不显得像彩票？哪些辅助信息可以减少认知负担而不泄露答案？</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>常见情况与处理</h2>
+        <table class="trouble-table">
+          <tbody>
+            <tr><th>没有出现 80 → 65</th><td>请确认选择的是“接口”，获得“现代胶痕”后回到“询问来客”，在“修复历史”中明确出示该证据；若此前做了其他操作，点“重新开始本案”再试。</td></tr>
+            <tr><th>不能提交报价</th><td>报价必须是大于 0、且低于卖家当前要价的整数；若议价容量已经用尽，仍可按当前要价买下或拒绝。</td></tr>
+            <tr><th>正式报价后不能返回调查</th><td>这是设计行为。首次正式报价代表进入收束阶段，调查被锁定；报价前仍可使用“暂不报价，返回调查”。</td></tr>
+            <tr><th>手机宽度看不到开发栏</th><td>这是正确的信息边界。开发栏只在桌面教学与调试场景出现，不属于玩家手机 UI。</td></tr>
+            <tr><th>文件双击后显示异常</th><td>优先换用最新版 Chrome 或 Edge 重新打开原始文件；不要从网页中复制局部源码，也不要重命名后改变文件扩展名。</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <footer>
+      <strong>本说明与游戏文件均可离线使用。</strong><br>
+      当前演示证明核心玩法切片可运行、可解释；不代表多案件平衡、长期留存、正式美术与微信内公开部署已经完成。
+    </footer>
+  </article>
+</body>
+</html>

@@ -100,7 +100,7 @@
 
 预期：全部通过。
 
-- [ ] **Step 7: 提交测试契约修正**
+- [x] **Step 7: 提交测试契约修正**
 
       git add <release-config> <release-test> <package-json> <standalone-test> <prototype-readme>
       git diff --cached --check
@@ -122,7 +122,7 @@
 - Consumes: 项目 Compass、current state、active decisions、canonical 高保真路径和已验证演示路线。
 - Produces: 老师可独立阅读的完整项目说明、演示步骤和仓库权威地图。
 
-- [ ] **Step 1: 扩展 release-contract 测试，验证教师包源文件**
+- [x] **Step 1: 扩展 release-contract 测试，验证教师包源文件**
 
 测试至少断言：
 
@@ -134,19 +134,19 @@
 
 项目内容完整性和易懂程度使用人工逐节清单与独立 QA，不用文案正则。
 
-- [ ] **Step 2: 运行 release-contract 专项并确认因教师源文件缺失而失败**
+- [x] **Step 2: 运行 release-contract 专项并确认因教师源文件缺失而失败**
 
       node --experimental-strip-types --test tests/v1-release-contract.test.mjs
 
-- [ ] **Step 3: 创建根 README 与三份教师文档**
+- [x] **Step 3: 创建根 README 与三份教师文档**
 
-- [ ] **Step 4: 为历史启动包 README 增加醒目入口声明**
+- [x] **Step 4: 为历史启动包 README 增加醒目入口声明**
 
 旧启动材料仍保留为历史来源，但不能继续自称当前项目入口。
 
-- [ ] **Step 5: 将 SYSTEM-MAP 从高保真待制作和 34/34 旧状态更新为评分修正版事实**
+- [x] **Step 5: 将 SYSTEM-MAP 从高保真待制作和 34/34 旧状态更新为评分修正版事实**
 
-- [ ] **Step 6: 运行 release-contract 测试并确认通过**
+- [x] **Step 6: 运行 release-contract 测试并确认通过**
 
       node --experimental-strip-types --test tests/v1-release-contract.test.mjs
 
@@ -161,7 +161,7 @@
 - Consumes: 代码、文档和 canonical 构建产物。
 - Produces: 冻结前的新鲜证据与项目状态。
 
-- [ ] **Step 1: 运行完整门禁**
+- [x] **Step 1: 运行完整门禁**
 
       npm.cmd test
       npx.cmd tsc --noEmit
@@ -169,15 +169,15 @@
 
 预期：全部退出 0；测试 0 失败。
 
-- [ ] **Step 2: 比较 canonical 与 dist/client SHA-256**
+- [x] **Step 2: 比较 canonical 与 dist/client SHA-256**
 
-- [ ] **Step 3: 在 1440 × 1000 和 390 × 844 复跑正式演示路径**
+- [x] **Step 3: 在 1440 × 1000 和 390 × 844 复跑正式演示路径**
 
-- [ ] **Step 4: 在真实浏览器检查两份教师 HTML 的布局、可读性和控制台**
+- [x] **Step 4: 在真实浏览器检查两份教师 HTML 的布局、可读性和控制台**
 
-- [ ] **Step 5: 写入 EXP-015，并把 CURRENT-STATE 与 NEXT-ACTIONS 更新到冻结语义**
+- [x] **Step 5: 写入 EXP-015，并把 CURRENT-STATE 与 NEXT-ACTIONS 更新到冻结语义**
 
-- [ ] **Step 6: 运行项目记忆检查、链接检查与 git diff --check**
+- [x] **Step 6: 运行项目记忆检查、链接检查与 git diff --check**
 
 ### Task 5: 独立 QA、最终提交和冻结标签
 
@@ -189,22 +189,24 @@
 - Consumes: cleanly staged V1 交付内容和全套验证证据。
 - Produces: 最终 commit、annotated tag、教师演示包、完整源码包和冻结 bundle。
 
-- [ ] **Step 1: 显式暂存交付文件并提交**
+- [x] **Step 1: 由独立 QA 做提交前内容复核并修正阻断项**
+
+- [ ] **Step 2: 显式暂存交付文件并提交**
 
       git commit -m "docs(handoff): 完成 V1 教师提交材料"
 
-- [ ] **Step 2: 在最终提交上重新运行完整自动化和 Git 健康检查**
+- [ ] **Step 3: 在最终提交上重新运行完整自动化和 Git 健康检查**
 
-- [ ] **Step 3: 由独立 QA 只读复核范围、结果、教师文档和权威边界**
+- [ ] **Step 4: 由独立 QA 只读复核最终提交、结果、教师文档和权威边界**
 
-- [ ] **Step 4: 创建 annotated tag**
+- [ ] **Step 5: 创建 annotated tag**
 
       git tag -a v1.0.0-teacher-handoff -m "掌眼 V1 教师提交版"
 
-- [ ] **Step 5: 从标签导出严格白名单教师包和完整源码包**
+- [ ] **Step 6: 从标签导出严格白名单教师包和完整源码包**
 
-- [ ] **Step 6: 生成 04_版本与校验.txt、逐文件 SHA-256、ZIP SHA-256 和最终 Git bundle**
+- [ ] **Step 7: 生成 04_版本与校验.txt、逐文件 SHA-256、ZIP SHA-256 和最终 Git bundle**
 
-- [ ] **Step 7: 解包复验五文件 allowlist、HTML 哈希、源码归属和绝对路径扫描**
+- [ ] **Step 8: 解包复验五文件 allowlist、HTML 哈希、源码归属和绝对路径扫描**
 
-- [ ] **Step 8: 独立 QA 复核最终仓库外包；根工作区 31 项再次逐文件验哈希**
+- [ ] **Step 9: 独立 QA 复核最终仓库外包；根工作区 31 项再次逐文件验哈希**

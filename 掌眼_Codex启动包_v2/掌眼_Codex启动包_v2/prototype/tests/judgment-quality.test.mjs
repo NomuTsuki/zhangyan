@@ -3,7 +3,11 @@ import test from "node:test";
 
 import { lacquerBoxCase } from "../content/lacquer-box.ts";
 import { calculateJudgmentQuality } from "../game/judgment-quality.ts";
-import { calculatePosterior } from "../game/resolve-action.ts";
+import {
+  calculatePosterior,
+  createInitialWorldState,
+  resolveTurn,
+} from "../game/resolve-action.ts";
 
 function scoreWithCase(
   caseDefinition,
@@ -320,4 +324,34 @@ test("decision score keeps the approved process penalties", () => {
     score([], { redundantActionCount: 1, sellerExited: true }).decisionScore,
     81,
   );
+});
+
+test("irrelevant statement dimensions cannot inflate restored robustness", () => {
+  const priceStatement = makeStatement("price", "cooperate", 1);
+  const result = score(["restored-interior"], {
+    statementHistory: [priceStatement],
+  });
+
+  assert.equal(result.dominantVariantId, "restored-genuine");
+  assert.deepEqual(result.missingDimensions, ["modern-restoration"]);
+  assert.equal(result.robustnessScore, 75);
+  assert.equal(result.rawScore, 86);
+  assert.equal(result.finalGrade, "S");
+});
+
+test("counterfeit interior feedback keeps the whole-case conclusion open", () => {
+  const initial = createInitialWorldState(
+    lacquerBoxCase,
+    lacquerBoxCase.seed,
+    "counterfeit",
+  );
+  const inspected = resolveTurn(lacquerBoxCase, initial, {
+    kind: "inspect",
+    targetId: "interior",
+  });
+  const feedback = inspected.actionHistory.at(-1);
+
+  assert.ok(feedback);
+  assert.match(feedback.description, /强支持木胎为现代制作，仍待独立佐证/);
+  assert.doesNotMatch(feedback.description, /足以锚定现代制作/);
 });

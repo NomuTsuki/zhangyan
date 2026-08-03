@@ -443,7 +443,7 @@ export const lacquerBoxCase = {
       short: "查看木胎与工具痕",
       knowledgeHint: "木胎结构通常比表面装饰更难伪装，是区分旧胎重修与整体仿制的重要位置。",
       results: {
-        counterfeit: { evidenceId: "counterfeit-interior", title: "发现现代机制板材", description: "层压结构和机器锯切纹足以锚定现代制作。", bonusEvidenceId: "counterfeit-bonus", bonusChance: 0.2 },
+        counterfeit: { evidenceId: "counterfeit-interior", title: "发现现代机制板材", description: "层压结构和机器锯切纹强支持木胎为现代制作，仍待独立佐证。", bonusEvidenceId: "counterfeit-bonus", bonusChance: 0.2 },
         "restored-genuine": { evidenceId: "restored-interior", title: "木胎具有长期氧化", description: "不规则刨痕和渐变木色支持旧胎判断。", bonusEvidenceId: "restored-bonus", bonusChance: 0.2 },
         "hidden-treasure": { evidenceId: "treasure-interior", title: "工具痕对应地方作坊", description: "榫接记号与底款能够互相印证。", bonusEvidenceId: "treasure-bonus", bonusChance: 0.2 },
       },

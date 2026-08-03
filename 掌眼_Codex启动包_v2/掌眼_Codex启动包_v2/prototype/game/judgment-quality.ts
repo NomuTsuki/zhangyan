@@ -204,6 +204,7 @@ export function calculateJudgmentQuality(input: {
   const missingDimensions = requiredDimensions.filter(
     (dimension) => !coveredDimensions.includes(dimension),
   );
+  const coveredRequiredDimensionCount = requiredDimensions.length - missingDimensions.length;
   const decisiveSignal = selectedSignals.find((signal) =>
     signal.decisiveFor?.includes(dominantVariantId),
   );
@@ -227,7 +228,7 @@ export function calculateJudgmentQuality(input: {
     robustnessScore = strength === "anchor" ? 70 : strength === "strong" ? 50 : 30;
   } else if (selectedSignals.length >= 2) {
     if (!allSourcesQualified || !hasStrongSource) robustnessScore = 60;
-    else if (coveredDimensions.length === 1) robustnessScore = 75;
+    else if (coveredRequiredDimensionCount === 1) robustnessScore = 75;
     else if (missingDimensions.length > 0) robustnessScore = 90;
     else robustnessScore = 100;
   }

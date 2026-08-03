@@ -6,7 +6,7 @@
 
 ## 一句话状态
 
-首案高保真教师演示与判断质量修正已经完成技术实现；本轮自动化回归已完成，但 Playwright CLI 阻止 `file://` 导航，尚未重新取得真实 Chrome 的桌面与移动端交互证据。下一阶段不再继续堆功能，而是让老师在不看公式的情况下试玩，确认核心任务流是否容易理解。
+首案高保真教师演示与判断质量修正已经完成技术实现、自动化回归和真实 Chrome 复核；Playwright CLI 直接 `file://` 导航受限，但已用本机 Chrome headless 启动 canonical 文件并经 CDP 附着验证桌面与移动端路径。下一阶段不再继续堆功能，而是让老师在不看公式的情况下试玩，确认核心任务流是否容易理解。
 
 ## 三份可运行文件
 
@@ -33,7 +33,8 @@
 - 高保真输出是无外网依赖的自包含单文件，并由完整构建复制到 `dist/client/`；
 - 2026-08-03 完整 `npm.cmd test` 为 `77/78`：唯一失败仍是已批准保留的低保真 `standalone-html.test.mjs` 对缺失 `resolveBuyout` 的静态断言；排除该文件后的其余完整列表为 `77/77` 通过，`npx.cmd tsc --noEmit` 与 `npm.cmd run lint` 均通过；
 - 2026-08-03 两份高保真生成物的 SHA-256 均为 `8B46D415627A2BDAA6D90C68C61189496DEAACCC1D3F1213ADC45A794464925B`；
-- 本轮未重新确认 `1440 × 1000` 与 `390 × 844` 的真实 Chrome 核心流程、横向溢出或控制台状态：系统 Chrome 已启动，但 Playwright CLI 对 canonical `file://` 页面返回 `Access to "file:" protocol is blocked`，未发生页面交互。此前的浏览器结论属于历史记录，不能作为本轮浏览器复核证据；
+- 2026-08-03 已用本机 Chrome headless + CDP 附着复核 canonical `file://`：`1440 × 1000` 与 `390 × 844` 的单条强证据终局均为玩家 `A` 和同一条单点证据原因；桌面开发栏显示 `D=100 / C=32 / R=50 / J=73`、`base A / cap S / final A`，玩家 `main` 不含精确 D/C/R/J 标签，移动端没有 Developer Rail 或展开按钮；两种视口无横向溢出、目标页控制台均为 `0 errors / 0 warnings`；
+- 两种视口均完成“现代胶痕公开、要价 `80 → 65`、报价 `50`、NPC 还价 `58`”回归。买下与拒绝均可见、启用且 trial-clickable；桌面按钮底部余量 `45.109px`，移动端 `16.109px`，移动端 `MAIN scrollTop=126 / clientHeight=716 / scrollHeight=843`。详见 [EXP-013](evidence/EXP-013-judgment-quality-scoring.md) 与其四张浏览器截图；
 - `390 × 844` 当前可见操作控件均达到至少 `44 × 44px`；
 - 无鼠标键盘激活路径可以完成检查、收证、证据询问、报价和成交；主阶段切换后焦点分别落到调查、证据结果、交易和复盘；
 - 证据簿浮层打开后进入安全焦点，`Escape` 关闭后返回证据簿入口，内容区没有询问或交易动作。

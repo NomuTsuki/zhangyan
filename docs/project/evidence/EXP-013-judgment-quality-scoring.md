@@ -1,6 +1,6 @@
 # EXP-013：判断质量评分修正验证
 
-状态：已执行，浏览器复核受工具协议限制未完成
+状态：已执行，含真实 Chrome 浏览器复核
 执行日期：2026-08-03
 规格原始日期：2026-07-31
 
@@ -41,7 +41,7 @@ Get-FileHash -Algorithm SHA256 dist/client/掌眼_高保真教师演示.html
 1. `1440 × 1000`：开始本局 → 检查底款得到“后刻底款” → 不取得第二条证据 → 交易并拒绝 → 玩家复盘 → 展开开发栏。
 2. `390 × 844`：同一条路径；并在两种视口执行“现代胶痕 → 公开证据 → 交易 → 报价 50 → NPC 还价 58”的滚动回归，检查“按当前要价买下”和“拒绝交易”的可见、可点与底部 `16px` 余量。
 
-实际使用的系统 Chrome 命令为：
+Playwright CLI 直接导航 canonical `file://` 页面的尝试为：
 
 ```powershell
 npx.cmd --yes --package @playwright/cli playwright-cli -s=judgment-task4-desktop open --browser chrome --headed <canonical-file-url>
@@ -49,32 +49,42 @@ npx.cmd --yes --package @playwright/cli playwright-cli -s=judgment-task4-desktop
 npx.cmd --yes --package @playwright/cli playwright-cli -s=judgment-task4-desktop goto <canonical-file-url>
 ```
 
-会话启动后页面保持 `about:blank`。对 canonical URL 执行 `goto` 的实际错误为：
+该 CLI 会话停留于 `about:blank`。对 canonical URL 执行 `goto` 的实际错误为：
 
 ```text
 Error: Access to "file:" protocol is blocked.
 Attempted URL: "file:///D:/.../public/掌眼_高保真教师演示.html"
 ```
 
-随后尝试以 `python -m http.server 8765 --bind 127.0.0.1` 在 `public/` 下启动本地静态服务器，作为明确不等同于 `file://` 的补充渲染检查；该后台启动命令在执行前被环境策略拒绝，未启动服务器或加载页面。因而也没有以 HTTP 观察来替代 `file://` 验收。
+该直接 CLI 限制没有被当成浏览器结论：随后以本机 Chrome headless 直接启动同一 canonical `file://` 文件，并通过 CDP 附着执行真实页面交互与测量。以下观察来自已加载的 canonical 页面，而不是空白页或 HTTP 替代品。
 
-因此本次没有加载页面，也没有可诚实记录的点击、阶段转换、开发栏、控制台、横向溢出、底部余量或移动端可访问树观察。已记录的唯一会话级观察是空白页在 `1440 × 1000` 时 `scrollWidth = clientWidth = bodyScrollWidth = 1440`，它不能证明高保真页面没有溢出。`console warning` 对空白页报告 `0 errors / 0 warnings`，同样不能证明目标页面控制台干净。
+### 单条强证据终局
+
+`1440 × 1000` 路径为“底部 → 后刻底款 → 收集 → 进入交易 → 拒绝 → 复盘 → 展开开发栏”。玩家复盘为 `A`，且仅显示原因“方向合理，但目前只由单点证据支撑，仍缺独立佐证”；玩家 `main` 未出现 `D`、`C`、`R`、`J` 精确标签。展开的开发栏显示 `D=100`、`C=32`、`R=50`、`J=73`，`base A`、`cap S`、`final A`。页面无横向溢出，控制台为 `0 errors / 0 warnings`。截图：`.superpowers/sdd/2026-07-31-judgment-quality-scoring/desktop-single-evidence-review.png`。
+
+`390 × 844` 走同一路径，玩家复盘同为 `A` 和同一条单点证据原因；`Developer Rail` 与其展开按钮均不存在于页面，页面无横向溢出，控制台为 `0 errors / 0 warnings`。截图：`.superpowers/sdd/2026-07-31-judgment-quality-scoring/mobile-single-evidence-review.png`。
+
+### 还价与滚动回归
+
+两种视口均执行“接口现代胶痕 → 收进证据簿 → 询问并公开证据 → 要价 `80 → 65` → 进入交易 → 报价 `50` → NPC 还价 `58`”。
+
+- `1440 × 1000`： “按当前要价买下”与“拒绝交易”均可见、启用且 trial-clickable；按钮底部余量为 `45.109px`，无横向溢出，控制台为 `0 errors / 0 warnings`。截图：`.superpowers/sdd/2026-07-31-judgment-quality-scoring/desktop-counter-58-actions.png`。
+- `390 × 844`：两按钮同样可见、启用且 trial-clickable；按钮底部余量为 `16.109px`，`MAIN scrollTop=126 / clientHeight=716 / scrollHeight=843`，无横向溢出，控制台为 `0 errors / 0 warnings`。截图：`.superpowers/sdd/2026-07-31-judgment-quality-scoring/mobile-counter-58-actions.png`。
 
 ## 证据来源与结论
 
-- 本记录的自动化、构建、哈希与协议错误均来自 2026-08-03 在隔离工作树的实际终端执行。
+- 本记录的自动化、构建、哈希、CLI 协议错误与 CDP 浏览器观察均来自 2026-08-03 在隔离工作树的实际执行。
 - `tests/judgment-quality.test.mjs` 的通过项覆盖单条证据上限、非决定性强证据封顶、局部/决定性证据、交叉来源、同源去重、隐藏真相隔离及 D/C/R/J 相关回归。
 - `tests/hifi-*.test.mjs` 的通过项覆盖自包含生成、`dist/client` 精确复制、玩家/开发信息边界、开发栏初始状态、结算投影和静态可访问性约束。
-- 上述结构与自动化证据不替代真实浏览器观察。
+- 截图、CDP 可见性/启用/试点检查、滚动测量、溢出测量与控制台读取构成本轮真实浏览器证据；它们不替代真实教师试玩或目标平台验证。
 
 ## 未验证面与残余风险
 
-- `file://` 协议被 Playwright CLI 阻止，故 1440×1000 与 390×844 的终局路径、现代胶痕公开、`50 → 58` 还价滚动、真实渲染、控制台、横向溢出、点击可达性、移动端开发栏隔离及底部 `16px` 余量均未在本轮验证。
-- 本地 HTTP 补充检查亦未运行：环境策略拒绝后台静态服务器启动。
+- Playwright CLI 直接 `goto file://` 仍受协议限制；本轮已用 Chrome headless + CDP 取得 canonical 文件的真实浏览器证据，但后续自动化应保留该附着方式或修复 CLI 协议配置。
 - 完整测试套件仍不是全绿：保留唯一已批准的低保真 `resolveBuyout` 静态断言失败；本记录不能称“全套通过”。
 - `docs/03_NUMERIC_MODEL.md` 的既有 `objectiveScore` / 客观胜利阈值及未成交 `actualNet` 示例可能陈旧。这是 Task 2 审查标记的 deferred minor，不在本任务授权修改范围内，留待最终独立审查裁决。
 - 真实教师无讲解试玩、HTTPS/微信内置浏览器、Safari、极窄屏、软键盘和真实设备 safe-area 仍未验证。
 
 ## 后续建议
 
-在能允许 canonical `file://` 导航的真实 Chrome 自动化或人工受控 Chrome 环境中，逐项重跑以上两条视口路径；将实际截图、点击结果、控制台和滚动余量追加为新证据。不要用当前空白页的会话结果替代该复核。
+将 Chrome headless + CDP 附着流程固定为可复现浏览器门禁，并在真实教师试玩、HTTPS/微信内置浏览器、Safari、极窄屏、软键盘和真实设备 safe-area 上补充专项目证。

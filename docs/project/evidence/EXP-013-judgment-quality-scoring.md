@@ -60,16 +60,16 @@ Attempted URL: "file:///D:/.../public/掌眼_高保真教师演示.html"
 
 ### 单条强证据终局
 
-`1440 × 1000` 路径为“底部 → 后刻底款 → 收集 → 进入交易 → 拒绝 → 复盘 → 展开开发栏”。玩家复盘为 `A`，且仅显示原因“方向合理，但目前只由单点证据支撑，仍缺独立佐证”；玩家 `main` 未出现 `D`、`C`、`R`、`J` 精确标签。展开的开发栏显示 `D=100`、`C=32`、`R=50`、`J=73`，`base A`、`cap S`、`final A`。页面无横向溢出，控制台为 `0 errors / 0 warnings`。截图：`.superpowers/sdd/2026-07-31-judgment-quality-scoring/desktop-single-evidence-review.png`。
+`1440 × 1000` 路径为“底部 → 后刻底款 → 收集 → 进入交易 → 拒绝 → 复盘 → 展开开发栏”。玩家复盘显示判断质量 `A`、综合等级 `B`，且仅显示判断原因“方向合理，但目前只由单点证据支撑，仍缺独立佐证”；玩家 `main` 未出现 `D`、`C`、`R`、`J` 精确标签。展开的开发栏显示 `D=100`、`C=32`、`R=50`、`J=73`，`base A`、`cap S`、`final A`。页面无横向溢出，控制台为 `0 errors / 0 warnings`。截图：[桌面单证据复盘截图](../../../.superpowers/sdd/2026-07-31-judgment-quality-scoring/desktop-single-evidence-review.png)。
 
-`390 × 844` 走同一路径，玩家复盘同为 `A` 和同一条单点证据原因；`Developer Rail` 与其展开按钮均不存在于页面，页面无横向溢出，控制台为 `0 errors / 0 warnings`。截图：`.superpowers/sdd/2026-07-31-judgment-quality-scoring/mobile-single-evidence-review.png`。
+`390 × 844` 走同一路径，玩家复盘同为判断质量 `A`、综合等级 `B`，并显示同一条单点证据原因；`Developer Rail` 与其展开按钮均不存在于页面，页面无横向溢出，控制台为 `0 errors / 0 warnings`。截图：[移动端单证据复盘截图](../../../.superpowers/sdd/2026-07-31-judgment-quality-scoring/mobile-single-evidence-review.png)。
 
 ### 还价与滚动回归
 
 两种视口均执行“接口现代胶痕 → 收进证据簿 → 询问并公开证据 → 要价 `80 → 65` → 进入交易 → 报价 `50` → NPC 还价 `58`”。
 
-- `1440 × 1000`： “按当前要价买下”与“拒绝交易”均可见、启用且 trial-clickable；按钮底部余量为 `45.109px`，无横向溢出，控制台为 `0 errors / 0 warnings`。截图：`.superpowers/sdd/2026-07-31-judgment-quality-scoring/desktop-counter-58-actions.png`。
-- `390 × 844`：两按钮同样可见、启用且 trial-clickable；按钮底部余量为 `16.109px`，`MAIN scrollTop=126 / clientHeight=716 / scrollHeight=843`，无横向溢出，控制台为 `0 errors / 0 warnings`。截图：`.superpowers/sdd/2026-07-31-judgment-quality-scoring/mobile-counter-58-actions.png`。
+- `1440 × 1000`： “按当前要价买下”与“拒绝交易”均可见、启用且 trial-clickable；按钮底部余量为 `45.109px`，无横向溢出，控制台为 `0 errors / 0 warnings`。截图：[桌面还价 58 操作截图](../../../.superpowers/sdd/2026-07-31-judgment-quality-scoring/desktop-counter-58-actions.png)。
+- `390 × 844`：两按钮同样可见、启用且 trial-clickable；按钮底部余量为 `16.109px`，`MAIN scrollTop=126 / clientHeight=716 / scrollHeight=843`，无横向溢出，控制台为 `0 errors / 0 warnings`。截图：[移动端还价 58 操作截图](../../../.superpowers/sdd/2026-07-31-judgment-quality-scoring/mobile-counter-58-actions.png)。
 
 ## 证据来源与结论
 
@@ -82,7 +82,7 @@ Attempted URL: "file:///D:/.../public/掌眼_高保真教师演示.html"
 
 - Playwright CLI 直接 `goto file://` 仍受协议限制；本轮已用 Chrome headless + CDP 取得 canonical 文件的真实浏览器证据，但后续自动化应保留该附着方式或修复 CLI 协议配置。
 - 完整测试套件仍不是全绿：保留唯一已批准的低保真 `resolveBuyout` 静态断言失败；本记录不能称“全套通过”。
-- `docs/03_NUMERIC_MODEL.md` 的既有 `objectiveScore` / 客观胜利阈值及未成交 `actualNet` 示例可能陈旧。这是 Task 2 审查标记的 deferred minor，不在本任务授权修改范围内，留待最终独立审查裁决。
+- 数值模型文档已在本次收口中对齐现行结算：未成交净收益为 `0`、检测费调试单列，oracle 使用动态最低可达买断线，机会损失仅作调试参考，综合成果采用 `D—SSS` 多维等级；该文档残余风险已消除。
 - 真实教师无讲解试玩、HTTPS/微信内置浏览器、Safari、极窄屏、软键盘和真实设备 safe-area 仍未验证。
 
 ## 后续建议

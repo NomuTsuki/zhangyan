@@ -1,6 +1,6 @@
 # 数值与结算原型
 
-> 当前实现基线：2026-07-23。以下是首案现行可运行参数与公式，不是最终平衡结论。
+> 当前实现基线：2026-08-03。以下是首案现行可运行参数与公式，不是最终平衡结论。
 
 ## 首案常量
 
@@ -8,7 +8,7 @@
 |---|---:|
 | 初始行动点 | 6 |
 | 卖家开价 | 80 |
-| 界面固定折价报价 | 60 |
+| 无条件买断线 | 由 NPC 当前价格状态动态计算 |
 | NPC 认知档案底价 | 55 |
 | 现代仿制品真实价值 | 20 |
 | 旧胎重修真品真实价值 | 65 |
@@ -283,33 +283,67 @@ posterior(v) = weight(v) / Σ weight(all variants)
 设 `acquired` 表示最终买下器物：
 
 ```text
-actualNet =
-  (acquired ? trueValue - paidPrice : 0)
-  - feesPaid
+actualNet = acquired
+  ? trueValue - paidPrice - feesPaid
+  : 0
 ```
+
+未成交时 `actualNet` 固定为 `0`；已经发生的 `feesPaid` 继续在开发调试成本中单列，不显示为持有器物的负收益。
 
 完全知情可达方案只比较玩家界面在本案实际允许的终局方案：
 
 ```text
 开局直接拒绝：0
-按开价80买下：trueValue - 80
-若固定折价60在开局可被接受：trueValue - 60
+按开价买下：trueValue - openingPrice
+仅当 oracleDealFloor < openingPrice 时，
+  按当前动态最低可达买断线成交：trueValue - oracleDealFloor
 
 oracleBestNet = max(可达方案净值)
 regret = max(0, oracleBestNet - actualNet)
-stakes = max(openingPrice, trueValue)
-objectiveScore =
-  clamp(round(100 - regret ÷ stakes × 100), 0, 100)
 ```
+
+oracle 方案按完全知情条件比较，因此方案净值不另扣玩家实际调查中已经支付的检测费；`regret` 只保留为开发调试中的机会损失参考，不生成客观百分制分数或胜利线。
+
+### 净收益表现档位
+
+未成交时，用进入交易时的动态最低接受线 `entryFloor` 判断客观结果：
 
 ```text
-objectiveScore >= 85 → 客观成功
-70—84                → 基本成功
-40—69                → 客观失手
-< 40                 → 重大损失
+trueValue <= entryFloor → 正确避损，净收益档位 A
+trueValue > entryFloor  → 错失机会，净收益档位 D
 ```
 
-客观胜利阈值为 `objectiveScore >= 70`。
+成交时，先按 `actualNet` 判断亏损与持平，再用净收益率 `actualNet / max(1, trueValue)` 分档：
+
+```text
+actualNet < 0           → D（客观亏损）
+actualNet = 0           → C（持平）
+0 < 净收益率 < 0.10     → C
+0.10 <= 净收益率 < 0.20 → B
+0.20 <= 净收益率 < 0.30 → A
+0.30 <= 净收益率 < 0.45 → S
+0.45 <= 净收益率 < 0.60 → SS
+净收益率 >= 0.60        → SSS
+```
+
+### 议价表现档位
+
+未成交时议价档位为 `C`。成交且 `paidPrice <= entryFloor` 时为 `SSS`；否则计算：
+
+```text
+capture = clamp(
+  (entryAsk - paidPrice) / max(1, entryAsk - entryFloor),
+  0,
+  1
+)
+
+capture < 0.20         → D
+0.20 <= capture < 0.40 → C
+0.40 <= capture < 0.60 → B
+0.60 <= capture < 0.80 → A
+0.80 <= capture < 0.95 → S
+capture >= 0.95        → SS
+```
 
 ## 判断质量
 
@@ -354,14 +388,30 @@ J=round(100×0.55 + 32×0.25 + 50×0.20)=73
 最终判断质量 A
 ```
 
-局末标题仍由客观结果与最终判断档位共同决定，详见 `01_GAMEPLAY_FLOW.md`。
+## 综合等级
+
+`D / C / B / A / S / SS / SSS` 依次映射为等级序号 `0—6`。综合等级直接消费品质、净收益、议价和已经封顶的最终判断档位：
+
+```text
+rawOverallIndex = round(
+  品质等级序号 × 0.35
+  + 净收益档位序号 × 0.30
+  + 议价档位序号 × 0.20
+  + 最终判断档位序号 × 0.15
+)
+
+cappedOverallIndex = min(rawOverallIndex, 品质上限序号)
+overallGrade = D—SSS[cappedOverallIndex]
+```
+
+局末客观标签由净收益结果区分“盈利成交 / 持平成交 / 客观亏损 / 正确避损 / 错失机会”；局末标题再结合该客观标签与最终判断档位生成，详见 `01_GAMEPLAY_FLOW.md`。
 
 ## 局末调试复盘
 
 每局结束后必须完整显示：
 
 - 三种真相及本局真实价值；
-- 实际净值、全部可达 oracle 方案、机会损失与客观分公式；
+- 实际净值、检测费用、全部可达 oracle 方案、机会损失参考与等级公式；
 - 玩家可见证据、去重后的陈述信号、后验概率、期望价值与判断分公式；
 - 每轮四状态变化图；
 - 每轮输入、分项 delta、候选硬过滤、基础分、seed 扰动、最终分、Storylet 与 NPC 回应。
@@ -376,4 +426,4 @@ J=round(100×0.55 + 32×0.25 + 50×0.20)=73
 - 付费检测是否有明确适用场景而非支配策略；
 - 重复行动惩罚是否可被玩家理解；
 - 三种真相下是否存在稳定的唯一最优路线；
-- 客观分与判断分的阈值是否符合玩家和指导老师对“成功”的直觉。
+- 净收益、议价档位与综合权重是否符合玩家和指导老师对成果等级的直觉。

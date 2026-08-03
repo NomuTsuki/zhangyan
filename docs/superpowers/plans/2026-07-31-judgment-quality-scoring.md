@@ -1042,7 +1042,7 @@ npx.cmd tsc --noEmit
 npm.cmd run lint
 ```
 
-Expected: every command exits `0` with no failed test, TypeScript error, ESLint error, build warning, or runtime warning.
+Acceptance: 三条命令仍应全部执行。唯一获批的基线例外是 `npm.cmd test` 中 `standalone-html.test.mjs` 对缺失 `resolveBuyout` 的既有静态断言失败；若仍且仅有这一项失败，必须如实记录为 `77/78`，并确认排除该文件后的其余完整测试列表为 `77/77`。不得把这种结果称为“全套全绿”；`npx.cmd tsc --noEmit` 与 `npm.cmd run lint` 仍必须各自以退出码 `0` 完成。
 
 - [ ] **Step 2: 核对生成物一致性**
 

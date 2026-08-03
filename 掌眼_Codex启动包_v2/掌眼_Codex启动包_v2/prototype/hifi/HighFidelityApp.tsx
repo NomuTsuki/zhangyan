@@ -661,9 +661,30 @@ function Trade({
   const quoteUnavailableReason =
     quoteError || (capacity < 1 ? "议价容量已经用尽；你仍可接受当前价或拒绝。" : "");
   const locked = Boolean(world.negotiation);
+  const offersMade = world.negotiation?.offersMade ?? 0;
+  const tradeScreenRef = useRef<HTMLElement>(null);
+  const terminalActionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (offersMade < 1) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const screen = tradeScreenRef.current;
+      const actions = terminalActionsRef.current;
+      if (!screen || !actions) return;
+
+      const screenRect = screen.getBoundingClientRect();
+      const actionsRect = actions.getBoundingClientRect();
+      const neededScroll = actionsRect.bottom - screenRect.bottom + 16;
+      if (neededScroll > 0) screen.scrollBy({ top: neededScroll });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [offersMade]);
 
   return (
     <main
+      ref={tradeScreenRef}
       className="screen trade-screen"
       data-stage-focus
       tabIndex={-1}
@@ -776,7 +797,7 @@ function Trade({
         </button>
       </section>
 
-      <div className="terminal-actions">
+      <div className="terminal-actions" ref={terminalActionsRef}>
         <button className="buy-button" onClick={onBuy}>
           <strong>按当前要价买下</strong>
           <span>{world.currentPrice} 点 · 立即成交</span>

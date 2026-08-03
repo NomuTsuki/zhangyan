@@ -39,13 +39,13 @@
       git diff --check
       python C:\Users\ASUS\.codex\skills\project-co-lead\scripts\check_project_memory.py --root <worktree>
 
-- [ ] **Step 3: 只暂存预期文档并检查 staged 清单**
+- [x] **Step 3: 只暂存预期文档并检查 staged 清单**
 
       git add <nine-explicit-doc-paths>
       git diff --cached --name-only
       git diff --cached --check
 
-- [ ] **Step 4: 提交规格检查点**
+- [x] **Step 4: 提交规格检查点**
 
       git commit -m "docs(project): 记录 V1 教师交付收口边界"
 
@@ -54,28 +54,34 @@
 **Files:**
 - Modify: 掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/tests/standalone-html.test.mjs
 - Modify: 掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/README.md
+- Create: 掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/tests/v1-release-contract.test.mjs
+- Modify: 掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/package.json
+- Create: release/v1-teacher-handoff.json
 
 **Interfaces:**
 - Consumes: committed legacy HTML/client、current page.tsx 与 rules.test.mjs 的买断行为契约。
 - Produces: 不伪装成现行规则、仍受基础完整性保护的 legacy 快照。
 
-- [ ] **Step 1: 在 standalone 测试中增加 README 权威边界测试**
+- [x] **Step 1: 新增机器可读发布权威边界测试**
 
 测试必须要求：
 
-    高保真教师演示 = canonical/当前权威
-    低保真 = 历史/调试快照，不代表当前规则
-    不再声称三份 HTML 共享同一 TypeScript 规则核心
+    canonicalRuntime 精确指向高保真教师演示
+    低保真与数值实验台都位于 excludedRuntimeArtifacts
+    canonical 与排除项没有重叠
+    包内目标文件名唯一
 
-- [ ] **Step 2: 单独运行新测试，确认因 README 缺少权威说明而失败**
+- [x] **Step 2: 单独运行新测试，确认因发布清单缺失而失败**
 
-      node --experimental-strip-types --test --test-name-pattern="V1 documentation identifies" tests/standalone-html.test.mjs
+      node --experimental-strip-types --test tests/v1-release-contract.test.mjs
 
-预期：FAIL，且失败原因是 README 不含 legacy/canonical 边界。
+预期：FAIL，且失败原因是 release/v1-teacher-handoff.json 不存在。
 
-- [ ] **Step 3: 最小修改 prototype/README.md 使新测试通过**
+- [x] **Step 3: 创建发布清单并使权威边界测试通过**
 
-- [ ] **Step 4: 将原 standalone 正则测试重写为 legacy smoke**
+- [x] **Step 4: 最小修改 prototype/README.md 说明 canonical、legacy 与实验工具边界**
+
+- [x] **Step 5: 将原 standalone 正则测试重写为 legacy smoke**
 
 保留：
 
@@ -88,15 +94,15 @@
 
 删除 61ef25d 加入的 15 条错误规则静态期望；保留 page.tsx 当前契约检查。
 
-- [ ] **Step 5: 运行 standalone、rules 与 hifi 专项测试**
+- [x] **Step 6: 运行发布清单、standalone、rules 与 hifi 专项测试**
 
-      node --experimental-strip-types --test tests/standalone-html.test.mjs tests/rules.test.mjs tests/hifi-html.test.mjs tests/hifi-flow.test.mjs
+      node --experimental-strip-types --test tests/v1-release-contract.test.mjs tests/standalone-html.test.mjs tests/rules.test.mjs tests/hifi-html.test.mjs tests/hifi-flow.test.mjs
 
 预期：全部通过。
 
-- [ ] **Step 6: 提交测试契约修正**
+- [ ] **Step 7: 提交测试契约修正**
 
-      git add <standalone-test> <prototype-readme>
+      git add <release-config> <release-test> <package-json> <standalone-test> <prototype-readme>
       git diff --cached --check
       git commit -m "test(lofi): 明确历史快照与正式规则边界"
 
@@ -107,8 +113,8 @@
 - Create: docs/teacher/00_请先看.txt
 - Create: docs/teacher/01_掌眼_V1_项目说明.html
 - Create: docs/teacher/02_掌眼_V1_演示说明.html
-- Create: 掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/tests/teacher-handoff.test.mjs
-- Modify: 掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/package.json
+- Modify: release/v1-teacher-handoff.json
+- Modify: 掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/tests/v1-release-contract.test.mjs
 - Modify: 掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/README.md
 - Modify: docs/project/01-SYSTEM-MAP.md
 
@@ -116,19 +122,21 @@
 - Consumes: 项目 Compass、current state、active decisions、canonical 高保真路径和已验证演示路线。
 - Produces: 老师可独立阅读的完整项目说明、演示步骤和仓库权威地图。
 
-- [ ] **Step 1: 新增 teacher-handoff 测试并加入 npm test**
+- [ ] **Step 1: 扩展 release-contract 测试，验证教师包源文件**
 
 测试至少断言：
 
-    根 README 包含核心循环、四层信息、双资源、D—SSS、普通 H5 与当前边界
-    项目说明包含全部必需章节
-    演示说明包含现代胶痕、80 → 65、报价 50、还价 58 和开发栏边界
-    两个 HTML 自包含且不含本机绝对路径
+    发布清单中的所有源文件存在
+    两个 HTML 文档为合法自包含 HTML
+    不包含外部 script、stylesheet、字体或图片依赖
+    不包含本机绝对路径
     canonical 高保真文件存在
 
-- [ ] **Step 2: 运行 teacher-handoff 专项并确认因文件缺失而失败**
+项目内容完整性和易懂程度使用人工逐节清单与独立 QA，不用文案正则。
 
-      node --experimental-strip-types --test tests/teacher-handoff.test.mjs
+- [ ] **Step 2: 运行 release-contract 专项并确认因教师源文件缺失而失败**
+
+      node --experimental-strip-types --test tests/v1-release-contract.test.mjs
 
 - [ ] **Step 3: 创建根 README 与三份教师文档**
 
@@ -138,9 +146,9 @@
 
 - [ ] **Step 5: 将 SYSTEM-MAP 从高保真待制作和 34/34 旧状态更新为评分修正版事实**
 
-- [ ] **Step 6: 运行 teacher-handoff 测试并确认通过**
+- [ ] **Step 6: 运行 release-contract 测试并确认通过**
 
-      node --experimental-strip-types --test tests/teacher-handoff.test.mjs
+      node --experimental-strip-types --test tests/v1-release-contract.test.mjs
 
 ### Task 4: 完整构建、自动化与真实浏览器验证
 

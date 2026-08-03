@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { createServer } from "vite";
 
 import { lacquerBoxCase } from "../content/lacquer-box.ts";
 import {
@@ -27,6 +30,39 @@ function collectKeys(value, keys = new Set()) {
     collectKeys(child, keys);
   }
   return keys;
+}
+
+async function renderReview(world, playerSettlement) {
+  const server = await createServer({
+    configFile: false,
+    logLevel: "error",
+    plugins: [
+      {
+        name: "expose-review-for-render-test",
+        enforce: "pre",
+        transform(source, id) {
+          if (!id.endsWith("/hifi/HighFidelityApp.tsx")) return null;
+          return `${source}\nexport { Review as __testReview };`;
+        },
+      },
+    ],
+    server: { middlewareMode: true },
+  });
+
+  try {
+    const { __testReview: Review } = await server.ssrLoadModule(
+      "/hifi/HighFidelityApp.tsx",
+    );
+    return renderToStaticMarkup(
+      createElement(Review, {
+        world,
+        playerSettlement,
+        onRestart: () => {},
+      }),
+    );
+  } finally {
+    await server.close();
+  }
 }
 
 test("player presentation never exposes hidden truth or exact NPC state fields", () => {
@@ -237,4 +273,60 @@ test("settlement card exposes D—SSS grades without hidden truth identifiers or
     serialized,
     /restored-genuine|旧胎重修真品/,
   );
+});
+
+test("rendered Review judgment card consumes the player settlement projection", async () => {
+  const settled = resolveTurn(lacquerBoxCase, start("restored-genuine"), {
+    kind: "reject",
+  });
+  const baseCard = buildSettlementCard(settled.settlement);
+  assert.ok(baseCard);
+  const playerSettlement = {
+    ...baseCard,
+    judgmentReason: "SAFE_JUDGMENT_REASON",
+    sections: baseCard.sections.map((section) =>
+      section.id === "judgment" ? { ...section, grade: "D" } : section,
+    ),
+  };
+  const world = {
+    ...settled,
+    settlement: {
+      ...settled.settlement,
+      judgmentGrade: "SSS",
+      judgmentLabel: "UNSAFE_JUDGMENT_LABEL",
+      judgmentBreakdown: {
+        ...settled.settlement.judgmentBreakdown,
+        decisionScore: 91,
+        certaintyScore: 92,
+        robustnessScore: 93,
+        rawScore: 94,
+        dominantVariantId: "UNSAFE_DOMINANT_VARIANT",
+        independentSourceGroups: ["UNSAFE_SOURCE_GROUP"],
+        coveredDimensions: ["UNSAFE_COVERED_DIMENSION"],
+        missingDimensions: ["UNSAFE_MISSING_DIMENSION"],
+        decisiveEvidenceId: "UNSAFE_DECISIVE_EVIDENCE",
+        sssEligible: true,
+        formula: ["UNSAFE_BREAKDOWN_FORMULA"],
+      },
+    },
+  };
+
+  const html = await renderReview(world, playerSettlement);
+
+  assert.match(html, /SAFE_JUDGMENT_REASON/);
+  for (const forbidden of [
+    "UNSAFE_JUDGMENT_LABEL",
+    "UNSAFE_DOMINANT_VARIANT",
+    "UNSAFE_SOURCE_GROUP",
+    "UNSAFE_COVERED_DIMENSION",
+    "UNSAFE_MISSING_DIMENSION",
+    "UNSAFE_DECISIVE_EVIDENCE",
+    "UNSAFE_BREAKDOWN_FORMULA",
+    "91",
+    "92",
+    "93",
+    "94",
+  ]) {
+    assert.doesNotMatch(html, new RegExp(forbidden));
+  }
 });

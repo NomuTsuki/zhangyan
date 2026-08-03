@@ -17,7 +17,11 @@ import type {
   WorldState,
 } from "../game/types";
 import { ArtifactIllustration } from "./components/ArtifactIllustration";
-import { describeNpcAtmosphere } from "./presentation";
+import {
+  buildSettlementCard,
+  describeNpcAtmosphere,
+  type PlayerSettlementCard,
+} from "./presentation";
 import "./styles.css";
 
 type Stage = "arrival" | "investigate" | "result" | "trade" | "review";
@@ -828,12 +832,17 @@ function Trade({
 
 function Review({
   world,
+  playerSettlement,
   onRestart,
 }: {
   world: WorldState;
+  playerSettlement: PlayerSettlementCard;
   onRestart: () => void;
 }) {
   const settlement = world.settlement!;
+  const judgment = playerSettlement.sections.find(
+    (section) => section.id === "judgment",
+  )!;
   const truth = lacquerBoxCase.truthVariants[settlement.truthVariantId];
   const discovered = getDiscoveredEvidence(lacquerBoxCase, world);
   const overallIndex = gradeOrder.indexOf(settlement.overallGrade);
@@ -891,7 +900,7 @@ function Review({
         {[
           ["物品品质", settlement.qualityGrade, `综合等级最高可达 ${settlement.qualityCap}`],
           ["议价表现", settlement.bargainingGrade, "相对入场价与可达底线"],
-          ["判断质量", settlement.judgmentGrade, settlement.judgmentLabel],
+          ["判断质量", judgment.grade, playerSettlement.judgmentReason],
           ["收益结果", settlement.netGrade, settlement.outcomeLabel],
         ].map(([label, grade, detail]) => (
           <article key={label}>
@@ -1163,6 +1172,10 @@ export default function HighFidelityApp() {
     () => getDiscoveredEvidence(lacquerBoxCase, world),
     [world],
   );
+  const playerSettlement = useMemo(
+    () => buildSettlementCard(world.settlement),
+    [world.settlement],
+  );
 
   useEffect(() => {
     if (previousStageRef.current === stage) return;
@@ -1281,8 +1294,12 @@ export default function HighFidelityApp() {
             onBack={() => setStage("investigate")}
           />
         )}
-        {stage === "review" && (
-          <Review world={world} onRestart={() => restart()} />
+        {stage === "review" && playerSettlement && (
+          <Review
+            world={world}
+            playerSettlement={playerSettlement}
+            onRestart={() => restart()}
+          />
         )}
 
         {overlay === "evidence" && (

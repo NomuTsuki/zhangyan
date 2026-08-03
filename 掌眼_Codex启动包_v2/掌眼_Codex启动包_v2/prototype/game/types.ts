@@ -40,6 +40,21 @@ export type NPCPhase =
   | "exited";
 export type ActionTone = "gentle" | "professional" | "firm";
 export type EvidenceStrength = "weak" | "medium" | "strong" | "anchor";
+export type EvidenceSourceGroup =
+  | "surface"
+  | "bottom"
+  | "joint"
+  | "latch"
+  | "interior"
+  | "hidden-mark"
+  | "specialist-test"
+  | "npc-statement";
+export type ReasoningDimension =
+  | "material-era"
+  | "modern-restoration"
+  | "component-era-consistency"
+  | "provenance-craft-identity"
+  | "price-context";
 export type CaseStatus = "active" | "settled";
 
 export type NPCState = Record<NPCStateKey, number> & {
@@ -92,10 +107,9 @@ export type PlayerAction =
 
 export type EvidenceLikelihoods = Record<TruthVariantId, number>;
 
-export type EvidenceDefinition = {
+type EvidenceDefinitionBase = {
   id: string;
   name: string;
-  kind: "object" | "statement" | "test";
   topic: string;
   strength: EvidenceStrength;
   detail: string;
@@ -104,6 +118,17 @@ export type EvidenceDefinition = {
   contradicts?: string;
   likelihoods: EvidenceLikelihoods;
 };
+
+export type EvidenceDefinition =
+  | (EvidenceDefinitionBase & {
+      kind: "object" | "test";
+      sourceGroup: EvidenceSourceGroup;
+      dimensions: ReasoningDimension[];
+      caseDecisiveFor?: TruthVariantId[];
+    })
+  | (EvidenceDefinitionBase & {
+      kind: "statement";
+    });
 
 export type TruthVariant = {
   id: TruthVariantId;
@@ -147,6 +172,8 @@ export type DialogueTopic = {
   prompt: string;
   initialClaim: string;
   responseEvidenceId?: string;
+  signalSourceGroup: "npc-statement";
+  signalDimensions: ReasoningDimension[];
   responses: Record<NPCBehaviorId, string>;
   signals: Record<
     NPCBehaviorId,
@@ -218,6 +245,10 @@ export type CaseDefinition = {
   dialogueTopics: DialogueTopic[];
   knowledgeCards: KnowledgeCard[];
   test: TestDefinition;
+  judgmentModel: {
+    hypothesisOrder: TruthVariantId[];
+    requiredDimensions: Record<TruthVariantId, ReasoningDimension[]>;
+  };
   suggestedDiscount: number;
 };
 

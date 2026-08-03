@@ -22,6 +22,7 @@ test("65价值按65成交不再得到顶级结果，净收益提高时等级单�
     entryAsk: 80,
     entryFloor: 55,
     judgmentScore: 86,
+    judgmentGrade: "S",
   };
   const atValue = calculateOutcomeGrades({
     ...common,
@@ -53,6 +54,7 @@ test("赝品综合封顶C，但判断质量可以达到SSS", () => {
     entryAsk: 80,
     entryFloor: 55,
     judgmentScore: 98,
+    judgmentGrade: "SSS",
   });
 
   assert.equal(result.overallGrade, "C");

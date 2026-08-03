@@ -25,6 +25,7 @@ import type {
 } from "./types";
 import { calculateNegotiationCapacity } from "./negotiation.ts";
 import { calculateOutcomeGrades, gradeIndex } from "./outcome-grades.ts";
+import { calculateJudgmentQuality } from "./judgment-quality.ts";
 
 const truthVariantIds: TruthVariantId[] = [
   "counterfeit",
@@ -129,6 +130,22 @@ function cloneState(state: WorldState): WorldState {
           objectiveFormula: [...state.settlement.objectiveFormula],
           judgmentFormula: [...state.settlement.judgmentFormula],
           gradeFormula: [...state.settlement.gradeFormula],
+          judgmentBreakdown: {
+            ...state.settlement.judgmentBreakdown,
+            supportingSignalIds: [
+              ...state.settlement.judgmentBreakdown.supportingSignalIds,
+            ],
+            independentSourceGroups: [
+              ...state.settlement.judgmentBreakdown.independentSourceGroups,
+            ],
+            coveredDimensions: [
+              ...state.settlement.judgmentBreakdown.coveredDimensions,
+            ],
+            missingDimensions: [
+              ...state.settlement.judgmentBreakdown.missingDimensions,
+            ],
+            formula: [...state.settlement.judgmentBreakdown.formula],
+          },
         }
       : undefined,
   };
@@ -673,46 +690,16 @@ function settlementResult(
   const chosenExpectedNet = acquired ? buyExpectedNet : 0;
   const bestExpectedNet = Math.max(0, buyExpectedNet);
   const utilityGap = Math.max(0, bestExpectedNet - chosenExpectedNet);
-  const strongestPosterior = Math.max(
-    ...posterior.map((entry) => entry.probability),
-  );
-  const uniqueStatementSignalCount = new Set(
-    state.statementHistory.map((statement) => statement.signalId),
-  ).size;
-  const independentEvidenceCount = state.discoveredEvidenceIds.filter(
-    (evidenceId) => caseDefinition.evidence[evidenceId]?.kind !== "statement",
-  ).length;
-  const visibleSignalCount =
-    independentEvidenceCount + uniqueStatementSignalCount;
-  const uncertaintyPenalty =
-    visibleSignalCount === 0
-      ? 15
-      : strongestPosterior < 0.55
-        ? 8
-        : 0;
-  const unsupportedRiskPenalty =
-    acquired && visibleSignalCount === 0 ? 15 : 0;
-  const redundantPenalty =
-    state.actionHistory.filter((turn) => turn.redundant).length * 4;
-  const exitPenalty = choice === "seller-exited" ? 15 : 0;
-  const judgmentScore = clamp(
-    Math.round(
-      100
-        - utilityGap * 3
-        - uncertaintyPenalty
-        - unsupportedRiskPenalty
-        - redundantPenalty
-        - exitPenalty,
-    ),
-  );
-  const judgmentLabel =
-    judgmentScore >= 85
-      ? "证据充分"
-      : judgmentScore >= 70
-        ? "判断合理"
-        : judgmentScore >= 50
-          ? "依据偏弱"
-          : "判断失准";
+  const judgmentBreakdown = calculateJudgmentQuality({
+    caseDefinition,
+    posterior,
+    discoveredEvidenceIds: state.discoveredEvidenceIds,
+    statementHistory: state.statementHistory,
+    utilityGap,
+    redundantActionCount: state.actionHistory.filter((turn) => turn.redundant)
+      .length,
+    sellerExited: choice === "seller-exited",
+  });
   const entryAsk = state.negotiation?.entryAsk ?? state.currentPrice;
   const entryFloor =
     state.negotiation?.entryFloor
@@ -726,7 +713,8 @@ function settlementResult(
     paidPrice,
     entryAsk,
     entryFloor,
-    judgmentScore,
+    judgmentScore: judgmentBreakdown.rawScore,
+    judgmentGrade: judgmentBreakdown.finalGrade,
   });
   const outcomeLabel = {
     profitable: "盈利成交",
@@ -780,7 +768,7 @@ function settlementResult(
     qualityCap: grades.qualityCap,
     netGrade: grades.netGrade,
     bargainingGrade: grades.bargainingGrade,
-    judgmentGrade: grades.judgmentGrade,
+    judgmentGrade: judgmentBreakdown.finalGrade,
     outcomeTag: grades.outcomeTag,
     outcomeLabel,
     rawOverallIndex: grades.rawOverallIndex,
@@ -790,8 +778,9 @@ function settlementResult(
     chosenExpectedNet,
     bestExpectedNet,
     utilityGap,
-    judgmentScore,
-    judgmentLabel,
+    judgmentScore: judgmentBreakdown.rawScore,
+    judgmentLabel: judgmentBreakdown.playerLabel,
+    judgmentBreakdown,
     endingTitle,
     objectiveFormula: [
       acquired
@@ -802,14 +791,7 @@ function settlementResult(
       `机会损失 = max(0, ${oracleBestNet} - ${actualNet}) = ${regret}`,
       "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
     ],
-    judgmentFormula: [
-      `玩家可见信号 = ${independentEvidenceCount}条物证/检测 + ${uniqueStatementSignalCount}类NPC陈述（同源陈述卡不重复计权）`,
-      `玩家可见期望价值 = Σ(后验概率 × 各真相价值) = ${round1(expectedValue)}`,
-      `所选方案期望净值 = ${round1(chosenExpectedNet)}；当前最佳期望净值 = ${round1(bestExpectedNet)}`,
-      `效用差 = max(0, ${round1(bestExpectedNet)} - ${round1(chosenExpectedNet)}) = ${round1(utilityGap)}`,
-      `判断分 = 100 - 效用差×3 - 不确定性${uncertaintyPenalty} - 无依据风险${unsupportedRiskPenalty} - 重复行动${redundantPenalty} - 离场${exitPenalty} = ${judgmentScore}`,
-      "判断质量只读取玩家已发现的物证、检测与NPC陈述信号，不读取本局隐藏真相。",
-    ],
+    judgmentFormula: judgmentBreakdown.formula,
     gradeFormula: grades.formula,
   };
 }

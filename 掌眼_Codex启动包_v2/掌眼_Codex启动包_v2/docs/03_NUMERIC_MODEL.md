@@ -321,47 +321,40 @@ bestExpectedNet = max(0, buyExpectedNet)
 utilityGap = max(0, bestExpectedNet - chosenExpectedNet)
 ```
 
-惩罚项：
+判断质量由决策、确定性和证据稳健度组成：
 
 ```text
-uncertaintyPenalty =
-  可见信号为0 ? 15
-  : 最大后验概率 < 0.55 ? 8
-  : 0
-
-unsupportedRiskPenalty =
-  买下且可见信号为0 ? 15 : 0
-
-redundantPenalty = 重复或低效行动数 × 4
-exitPenalty = 卖家离场 ? 15 : 0
+D = clamp(round(100 - utilityGap×3 - 重复或低效行动数×4 - 卖家离场惩罚15), 0, 100)
+C = round(100 × (1 - 后验熵 / log2(假设数)))
+R = 由支持主导假设的独立来源、覆盖维度与证据强度确定
+J = round(D×0.55 + C×0.25 + R×0.20)
 ```
 
-最终：
+`R` 的取值规则：决定性证据为 100；单条锚点/强/中弱证据依次为 70/50/30；多个来源但强度或覆盖不充分为 60、75 或 90；满足独立交叉验证且覆盖全部所需维度为 100。
 
 ```text
-judgmentScore =
-  clamp(
-    round(
-      100
-      - utilityGap×3
-      - uncertaintyPenalty
-      - unsupportedRiskPenalty
-      - redundantPenalty
-      - exitPenalty
-    ),
-    0,
-    100
-  )
+J < 40 → D
+40 ≤ J < 55 → C
+55 ≤ J < 70 → B
+70 ≤ J < 80 → A
+80 ≤ J < 88 → S
+88 ≤ J < 95 → SS
+95 ≤ J → SSS
 ```
+
+最终档位取基础档位与证据结构上限中的较低者：无支持信号上限 B；单条中弱/强/锚点证据上限依次为 A/S/SS；多个来源上限 SS；决定性证据或完整独立交叉验证可达 SSS。
+
+SSS 还必须同时满足 `J ≥ 95`、`D ≥ 95`、`C ≥ 85`、`R ≥ 90`，且具备决定性证据或完整独立交叉验证；否则即使结构上限为 SSS，也降为 SS。
+
+单条强证据“后刻底款”：
 
 ```text
-judgmentScore >= 85 → 证据充分
-70—84               → 判断合理
-50—69               → 依据偏弱
-< 50                → 判断失准
+D=100，C=32，R=50
+J=round(100×0.55 + 32×0.25 + 50×0.20)=73
+最终判断质量 A
 ```
 
-局末标题由客观胜利阈值 70 和判断质量阈值 70 组成四象限，详见 `01_GAMEPLAY_FLOW.md`。
+局末标题仍由客观结果与最终判断档位共同决定，详见 `01_GAMEPLAY_FLOW.md`。
 
 ## 局末调试复盘
 

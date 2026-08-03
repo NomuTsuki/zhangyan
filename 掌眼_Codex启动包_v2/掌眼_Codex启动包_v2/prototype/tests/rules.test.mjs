@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { lacquerBoxCase } from "../content/lacquer-box.ts";
+import { calculateOutcomeGrades } from "../game/outcome-grades.ts";
 import {
   calculateNpcPosterior,
   calculatePosterior,
@@ -16,6 +17,29 @@ const seed = 20260723;
 
 function start(variant = "restored-genuine", selectedSeed = seed) {
   return createInitialWorldState(lacquerBoxCase, selectedSeed, variant);
+}
+
+function settleWithCase(
+  caseDefinition,
+  variant,
+  evidenceIds,
+  action,
+) {
+  const initial = createInitialWorldState(caseDefinition, 5, variant);
+  const visibleState = {
+    ...initial,
+    discoveredEvidenceIds: [...evidenceIds],
+  };
+  return resolveTurn(caseDefinition, visibleState, action).settlement;
+}
+
+function settleWithEvidence(variant, evidenceIds, action) {
+  return settleWithCase(
+    lacquerBoxCase,
+    variant,
+    evidenceIds,
+    action,
+  );
 }
 
 function play(state, actions) {
@@ -39,6 +63,73 @@ function assertPosteriorNormalized(posterior, message) {
     `${message}: probabilities must sum to one, received ${total}`,
   );
 }
+
+test("settlement uses capped judgment grades and preserves objective fields", () => {
+  const visible = ["restored-bottom"];
+  const results = ["counterfeit", "restored-genuine", "hidden-treasure"].map(
+    (variant) => settleWithEvidence(variant, visible, { kind: "reject" }),
+  );
+
+  assert.deepEqual(
+    results.map((result) => result.judgmentGrade),
+    ["A", "A", "A"],
+  );
+  assert.equal(new Set(results.map((result) =>
+    JSON.stringify(result.judgmentBreakdown))).size, 1);
+  assert.equal(new Set(results.map((result) => result.trueValue)).size, 3);
+});
+
+test("settlement consumes the capped final judgment grade", () => {
+  const cappedCase = {
+    ...lacquerBoxCase,
+    evidence: {
+      ...lacquerBoxCase.evidence,
+      "cap-signal": {
+        ...lacquerBoxCase.evidence["counterfeit-bonus"],
+        id: "cap-signal",
+        name: "高确定性非决定性强证据",
+        strength: "strong",
+        caseDecisiveFor: undefined,
+      },
+    },
+  };
+  const result = settleWithCase(
+    cappedCase,
+    "counterfeit",
+    ["cap-signal"],
+    { kind: "reject" },
+  );
+
+  assert.equal(result.judgmentBreakdown.baseGrade, "SS");
+  assert.equal(result.judgmentBreakdown.evidenceCap, "S");
+  assert.equal(result.judgmentBreakdown.finalGrade, "S");
+  assert.equal(
+    result.judgmentGrade,
+    result.judgmentBreakdown.finalGrade,
+  );
+  assert.notEqual(
+    result.judgmentGrade,
+    result.judgmentBreakdown.baseGrade,
+  );
+});
+
+test("raw SSS cannot bypass the final evidence cap in overall grading", () => {
+  const result = calculateOutcomeGrades({
+    qualityGrade: "S",
+    qualityCap: "SSS",
+    acquired: true,
+    trueValue: 100,
+    actualNet: 40,
+    paidPrice: 60,
+    entryAsk: 80,
+    entryFloor: 60,
+    judgmentScore: 99,
+    judgmentGrade: "S",
+  });
+  assert.equal(result.judgmentGrade, "S");
+  assert.equal(result.rawOverallIndex, 4);
+  assert.equal(result.overallGrade, "S");
+});
 
 test("truth is fixed by the case input while seed only changes allowed variation", () => {
   const first = start("restored-genuine", 1);
@@ -624,7 +715,8 @@ test("objective outcome and judgment quality distinguish luck from skill", () =>
   assert.equal(treasureBuy.actualNet, 50);
   assert.equal(treasureBuy.endingTitle, "险中得手");
   assert.equal(treasureReject.actualNet, 0);
-  assert.equal(treasureReject.endingTitle, "判断有据，仍错过机会");
+  assert.equal(treasureReject.judgmentGrade, "B");
+  assert.equal(treasureReject.endingTitle, "线索尚未收束");
   assert.equal(fakeBuy.judgmentScore, treasureBuy.judgmentScore);
   assert.notEqual(fakeBuy.qualityGrade, treasureBuy.qualityGrade);
   assert.notEqual(fakeBuy.netGrade, treasureBuy.netGrade);

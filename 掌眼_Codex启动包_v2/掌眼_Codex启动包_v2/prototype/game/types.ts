@@ -1,3 +1,5 @@
+import type { JudgmentQualityBreakdown } from "./judgment-quality";
+
 export const NPC_STATE_KEYS = [
   "pressure",
   "trust",
@@ -391,6 +393,7 @@ export type SettlementResult = {
   utilityGap: number;
   judgmentScore: number;
   judgmentLabel: string;
+  judgmentBreakdown: JudgmentQualityBreakdown;
   endingTitle: string;
   objectiveFormula: string[];
   judgmentFormula: string[];

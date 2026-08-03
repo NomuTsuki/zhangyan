@@ -16,6 +16,7 @@ export type OutcomeGradeInput = {
   entryAsk: number;
   entryFloor: number;
   judgmentScore: number;
+  judgmentGrade: OutcomeGrade;
 };
 
 function clamp(value: number, min: number, max: number) {
@@ -101,27 +102,15 @@ function bargainingOutcome(input: OutcomeGradeInput): {
   return { grade, capture };
 }
 
-function judgmentGrade(score: number): OutcomeGrade {
-  const normalized = clamp(Math.round(score), 0, 100);
-  if (normalized < 40) return "D";
-  if (normalized < 55) return "C";
-  if (normalized < 70) return "B";
-  if (normalized < 80) return "A";
-  if (normalized < 88) return "S";
-  if (normalized < 95) return "SS";
-  return "SSS";
-}
-
 export function calculateOutcomeGrades(
   input: OutcomeGradeInput,
 ): OutcomeGrades {
   const net = netOutcome(input);
   const bargaining = bargainingOutcome(input);
-  const judgment = judgmentGrade(input.judgmentScore);
   const qualityIndex = gradeIndex(input.qualityGrade);
   const netIndex = gradeIndex(net.grade);
   const bargainingIndex = gradeIndex(bargaining.grade);
-  const judgmentIndex = gradeIndex(judgment);
+  const judgmentIndex = gradeIndex(input.judgmentGrade);
   const rawOverallIndex = Math.round(
     qualityIndex * 0.35
       + netIndex * 0.3
@@ -139,7 +128,7 @@ export function calculateOutcomeGrades(
     qualityCap: input.qualityCap,
     netGrade: net.grade,
     bargainingGrade: bargaining.grade,
-    judgmentGrade: judgment,
+    judgmentGrade: input.judgmentGrade,
     outcomeTag: net.tag,
     rawOverallIndex,
     cappedOverallIndex,
@@ -147,7 +136,7 @@ export function calculateOutcomeGrades(
       `品质序号 = ${input.qualityGrade}(${qualityIndex})`,
       `净收益档位 = ${net.grade}(${netIndex})；净收益率 = ${Math.round(net.ratio * 1000) / 10}%`,
       `议价档位 = ${bargaining.grade}(${bargainingIndex})；让利捕获率 = ${Math.round(bargaining.capture * 1000) / 10}%`,
-      `判断档位 = ${judgment}(${judgmentIndex})；判断中间分 = ${clamp(Math.round(input.judgmentScore), 0, 100)}`,
+      `判断档位 = ${input.judgmentGrade}(${judgmentIndex})；判断原始分 = ${clamp(Math.round(input.judgmentScore), 0, 100)}`,
       `原始等级序号 = round(${qualityIndex}×0.35 + ${netIndex}×0.30 + ${bargainingIndex}×0.20 + ${judgmentIndex}×0.15) = ${rawOverallIndex}`,
       `综合等级序号 = min(${rawOverallIndex}, 品质上限${input.qualityCap}(${gradeIndex(input.qualityCap)})) = ${cappedOverallIndex}`,
     ],

@@ -77,6 +77,7 @@ export type PlayerSettlementCard = {
   overallLabel: "综合成果";
   overallGrade: OutcomeGrade;
   outcomeLabel: string;
+  judgmentReason: string;
   summary: string;
   sections: SettlementCardSection[];
 };
@@ -298,6 +299,7 @@ export function buildSettlementCard(
     overallLabel: "综合成果",
     overallGrade: settlement.overallGrade,
     outcomeLabel: settlement.outcomeLabel,
+    judgmentReason: settlement.judgmentLabel,
     summary: `${settlement.outcomeLabel}；判断质量 ${settlement.judgmentGrade}。`,
     sections: [
       {

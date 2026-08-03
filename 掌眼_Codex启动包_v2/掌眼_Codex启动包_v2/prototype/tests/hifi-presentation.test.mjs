@@ -189,7 +189,11 @@ test("evidence disclosure lists concrete discovered evidence as the only shareab
 });
 
 test("settlement card exposes D—SSS grades without hidden truth identifiers or values", () => {
-  const settled = resolveTurn(lacquerBoxCase, start("restored-genuine"), {
+  const visible = {
+    ...start("restored-genuine"),
+    discoveredEvidenceIds: ["restored-bottom"],
+  };
+  const settled = resolveTurn(lacquerBoxCase, visible, {
     kind: "reject",
   });
   const card = buildSettlementCard(settled.settlement);
@@ -197,6 +201,7 @@ test("settlement card exposes D—SSS grades without hidden truth identifiers or
 
   assert.ok(card);
   assert.match(card.overallGrade, /^(D|C|B|A|S|SS|SSS)$/);
+  assert.match(card.judgmentReason, /单点|独立佐证/);
   assert.deepEqual(
     card.sections.map((section) => section.label),
     ["器物客观品质", "实际净收益", "议价表现", "判断质量"],
@@ -205,8 +210,31 @@ test("settlement card exposes D—SSS grades without hidden truth identifiers or
   assert.equal(keys.has("trueValue"), false);
   assert.equal(keys.has("objectiveScore"), false);
   assert.equal(keys.has("judgmentScore"), false);
+  const serialized = JSON.stringify(card);
+  for (const forbidden of [
+    "judgmentBreakdown",
+    "decisionScore",
+    "certaintyScore",
+    "robustnessScore",
+    "rawScore",
+    "baseGrade",
+    "evidenceCap",
+    "dominantVariantId",
+    "supportingSignalIds",
+    "independentSourceGroups",
+    "coveredDimensions",
+    "missingDimensions",
+    "crossValidated",
+    "decisiveEvidenceId",
+    "sssEligible",
+    "capApplied",
+    "capReason",
+    "formula",
+  ]) {
+    assert.doesNotMatch(serialized, new RegExp(forbidden));
+  }
   assert.doesNotMatch(
-    JSON.stringify(card),
+    serialized,
     /restored-genuine|旧胎重修真品/,
   );
 });

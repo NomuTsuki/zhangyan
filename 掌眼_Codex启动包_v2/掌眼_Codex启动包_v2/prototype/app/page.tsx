@@ -608,6 +608,10 @@ function DebugRail({
               ))}
             </div>
             <div className="debug-formula-stack">
+              <code>决策合理性 D = {settlement.judgmentBreakdown.decisionScore}</code>
+              <code>后验确定性 C = {settlement.judgmentBreakdown.certaintyScore}</code>
+              <code>证据稳健度 R = {settlement.judgmentBreakdown.robustnessScore}</code>
+              <code>最终档 = {settlement.judgmentBreakdown.finalGrade}</code>
               {settlement.judgmentFormula.map((line) => <code key={line}>{line}</code>)}
             </div>
           </section>

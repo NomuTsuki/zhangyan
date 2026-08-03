@@ -68,6 +68,16 @@ test("teacher demo exposes the approved player contract and keeps development da
   const html = await readIfPresent(publicHtmlUrl);
   assert.notEqual(html, null, "expected the generated teacher demo");
 
+  for (const label of [
+    "决策合理性 D",
+    "后验确定性 C",
+    "证据稳健度 R",
+    "证据上限",
+    "缺失维度",
+  ]) {
+    assert.match(html, new RegExp(label));
+  }
+
   for (const requiredText of [
     "调查行动",
     "议价容量",

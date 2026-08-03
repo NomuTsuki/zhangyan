@@ -1040,6 +1040,38 @@ function TeacherRail({ world }: { world: WorldState }) {
         )}
       </section>
 
+      {world.status === "settled" && world.settlement?.judgmentBreakdown && (
+        <section>
+          <div className="rail-heading">
+            <h3>判断质量拆解</h3>
+            <span>局末解锁</span>
+          </div>
+          <div className="judgment-debug-grid">
+            {[
+              ["决策合理性 D", world.settlement.judgmentBreakdown.decisionScore],
+              ["后验确定性 C", world.settlement.judgmentBreakdown.certaintyScore],
+              ["证据稳健度 R", world.settlement.judgmentBreakdown.robustnessScore],
+              ["综合判断 J", world.settlement.judgmentBreakdown.rawScore],
+            ].map(([label, score]) => (
+              <div key={label}>
+                <span>{label}</span>
+                <strong>{score}</strong>
+              </div>
+            ))}
+          </div>
+          <dl className="judgment-debug-list">
+            <div><dt>基础档</dt><dd>{world.settlement.judgmentBreakdown.baseGrade}</dd></div>
+            <div><dt>证据上限</dt><dd>{world.settlement.judgmentBreakdown.evidenceCap}</dd></div>
+            <div><dt>最终档</dt><dd>{world.settlement.judgmentBreakdown.finalGrade}</dd></div>
+            <div><dt>独立来源</dt><dd>{world.settlement.judgmentBreakdown.independentSourceGroups.join("、") || "无"}</dd></div>
+            <div><dt>已覆盖维度</dt><dd>{world.settlement.judgmentBreakdown.coveredDimensions.join("、") || "无"}</dd></div>
+            <div><dt>缺失维度</dt><dd>{world.settlement.judgmentBreakdown.missingDimensions.join("、") || "无"}</dd></div>
+            <div><dt>决定性证据</dt><dd>{world.settlement.judgmentBreakdown.decisiveEvidenceId ?? "无"}</dd></div>
+            <div><dt>SSS资格</dt><dd>{world.settlement.judgmentBreakdown.sssEligible ? "具备" : "未具备"}</dd></div>
+          </dl>
+        </section>
+      )}
+
       <section>
         <div className="rail-heading">
           <h3>最近一次规则结算</h3>

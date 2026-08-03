@@ -1955,6 +1955,46 @@ fieldset > small {
   font: 700 10px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 
+.teacher-rail .judgment-debug-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.teacher-rail .judgment-debug-grid div {
+  display: grid;
+  gap: 4px;
+  padding: 9px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.teacher-rail .judgment-debug-grid span,
+.teacher-rail .judgment-debug-list dt {
+  color: #9aa9a3;
+  font-size: 9px;
+}
+
+.teacher-rail .judgment-debug-grid strong {
+  color: #f0d795;
+  font: 700 16px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.teacher-rail .judgment-debug-list {
+  gap: 8px;
+}
+
+.teacher-rail .judgment-debug-list div {
+  align-items: flex-start;
+}
+
+.teacher-rail .judgment-debug-list dd {
+  max-width: 58%;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
 .truth-debug {
   display: grid;
   gap: 5px;

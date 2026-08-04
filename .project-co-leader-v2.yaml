@@ -1,0 +1,37 @@
+version: 2
+workflow_revision: "2.2-agent-topology"
+mode: "auto"
+question_horizon: "next-verifiable-checkpoint"
+question_posture: "adaptive-inquiry-forward"
+question_budget:
+  evidence_first_max_before_action: 2
+  design_grill: "dependency-complete"
+  boundary_grill: "until-shared-understanding"
+reply_interpretation: "explicit-on-material"
+continuity_gate: "material-interruption"
+user_orientation: "on-reentry-or-direction-change"
+context_recovery: "live-signals-then-project-memory"
+active_work_visibility: "required-for-material-delegation"
+resolved_language_destination: "existing-project-memory"
+deferred_question_requires_trigger: true
+verification_contract_mode: "risk-based"
+docs_root: "docs/project"
+language: "zh-CN"
+auto_update_project_memory: true
+auto_git_commit: false
+document_update_frequency: "event-driven"
+archive_policy: "supersede-and-archive"
+approval_required:
+  - "core_value"
+  - "target_audience"
+  - "non_negotiable_principle"
+  - "major_scope_change"
+  - "core_system_boundary"
+  - "key_experience_direction"
+  - "irreversible_technology_choice"
+  - "major_existing_work_invalidation"
+  - "persistent_agent_creation"
+  - "agent_permission_expansion"
+  - "agent_decision_authority_change"
+  - "independent_verification_removal"
+extra_perspectives: []

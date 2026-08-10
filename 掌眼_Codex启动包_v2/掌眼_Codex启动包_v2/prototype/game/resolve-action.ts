@@ -23,6 +23,15 @@ import type {
   TurnRecord,
   WorldState,
 } from "./types";
+import { TRUTH_VARIANT_IDS } from "./types.ts";
+import {
+  calculateNpcPosterior,
+  calculatePosterior,
+  posteriorEntropy,
+  posteriorExpectedValue,
+  posteriorQuantile,
+} from "./belief.ts";
+export { calculateNpcPosterior, calculatePosterior };
 import { calculateNegotiationCapacity } from "./negotiation.ts";
 import { calculateOutcomeGrades, gradeIndex } from "./outcome-grades.ts";
 import { calculateJudgmentQuality } from "./judgment-quality.ts";
@@ -36,11 +45,7 @@ import {
 } from "./numeric.ts";
 import { behaviorJitter, seededUnit } from "./random.ts";
 
-const truthVariantIds: TruthVariantId[] = [
-  "counterfeit",
-  "restored-genuine",
-  "hidden-treasure",
-];
+const truthVariantIds = TRUTH_VARIANT_IDS;
 
 const stateLabels: Record<NPCStateKey, string> = {
   pressure: "压力",
@@ -282,129 +287,6 @@ function getEvidence(
   const evidence = caseDefinition.evidence[evidenceId];
   if (!evidence) throw new Error(`未知证据：${evidenceId}`);
   return evidence;
-}
-
-export function calculatePosterior(
-  caseDefinition: CaseDefinition,
-  evidenceIds: string[],
-  statementHistory: WorldState["statementHistory"] = [],
-): PosteriorEntry[] {
-  // NPC 回应可以同时生成一张便于阅读的“陈述卡”和一个结构化陈述信号。
-  // 两者来自同一次事件，因此陈述卡只负责展示，后验只计算结构化信号一次。
-  const independentEvidenceIds = [...new Set(evidenceIds)].filter(
-    (evidenceId) => caseDefinition.evidence[evidenceId]?.kind !== "statement",
-  );
-  const uniqueStatementSignals = [
-    ...new Map(
-      statementHistory.map((statement) => [statement.signalId, statement]),
-    ).values(),
-  ];
-  const weights = truthVariantIds.map((variantId) => {
-    const evidenceLikelihood = independentEvidenceIds.reduce((product, evidenceId) => {
-      const evidence = caseDefinition.evidence[evidenceId];
-      return product * (evidence?.likelihoods[variantId] ?? 1);
-    }, 1 / truthVariantIds.length);
-    const statementLikelihood = uniqueStatementSignals.reduce(
-      (product, statement) =>
-        product
-        * Math.pow(
-          Math.max(0.0001, statement.likelihoods[variantId] ?? 1),
-          statement.confidence,
-        ),
-      1,
-    );
-    return {
-      variantId,
-      weight: evidenceLikelihood * statementLikelihood,
-    };
-  });
-  const total = weights.reduce((sum, entry) => sum + entry.weight, 0) || 1;
-
-  return weights.map(({ variantId, weight }) => {
-    const variant = caseDefinition.truthVariants[variantId];
-    return {
-      variantId,
-      label: variant.label,
-      probability: weight / total,
-      trueValue: variant.trueValue,
-    };
-  });
-}
-
-function normalizedPosterior(
-  caseDefinition: CaseDefinition,
-  rawWeights: Array<{ variantId: TruthVariantId; weight: number }>,
-) {
-  const total = rawWeights.reduce((sum, entry) => sum + entry.weight, 0) || 1;
-  return rawWeights.map(({ variantId, weight }) => ({
-    variantId,
-    label: caseDefinition.truthVariants[variantId].label,
-    probability: weight / total,
-    trueValue: caseDefinition.truthVariants[variantId].trueValue,
-  }));
-}
-
-export function calculateNpcPosterior(
-  caseDefinition: CaseDefinition,
-  sharedEvidenceIds: string[],
-): PosteriorEntry[] {
-  const uniqueSharedEvidenceIds = [...new Set(sharedEvidenceIds)].filter(
-    (evidenceId) => caseDefinition.evidence[evidenceId]?.kind !== "statement",
-  );
-  const rawWeights = truthVariantIds.map((variantId) => {
-    const privateWeight = caseDefinition.npcProfile.privateSignals.reduce(
-      (product, signal) =>
-        product
-        * Math.pow(
-          Math.max(0.0001, signal.likelihoods[variantId]),
-          signal.confidence,
-        ),
-      1 / truthVariantIds.length,
-    );
-    const sharedWeight = uniqueSharedEvidenceIds.reduce((product, evidenceId) => {
-      const likelihood =
-        caseDefinition.evidence[evidenceId]?.likelihoods[variantId] ?? 1;
-      return product
-        * Math.pow(
-          Math.max(0.0001, likelihood),
-          caseDefinition.npcProfile.expertise,
-        );
-    }, 1);
-    return {
-      variantId,
-      weight: privateWeight * sharedWeight,
-    };
-  });
-  return normalizedPosterior(caseDefinition, rawWeights);
-}
-
-function posteriorExpectedValue(posterior: PosteriorEntry[]) {
-  return posterior.reduce(
-    (sum, entry) => sum + entry.probability * entry.trueValue,
-    0,
-  );
-}
-
-function posteriorQuantile(posterior: PosteriorEntry[], quantile: number) {
-  const ordered = [...posterior].sort(
-    (left, right) => left.trueValue - right.trueValue,
-  );
-  let cumulative = 0;
-  for (const entry of ordered) {
-    cumulative += entry.probability;
-    if (cumulative >= quantile) return entry.trueValue;
-  }
-  return ordered.at(-1)?.trueValue ?? 0;
-}
-
-function posteriorEntropy(posterior: PosteriorEntry[]) {
-  return posterior.reduce(
-    (sum, entry) =>
-      entry.probability > 0
-        ? sum - entry.probability * Math.log2(entry.probability)
-        : sum,
-    0,
-  );
 }
 
 export type NpcStance =

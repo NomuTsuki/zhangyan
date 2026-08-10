@@ -49,6 +49,24 @@ test("high-fidelity teacher demo has no external runtime dependencies", async ()
   assert.doesNotMatch(html, /@import\s+(?:url\()?["']?https?:\/\//i);
 });
 
+test("V2 artifact embeds exact rules and source provenance", async () => {
+  const html = await readIfPresent(publicHtmlUrl);
+  assert.notEqual(html, null, "expected the generated teacher demo");
+
+  const match = html.match(
+    /<script id="zhangyan-build-provenance" type="application\/json">([^<]+)<\/script>/,
+  );
+  assert.ok(match);
+  const provenance = JSON.parse(match[1]);
+
+  assert.equal(provenance.rulesetId, "zhangyan-core");
+  assert.equal(provenance.rulesetVersion, "2.0.0-alpha.1");
+  assert.equal(provenance.caseId, "lacquer-box-001");
+  assert.equal(provenance.caseVersion, "1.0.0");
+  assert.match(provenance.sourceCommit, /^[0-9a-f]{40}$/);
+  assert.match(provenance.sourceTreeStatus, /^(clean|dirty)$/);
+});
+
 test("teacher demo exposes the approved player contract and keeps development data outside it", async () => {
   const html = await readIfPresent(publicHtmlUrl);
   assert.notEqual(html, null, "expected the generated teacher demo");

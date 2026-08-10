@@ -39,6 +39,12 @@ test("V2 development manifest identifies the non-public runtime and preserved V1
     schemaVersion: 1,
     releaseId: "v2-development",
     publicationStatus: "not-public",
+    identity: {
+      rulesetId: "zhangyan-core",
+      rulesetVersion: "2.0.0-alpha.1",
+      caseId: "lacquer-box-001",
+      caseVersion: "1.0.0",
+    },
     runtime: "掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_V2_高保真演示.html",
     preservedV1Runtime: "掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_高保真教师演示.html",
   });

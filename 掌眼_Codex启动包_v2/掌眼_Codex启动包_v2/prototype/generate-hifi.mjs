@@ -1,6 +1,9 @@
+import { execFileSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { lacquerBoxCase } from "./content/lacquer-box.ts";
+import { DEFAULT_RULESET_IDENTITY } from "./game/ruleset.ts";
 
 const buildIndexUrl = new URL("./work/hifi/index.html", import.meta.url);
 const buildRoot = fileURLToPath(new URL("./work/hifi/", import.meta.url));
@@ -8,6 +11,26 @@ const outputUrl = new URL(
   "./public/掌眼_V2_高保真演示.html",
   import.meta.url,
 );
+const repositoryRoot = fileURLToPath(new URL("../../../", import.meta.url));
+const productRelativePath = "掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype";
+
+const sourceCommit = execFileSync("git", ["rev-parse", "HEAD"], {
+  cwd: repositoryRoot,
+  encoding: "utf8",
+}).trim();
+const productStatus = execFileSync(
+  "git",
+  ["status", "--porcelain", "--untracked-files=all", "--", productRelativePath],
+  { cwd: repositoryRoot, encoding: "utf8" },
+).trim();
+const provenance = {
+  rulesetId: DEFAULT_RULESET_IDENTITY.rulesetId,
+  rulesetVersion: DEFAULT_RULESET_IDENTITY.rulesetVersion,
+  caseId: lacquerBoxCase.id,
+  caseVersion: lacquerBoxCase.caseVersion,
+  sourceCommit,
+  sourceTreeStatus: productStatus === "" ? "clean" : "dirty",
+};
 
 function getAttribute(tag, name) {
   const match = tag.match(
@@ -99,6 +122,11 @@ async function inlineScripts(html) {
 let html = await readFile(buildIndexUrl, "utf8");
 html = await inlineStyles(html);
 html = await inlineScripts(html);
+const provenanceJson = JSON.stringify(provenance).replaceAll("</script", "<\\/script");
+html = html.replace(
+  "</head>",
+  `<script id="zhangyan-build-provenance" type="application/json">${provenanceJson}</script></head>`,
+);
 
 if (/<script\b[^>]*\bsrc\s*=/i.test(html)) {
   throw new Error("Generated teacher demo still contains an external script");

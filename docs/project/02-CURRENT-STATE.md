@@ -2,11 +2,11 @@
 
 > 只保存项目此刻的真实状态。历史结论进入 Decision、Evidence 或 archive。
 
-更新时间：2026-08-04
+更新时间：2026-08-10
 
 ## 一句话状态
 
-V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 已从该冻结点建立独立分支与 worktree，并完成 `project-co-lead` V1 停用、`project-co-leader-v2` 启用的最小治理迁移。产品代码尚未进入 V2 重构，下一证据检查点是只读启动审查。
+V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 统一数值权威源的 Task 1—14 已按批准计划实现并逐项提交。Task 15 的静态/全量/浏览器验证已完成，等待控制器安排的独立只读最终复核；尚未 push、merge 或部署。
 
 ## V2 治理迁移
 
@@ -17,11 +17,45 @@ V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 
 - 治理状态：`AGENTS.md` 中 V1 block 为 `disabled`、V2 block 为 `enabled`；`.project-co-lead.yaml` 作为回滚资料保留，`.project-co-leader-v2.yaml` 成为当前配置；
 - 新增边界：持久 Agent 创建、Agent 权限扩大、决策权限改变和移除独立验证均需用户明确批准；本次均未发生；
 - 迁移前基线：在干净 V2 worktree 执行 `npm.cmd ci` 与完整 `npm.cmd test`，结果 `81/81`；构建后工作树仍干净；
-- 下一重开触发：在以 V2 worktree 为根目录的新 Codex 顶层任务中执行冻结点、数值来源与 Agent 框架只读审查。
+- 启动审查收口：2026-08-04 已完成冻结点、数值来源与 Agent 框架只读审查，证据见 `EXP-016`；该门不再作为未来重开条件。
 
 ## Active Work Ledger
 
-当前没有 `Active`、`Parked`、`Blocked` 或 `Awaiting review` 的物质工作流。`V2-GOV-001` 已完成并在上一节关闭；下一工作流只在新的 V2 顶层任务开始只读启动审查时创建。
+- Workstream：`V2-NUMERIC-AUTHORITY-EXEC-001`；状态：Controller Review Pending；责任载体：Project Co-Leader 控制器 + 逐任务临时 Agent；
+- 当前检查点：Task 1—14 已闭环；Task 15 已完成 authority audit、完整验证、真实浏览器回归与项目 handoff。`npm.cmd test` 为 `88/88 PASS`，指定聚焦套件 `14/14 PASS`，TypeScript 通过，lint 为 `0 errors / 17 warnings`，V1 canonical SHA-256 仍为 `8B46D415627A2BDAA6D90C68C61189496DEAACCC1D3F1213ADC45A794464925B`；V2 生成单文件 provenance 已从旧 `a7f1b38`/dirty 更新为 `d366476`/clean。独立最终只读复核未由本任务执行，保留给控制器；
+- 授权边界：允许按批准计划修改产品代码、使用逐任务临时 Agent，并在 `codex/v2-bootstrap` 中按每任务明确白名单创建本地 commit；不允许 stage/commit 既有无关改动，不允许 push/merge/deploy；
+- 已知 changed surface：Task 1—3 的边界、基线与身份白名单文件及本 ledger；Phase 2 仅允许 Task 4 明示的数值/随机模块与调用点。已知 preserved surface：V1 canonical 与历史低保真字节、十场景首案语义、fixture、V1 tag/worktree、原工作区 31 项、教师交付包、作品集 capsule 与既有未提交资产；
+- 验证状态：Task 1 `11/11 PASS`；Task 2 `28/28` 与完整 `82/82 PASS`；Task 3 身份/基线/规则 `30/30 PASS`；Task 15 完整 `88/88 PASS`、聚焦 `14/14 PASS`、TypeScript 通过、lint `0 errors / 17 warnings`；桌面 `1440×1000` 与移动 `390×844` 均无横向溢出、控制台 `0 errors / 0 warnings`。fixture SHA-256 持续为 `909075060FC994501D1D4B6505D203AB70A9B88F639488C803510523CAF0A522`；
+- Durable handoff：计划 `docs/superpowers/plans/2026-08-10-v2-numeric-authority.md`，运行账本 `.superpowers/sdd/2026-08-10-v2-numeric-authority/progress.md`，最终验证见 `EXP-020` 与未暂存 Task 15 report；最后更新：2026-08-10；停止/重开触发：独立最终审查出现 load-bearing finding、完整/类型/lint/authority/browser 任一门失败，或 V1/基线/provenance 漂移。治理 Minor：`AGENT-ROSTER.md` 缺失，需在最终 handoff 说明；当前会话没有 `project-agent-governance` capability，不擅自建立持久 Agent。
+
+- Workstream：`V2-NUMERIC-AUTHORITY-PLAN-001`；状态：Completed；责任载体：Project Co-Leader（实施计划负责人）；
+- 当前检查点：统一数值权威源书面规格与 15 任务计划均已获用户批准；用户已选择 Subagent-Driven 执行；
+- 授权边界：允许只读检查产品实现与测试，并新增/更新实施计划、批准状态和项目 ledger；不修改产品代码、产品测试、构建物或依赖，不 stage/commit/push；
+- 已知 changed surface：批准后的设计规格、本 ledger、`03-NEXT-ACTIONS.md` 与 `docs/superpowers/plans/2026-08-10-v2-numeric-authority.md`；已知 preserved surface：全部产品目录、V1 tag/worktree、原工作区 31 项、教师交付包、作品集 capsule 与既有未提交资产；
+- 验证状态：规格与计划均已获用户批准；计划已完成规格覆盖、占位符、类型/接口一致性与路径/命令自检；当前没有产品实现结果；
+- Durable handoff：`docs/superpowers/plans/2026-08-10-v2-numeric-authority.md`；最后更新：2026-08-10；停止/重开触发：计划发现规格内部不可实施、需要新增生产依赖、需要改变产品边界，或用户要求改写/放弃该工程。
+
+- Workstream：`V2-NUMERIC-AUTHORITY-DESIGN-001`；状态：Completed；责任载体：Project Co-Leader（设计规格负责人）；
+- 当前检查点：用户已批准 `EXP-019` 推荐方向与完整书面规格；“内部确定性规则核 + 可替换适配层”及 Phase 0—6 迁移边界已冻结为计划输入；
+- 授权边界：允许只读检查现有实现、测试、生成链与项目记录，并新增/更新设计规格和项目状态；不修改产品代码、测试或生成物，不安装依赖，不 stage/commit/push；
+- 已知 changed surface：本 ledger、`03-NEXT-ACTIONS.md` 与 `docs/superpowers/specs/2026-08-10-v2-numeric-authority-design.md`；已知 preserved surface：V1 tag/worktree、全部产品目录、原工作区 31 项、教师交付包、作品集 capsule 及既有未提交资产；
+- 验证状态：设计方向和书面规格均已获用户批准；规格完成覆盖项与矛盾自检；当前没有产品实现或产品验证结果；
+- Durable handoff：`docs/superpowers/specs/2026-08-10-v2-numeric-authority-design.md`；最后更新：2026-08-10；停止/重开触发：发现设计与既有决定冲突、需要新增外部依赖、需要改变已批准产品边界，或用户要求改写/放弃当前方向。
+
+- Workstream：`V2-RESEARCH-001`；状态：Completed；责任载体：Project Co-Leader（研究负责人）；
+- 当前检查点：已对 boardgame.io、ink/inkjs、Yuka 与 OpenSpiel 完成官方文档、源码、测试、许可证、维护、Web 适配和集成成本比较，并形成采用/借鉴/拒绝结论；
+- 授权边界：只读访问 GitHub、框架官方文档、相关社区与研究资料，允许新增/更新项目研究证据和状态记录；不安装依赖、不复制外部代码、不修改产品、不创建外部 issue/PR、不 stage/commit/push；
+- 已知 changed surface：本 ledger、`03-NEXT-ACTIONS.md`、`EXP-019`；已知 preserved surface：V1 tag/worktree、全部产品目录、原工作区 31 项、教师交付包、作品集 capsule 与既有未提交资产；
+- 验证状态：只读研究完成。四个候选均有官方来源和许可证证据，测试与维护差异已明确；没有安装、执行或本机兼容性验证候选，因此结论只授权架构输入，不授权依赖采用；
+- Durable handoff：`docs/project/evidence/EXP-019-v2-framework-research.md`；最后更新：2026-08-10；重开触发：准备引入任一外部依赖、候选维护/许可发生实质变化、现有内核无法满足计划完成标准，或离线平衡阶段需要 OpenSpiel/inkjs spike。
+
+- Workstream：`V2-PORTFOLIO-001`；状态：Completed；责任载体：Project Co-Leader 控制器 + 独立审查者运行池；
+- 当前检查点：任务 1—6 全部闭环。`RUN-DOCX-01 FAIL` 作为历史保留，`RUN-DOCX-02 PASS` 合法接续；最终独立 QA 修正两处 README provenance 矛盾后 PASS。三份文本一次性冻结、18 项 checksum 与 frozen close 通过；精确 QA staging 已删除且不存在；
+- 授权边界：允许新增仓库内文档、只读校验脚本与测试，非覆盖创建 `D:\实习工作\掌眼_作品集证据保全\2026-08-04-v1-baseline` 和唯一 QA staging，复制恰好 15 项白名单，生成仅供验证的 DOCX 渲染，使用临时 Chrome profile，执行只读复验，并在收口时安全删除该精确 staging；不修改产品代码，不 stage/commit/push，不移动或改写 V1 tag/worktree，不部署或公开发布；
+- 已知 changed surface：本 ledger、`03-NEXT-ACTIONS.md`、`EXP-016`、`EXP-017`、保全规格/计划、`docs/portfolio/v1-evidence/`、`scripts/portfolio-evidence/`、SDD 审查记录、待建 `EXP-018`、已创建的精确胶囊与 QA staging；已知 preserved surface：V1 冻结点、产品目录、原工作区 31 项、教师交付包、浏览器原始证据、恢复 master 和既有项目记忆；
+- 验证状态：validator 语法与完整套件 `59/59 PASS`；Task 4 与 Task 6 新鲜独立 QA 均通过。十四条 runs 含十二道 required gates 与保留的 DOCX 失败/成功链；账本终态为 `15 private-master-copied / 105 private-recovery-master-verified-in-place / 59 duplicate-reference / 31 rebuildable`。pre-freeze、frozen 与 cleanup 后 frozen close 均返回 copied `15` / `6,604,677` bytes、unresolved `0`、blocking `0`、errors `0`；冻结 checksum `18/18`；最终 project memory `0 errors / 0 warnings`；同盘 capsule 不构成异盘灾难恢复；
+- Durable handoff：规格 `docs/superpowers/specs/2026-08-04-v1-portfolio-evidence-preservation-design.md`；计划 `docs/superpowers/plans/2026-08-04-v1-portfolio-evidence-preservation.md`；运行账本 `.superpowers/sdd/2026-08-04-v1-portfolio-evidence-preservation/progress.md`；
+- 最后更新：2026-08-10；重开触发：冻结 checksum/close 失败、源路径/许可/隐私状态变化、需要异盘灾难恢复或最终学校 PDF 策展。已冻结文本不得覆盖；历史 `RUN-DOCX-01 FAIL` 不得删除。
 
 ## V1 教师交付收口
 
@@ -83,26 +117,26 @@ V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 
 
 ## 已批准但尚未实现
 
-- V2 首个产品步骤不是继续堆功能，而是先只读审查冻结点、仓库内容、数值定义位置、实验台、单文件、测试、文档和 Agent 框架；
-- 上述审查结束后，Agent 必须主动提醒用户：统一数值权威源已经获批，是 V2 第一项核心产品工程；
-- 产品层尚未开始统一数值权威源，也尚未为该工程编写实施计划；
+- V2 启动审查、书面规格、15 任务实施、Task 15 自动/浏览器验证均已完成；这里不再把“统一数值权威源尚未开始”作为当前事实，最终独立只读复核仍待控制器；
+- `V2-RESEARCH-001` 已完成；`EXP-019` 的“内部确定性规则核 + 可替换适配层”已经落实为本轮实现。任何后续新生产依赖仍需单独证明必要性；
 - 面向老师的自动化、低认知门槛层继续作为后续上层能力，不在治理迁移中提前编码；
-- `project-agent-governance` 的本机文件可找到，但本任务的可调用 Skill 清单尚未暴露它；新 V2 顶层任务必须先刷新并核验注册状态，不能假装已调用。
+- `project-agent-governance` 的本机文件可找到，但当前可调用 Skill 清单尚未暴露它；若以后需要持久 Agent 拓扑，必须现场核验注册状态，不能假装已调用。
 
 ## 当前最大风险
 
 V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造多套权威和治理误配：
 
-1. 生产规则、实验台、历史单文件、生成文件与测试之间仍存在多处数值定义，尚未形成权威源清单；
-2. 根工作区仍保存 31 项历史混合改动，V2 不能把这些内容整包导入或误认成冻结基线；
-3. 当前只有一个简单教学案，无法证明数值平衡、不同案件的信息披露与一般玩家体验；
-4. 新任务若未正确加载 V2 Skill 或错误同时启用 V1/V2，会破坏单一项目负责人入口；
-5. 公开 H5 的依赖安全、真实微信环境和一般目标玩家体验仍未验证。
+1. 未来改动可能重新让实验台、历史单文件、生成文件或测试成为第二数值权威；本轮已完成生产权威收敛，`EXP-020` 记录当前审计边界；
+2. 若整体引入 boardgame.io、Yuka、OpenSpiel 或让 ink 持有生产数值，会新增第二状态机或与现有回放骨架重复；
+3. 根工作区仍保存 31 项历史混合改动，V2 不能把这些内容整包导入或误认成冻结基线；
+4. 当前只有一个简单教学案，无法证明数值平衡、不同案件的信息披露与一般玩家体验；
+5. 新任务若未正确加载 V2 Skill 或错误同时启用 V1/V2，会破坏单一项目负责人入口；
+6. 公开 H5 的依赖安全、真实微信环境和一般目标玩家体验仍未验证。
 
 ## 当前阻塞
 
 - V2 最小治理迁移没有技术阻塞；
-- 下一步产品工作必须先完成 V2 启动审查，不能直接重构数值；
+- 当前产品工作没有技术阻塞；当前流程门是控制器安排的独立最终只读复核，不应倒退为再次等待书面规格或实施计划批准；
 - `project-agent-governance` 是否会在新顶层任务中出现在可调用 Skill 清单，仍需现场核验；
 - 公开 H5 地址和微信内实机验证需要后续选择托管方式，不属于当前 V2 启动范围。
 
@@ -113,7 +147,7 @@ V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造�
 - 不迁移 Unity，不制作微信小游戏工程；
 - 不把高保真完成等同于玩法平衡或正式美术验收；
 - 不接真实市场价格、登录、云存档、支付或长期经济；
-- 启动审查完成前不实施数值重构、不扩写第二案件。
+- 独立最终复核前不宣称本 workstream 已完成；不安装候选框架、不扩写第二案件、不把自动回归替代平衡或真人体验证据。
 
 ## 关键记录
 
@@ -128,3 +162,11 @@ V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造�
 - [EXP-013：判断质量评分修正验证](evidence/EXP-013-judgment-quality-scoring.md)
 - [EXP-014：V1 定稿预检与恢复点](evidence/EXP-014-v1-preflight-recovery-and-classification.md)
 - [EXP-015：V1 教师交付收口与冻结前验证](evidence/EXP-015-v1-teacher-handoff.md)
+- [EXP-016：V2 启动只读审查与数值权威边界](evidence/EXP-016-v2-startup-audit.md)
+- [EXP-017：学校作品集成果/过程取舍核实](evidence/EXP-017-portfolio-curation-guidance-review.md)
+- [EXP-018：V1 基线与作品集原始证据保全](evidence/EXP-018-v1-portfolio-evidence-preservation.md)
+- [EXP-019：V2 同类框架与社区方案只读调研](evidence/EXP-019-v2-framework-research.md)
+- [CH-003：必检 run 失败后的可审计重试语义](challenges/resolved/CH-003-verification-run-retry-semantics.md)
+- [DEC-012：必检 run 使用追加式 supersession](decisions/DEC-012-verification-run-supersession.md)
+- [V1 基线与作品集原始证据保全设计](../superpowers/specs/2026-08-04-v1-portfolio-evidence-preservation-design.md)
+- [V1 作品集证据保全实施计划](../superpowers/plans/2026-08-04-v1-portfolio-evidence-preservation.md)

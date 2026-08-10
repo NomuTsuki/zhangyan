@@ -131,10 +131,20 @@ export type PlayerTurnView = Readonly<{
   negotiationCapacityCost: number;
   evidenceAdded: string[];
   sharedEvidenceAdded: string[];
-  statement: TurnRecord["statement"];
-  priceChange: TurnRecord["priceChange"];
+  statement: PlayerStatementView | undefined;
+  priceChange: { before: number; after: number; publicReason: string } | undefined;
   phaseBefore: NPCState["phase"];
   phaseAfter: NPCState["phase"];
+}>;
+
+export type PlayerStatementView = Readonly<{
+  id: string;
+  turn: number;
+  text: string;
+  speaker: "seller";
+  topicId: string;
+  sourceKind: "memory" | "judgment" | "refusal";
+  confidence: number;
 }>;
 
 export type PlayerSettlementView = Readonly<{
@@ -164,11 +174,11 @@ export type PlayerView = Readonly<{
   inspectedTargetIds: string[];
   discoveredEvidence: PlayerEvidenceView[];
   sharedEvidenceIds: string[];
-  statementHistory: NonNullable<TurnRecord["statement"]>[];
+  statementHistory: PlayerStatementView[];
   actionHistory: PlayerTurnView[];
   lastTurn: PlayerTurnView | null;
   testConsent: { allowed: boolean; reasons: string[] };
-  reference: ReturnType<typeof getPlayerReferenceOffer>;
+  reference: { suggestedOffer: number; offer: number };
   settlement: PlayerSettlementView | null;
 }>;
 
@@ -448,10 +458,28 @@ function buildPlayerTurnView(turn: TurnRecord): PlayerTurnView {
     negotiationCapacityCost: turn.negotiationCapacityCost,
     evidenceAdded: [...turn.evidenceAdded],
     sharedEvidenceAdded: [...(turn.sharedEvidenceAdded ?? [])],
-    statement: turn.statement ? { ...turn.statement } : undefined,
-    priceChange: turn.priceChange ? { ...turn.priceChange } : undefined,
+    statement: turn.statement ? buildPlayerStatementView(turn.statement) : undefined,
+    priceChange: turn.priceChange
+      ? {
+          before: turn.priceChange.before,
+          after: turn.priceChange.after,
+          publicReason: turn.priceChange.publicReason,
+        }
+      : undefined,
     phaseBefore: turn.before.npcState.phase,
     phaseAfter: turn.after.npcState.phase,
+  };
+}
+
+function buildPlayerStatementView(statement: NonNullable<TurnRecord["statement"]>): PlayerStatementView {
+  return {
+    id: `statement-${statement.turn}`,
+    turn: statement.turn,
+    text: statement.text,
+    speaker: "seller",
+    topicId: statement.topicId,
+    sourceKind: statement.sourceKind,
+    confidence: statement.confidence,
   };
 }
 
@@ -494,7 +522,7 @@ export function buildPlayerView(
     inspectedTargetIds: [...state.inspectedTargetIds],
     discoveredEvidence,
     sharedEvidenceIds: [...state.sharedEvidenceIds],
-    statementHistory: state.statementHistory.map((statement) => ({ ...statement })),
+    statementHistory: state.statementHistory.map(buildPlayerStatementView),
     actionHistory: state.actionHistory.map(buildPlayerTurnView),
     lastTurn: state.actionHistory.at(-1)
       ? buildPlayerTurnView(state.actionHistory.at(-1)!)
@@ -503,8 +531,11 @@ export function buildPlayerView(
       const consent = getTestConsent(caseDefinition, state);
       return { allowed: consent.allowed, reasons: [...consent.reasons] };
     })(),
-    reference,
-    settlement: settlement && truth
+    reference: {
+      suggestedOffer: reference.suggestedOffer,
+      offer: reference.offer,
+    },
+    settlement: state.status === "settled" && settlement && truth
       ? {
           endingTitle: settlement.endingTitle,
           choiceLabel: settlement.choiceLabel,

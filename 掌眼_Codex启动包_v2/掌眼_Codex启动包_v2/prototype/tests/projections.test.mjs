@@ -8,7 +8,7 @@ import {
   resolveTurn,
 } from "../game/resolve-action.ts";
 import { buildDeveloperProjection } from "../game/projections.ts";
-import { buildPlayerPresentation } from "../hifi/presentation.ts";
+import { buildPlayerPresentation, buildPlayerView } from "../hifi/presentation.ts";
 
 function start(variant = "restored-genuine") {
   return createInitialWorldState(lacquerBoxCase, 20260723, variant);
@@ -62,9 +62,10 @@ test("developer projection is a deep copy and reveals truth only after settlemen
 });
 
 test("player-facing app components route safe player props instead of WorldState", async () => {
-  const [hifiSource, appSource] = await Promise.all([
+  const [hifiSource, appSource, presentationSource] = await Promise.all([
     readFile(new URL("../hifi/HighFidelityApp.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../hifi/presentation.ts", import.meta.url), "utf8"),
   ]);
 
   for (const component of ["Investigation", "ResultScreen", "Trade", "Review"]) {
@@ -89,4 +90,52 @@ test("player-facing app components route safe player props instead of WorldState
     .replace(/\/\/.*$/gm, "");
   assert.doesNotMatch(executableHifi, /\bworld\.(?!settlement\b)/);
   assert.doesNotMatch(executableApp, /\bworldState\./);
+  assert.match(presentationSource, /function buildPlayerStatementView/);
+  assert.doesNotMatch(presentationSource, /statementHistory:\s*state\.statementHistory\.map\(\(statement\) => \(\{ \.\.\.statement \}\)\)/);
+  assert.match(presentationSource, /settlement: state\.status === "settled" && settlement && truth/);
+});
+
+test("player statement projection omits dialogue likelihood weights", () => {
+  const inspected = resolveTurn(lacquerBoxCase, start(), {
+    kind: "inspect",
+    targetId: "joint",
+  });
+  const dialogue = resolveTurn(lacquerBoxCase, inspected, {
+    kind: "dialogue",
+    topicId: "repair-history",
+    tone: "professional",
+    evidenceId: "modern-adhesive-trace",
+  });
+  const player = buildPlayerView(lacquerBoxCase, dialogue);
+  const serialized = JSON.stringify(player);
+
+  assert.ok(player.statementHistory.length > 0);
+  assert.doesNotMatch(serialized, /likelihoods|sourceGroup|restored-genuine|hidden-treasure/);
+  assert.equal(player.statementHistory.at(-1)?.text.length > 0, true);
+});
+
+test("active state fails closed when a settlement payload is injected", () => {
+  const settled = resolveTurn(lacquerBoxCase, start("hidden-treasure"), {
+    kind: "reject",
+  });
+  const activeWithSettlement = {
+    ...start("hidden-treasure"),
+    settlement: settled.settlement,
+  };
+  const player = buildPlayerView(lacquerBoxCase, activeWithSettlement);
+
+  assert.equal(player.status, "active");
+  assert.equal(player.settlement, null);
+  assert.doesNotMatch(JSON.stringify(player), /trueValue|hidden-treasure/);
+});
+
+test("settled player view includes the permitted truth reveal", () => {
+  const settled = resolveTurn(lacquerBoxCase, start("hidden-treasure"), {
+    kind: "reject",
+  });
+  const player = buildPlayerView(lacquerBoxCase, settled);
+
+  assert.equal(player.status, "settled");
+  assert.equal(player.settlement?.truth.label.length > 0, true);
+  assert.equal(player.settlement?.truth.trueValue, 130);
 });

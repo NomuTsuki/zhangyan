@@ -1,0 +1,3359 @@
+{
+  "schemaVersion": 1,
+  "snapshots": {
+    "blind-buy:counterfeit": {
+      "status": "settled",
+      "turn": 1,
+      "actionPoints": 6,
+      "negotiation": null,
+      "feesPaid": 0,
+      "currentPrice": 80,
+      "npcState": {
+        "pressure": 26,
+        "trust": 58,
+        "dealIntent": 72,
+        "control": 68,
+        "phase": "relaxed"
+      },
+      "discoveredEvidenceIds": [],
+      "sharedEvidenceIds": [],
+      "npcPosterior": [
+        {
+          "variantId": "counterfeit",
+          "label": "现代仿制品",
+          "probability": 0.29606921585468665,
+          "trueValue": 20
+        },
+        {
+          "variantId": "restored-genuine",
+          "label": "旧胎重修真品",
+          "probability": 0.20975993655647054,
+          "trueValue": 65
+        },
+        {
+          "variantId": "hidden-treasure",
+          "label": "被低估的珍品",
+          "probability": 0.4941708475888428,
+          "trueValue": 130
+        }
+      ],
+      "priceHistory": [],
+      "statementHistory": [],
+      "triggeredStoryletIds": [],
+      "actionHistory": [
+        {
+          "turn": 1,
+          "action": {
+            "kind": "buy"
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 6,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 0,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
+            "实际净结果 = 20（真实价值）- 80（成交价）- 0（检测费） = -60",
+            "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-60；完全知情时按55点最低可达买断线成交:-35",
+            "完全知情最佳净结果 = max(0, -60, -35) = 0",
+            "机会损失 = max(0, 0 - -60) = 60",
+            "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
+            "D = 75",
+            "C = 0",
+            "R = 0",
+            "J = 41",
+            "基础档位 = C",
+            "证据上限 = B",
+            "最终档位 = C"
+          ],
+          "redundant": false
+        }
+      ],
+      "settlement": {
+        "choice": "buy",
+        "choiceLabel": "按当前价格买下",
+        "truthVariantId": "counterfeit",
+        "truthLabel": "现代仿制品",
+        "trueValue": 20,
+        "paidPrice": 80,
+        "feesPaid": 0,
+        "actualNet": -60,
+        "oracleBestNet": 0,
+        "regret": 60,
+        "stakes": 80,
+        "overallGrade": "C",
+        "qualityGrade": "C",
+        "qualityCap": "C",
+        "netGrade": "D",
+        "bargainingGrade": "D",
+        "judgmentGrade": "C",
+        "outcomeTag": "loss",
+        "outcomeLabel": "客观亏损",
+        "rawOverallIndex": 1,
+        "cappedOverallIndex": 1,
+        "posterior": [
+          {
+            "variantId": "counterfeit",
+            "label": "现代仿制品",
+            "probability": 0.3333333333333333,
+            "trueValue": 20
+          },
+          {
+            "variantId": "restored-genuine",
+            "label": "旧胎重修真品",
+            "probability": 0.3333333333333333,
+            "trueValue": 65
+          },
+          {
+            "variantId": "hidden-treasure",
+            "label": "被低估的珍品",
+            "probability": 0.3333333333333333,
+            "trueValue": 130
+          }
+        ],
+        "expectedValue": 71.66666666666666,
+        "chosenExpectedNet": -8.333333333333343,
+        "bestExpectedNet": 0,
+        "utilityGap": 8.333333333333343,
+        "judgmentScore": 41,
+        "judgmentLabel": "方向可能合理，但目前没有证据支撑",
+        "judgmentBreakdown": {
+          "decisionScore": 75,
+          "certaintyScore": 0,
+          "robustnessScore": 0,
+          "rawScore": 41,
+          "baseGrade": "C",
+          "evidenceCap": "B",
+          "finalGrade": "C",
+          "dominantVariantId": "counterfeit",
+          "supportingSignalIds": [],
+          "independentSourceGroups": [],
+          "coveredDimensions": [],
+          "missingDimensions": [
+            "material-era",
+            "component-era-consistency"
+          ],
+          "crossValidated": false,
+          "sssEligible": false,
+          "capApplied": false,
+          "capReason": "基础判断档位未触及证据结构上限",
+          "playerLabel": "方向可能合理，但目前没有证据支撑",
+          "formula": [
+            "D = 75",
+            "C = 0",
+            "R = 0",
+            "J = 41",
+            "基础档位 = C",
+            "证据上限 = B",
+            "最终档位 = C"
+          ]
+        },
+        "endingTitle": "看走眼",
+        "objectiveFormula": [
+          "实际净结果 = 20（真实价值）- 80（成交价）- 0（检测费） = -60",
+          "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-60；完全知情时按55点最低可达买断线成交:-35",
+          "完全知情最佳净结果 = max(0, -60, -35) = 0",
+          "机会损失 = max(0, 0 - -60) = 60",
+          "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。"
+        ],
+        "judgmentFormula": [
+          "D = 75",
+          "C = 0",
+          "R = 0",
+          "J = 41",
+          "基础档位 = C",
+          "证据上限 = B",
+          "最终档位 = C"
+        ],
+        "gradeFormula": [
+          "品质序号 = C(1)",
+          "净收益档位 = D(0)；净收益率 = -300%",
+          "议价档位 = D(0)；让利捕获率 = 0%",
+          "判断档位 = C(1)；判断原始分 = 41",
+          "原始等级序号 = round(1×0.35 + 0×0.30 + 0×0.20 + 1×0.15) = 1",
+          "综合等级序号 = min(1, 品质上限C(1)) = 1"
+        ]
+      }
+    },
+    "blind-reject:counterfeit": {
+      "status": "settled",
+      "turn": 1,
+      "actionPoints": 6,
+      "negotiation": null,
+      "feesPaid": 0,
+      "currentPrice": 80,
+      "npcState": {
+        "pressure": 26,
+        "trust": 58,
+        "dealIntent": 72,
+        "control": 68,
+        "phase": "relaxed"
+      },
+      "discoveredEvidenceIds": [],
+      "sharedEvidenceIds": [],
+      "npcPosterior": [
+        {
+          "variantId": "counterfeit",
+          "label": "现代仿制品",
+          "probability": 0.29606921585468665,
+          "trueValue": 20
+        },
+        {
+          "variantId": "restored-genuine",
+          "label": "旧胎重修真品",
+          "probability": 0.20975993655647054,
+          "trueValue": 65
+        },
+        {
+          "variantId": "hidden-treasure",
+          "label": "被低估的珍品",
+          "probability": 0.4941708475888428,
+          "trueValue": 130
+        }
+      ],
+      "priceHistory": [],
+      "statementHistory": [],
+      "triggeredStoryletIds": [],
+      "actionHistory": [
+        {
+          "turn": 1,
+          "action": {
+            "kind": "reject"
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 6,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 0,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
+            "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+            "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-60；完全知情时按55点最低可达买断线成交:-35",
+            "完全知情最佳净结果 = max(0, -60, -35) = 0",
+            "机会损失 = max(0, 0 - 0) = 0",
+            "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
+            "D = 100",
+            "C = 0",
+            "R = 0",
+            "J = 55",
+            "基础档位 = B",
+            "证据上限 = B",
+            "最终档位 = B"
+          ],
+          "redundant": false
+        }
+      ],
+      "settlement": {
+        "choice": "reject",
+        "choiceLabel": "拒绝交易",
+        "truthVariantId": "counterfeit",
+        "truthLabel": "现代仿制品",
+        "trueValue": 20,
+        "paidPrice": 0,
+        "feesPaid": 0,
+        "actualNet": 0,
+        "oracleBestNet": 0,
+        "regret": 0,
+        "stakes": 80,
+        "overallGrade": "C",
+        "qualityGrade": "C",
+        "qualityCap": "C",
+        "netGrade": "A",
+        "bargainingGrade": "C",
+        "judgmentGrade": "B",
+        "outcomeTag": "correct-avoidance",
+        "outcomeLabel": "正确避损",
+        "rawOverallIndex": 2,
+        "cappedOverallIndex": 1,
+        "posterior": [
+          {
+            "variantId": "counterfeit",
+            "label": "现代仿制品",
+            "probability": 0.3333333333333333,
+            "trueValue": 20
+          },
+          {
+            "variantId": "restored-genuine",
+            "label": "旧胎重修真品",
+            "probability": 0.3333333333333333,
+            "trueValue": 65
+          },
+          {
+            "variantId": "hidden-treasure",
+            "label": "被低估的珍品",
+            "probability": 0.3333333333333333,
+            "trueValue": 130
+          }
+        ],
+        "expectedValue": 71.66666666666666,
+        "chosenExpectedNet": 0,
+        "bestExpectedNet": 0,
+        "utilityGap": 0,
+        "judgmentScore": 55,
+        "judgmentLabel": "方向可能合理，但目前没有证据支撑",
+        "judgmentBreakdown": {
+          "decisionScore": 100,
+          "certaintyScore": 0,
+          "robustnessScore": 0,
+          "rawScore": 55,
+          "baseGrade": "B",
+          "evidenceCap": "B",
+          "finalGrade": "B",
+          "dominantVariantId": "counterfeit",
+          "supportingSignalIds": [],
+          "independentSourceGroups": [],
+          "coveredDimensions": [],
+          "missingDimensions": [
+            "material-era",
+            "component-era-consistency"
+          ],
+          "crossValidated": false,
+          "sssEligible": false,
+          "capApplied": false,
+          "capReason": "基础判断档位未触及证据结构上限",
+          "playerLabel": "方向可能合理，但目前没有证据支撑",
+          "formula": [
+            "D = 100",
+            "C = 0",
+            "R = 0",
+            "J = 55",
+            "基础档位 = B",
+            "证据上限 = B",
+            "最终档位 = B"
+          ]
+        },
+        "endingTitle": "识险止损",
+        "objectiveFormula": [
+          "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+          "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-60；完全知情时按55点最低可达买断线成交:-35",
+          "完全知情最佳净结果 = max(0, -60, -35) = 0",
+          "机会损失 = max(0, 0 - 0) = 0",
+          "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。"
+        ],
+        "judgmentFormula": [
+          "D = 100",
+          "C = 0",
+          "R = 0",
+          "J = 55",
+          "基础档位 = B",
+          "证据上限 = B",
+          "最终档位 = B"
+        ],
+        "gradeFormula": [
+          "品质序号 = C(1)",
+          "净收益档位 = A(3)；净收益率 = 0%",
+          "议价档位 = C(1)；让利捕获率 = 0%",
+          "判断档位 = B(2)；判断原始分 = 55",
+          "原始等级序号 = round(1×0.35 + 3×0.30 + 1×0.20 + 2×0.15) = 2",
+          "综合等级序号 = min(2, 品质上限C(1)) = 1"
+        ]
+      }
+    },
+    "blind-buy:restored-genuine": {
+      "status": "settled",
+      "turn": 1,
+      "actionPoints": 6,
+      "negotiation": null,
+      "feesPaid": 0,
+      "currentPrice": 80,
+      "npcState": {
+        "pressure": 26,
+        "trust": 58,
+        "dealIntent": 72,
+        "control": 68,
+        "phase": "relaxed"
+      },
+      "discoveredEvidenceIds": [],
+      "sharedEvidenceIds": [],
+      "npcPosterior": [
+        {
+          "variantId": "counterfeit",
+          "label": "现代仿制品",
+          "probability": 0.29606921585468665,
+          "trueValue": 20
+        },
+        {
+          "variantId": "restored-genuine",
+          "label": "旧胎重修真品",
+          "probability": 0.20975993655647054,
+          "trueValue": 65
+        },
+        {
+          "variantId": "hidden-treasure",
+          "label": "被低估的珍品",
+          "probability": 0.4941708475888428,
+          "trueValue": 130
+        }
+      ],
+      "priceHistory": [],
+      "statementHistory": [],
+      "triggeredStoryletIds": [],
+      "actionHistory": [
+        {
+          "turn": 1,
+          "action": {
+            "kind": "buy"
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 6,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 0,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
+            "实际净结果 = 65（真实价值）- 80（成交价）- 0（检测费） = -15",
+            "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按55点最低可达买断线成交:10",
+            "完全知情最佳净结果 = max(0, -15, 10) = 10",
+            "机会损失 = max(0, 10 - -15) = 25",
+            "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
+            "D = 75",
+            "C = 0",
+            "R = 0",
+            "J = 41",
+            "基础档位 = C",
+            "证据上限 = B",
+            "最终档位 = C"
+          ],
+          "redundant": false
+        }
+      ],
+      "settlement": {
+        "choice": "buy",
+        "choiceLabel": "按当前价格买下",
+        "truthVariantId": "restored-genuine",
+        "truthLabel": "旧胎重修真品",
+        "trueValue": 65,
+        "paidPrice": 80,
+        "feesPaid": 0,
+        "actualNet": -15,
+        "oracleBestNet": 10,
+        "regret": 25,
+        "stakes": 80,
+        "overallGrade": "C",
+        "qualityGrade": "A",
+        "qualityCap": "A",
+        "netGrade": "D",
+        "bargainingGrade": "D",
+        "judgmentGrade": "C",
+        "outcomeTag": "loss",
+        "outcomeLabel": "客观亏损",
+        "rawOverallIndex": 1,
+        "cappedOverallIndex": 1,
+        "posterior": [
+          {
+            "variantId": "counterfeit",
+            "label": "现代仿制品",
+            "probability": 0.3333333333333333,
+            "trueValue": 20
+          },
+          {
+            "variantId": "restored-genuine",
+            "label": "旧胎重修真品",
+            "probability": 0.3333333333333333,
+            "trueValue": 65
+          },
+          {
+            "variantId": "hidden-treasure",
+            "label": "被低估的珍品",
+            "probability": 0.3333333333333333,
+            "trueValue": 130
+          }
+        ],
+        "expectedValue": 71.66666666666666,
+        "chosenExpectedNet": -8.333333333333343,
+        "bestExpectedNet": 0,
+        "utilityGap": 8.333333333333343,
+        "judgmentScore": 41,
+        "judgmentLabel": "方向可能合理，但目前没有证据支撑",
+        "judgmentBreakdown": {
+          "decisionScore": 75,
+          "certaintyScore": 0,
+          "robustnessScore": 0,
+          "rawScore": 41,
+          "baseGrade": "C",
+          "evidenceCap": "B",
+          "finalGrade": "C",
+          "dominantVariantId": "counterfeit",
+          "supportingSignalIds": [],
+          "independentSourceGroups": [],
+          "coveredDimensions": [],
+          "missingDimensions": [
+            "material-era",
+            "component-era-consistency"
+          ],
+          "crossValidated": false,
+          "sssEligible": false,
+          "capApplied": false,
+          "capReason": "基础判断档位未触及证据结构上限",
+          "playerLabel": "方向可能合理，但目前没有证据支撑",
+          "formula": [
+            "D = 75",
+            "C = 0",
+            "R = 0",
+            "J = 41",
+            "基础档位 = C",
+            "证据上限 = B",
+            "最终档位 = C"
+          ]
+        },
+        "endingTitle": "看走眼",
+        "objectiveFormula": [
+          "实际净结果 = 65（真实价值）- 80（成交价）- 0（检测费） = -15",
+          "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按55点最低可达买断线成交:10",
+          "完全知情最佳净结果 = max(0, -15, 10) = 10",
+          "机会损失 = max(0, 10 - -15) = 25",
+          "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。"
+        ],
+        "judgmentFormula": [
+          "D = 75",
+          "C = 0",
+          "R = 0",
+          "J = 41",
+          "基础档位 = C",
+          "证据上限 = B",
+          "最终档位 = C"
+        ],
+        "gradeFormula": [
+          "品质序号 = A(3)",
+          "净收益档位 = D(0)；净收益率 = -23.1%",
+          "议价档位 = D(0)；让利捕获率 = 0%",
+          "判断档位 = C(1)；判断原始分 = 41",
+          "原始等级序号 = round(3×0.35 + 0×0.30 + 0×0.20 + 1×0.15) = 1",
+          "综合等级序号 = min(1, 品质上限A(3)) = 1"
+        ]
+      }
+    },
+    "blind-reject:restored-genuine": {
+      "status": "settled",
+      "turn": 1,
+      "actionPoints": 6,
+      "negotiation": null,
+      "feesPaid": 0,
+      "currentPrice": 80,
+      "npcState": {
+        "pressure": 26,
+        "trust": 58,
+        "dealIntent": 72,
+        "control": 68,
+        "phase": "relaxed"
+      },
+      "discoveredEvidenceIds": [],
+      "sharedEvidenceIds": [],
+      "npcPosterior": [
+        {
+          "variantId": "counterfeit",
+          "label": "现代仿制品",
+          "probability": 0.29606921585468665,
+          "trueValue": 20
+        },
+        {
+          "variantId": "restored-genuine",
+          "label": "旧胎重修真品",
+          "probability": 0.20975993655647054,
+          "trueValue": 65
+        },
+        {
+          "variantId": "hidden-treasure",
+          "label": "被低估的珍品",
+          "probability": 0.4941708475888428,
+          "trueValue": 130
+        }
+      ],
+      "priceHistory": [],
+      "statementHistory": [],
+      "triggeredStoryletIds": [],
+      "actionHistory": [
+        {
+          "turn": 1,
+          "action": {
+            "kind": "reject"
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 6,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 0,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
+            "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+            "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按55点最低可达买断线成交:10",
+            "完全知情最佳净结果 = max(0, -15, 10) = 10",
+            "机会损失 = max(0, 10 - 0) = 10",
+            "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
+            "D = 100",
+            "C = 0",
+            "R = 0",
+            "J = 55",
+            "基础档位 = B",
+            "证据上限 = B",
+            "最终档位 = B"
+          ],
+          "redundant": false
+        }
+      ],
+      "settlement": {
+        "choice": "reject",
+        "choiceLabel": "拒绝交易",
+        "truthVariantId": "restored-genuine",
+        "truthLabel": "旧胎重修真品",
+        "trueValue": 65,
+        "paidPrice": 0,
+        "feesPaid": 0,
+        "actualNet": 0,
+        "oracleBestNet": 10,
+        "regret": 10,
+        "stakes": 80,
+        "overallGrade": "B",
+        "qualityGrade": "A",
+        "qualityCap": "A",
+        "netGrade": "D",
+        "bargainingGrade": "C",
+        "judgmentGrade": "B",
+        "outcomeTag": "missed-opportunity",
+        "outcomeLabel": "错失机会",
+        "rawOverallIndex": 2,
+        "cappedOverallIndex": 2,
+        "posterior": [
+          {
+            "variantId": "counterfeit",
+            "label": "现代仿制品",
+            "probability": 0.3333333333333333,
+            "trueValue": 20
+          },
+          {
+            "variantId": "restored-genuine",
+            "label": "旧胎重修真品",
+            "probability": 0.3333333333333333,
+            "trueValue": 65
+          },
+          {
+            "variantId": "hidden-treasure",
+            "label": "被低估的珍品",
+            "probability": 0.3333333333333333,
+            "trueValue": 130
+          }
+        ],
+        "expectedValue": 71.66666666666666,
+        "chosenExpectedNet": 0,
+        "bestExpectedNet": 0,
+        "utilityGap": 0,
+        "judgmentScore": 55,
+        "judgmentLabel": "方向可能合理，但目前没有证据支撑",
+        "judgmentBreakdown": {
+          "decisionScore": 100,
+          "certaintyScore": 0,
+          "robustnessScore": 0,
+          "rawScore": 55,
+          "baseGrade": "B",
+          "evidenceCap": "B",
+          "finalGrade": "B",
+          "dominantVariantId": "counterfeit",
+          "supportingSignalIds": [],
+          "independentSourceGroups": [],
+          "coveredDimensions": [],
+          "missingDimensions": [
+            "material-era",
+            "component-era-consistency"
+          ],
+          "crossValidated": false,
+          "sssEligible": false,
+          "capApplied": false,
+          "capReason": "基础判断档位未触及证据结构上限",
+          "playerLabel": "方向可能合理，但目前没有证据支撑",
+          "formula": [
+            "D = 100",
+            "C = 0",
+            "R = 0",
+            "J = 55",
+            "基础档位 = B",
+            "证据上限 = B",
+            "最终档位 = B"
+          ]
+        },
+        "endingTitle": "线索尚未收束",
+        "objectiveFormula": [
+          "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+          "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按55点最低可达买断线成交:10",
+          "完全知情最佳净结果 = max(0, -15, 10) = 10",
+          "机会损失 = max(0, 10 - 0) = 10",
+          "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。"
+        ],
+        "judgmentFormula": [
+          "D = 100",
+          "C = 0",
+          "R = 0",
+          "J = 55",
+          "基础档位 = B",
+          "证据上限 = B",
+          "最终档位 = B"
+        ],
+        "gradeFormula": [
+          "品质序号 = A(3)",
+          "净收益档位 = D(0)；净收益率 = 0%",
+          "议价档位 = C(1)；让利捕获率 = 0%",
+          "判断档位 = B(2)；判断原始分 = 55",
+          "原始等级序号 = round(3×0.35 + 0×0.30 + 1×0.20 + 2×0.15) = 2",
+          "综合等级序号 = min(2, 品质上限A(3)) = 2"
+        ]
+      }
+    },
+    "blind-buy:hidden-treasure": {
+      "status": "settled",
+      "turn": 1,
+      "actionPoints": 6,
+      "negotiation": null,
+      "feesPaid": 0,
+      "currentPrice": 80,
+      "npcState": {
+        "pressure": 26,
+        "trust": 58,
+        "dealIntent": 72,
+        "control": 68,
+        "phase": "relaxed"
+      },
+      "discoveredEvidenceIds": [],
+      "sharedEvidenceIds": [],
+      "npcPosterior": [
+        {
+          "variantId": "counterfeit",
+          "label": "现代仿制品",
+          "probability": 0.29606921585468665,
+          "trueValue": 20
+        },
+        {
+          "variantId": "restored-genuine",
+          "label": "旧胎重修真品",
+          "probability": 0.20975993655647054,
+          "trueValue": 65
+        },
+        {
+          "variantId": "hidden-treasure",
+          "label": "被低估的珍品",
+          "probability": 0.4941708475888428,
+          "trueValue": 130
+        }
+      ],
+      "priceHistory": [],
+      "statementHistory": [],
+      "triggeredStoryletIds": [],
+      "actionHistory": [
+        {
+          "turn": 1,
+          "action": {
+            "kind": "buy"
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 6,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 0,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
+            "实际净结果 = 130（真实价值）- 80（成交价）- 0（检测费） = 50",
+            "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:50；完全知情时按55点最低可达买断线成交:75",
+            "完全知情最佳净结果 = max(0, 50, 75) = 75",
+            "机会损失 = max(0, 75 - 50) = 25",
+            "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
+            "D = 75",
+            "C = 0",
+            "R = 0",
+            "J = 41",
+            "基础档位 = C",
+            "证据上限 = B",
+            "最终档位 = C"
+          ],
+          "redundant": false
+        }
+      ],
+      "settlement": {
+        "choice": "buy",
+        "choiceLabel": "按当前价格买下",
+        "truthVariantId": "hidden-treasure",
+        "truthLabel": "被低估的珍品",
+        "trueValue": 130,
+        "paidPrice": 80,
+        "feesPaid": 0,
+        "actualNet": 50,
+        "oracleBestNet": 75,
+        "regret": 25,
+        "stakes": 130,
+        "overallGrade": "A",
+        "qualityGrade": "SSS",
+        "qualityCap": "SSS",
+        "netGrade": "S",
+        "bargainingGrade": "D",
+        "judgmentGrade": "C",
+        "outcomeTag": "profitable",
+        "outcomeLabel": "盈利成交",
+        "rawOverallIndex": 3,
+        "cappedOverallIndex": 3,
+        "posterior": [
+          {
+            "variantId": "counterfeit",
+            "label": "现代仿制品",
+            "probability": 0.3333333333333333,
+            "trueValue": 20
+          },
+          {
+            "variantId": "restored-genuine",
+            "label": "旧胎重修真品",
+            "probability": 0.3333333333333333,
+            "trueValue": 65
+          },
+          {
+            "variantId": "hidden-treasure",
+            "label": "被低估的珍品",
+            "probability": 0.3333333333333333,
+            "trueValue": 130
+          }
+        ],
+        "expectedValue": 71.66666666666666,
+        "chosenExpectedNet": -8.333333333333343,
+        "bestExpectedNet": 0,
+        "utilityGap": 8.333333333333343,
+        "judgmentScore": 41,
+        "judgmentLabel": "方向可能合理，但目前没有证据支撑",
+        "judgmentBreakdown": {
+          "decisionScore": 75,
+          "certaintyScore": 0,
+          "robustnessScore": 0,
+          "rawScore": 41,
+          "baseGrade": "C",
+          "evidenceCap": "B",
+          "finalGrade": "C",
+          "dominantVariantId": "counterfeit",
+          "supportingSignalIds": [],
+          "independentSourceGroups": [],
+          "coveredDimensions": [],
+          "missingDimensions": [
+            "material-era",
+            "component-era-consistency"
+          ],
+          "crossValidated": false,
+          "sssEligible": false,
+          "capApplied": false,
+          "capReason": "基础判断档位未触及证据结构上限",
+          "playerLabel": "方向可能合理，但目前没有证据支撑",
+          "formula": [
+            "D = 75",
+            "C = 0",
+            "R = 0",
+            "J = 41",
+            "基础档位 = C",
+            "证据上限 = B",
+            "最终档位 = C"
+          ]
+        },
+        "endingTitle": "险中得手",
+        "objectiveFormula": [
+          "实际净结果 = 130（真实价值）- 80（成交价）- 0（检测费） = 50",
+          "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:50；完全知情时按55点最低可达买断线成交:75",
+          "完全知情最佳净结果 = max(0, 50, 75) = 75",
+          "机会损失 = max(0, 75 - 50) = 25",
+          "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。"
+        ],
+        "judgmentFormula": [
+          "D = 75",
+          "C = 0",
+          "R = 0",
+          "J = 41",
+          "基础档位 = C",
+          "证据上限 = B",
+          "最终档位 = C"
+        ],
+        "gradeFormula": [
+          "品质序号 = SSS(6)",
+          "净收益档位 = S(4)；净收益率 = 38.5%",
+          "议价档位 = D(0)；让利捕获率 = 0%",
+          "判断档位 = C(1)；判断原始分 = 41",
+          "原始等级序号 = round(6×0.35 + 4×0.30 + 0×0.20 + 1×0.15) = 3",
+          "综合等级序号 = min(3, 品质上限SSS(6)) = 3"
+        ]
+      }
+    },
+    "blind-reject:hidden-treasure": {
+      "status": "settled",
+      "turn": 1,
+      "actionPoints": 6,
+      "negotiation": null,
+      "feesPaid": 0,
+      "currentPrice": 80,
+      "npcState": {
+        "pressure": 26,
+        "trust": 58,
+        "dealIntent": 72,
+        "control": 68,
+        "phase": "relaxed"
+      },
+      "discoveredEvidenceIds": [],
+      "sharedEvidenceIds": [],
+      "npcPosterior": [
+        {
+          "variantId": "counterfeit",
+          "label": "现代仿制品",
+          "probability": 0.29606921585468665,
+          "trueValue": 20
+        },
+        {
+          "variantId": "restored-genuine",
+          "label": "旧胎重修真品",
+          "probability": 0.20975993655647054,
+          "trueValue": 65
+        },
+        {
+          "variantId": "hidden-treasure",
+          "label": "被低估的珍品",
+          "probability": 0.4941708475888428,
+          "trueValue": 130
+        }
+      ],
+      "priceHistory": [],
+      "statementHistory": [],
+      "triggeredStoryletIds": [],
+      "actionHistory": [
+        {
+          "turn": 1,
+          "action": {
+            "kind": "reject"
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 6,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 0,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
+            "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+            "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:50；完全知情时按55点最低可达买断线成交:75",
+            "完全知情最佳净结果 = max(0, 50, 75) = 75",
+            "机会损失 = max(0, 75 - 0) = 75",
+            "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
+            "D = 100",
+            "C = 0",
+            "R = 0",
+            "J = 55",
+            "基础档位 = B",
+            "证据上限 = B",
+            "最终档位 = B"
+          ],
+          "redundant": false
+        }
+      ],
+      "settlement": {
+        "choice": "reject",
+        "choiceLabel": "拒绝交易",
+        "truthVariantId": "hidden-treasure",
+        "truthLabel": "被低估的珍品",
+        "trueValue": 130,
+        "paidPrice": 0,
+        "feesPaid": 0,
+        "actualNet": 0,
+        "oracleBestNet": 75,
+        "regret": 75,
+        "stakes": 130,
+        "overallGrade": "A",
+        "qualityGrade": "SSS",
+        "qualityCap": "SSS",
+        "netGrade": "D",
+        "bargainingGrade": "C",
+        "judgmentGrade": "B",
+        "outcomeTag": "missed-opportunity",
+        "outcomeLabel": "错失机会",
+        "rawOverallIndex": 3,
+        "cappedOverallIndex": 3,
+        "posterior": [
+          {
+            "variantId": "counterfeit",
+            "label": "现代仿制品",
+            "probability": 0.3333333333333333,
+            "trueValue": 20
+          },
+          {
+            "variantId": "restored-genuine",
+            "label": "旧胎重修真品",
+            "probability": 0.3333333333333333,
+            "trueValue": 65
+          },
+          {
+            "variantId": "hidden-treasure",
+            "label": "被低估的珍品",
+            "probability": 0.3333333333333333,
+            "trueValue": 130
+          }
+        ],
+        "expectedValue": 71.66666666666666,
+        "chosenExpectedNet": 0,
+        "bestExpectedNet": 0,
+        "utilityGap": 0,
+        "judgmentScore": 55,
+        "judgmentLabel": "方向可能合理，但目前没有证据支撑",
+        "judgmentBreakdown": {
+          "decisionScore": 100,
+          "certaintyScore": 0,
+          "robustnessScore": 0,
+          "rawScore": 55,
+          "baseGrade": "B",
+          "evidenceCap": "B",
+          "finalGrade": "B",
+          "dominantVariantId": "counterfeit",
+          "supportingSignalIds": [],
+          "independentSourceGroups": [],
+          "coveredDimensions": [],
+          "missingDimensions": [
+            "material-era",
+            "component-era-consistency"
+          ],
+          "crossValidated": false,
+          "sssEligible": false,
+          "capApplied": false,
+          "capReason": "基础判断档位未触及证据结构上限",
+          "playerLabel": "方向可能合理，但目前没有证据支撑",
+          "formula": [
+            "D = 100",
+            "C = 0",
+            "R = 0",
+            "J = 55",
+            "基础档位 = B",
+            "证据上限 = B",
+            "最终档位 = B"
+          ]
+        },
+        "endingTitle": "线索尚未收束",
+        "objectiveFormula": [
+          "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+          "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:50；完全知情时按55点最低可达买断线成交:75",
+          "完全知情最佳净结果 = max(0, 50, 75) = 75",
+          "机会损失 = max(0, 75 - 0) = 75",
+          "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。"
+        ],
+        "judgmentFormula": [
+          "D = 100",
+          "C = 0",
+          "R = 0",
+          "J = 55",
+          "基础档位 = B",
+          "证据上限 = B",
+          "最终档位 = B"
+        ],
+        "gradeFormula": [
+          "品质序号 = SSS(6)",
+          "净收益档位 = D(0)；净收益率 = 0%",
+          "议价档位 = C(1)；让利捕获率 = 0%",
+          "判断档位 = B(2)；判断原始分 = 55",
+          "原始等级序号 = round(6×0.35 + 0×0.30 + 1×0.20 + 2×0.15) = 3",
+          "综合等级序号 = min(3, 品质上限SSS(6)) = 3"
+        ]
+      }
+    },
+    "restored-disclosure-trade": {
+      "status": "settled",
+      "turn": 4,
+      "actionPoints": 4,
+      "negotiation": {
+        "started": true,
+        "initialCapacity": 5,
+        "remainingCapacity": 4,
+        "entryAsk": 65,
+        "entryFloor": 55,
+        "offersMade": 1
+      },
+      "feesPaid": 0,
+      "currentPrice": 58,
+      "npcState": {
+        "pressure": 43,
+        "trust": 58,
+        "dealIntent": 65,
+        "control": 54,
+        "phase": "negotiating"
+      },
+      "discoveredEvidenceIds": [
+        "modern-adhesive-trace",
+        "repair-admission"
+      ],
+      "sharedEvidenceIds": [
+        "modern-adhesive-trace"
+      ],
+      "npcPosterior": [
+        {
+          "variantId": "counterfeit",
+          "label": "现代仿制品",
+          "probability": 0.46456562990526323,
+          "trueValue": 20
+        },
+        {
+          "variantId": "restored-genuine",
+          "label": "旧胎重修真品",
+          "probability": 0.41440456134495224,
+          "trueValue": 65
+        },
+        {
+          "variantId": "hidden-treasure",
+          "label": "被低估的珍品",
+          "probability": 0.12102980874978445,
+          "trueValue": 130
+        }
+      ],
+      "priceHistory": [
+        {
+          "turn": 2,
+          "before": 80,
+          "after": 65,
+          "publicReason": "你公开的新事实让卖家重新考虑修复与价值风险。",
+          "reasons": [
+            "共享信息使卖家主观估值移动38%",
+            "卖家对器物最可能类型的判断发生跨档变化"
+          ]
+        }
+      ],
+      "statementHistory": [
+        {
+          "turn": 2,
+          "topicId": "repair-history",
+          "behaviorId": "partial-admit",
+          "sourceKind": "memory",
+          "confidence": 0.72,
+          "text": "锁扣可能换过，表面以前也许重新处理过。",
+          "signalId": "repair:possible-rework",
+          "signalLabel": "卖家收窄为可能换件或重做表面",
+          "likelihoods": {
+            "counterfeit": 0.3,
+            "restored-genuine": 0.6,
+            "hidden-treasure": 0.1
+          }
+        }
+      ],
+      "triggeredStoryletIds": [
+        "repair-history:partial-admit"
+      ],
+      "actionHistory": [
+        {
+          "turn": 1,
+          "action": {
+            "kind": "inspect",
+            "targetId": "joint"
+          },
+          "actionPointCost": 1,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 5,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 1,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [
+            "modern-adhesive-trace"
+          ],
+          "formulaLog": [
+            "行动点 = 6 - 1 = 5",
+            "幸运线索判定 = seededRoll(20260723, 第1轮, joint) = 95.6%；阈值 15%",
+            "幸运线索未命中；基础观察事实仍然保留。"
+          ],
+          "redundant": false
+        },
+        {
+          "turn": 2,
+          "action": {
+            "kind": "dialogue",
+            "topicId": "repair-history",
+            "tone": "professional",
+            "evidenceId": "modern-adhesive-trace"
+          },
+          "actionPointCost": 1,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 4,
+            "feesPaid": 0,
+            "currentPrice": 65,
+            "npcState": {
+              "pressure": 41,
+              "trust": 60,
+              "dealIntent": 68,
+              "control": 55,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 2,
+            "sharedEvidenceCount": 1,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.46456562990526323,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.41440456134495224,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.12102980874978445,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [
+            {
+              "key": "pressure",
+              "label": "压力",
+              "before": 26,
+              "delta": 15,
+              "after": 41,
+              "reasons": [
+                "引用现代胶痕",
+                "态度：专业",
+                "完全重复 0 次"
+              ],
+              "formula": "round(基础10 × 态度1 × 证据1.3 × 相关1 × 衰减1 + 情境2 + 重复0) = 15"
+            },
+            {
+              "key": "trust",
+              "label": "信任",
+              "before": 58,
+              "delta": 2,
+              "after": 60,
+              "reasons": [
+                "专业表达",
+                "证据与问题相关",
+                "首次采用该行动组合"
+              ],
+              "formula": "态度基础 + 开放询问修正 + 相关性修正 - 重复0×2 = 2"
+            },
+            {
+              "key": "dealIntent",
+              "label": "成交意愿",
+              "before": 72,
+              "delta": -4,
+              "after": 68,
+              "reasons": [
+                "证据提高卖家承担的交易风险",
+                "无重复惩罚"
+              ],
+              "formula": "态度基础 - 证据2.6 - 重复0×2 = -4"
+            },
+            {
+              "key": "control",
+              "label": "控制感",
+              "before": 68,
+              "delta": -13,
+              "after": 55,
+              "reasons": [
+                "相关证据压缩叙事空间"
+              ],
+              "formula": "-round(10 × 态度1 × 证据1.3 × 相关1) - 重复0 = -13"
+            }
+          ],
+          "evidenceAdded": [
+            "repair-admission"
+          ],
+          "sharedEvidenceAdded": [
+            "modern-adhesive-trace"
+          ],
+          "priceChange": {
+            "turn": 2,
+            "before": 80,
+            "after": 65,
+            "publicReason": "你公开的新事实让卖家重新考虑修复与价值风险。",
+            "reasons": [
+              "共享信息使卖家主观估值移动38%",
+              "卖家对器物最可能类型的判断发生跨档变化"
+            ]
+          },
+          "statement": {
+            "turn": 2,
+            "topicId": "repair-history",
+            "behaviorId": "partial-admit",
+            "sourceKind": "memory",
+            "confidence": 0.72,
+            "text": "锁扣可能换过，表面以前也许重新处理过。",
+            "signalId": "repair:possible-rework",
+            "signalLabel": "卖家收窄为可能换件或重做表面",
+            "likelihoods": {
+              "counterfeit": 0.3,
+              "restored-genuine": 0.6,
+              "hidden-treasure": 0.1
+            }
+          },
+          "formulaLog": [
+            "行动点 = 5 - 1 = 4",
+            "压力：round(基础10 × 态度1 × 证据1.3 × 相关1 × 衰减1 + 情境2 + 重复0) = 15",
+            "信任：态度基础 + 开放询问修正 + 相关性修正 - 重复0×2 = 2",
+            "成交意愿：态度基础 - 证据2.6 - 重复0×2 = -4",
+            "控制感：-round(10 × 态度1 × 证据1.3 × 相关1) - 重复0 = -13",
+            "陈述信号：卖家收窄为可能换件或重做表面；似然 counterfeit=0.3 / restored-genuine=0.6 / hidden-treasure=0.1",
+            "信息可见性：首次公开「现代胶痕」，写入双方共享账本",
+            "正式重估：80 → 65；共享信息使卖家主观估值移动38%；卖家对器物最可能类型的判断发生跨档变化",
+            "候选行为 = 过滤合法性后取最高分；seed扰动范围 [-1.5, +1.5]"
+          ],
+          "spindle": {
+            "expansion": [
+              "问题：修复历史",
+              "态度：专业",
+              "证据：现代胶痕",
+              "证据效力：1.3；相关性：1",
+              "当前历史：同签名重复 0 次",
+              "数值入口：压力26 / 信任58 / 成交72 / 控制68"
+            ],
+            "candidates": [
+              {
+                "id": "cooperate",
+                "label": "补充说明",
+                "eligible": true,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 10
+                  },
+                  {
+                    "label": "信任×0.35",
+                    "value": 21
+                  },
+                  {
+                    "label": "成交×0.25",
+                    "value": 17
+                  },
+                  {
+                    "label": "压力×-0.15",
+                    "value": -6.1
+                  },
+                  {
+                    "label": "开放询问",
+                    "value": 0
+                  },
+                  {
+                    "label": "重复×-12",
+                    "value": 0
+                  }
+                ],
+                "baseScore": 41.9,
+                "jitter": 1.3,
+                "finalScore": 43.2,
+                "score": 43.2,
+                "formula": "固定+10 信任×0.35+21 成交×0.25+17 压力×-0.15-6.1 开放询问+0 重复×-12+0 = 基础41.9 + seed扰动1.3 = 43.2",
+                "filterReasons": [
+                  "信任至少40",
+                  "成交意愿至少25"
+                ],
+                "reasons": [
+                  "信任至少40",
+                  "成交意愿至少25"
+                ]
+              },
+              {
+                "id": "deflect",
+                "label": "模糊回应",
+                "eligible": true,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 8
+                  },
+                  {
+                    "label": "控制×0.35",
+                    "value": 19.3
+                  },
+                  {
+                    "label": "低压力×0.12",
+                    "value": 7.1
+                  },
+                  {
+                    "label": "弱证据",
+                    "value": 0
+                  },
+                  {
+                    "label": "重复×4",
+                    "value": 0
+                  }
+                ],
+                "baseScore": 34.4,
+                "jitter": 1,
+                "finalScore": 35.4,
+                "score": 35.4,
+                "formula": "固定+8 控制×0.35+19.3 低压力×0.12+7.1 弱证据+0 重复×4+0 = 基础34.4 + seed扰动1 = 35.4",
+                "filterReasons": [
+                  "仍保有叙事控制空间"
+                ],
+                "reasons": [
+                  "仍保有叙事控制空间"
+                ]
+              },
+              {
+                "id": "partial-admit",
+                "label": "部分承认",
+                "eligible": true,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 5
+                  },
+                  {
+                    "label": "压力×0.28",
+                    "value": 11.5
+                  },
+                  {
+                    "label": "失控×0.25",
+                    "value": 11.3
+                  },
+                  {
+                    "label": "成交×0.15",
+                    "value": 10.2
+                  },
+                  {
+                    "label": "证据效力×12",
+                    "value": 15.6
+                  }
+                ],
+                "baseScore": 53.6,
+                "jitter": 0.5,
+                "finalScore": 54.1,
+                "score": 54.1,
+                "formula": "固定+5 压力×0.28+11.5 失控×0.25+11.3 成交×0.15+10.2 证据效力×12+15.6 = 基础53.6 + seed扰动0.5 = 54.1",
+                "filterReasons": [
+                  "引用现代胶痕",
+                  "证据与问题相关",
+                  "一次性承认尚未触发"
+                ],
+                "reasons": [
+                  "引用现代胶痕",
+                  "证据与问题相关",
+                  "一次性承认尚未触发"
+                ]
+              },
+              {
+                "id": "counter",
+                "label": "反向质疑",
+                "eligible": false,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 6
+                  },
+                  {
+                    "label": "压力×0.25",
+                    "value": 10.3
+                  },
+                  {
+                    "label": "不信任×0.22",
+                    "value": 8.8
+                  },
+                  {
+                    "label": "控制×0.18",
+                    "value": 9.9
+                  },
+                  {
+                    "label": "强硬触发",
+                    "value": 0
+                  }
+                ],
+                "baseScore": 35,
+                "jitter": 0,
+                "finalScore": -999,
+                "score": -999,
+                "formula": "固定+6 压力×0.25+10.3 不信任×0.22+8.8 控制×0.18+9.9 强硬触发+0 = 基础35；硬条件过滤",
+                "filterReasons": [
+                  "压力达到45或玩家采用强硬表达"
+                ],
+                "reasons": [
+                  "压力达到45或玩家采用强硬表达"
+                ]
+              },
+              {
+                "id": "refuse",
+                "label": "拒绝回答",
+                "eligible": false,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 4
+                  },
+                  {
+                    "label": "压力×0.28",
+                    "value": 11.5
+                  },
+                  {
+                    "label": "不信任×0.25",
+                    "value": 10
+                  },
+                  {
+                    "label": "重复×20",
+                    "value": 0
+                  }
+                ],
+                "baseScore": 25.5,
+                "jitter": 0,
+                "finalScore": -999,
+                "score": -999,
+                "formula": "固定+4 压力×0.28+11.5 不信任×0.25+10 重复×20+0 = 基础25.5；硬条件过滤",
+                "filterReasons": [
+                  "高压力或完全重复问题"
+                ],
+                "reasons": [
+                  "高压力或完全重复问题"
+                ]
+              },
+              {
+                "id": "exit",
+                "label": "结束交易",
+                "eligible": false,
+                "components": [
+                  {
+                    "label": "压力×0.3",
+                    "value": 12.3
+                  },
+                  {
+                    "label": "不信任×0.3",
+                    "value": 12
+                  },
+                  {
+                    "label": "低成交×0.4",
+                    "value": 12.8
+                  }
+                ],
+                "baseScore": 37.1,
+                "jitter": 0,
+                "finalScore": -999,
+                "score": -999,
+                "formula": "压力×0.3+12.3 不信任×0.3+12 低成交×0.4+12.8 = 基础37.1；硬条件过滤",
+                "filterReasons": [
+                  "成交意愿≤20，或压力≥82且信任≤32"
+                ],
+                "reasons": [
+                  "成交意愿≤20，或压力≥82且信任≤32"
+                ]
+              }
+            ],
+            "selectedId": "partial-admit",
+            "selectedLabel": "部分承认",
+            "convergence": [
+              "选择最高合法效用：部分承认 54.1",
+              "命中一次性Storylet：repair-history:partial-admit",
+              "收敛为有限模板：锁扣可能换过，表面以前也许重新处理过。",
+              "写入可见陈述信号：卖家收窄为可能换件或重做表面",
+              "共享信息触发正式重估：80 → 65"
+            ]
+          },
+          "redundant": false
+        },
+        {
+          "turn": 3,
+          "action": {
+            "kind": "discount",
+            "offer": 50
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 1,
+          "after": {
+            "actionPoints": 4,
+            "feesPaid": 0,
+            "currentPrice": 58,
+            "npcState": {
+              "pressure": 43,
+              "trust": 58,
+              "dealIntent": 65,
+              "control": 54,
+              "phase": "negotiating"
+            },
+            "negotiation": {
+              "started": true,
+              "initialCapacity": 5,
+              "remainingCapacity": 4,
+              "entryAsk": 65,
+              "entryFloor": 55,
+              "offersMade": 1
+            },
+            "evidenceCount": 2,
+            "sharedEvidenceCount": 1,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.46456562990526323,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.41440456134495224,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.12102980874978445,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [
+            {
+              "key": "pressure",
+              "label": "压力",
+              "before": 41,
+              "delta": 2,
+              "after": 43,
+              "reasons": [
+                "报价低于当前价格"
+              ],
+              "formula": "clamp(round(差价15÷8), 2, 8)"
+            },
+            {
+              "key": "trust",
+              "label": "信任",
+              "before": 60,
+              "delta": -2,
+              "after": 58,
+              "reasons": [
+                "报价仍在可协商范围"
+              ],
+              "formula": "报价差额 5 对应信任修正 -2"
+            },
+            {
+              "key": "dealIntent",
+              "label": "成交意愿",
+              "before": 68,
+              "delta": -3,
+              "after": 65,
+              "reasons": [
+                "报价接近可接受条件"
+              ],
+              "formula": "报价差额 5 对应成交修正 -3"
+            },
+            {
+              "key": "control",
+              "label": "控制感",
+              "before": 55,
+              "delta": -1,
+              "after": 54,
+              "reasons": [
+                "正式报价迫使卖家表明底线"
+              ],
+              "formula": "报价是否达线 否 → -1"
+            }
+          ],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "调查行动点保持 4",
+            "议价容量 = 5 - 1 = 4",
+            "主观中枢 = 0.6×Q50(65) + 0.4×期望值(52) = 59.8",
+            "确定性等价 = max(外部选项16, 主观中枢59.8 - 风险折减4.1 - 急售折减2.4) = 53.3",
+            "普通接受线 = min(当前报价65, 向上取整5(max(外部选项, 确定性等价×立场1))) = 55",
+            "无条件买断线 = 向下取整5(max(外部选项, 普通线 - 风险转移折价1.8)) = 50",
+            "压力：clamp(round(差价15÷8), 2, 8)",
+            "信任：报价差额 5 对应信任修正 -2",
+            "成交意愿：报价差额 5 对应成交修正 -3",
+            "控制感：报价是否达线 否 → -1"
+          ],
+          "spindle": {
+            "expansion": [
+              "玩家报价：50",
+              "NPC认知档案：急售、重真诚的普通藏家",
+              "NPC后验：现代仿制品46.5% / 旧胎重修真品41.4% / 被低估的珍品12.1%",
+              "后验Q25/Q50/Q75：20 / 65 / 65",
+              "风险厌恶：0.72；急迫度：0.68；外部选项：16",
+              "当前NPC状态：压力41 / 信任60 / 成交68 / 控制55"
+            ],
+            "candidates": [
+              {
+                "id": "accept-offer",
+                "label": "接受报价",
+                "eligible": false,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 90
+                  },
+                  {
+                    "label": "报价余量",
+                    "value": -5
+                  }
+                ],
+                "baseScore": 85,
+                "jitter": 0,
+                "finalScore": -999,
+                "score": -999,
+                "formula": "固定+90 报价余量-5 = 基础85；硬条件过滤",
+                "filterReasons": [
+                  "报价未达到可接受线"
+                ],
+                "reasons": [
+                  "报价未达到可接受线"
+                ]
+              },
+              {
+                "id": "counter-offer",
+                "label": "提出还价",
+                "eligible": true,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 82
+                  },
+                  {
+                    "label": "报价差额",
+                    "value": -5
+                  }
+                ],
+                "baseScore": 77,
+                "jitter": 0,
+                "finalScore": 77,
+                "score": 77,
+                "formula": "固定+82 报价差额-5 = 77",
+                "filterReasons": [
+                  "差额在1—8之间"
+                ],
+                "reasons": [
+                  "差额在1—8之间"
+                ]
+              },
+              {
+                "id": "reject-offer",
+                "label": "拒绝报价",
+                "eligible": false,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 72
+                  },
+                  {
+                    "label": "差额推动",
+                    "value": 5
+                  }
+                ],
+                "baseScore": 77,
+                "jitter": 0,
+                "finalScore": -999,
+                "score": -999,
+                "formula": "固定+72 差额推动+5 = 基础77；硬条件过滤",
+                "filterReasons": [
+                  "报价明显低于接受线"
+                ],
+                "reasons": [
+                  "报价明显低于接受线"
+                ]
+              },
+              {
+                "id": "exit",
+                "label": "结束交易",
+                "eligible": false,
+                "components": [
+                  {
+                    "label": "离场固定效用",
+                    "value": 95
+                  }
+                ],
+                "baseScore": 95,
+                "jitter": 0,
+                "finalScore": -999,
+                "score": -999,
+                "formula": "离场固定效用+95 = 基础95；硬条件过滤",
+                "filterReasons": [
+                  "差额>15，且信任<40、成交<40或压力>75"
+                ],
+                "reasons": [
+                  "差额>15，且信任<40、成交<40或压力>75"
+                ]
+              }
+            ],
+            "selectedId": "counter-offer",
+            "selectedLabel": "提出还价",
+            "convergence": [
+              "主观中枢 = 0.6×Q50(65) + 0.4×期望值(52) = 59.8",
+              "确定性等价 = max(外部选项16, 主观中枢59.8 - 风险折减4.1 - 急售折减2.4) = 53.3",
+              "普通接受线 = min(当前报价65, 向上取整5(max(外部选项, 确定性等价×立场1))) = 55",
+              "无条件买断线 = 向下取整5(max(外部选项, 普通线 - 风险转移折价1.8)) = 50",
+              "报价差额 = 55 - 50 = 5",
+              "收敛结果：提出还价"
+            ]
+          },
+          "redundant": false
+        },
+        {
+          "turn": 4,
+          "action": {
+            "kind": "buy"
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 4,
+            "feesPaid": 0,
+            "currentPrice": 58,
+            "npcState": {
+              "pressure": 43,
+              "trust": 58,
+              "dealIntent": 65,
+              "control": 54,
+              "phase": "negotiating"
+            },
+            "negotiation": {
+              "started": true,
+              "initialCapacity": 5,
+              "remainingCapacity": 4,
+              "entryAsk": 65,
+              "entryFloor": 55,
+              "offersMade": 1
+            },
+            "evidenceCount": 2,
+            "sharedEvidenceCount": 1,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.46456562990526323,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.41440456134495224,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.12102980874978445,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
+            "实际净结果 = 65（真实价值）- 58（成交价）- 0（检测费） = 7",
+            "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按50点最低可达买断线成交:15",
+            "完全知情最佳净结果 = max(0, -15, 15) = 15",
+            "机会损失 = max(0, 15 - 7) = 8",
+            "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
+            "D = 83",
+            "C = 42",
+            "R = 75",
+            "J = 71",
+            "基础档位 = A",
+            "证据上限 = SS",
+            "最终档位 = A"
+          ],
+          "redundant": false
+        }
+      ],
+      "settlement": {
+        "choice": "buy",
+        "choiceLabel": "按当前价格买下",
+        "truthVariantId": "restored-genuine",
+        "truthLabel": "旧胎重修真品",
+        "trueValue": 65,
+        "paidPrice": 58,
+        "feesPaid": 0,
+        "actualNet": 7,
+        "oracleBestNet": 15,
+        "regret": 8,
+        "stakes": 80,
+        "overallGrade": "A",
+        "qualityGrade": "A",
+        "qualityCap": "A",
+        "netGrade": "B",
+        "bargainingGrade": "A",
+        "judgmentGrade": "A",
+        "outcomeTag": "profitable",
+        "outcomeLabel": "盈利成交",
+        "rawOverallIndex": 3,
+        "cappedOverallIndex": 3,
+        "posterior": [
+          {
+            "variantId": "counterfeit",
+            "label": "现代仿制品",
+            "probability": 0.2931619829924944,
+            "trueValue": 20
+          },
+          {
+            "variantId": "restored-genuine",
+            "label": "旧胎重修真品",
+            "probability": 0.7001921698112055,
+            "trueValue": 65
+          },
+          {
+            "variantId": "hidden-treasure",
+            "label": "被低估的珍品",
+            "probability": 0.006645847196300265,
+            "trueValue": 130
+          }
+        ],
+        "expectedValue": 52.23969083309728,
+        "chosenExpectedNet": -5.760309166902722,
+        "bestExpectedNet": 0,
+        "utilityGap": 5.760309166902722,
+        "judgmentScore": 71,
+        "judgmentLabel": "关键事实已有依据，主要替代解释仍待排除",
+        "judgmentBreakdown": {
+          "decisionScore": 83,
+          "certaintyScore": 42,
+          "robustnessScore": 75,
+          "rawScore": 71,
+          "baseGrade": "A",
+          "evidenceCap": "SS",
+          "finalGrade": "A",
+          "dominantVariantId": "restored-genuine",
+          "supportingSignalIds": [
+            "modern-adhesive-trace",
+            "repair:possible-rework"
+          ],
+          "independentSourceGroups": [
+            "joint",
+            "npc-statement"
+          ],
+          "coveredDimensions": [
+            "modern-restoration"
+          ],
+          "missingDimensions": [
+            "material-era"
+          ],
+          "crossValidated": false,
+          "sssEligible": false,
+          "capApplied": false,
+          "capReason": "基础判断档位未触及证据结构上限",
+          "playerLabel": "关键事实已有依据，主要替代解释仍待排除",
+          "formula": [
+            "D = 83",
+            "C = 42",
+            "R = 75",
+            "J = 71",
+            "基础档位 = A",
+            "证据上限 = SS",
+            "最终档位 = A"
+          ]
+        },
+        "endingTitle": "真正掌眼",
+        "objectiveFormula": [
+          "实际净结果 = 65（真实价值）- 58（成交价）- 0（检测费） = 7",
+          "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按50点最低可达买断线成交:15",
+          "完全知情最佳净结果 = max(0, -15, 15) = 15",
+          "机会损失 = max(0, 15 - 7) = 8",
+          "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。"
+        ],
+        "judgmentFormula": [
+          "D = 83",
+          "C = 42",
+          "R = 75",
+          "J = 71",
+          "基础档位 = A",
+          "证据上限 = SS",
+          "最终档位 = A"
+        ],
+        "gradeFormula": [
+          "品质序号 = A(3)",
+          "净收益档位 = B(2)；净收益率 = 10.8%",
+          "议价档位 = A(3)；让利捕获率 = 70%",
+          "判断档位 = A(3)；判断原始分 = 71",
+          "原始等级序号 = round(3×0.35 + 2×0.30 + 3×0.20 + 3×0.15) = 3",
+          "综合等级序号 = min(3, 品质上限A(3)) = 3"
+        ]
+      }
+    },
+    "restored-open-inquiry": {
+      "status": "settled",
+      "turn": 2,
+      "actionPoints": 5,
+      "negotiation": null,
+      "feesPaid": 0,
+      "currentPrice": 75,
+      "npcState": {
+        "pressure": 27,
+        "trust": 66,
+        "dealIntent": 73,
+        "control": 70,
+        "phase": "relaxed"
+      },
+      "discoveredEvidenceIds": [],
+      "sharedEvidenceIds": [],
+      "npcPosterior": [
+        {
+          "variantId": "counterfeit",
+          "label": "现代仿制品",
+          "probability": 0.29606921585468665,
+          "trueValue": 20
+        },
+        {
+          "variantId": "restored-genuine",
+          "label": "旧胎重修真品",
+          "probability": 0.20975993655647054,
+          "trueValue": 65
+        },
+        {
+          "variantId": "hidden-treasure",
+          "label": "被低估的珍品",
+          "probability": 0.4941708475888428,
+          "trueValue": 130
+        }
+      ],
+      "priceHistory": [
+        {
+          "turn": 1,
+          "before": 80,
+          "after": 75,
+          "publicReason": "谈判立场发生变化，卖家重新表明当前报价。",
+          "reasons": [
+            "谈判立场由neutral转为cooperative"
+          ]
+        }
+      ],
+      "statementHistory": [
+        {
+          "turn": 1,
+          "topicId": "provenance",
+          "behaviorId": "cooperate",
+          "sourceKind": "memory",
+          "confidence": 0.65,
+          "text": "父亲大概九十年代从旧货市场买的，票据早找不到了。",
+          "signalId": "provenance:market-1990s",
+          "signalLabel": "来源收窄为九十年代旧货市场",
+          "likelihoods": {
+            "counterfeit": 0.2,
+            "restored-genuine": 0.62,
+            "hidden-treasure": 0.18
+          }
+        }
+      ],
+      "triggeredStoryletIds": [],
+      "actionHistory": [
+        {
+          "turn": 1,
+          "action": {
+            "kind": "dialogue",
+            "topicId": "provenance",
+            "tone": "gentle"
+          },
+          "actionPointCost": 1,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 5,
+            "feesPaid": 0,
+            "currentPrice": 75,
+            "npcState": {
+              "pressure": 27,
+              "trust": 66,
+              "dealIntent": 73,
+              "control": 70,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 0,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [
+            {
+              "key": "pressure",
+              "label": "压力",
+              "before": 26,
+              "delta": 1,
+              "after": 27,
+              "reasons": [
+                "开放询问不要求证据",
+                "态度：温和",
+                "完全重复 0 次"
+              ],
+              "formula": "round(基础3 × 态度0.72 × 证据0.5 × 相关1 × 衰减1 + 情境0 + 重复0) = 1"
+            },
+            {
+              "key": "trust",
+              "label": "信任",
+              "before": 58,
+              "delta": 8,
+              "after": 66,
+              "reasons": [
+                "温和表达",
+                "先固定原始说法",
+                "首次采用该行动组合"
+              ],
+              "formula": "态度基础 + 开放询问修正 + 相关性修正 - 重复0×2 = 8"
+            },
+            {
+              "key": "dealIntent",
+              "label": "成交意愿",
+              "before": 72,
+              "delta": 1,
+              "after": 73,
+              "reasons": [
+                "普通询问保持交易空间",
+                "无重复惩罚"
+              ],
+              "formula": "态度基础 - 证据0 - 重复0×2 = 1"
+            },
+            {
+              "key": "control",
+              "label": "控制感",
+              "before": 68,
+              "delta": 2,
+              "after": 70,
+              "reasons": [
+                "开放询问让卖家保留主动叙述空间"
+              ],
+              "formula": "开放询问态度修正 = 2"
+            }
+          ],
+          "evidenceAdded": [],
+          "sharedEvidenceAdded": [],
+          "priceChange": {
+            "turn": 1,
+            "before": 80,
+            "after": 75,
+            "publicReason": "谈判立场发生变化，卖家重新表明当前报价。",
+            "reasons": [
+              "谈判立场由neutral转为cooperative"
+            ]
+          },
+          "statement": {
+            "turn": 1,
+            "topicId": "provenance",
+            "behaviorId": "cooperate",
+            "sourceKind": "memory",
+            "confidence": 0.65,
+            "text": "父亲大概九十年代从旧货市场买的，票据早找不到了。",
+            "signalId": "provenance:market-1990s",
+            "signalLabel": "来源收窄为九十年代旧货市场",
+            "likelihoods": {
+              "counterfeit": 0.2,
+              "restored-genuine": 0.62,
+              "hidden-treasure": 0.18
+            }
+          },
+          "formulaLog": [
+            "行动点 = 6 - 1 = 5",
+            "压力：round(基础3 × 态度0.72 × 证据0.5 × 相关1 × 衰减1 + 情境0 + 重复0) = 1",
+            "信任：态度基础 + 开放询问修正 + 相关性修正 - 重复0×2 = 8",
+            "成交意愿：态度基础 - 证据0 - 重复0×2 = 1",
+            "控制感：开放询问态度修正 = 2",
+            "陈述信号：来源收窄为九十年代旧货市场；似然 counterfeit=0.2 / restored-genuine=0.62 / hidden-treasure=0.18",
+            "信息可见性：未出示物证，NPC后验不读取玩家私有证据",
+            "正式重估：80 → 75；谈判立场由neutral转为cooperative",
+            "候选行为 = 过滤合法性后取最高分；seed扰动范围 [-1.5, +1.5]"
+          ],
+          "spindle": {
+            "expansion": [
+              "问题：来源经历",
+              "态度：温和",
+              "证据：无（开放询问）",
+              "证据效力：0.5；相关性：1",
+              "当前历史：同签名重复 0 次",
+              "数值入口：压力26 / 信任58 / 成交72 / 控制68"
+            ],
+            "candidates": [
+              {
+                "id": "cooperate",
+                "label": "补充说明",
+                "eligible": true,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 10
+                  },
+                  {
+                    "label": "信任×0.35",
+                    "value": 23.1
+                  },
+                  {
+                    "label": "成交×0.25",
+                    "value": 18.3
+                  },
+                  {
+                    "label": "压力×-0.15",
+                    "value": -4
+                  },
+                  {
+                    "label": "开放询问",
+                    "value": 8
+                  },
+                  {
+                    "label": "重复×-12",
+                    "value": 0
+                  }
+                ],
+                "baseScore": 55.4,
+                "jitter": 0.7,
+                "finalScore": 56.1,
+                "score": 56.1,
+                "formula": "固定+10 信任×0.35+23.1 成交×0.25+18.3 压力×-0.15-4 开放询问+8 重复×-12+0 = 基础55.4 + seed扰动0.7 = 56.1",
+                "filterReasons": [
+                  "信任至少40",
+                  "成交意愿至少25"
+                ],
+                "reasons": [
+                  "信任至少40",
+                  "成交意愿至少25"
+                ]
+              },
+              {
+                "id": "deflect",
+                "label": "模糊回应",
+                "eligible": true,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 8
+                  },
+                  {
+                    "label": "控制×0.35",
+                    "value": 24.5
+                  },
+                  {
+                    "label": "低压力×0.12",
+                    "value": 8.8
+                  },
+                  {
+                    "label": "弱证据",
+                    "value": 6
+                  },
+                  {
+                    "label": "重复×4",
+                    "value": 0
+                  }
+                ],
+                "baseScore": 47.3,
+                "jitter": -1.4,
+                "finalScore": 45.9,
+                "score": 45.9,
+                "formula": "固定+8 控制×0.35+24.5 低压力×0.12+8.8 弱证据+6 重复×4+0 = 基础47.3 + seed扰动-1.4 = 45.9",
+                "filterReasons": [
+                  "仍保有叙事控制空间"
+                ],
+                "reasons": [
+                  "仍保有叙事控制空间"
+                ]
+              },
+              {
+                "id": "partial-admit",
+                "label": "部分承认",
+                "eligible": false,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 5
+                  },
+                  {
+                    "label": "压力×0.28",
+                    "value": 7.6
+                  },
+                  {
+                    "label": "失控×0.25",
+                    "value": 7.5
+                  },
+                  {
+                    "label": "成交×0.15",
+                    "value": 11
+                  },
+                  {
+                    "label": "证据效力×12",
+                    "value": 6
+                  }
+                ],
+                "baseScore": 37.1,
+                "jitter": 0,
+                "finalScore": -999,
+                "score": -999,
+                "formula": "固定+5 压力×0.28+7.6 失控×0.25+7.5 成交×0.15+11 证据效力×12+6 = 基础37.1；硬条件过滤",
+                "filterReasons": [
+                  "没有引用证据",
+                  "证据与问题不相关",
+                  "一次性承认尚未触发"
+                ],
+                "reasons": [
+                  "没有引用证据",
+                  "证据与问题不相关",
+                  "一次性承认尚未触发"
+                ]
+              },
+              {
+                "id": "counter",
+                "label": "反向质疑",
+                "eligible": false,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 6
+                  },
+                  {
+                    "label": "压力×0.25",
+                    "value": 6.8
+                  },
+                  {
+                    "label": "不信任×0.22",
+                    "value": 7.5
+                  },
+                  {
+                    "label": "控制×0.18",
+                    "value": 12.6
+                  },
+                  {
+                    "label": "强硬触发",
+                    "value": 0
+                  }
+                ],
+                "baseScore": 32.9,
+                "jitter": 0,
+                "finalScore": -999,
+                "score": -999,
+                "formula": "固定+6 压力×0.25+6.8 不信任×0.22+7.5 控制×0.18+12.6 强硬触发+0 = 基础32.9；硬条件过滤",
+                "filterReasons": [
+                  "压力达到45或玩家采用强硬表达"
+                ],
+                "reasons": [
+                  "压力达到45或玩家采用强硬表达"
+                ]
+              },
+              {
+                "id": "refuse",
+                "label": "拒绝回答",
+                "eligible": false,
+                "components": [
+                  {
+                    "label": "固定",
+                    "value": 4
+                  },
+                  {
+                    "label": "压力×0.28",
+                    "value": 7.6
+                  },
+                  {
+                    "label": "不信任×0.25",
+                    "value": 8.5
+                  },
+                  {
+                    "label": "重复×20",
+                    "value": 0
+                  }
+                ],
+                "baseScore": 20.1,
+                "jitter": 0,
+                "finalScore": -999,
+                "score": -999,
+                "formula": "固定+4 压力×0.28+7.6 不信任×0.25+8.5 重复×20+0 = 基础20.1；硬条件过滤",
+                "filterReasons": [
+                  "高压力或完全重复问题"
+                ],
+                "reasons": [
+                  "高压力或完全重复问题"
+                ]
+              },
+              {
+                "id": "exit",
+                "label": "结束交易",
+                "eligible": false,
+                "components": [
+                  {
+                    "label": "压力×0.3",
+                    "value": 8.1
+                  },
+                  {
+                    "label": "不信任×0.3",
+                    "value": 10.2
+                  },
+                  {
+                    "label": "低成交×0.4",
+                    "value": 10.8
+                  }
+                ],
+                "baseScore": 29.1,
+                "jitter": 0,
+                "finalScore": -999,
+                "score": -999,
+                "formula": "压力×0.3+8.1 不信任×0.3+10.2 低成交×0.4+10.8 = 基础29.1；硬条件过滤",
+                "filterReasons": [
+                  "成交意愿≤20，或压力≥82且信任≤32"
+                ],
+                "reasons": [
+                  "成交意愿≤20，或压力≥82且信任≤32"
+                ]
+              }
+            ],
+            "selectedId": "cooperate",
+            "selectedLabel": "补充说明",
+            "convergence": [
+              "选择最高合法效用：补充说明 56.1",
+              "未命中事实承认Storylet",
+              "收敛为有限模板：父亲大概九十年代从旧货市场买的，票据早找不到了。",
+              "写入可见陈述信号：来源收窄为九十年代旧货市场",
+              "共享信息触发正式重估：80 → 75"
+            ]
+          },
+          "redundant": false
+        },
+        {
+          "turn": 2,
+          "action": {
+            "kind": "reject"
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 5,
+            "feesPaid": 0,
+            "currentPrice": 75,
+            "npcState": {
+              "pressure": 27,
+              "trust": 66,
+              "dealIntent": 73,
+              "control": 70,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 0,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
+            "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+            "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按55点最低可达买断线成交:10",
+            "完全知情最佳净结果 = max(0, -15, 10) = 10",
+            "机会损失 = max(0, 10 - 0) = 10",
+            "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
+            "D = 100",
+            "C = 7",
+            "R = 30",
+            "J = 63",
+            "基础档位 = B",
+            "证据上限 = A",
+            "最终档位 = B"
+          ],
+          "redundant": false
+        }
+      ],
+      "settlement": {
+        "choice": "reject",
+        "choiceLabel": "拒绝交易",
+        "truthVariantId": "restored-genuine",
+        "truthLabel": "旧胎重修真品",
+        "trueValue": 65,
+        "paidPrice": 0,
+        "feesPaid": 0,
+        "actualNet": 0,
+        "oracleBestNet": 10,
+        "regret": 10,
+        "stakes": 80,
+        "overallGrade": "B",
+        "qualityGrade": "A",
+        "qualityCap": "A",
+        "netGrade": "D",
+        "bargainingGrade": "C",
+        "judgmentGrade": "B",
+        "outcomeTag": "missed-opportunity",
+        "outcomeLabel": "错失机会",
+        "rawOverallIndex": 2,
+        "cappedOverallIndex": 2,
+        "posterior": [
+          {
+            "variantId": "counterfeit",
+            "label": "现代仿制品",
+            "probability": 0.24874705073313697,
+            "trueValue": 20
+          },
+          {
+            "variantId": "restored-genuine",
+            "label": "旧胎重修真品",
+            "probability": 0.5189709414443177,
+            "trueValue": 65
+          },
+          {
+            "variantId": "hidden-treasure",
+            "label": "被低估的珍品",
+            "probability": 0.23228200782254543,
+            "trueValue": 130
+          }
+        ],
+        "expectedValue": 68.9047132254743,
+        "chosenExpectedNet": 0,
+        "bestExpectedNet": 0,
+        "utilityGap": 0,
+        "judgmentScore": 63,
+        "judgmentLabel": "方向合理，但目前只由单点证据支撑，仍缺独立佐证",
+        "judgmentBreakdown": {
+          "decisionScore": 100,
+          "certaintyScore": 7,
+          "robustnessScore": 30,
+          "rawScore": 63,
+          "baseGrade": "B",
+          "evidenceCap": "A",
+          "finalGrade": "B",
+          "dominantVariantId": "restored-genuine",
+          "supportingSignalIds": [
+            "provenance:market-1990s"
+          ],
+          "independentSourceGroups": [
+            "npc-statement"
+          ],
+          "coveredDimensions": [
+            "provenance-craft-identity"
+          ],
+          "missingDimensions": [
+            "material-era",
+            "modern-restoration"
+          ],
+          "crossValidated": false,
+          "sssEligible": false,
+          "capApplied": false,
+          "capReason": "基础判断档位未触及证据结构上限",
+          "playerLabel": "方向合理，但目前只由单点证据支撑，仍缺独立佐证",
+          "formula": [
+            "D = 100",
+            "C = 7",
+            "R = 30",
+            "J = 63",
+            "基础档位 = B",
+            "证据上限 = A",
+            "最终档位 = B"
+          ]
+        },
+        "endingTitle": "线索尚未收束",
+        "objectiveFormula": [
+          "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+          "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按55点最低可达买断线成交:10",
+          "完全知情最佳净结果 = max(0, -15, 10) = 10",
+          "机会损失 = max(0, 10 - 0) = 10",
+          "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。"
+        ],
+        "judgmentFormula": [
+          "D = 100",
+          "C = 7",
+          "R = 30",
+          "J = 63",
+          "基础档位 = B",
+          "证据上限 = A",
+          "最终档位 = B"
+        ],
+        "gradeFormula": [
+          "品质序号 = A(3)",
+          "净收益档位 = D(0)；净收益率 = 0%",
+          "议价档位 = C(1)；让利捕获率 = 0%",
+          "判断档位 = B(2)；判断原始分 = 63",
+          "原始等级序号 = round(3×0.35 + 0×0.30 + 1×0.20 + 2×0.15) = 2",
+          "综合等级序号 = min(2, 品质上限A(3)) = 2"
+        ]
+      }
+    },
+    "restored-lucky-seed-1": {
+      "status": "settled",
+      "turn": 2,
+      "actionPoints": 5,
+      "negotiation": null,
+      "feesPaid": 0,
+      "currentPrice": 80,
+      "npcState": {
+        "pressure": 26,
+        "trust": 58,
+        "dealIntent": 72,
+        "control": 68,
+        "phase": "relaxed"
+      },
+      "discoveredEvidenceIds": [
+        "modern-adhesive-trace",
+        "restored-bonus"
+      ],
+      "sharedEvidenceIds": [],
+      "npcPosterior": [
+        {
+          "variantId": "counterfeit",
+          "label": "现代仿制品",
+          "probability": 0.29606921585468665,
+          "trueValue": 20
+        },
+        {
+          "variantId": "restored-genuine",
+          "label": "旧胎重修真品",
+          "probability": 0.20975993655647054,
+          "trueValue": 65
+        },
+        {
+          "variantId": "hidden-treasure",
+          "label": "被低估的珍品",
+          "probability": 0.4941708475888428,
+          "trueValue": 130
+        }
+      ],
+      "priceHistory": [],
+      "statementHistory": [],
+      "triggeredStoryletIds": [],
+      "actionHistory": [
+        {
+          "turn": 1,
+          "action": {
+            "kind": "inspect",
+            "targetId": "joint"
+          },
+          "actionPointCost": 1,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 5,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 2,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [
+            "modern-adhesive-trace",
+            "restored-bonus"
+          ],
+          "formulaLog": [
+            "行动点 = 6 - 1 = 5",
+            "幸运线索判定 = seededRoll(1, 第1轮, joint) = 6.3%；阈值 15%",
+            "幸运线索命中：新增锚点证据「维修日期铅笔记」"
+          ],
+          "redundant": false
+        },
+        {
+          "turn": 2,
+          "action": {
+            "kind": "reject"
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 5,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 2,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
+            "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+            "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按55点最低可达买断线成交:10",
+            "完全知情最佳净结果 = max(0, -15, 10) = 10",
+            "机会损失 = max(0, 10 - 0) = 10",
+            "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
+            "D = 100",
+            "C = 79",
+            "R = 75",
+            "J = 90",
+            "基础档位 = SS",
+            "证据上限 = SS",
+            "最终档位 = SS"
+          ],
+          "redundant": false
+        }
+      ],
+      "settlement": {
+        "choice": "reject",
+        "choiceLabel": "拒绝交易",
+        "truthVariantId": "restored-genuine",
+        "truthLabel": "旧胎重修真品",
+        "trueValue": 65,
+        "paidPrice": 0,
+        "feesPaid": 0,
+        "actualNet": 0,
+        "oracleBestNet": 10,
+        "regret": 10,
+        "stakes": 80,
+        "overallGrade": "B",
+        "qualityGrade": "A",
+        "qualityCap": "A",
+        "netGrade": "D",
+        "bargainingGrade": "C",
+        "judgmentGrade": "SS",
+        "outcomeTag": "missed-opportunity",
+        "outcomeLabel": "错失机会",
+        "rawOverallIndex": 2,
+        "cappedOverallIndex": 2,
+        "posterior": [
+          {
+            "variantId": "counterfeit",
+            "label": "现代仿制品",
+            "probability": 0.05772005772005772,
+            "trueValue": 20
+          },
+          {
+            "variantId": "restored-genuine",
+            "label": "旧胎重修真品",
+            "probability": 0.9415584415584415,
+            "trueValue": 65
+          },
+          {
+            "variantId": "hidden-treasure",
+            "label": "被低估的珍品",
+            "probability": 0.0007215007215007216,
+            "trueValue": 130
+          }
+        ],
+        "expectedValue": 62.44949494949495,
+        "chosenExpectedNet": 0,
+        "bestExpectedNet": 0,
+        "utilityGap": 0,
+        "judgmentScore": 90,
+        "judgmentLabel": "关键事实已有依据，主要替代解释仍待排除",
+        "judgmentBreakdown": {
+          "decisionScore": 100,
+          "certaintyScore": 79,
+          "robustnessScore": 75,
+          "rawScore": 90,
+          "baseGrade": "SS",
+          "evidenceCap": "SS",
+          "finalGrade": "SS",
+          "dominantVariantId": "restored-genuine",
+          "supportingSignalIds": [
+            "modern-adhesive-trace",
+            "restored-bonus"
+          ],
+          "independentSourceGroups": [
+            "joint",
+            "hidden-mark"
+          ],
+          "coveredDimensions": [
+            "modern-restoration"
+          ],
+          "missingDimensions": [
+            "material-era"
+          ],
+          "crossValidated": false,
+          "sssEligible": false,
+          "capApplied": false,
+          "capReason": "基础判断档位未触及证据结构上限",
+          "playerLabel": "关键事实已有依据，主要替代解释仍待排除",
+          "formula": [
+            "D = 100",
+            "C = 79",
+            "R = 75",
+            "J = 90",
+            "基础档位 = SS",
+            "证据上限 = SS",
+            "最终档位 = SS"
+          ]
+        },
+        "endingTitle": "判断有据，仍错过机会",
+        "objectiveFormula": [
+          "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+          "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按55点最低可达买断线成交:10",
+          "完全知情最佳净结果 = max(0, -15, 10) = 10",
+          "机会损失 = max(0, 10 - 0) = 10",
+          "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。"
+        ],
+        "judgmentFormula": [
+          "D = 100",
+          "C = 79",
+          "R = 75",
+          "J = 90",
+          "基础档位 = SS",
+          "证据上限 = SS",
+          "最终档位 = SS"
+        ],
+        "gradeFormula": [
+          "品质序号 = A(3)",
+          "净收益档位 = D(0)；净收益率 = 0%",
+          "议价档位 = C(1)；让利捕获率 = 0%",
+          "判断档位 = SS(5)；判断原始分 = 90",
+          "原始等级序号 = round(3×0.35 + 0×0.30 + 1×0.20 + 5×0.15) = 2",
+          "综合等级序号 = min(2, 品质上限A(3)) = 2"
+        ]
+      }
+    },
+    "restored-ordinary-seed-5": {
+      "status": "settled",
+      "turn": 2,
+      "actionPoints": 5,
+      "negotiation": null,
+      "feesPaid": 0,
+      "currentPrice": 80,
+      "npcState": {
+        "pressure": 26,
+        "trust": 58,
+        "dealIntent": 72,
+        "control": 68,
+        "phase": "relaxed"
+      },
+      "discoveredEvidenceIds": [
+        "modern-adhesive-trace"
+      ],
+      "sharedEvidenceIds": [],
+      "npcPosterior": [
+        {
+          "variantId": "counterfeit",
+          "label": "现代仿制品",
+          "probability": 0.29606921585468665,
+          "trueValue": 20
+        },
+        {
+          "variantId": "restored-genuine",
+          "label": "旧胎重修真品",
+          "probability": 0.20975993655647054,
+          "trueValue": 65
+        },
+        {
+          "variantId": "hidden-treasure",
+          "label": "被低估的珍品",
+          "probability": 0.4941708475888428,
+          "trueValue": 130
+        }
+      ],
+      "priceHistory": [],
+      "statementHistory": [],
+      "triggeredStoryletIds": [],
+      "actionHistory": [
+        {
+          "turn": 1,
+          "action": {
+            "kind": "inspect",
+            "targetId": "joint"
+          },
+          "actionPointCost": 1,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 5,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 1,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [
+            "modern-adhesive-trace"
+          ],
+          "formulaLog": [
+            "行动点 = 6 - 1 = 5",
+            "幸运线索判定 = seededRoll(5, 第1轮, joint) = 29.7%；阈值 15%",
+            "幸运线索未命中；基础观察事实仍然保留。"
+          ],
+          "redundant": false
+        },
+        {
+          "turn": 2,
+          "action": {
+            "kind": "reject"
+          },
+          "actionPointCost": 0,
+          "negotiationCapacityCost": 0,
+          "after": {
+            "actionPoints": 5,
+            "feesPaid": 0,
+            "currentPrice": 80,
+            "npcState": {
+              "pressure": 26,
+              "trust": 58,
+              "dealIntent": 72,
+              "control": 68,
+              "phase": "relaxed"
+            },
+            "negotiation": null,
+            "evidenceCount": 1,
+            "sharedEvidenceCount": 0,
+            "npcPosterior": [
+              {
+                "variantId": "counterfeit",
+                "label": "现代仿制品",
+                "probability": 0.29606921585468665,
+                "trueValue": 20
+              },
+              {
+                "variantId": "restored-genuine",
+                "label": "旧胎重修真品",
+                "probability": 0.20975993655647054,
+                "trueValue": 65
+              },
+              {
+                "variantId": "hidden-treasure",
+                "label": "被低估的珍品",
+                "probability": 0.4941708475888428,
+                "trueValue": 130
+              }
+            ]
+          },
+          "changes": [],
+          "evidenceAdded": [],
+          "formulaLog": [
+            "购买与拒绝是零行动点终局动作，因此行动点耗尽也不会死锁。",
+            "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+            "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按55点最低可达买断线成交:10",
+            "完全知情最佳净结果 = max(0, -15, 10) = 10",
+            "机会损失 = max(0, 10 - 0) = 10",
+            "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。",
+            "D = 100",
+            "C = 31",
+            "R = 50",
+            "J = 73",
+            "基础档位 = A",
+            "证据上限 = S",
+            "最终档位 = A"
+          ],
+          "redundant": false
+        }
+      ],
+      "settlement": {
+        "choice": "reject",
+        "choiceLabel": "拒绝交易",
+        "truthVariantId": "restored-genuine",
+        "truthLabel": "旧胎重修真品",
+        "trueValue": 65,
+        "paidPrice": 0,
+        "feesPaid": 0,
+        "actualNet": 0,
+        "oracleBestNet": 10,
+        "regret": 10,
+        "stakes": 80,
+        "overallGrade": "B",
+        "qualityGrade": "A",
+        "qualityCap": "A",
+        "netGrade": "D",
+        "bargainingGrade": "C",
+        "judgmentGrade": "A",
+        "outcomeTag": "missed-opportunity",
+        "outcomeLabel": "错失机会",
+        "rawOverallIndex": 2,
+        "cappedOverallIndex": 2,
+        "posterior": [
+          {
+            "variantId": "counterfeit",
+            "label": "现代仿制品",
+            "probability": 0.4,
+            "trueValue": 20
+          },
+          {
+            "variantId": "restored-genuine",
+            "label": "旧胎重修真品",
+            "probability": 0.58,
+            "trueValue": 65
+          },
+          {
+            "variantId": "hidden-treasure",
+            "label": "被低估的珍品",
+            "probability": 0.02,
+            "trueValue": 130
+          }
+        ],
+        "expectedValue": 48.3,
+        "chosenExpectedNet": 0,
+        "bestExpectedNet": 0,
+        "utilityGap": 0,
+        "judgmentScore": 73,
+        "judgmentLabel": "方向合理，但目前只由单点证据支撑，仍缺独立佐证",
+        "judgmentBreakdown": {
+          "decisionScore": 100,
+          "certaintyScore": 31,
+          "robustnessScore": 50,
+          "rawScore": 73,
+          "baseGrade": "A",
+          "evidenceCap": "S",
+          "finalGrade": "A",
+          "dominantVariantId": "restored-genuine",
+          "supportingSignalIds": [
+            "modern-adhesive-trace"
+          ],
+          "independentSourceGroups": [
+            "joint"
+          ],
+          "coveredDimensions": [
+            "modern-restoration"
+          ],
+          "missingDimensions": [
+            "material-era"
+          ],
+          "crossValidated": false,
+          "sssEligible": false,
+          "capApplied": false,
+          "capReason": "基础判断档位未触及证据结构上限",
+          "playerLabel": "方向合理，但目前只由单点证据支撑，仍缺独立佐证",
+          "formula": [
+            "D = 100",
+            "C = 31",
+            "R = 50",
+            "J = 73",
+            "基础档位 = A",
+            "证据上限 = S",
+            "最终档位 = A"
+          ]
+        },
+        "endingTitle": "判断有据，仍错过机会",
+        "objectiveFormula": [
+          "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
+          "完全知情可达方案 = 开局直接拒绝:0；按开价80买下:-15；完全知情时按55点最低可达买断线成交:10",
+          "完全知情最佳净结果 = max(0, -15, 10) = 10",
+          "机会损失 = max(0, 10 - 0) = 10",
+          "机会损失只作为开发调试参考，不再生成0—100总分或胜利线。"
+        ],
+        "judgmentFormula": [
+          "D = 100",
+          "C = 31",
+          "R = 50",
+          "J = 73",
+          "基础档位 = A",
+          "证据上限 = S",
+          "最终档位 = A"
+        ],
+        "gradeFormula": [
+          "品质序号 = A(3)",
+          "净收益档位 = D(0)；净收益率 = 0%",
+          "议价档位 = C(1)；让利捕获率 = 0%",
+          "判断档位 = A(3)；判断原始分 = 73",
+          "原始等级序号 = round(3×0.35 + 0×0.30 + 1×0.20 + 3×0.15) = 2",
+          "综合等级序号 = min(2, 品质上限A(3)) = 2"
+        ]
+      }
+    }
+  },
+  "provenance": {
+    "sourceHead": "baad9745656a2ddb6d12b1a9d545dec5e26c2f57",
+    "v1FrozenCommit": "f0b20b8ef5f5246529027f90a3fb277659c329cf",
+    "scenarioCount": 10,
+    "snapshotsSha256": "ce10efc5b832cb149ae0e65964f32e12599101370faf1d9a82728f91ebc987ec"
+  }
+}

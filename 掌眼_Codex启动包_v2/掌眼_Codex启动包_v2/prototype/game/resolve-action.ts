@@ -27,6 +27,14 @@ import { calculateNegotiationCapacity } from "./negotiation.ts";
 import { calculateOutcomeGrades, gradeIndex } from "./outcome-grades.ts";
 import { calculateJudgmentQuality } from "./judgment-quality.ts";
 import { DEFAULT_RULESET_IDENTITY } from "./ruleset.ts";
+import {
+  ceilToTick,
+  clamp,
+  floorToTick,
+  round1,
+  roundToTick,
+} from "./numeric.ts";
+import { behaviorJitter, seededUnit } from "./random.ts";
 
 const truthVariantIds: TruthVariantId[] = [
   "counterfeit",
@@ -68,37 +76,6 @@ const behaviorLabels: Record<NPCBehaviorId, string> = {
   refuse: "拒绝回答",
   exit: "结束交易",
 };
-
-function clamp(value: number, min = 0, max = 100) {
-  return Math.min(max, Math.max(min, value));
-}
-
-function round1(value: number) {
-  return Math.round(value * 10) / 10;
-}
-
-function hashString(value: string) {
-  let hash = 2166136261;
-  for (let index = 0; index < value.length; index += 1) {
-    hash ^= value.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function seededUnit(seed: number, turn: number, key: string) {
-  let value = (seed ^ hashString(key) ^ Math.imul(turn + 1, 2654435761)) >>> 0;
-  value = (value ^ (value >>> 16)) >>> 0;
-  value = Math.imul(value, 2246822507) >>> 0;
-  value = (value ^ (value >>> 13)) >>> 0;
-  value = Math.imul(value, 3266489909) >>> 0;
-  value = (value ^ (value >>> 16)) >>> 0;
-  return value / 4294967296;
-}
-
-function jitter(seed: number, turn: number, key: string) {
-  return round1((seededUnit(seed, turn, `behavior:${key}`) - 0.5) * 3);
-}
 
 function cloneNpcState(state: NPCState): NPCState {
   return { ...state };
@@ -428,18 +405,6 @@ function posteriorEntropy(posterior: PosteriorEntry[]) {
         : sum,
     0,
   );
-}
-
-function roundToTick(value: number, tick = 5) {
-  return Math.max(tick, Math.round(value / tick) * tick);
-}
-
-function ceilToTick(value: number, tick = 5) {
-  return Math.max(tick, Math.ceil(value / tick) * tick);
-}
-
-function floorToTick(value: number, tick = 5) {
-  return Math.max(tick, Math.floor(value / tick) * tick);
 }
 
 export type NpcStance =
@@ -934,7 +899,9 @@ function behaviorCandidate(
   const baseScore = round1(
     components.reduce((sum, component) => sum + component.value, 0),
   );
-  const randomJitter = eligible ? jitter(state.seed, state.turn + 1, id) : 0;
+  const randomJitter = eligible
+    ? behaviorJitter(state.seed, state.turn + 1, id)
+    : 0;
   const finalScore = eligible ? round1(baseScore + randomJitter) : -999;
   return {
     id,

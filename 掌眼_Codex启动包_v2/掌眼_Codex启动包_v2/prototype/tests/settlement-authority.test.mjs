@@ -3,7 +3,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import { lacquerBoxCase } from "../content/lacquer-box.ts";
+import { calculateJudgmentQuality } from "../game/judgment-quality.ts";
 import { createInitialWorldState } from "../game/resolve-action.ts";
+import { calculatePosterior } from "../game/resolve-action.ts";
 import {
   calculateSettlement,
   settleWorldState,
@@ -28,6 +30,22 @@ test("objective net can change while judgment evidence remains identical", () =>
   assert.deepEqual(fake.posterior, treasure.posterior);
   assert.equal(fake.judgmentScore, treasure.judgmentScore);
   assert.equal(fake.judgmentGrade, treasure.judgmentGrade);
+});
+
+test("judgment quality accepts only a player-visible judgment view", () => {
+  const result = calculateJudgmentQuality({
+    judgmentModel: lacquerBoxCase.judgmentModel,
+    evidenceById: {},
+    statementTopicsById: {},
+    posterior: calculatePosterior(lacquerBoxCase, [], []),
+    discoveredEvidenceIds: [],
+    statementHistory: [],
+    utilityGap: 0,
+    redundantActionCount: 0,
+    sellerExited: false,
+  });
+
+  assert.equal(result.finalGrade, "B");
 });
 
 test("settleWorldState composes the calculated settlement without mutating active state", () => {

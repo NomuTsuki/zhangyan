@@ -457,3 +457,21 @@ export type WorldState = {
   actionHistory: TurnRecord[];
   settlement?: SettlementResult;
 };
+
+export type DomainEvent =
+  | { kind: "evidence-discovered"; evidenceId: string }
+  | { kind: "evidence-shared"; evidenceId: string }
+  | { kind: "price-changed"; priceChange: PriceChange }
+  | { kind: "case-settled"; settlement: SettlementResult };
+
+export type CalculationTrace = Readonly<{
+  turn: number;
+  formulaLog: string[];
+  spindle?: SpindleTrace;
+}>;
+
+export type TransitionResult = Readonly<{
+  state: WorldState;
+  events: DomainEvent[];
+  trace: CalculationTrace;
+}>;

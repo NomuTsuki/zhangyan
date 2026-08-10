@@ -132,6 +132,36 @@ export type EvidenceDefinition =
       kind: "statement";
     });
 
+export type EvidencePayload = Readonly<
+  Pick<
+    EvidenceDefinition,
+    "id" | "kind" | "name" | "topic" | "strength" | "likelihoods"
+  >
+>;
+
+export type DisclosureSelection = Readonly<{
+  evidenceId: string | null;
+  newlyShared: boolean;
+}>;
+
+export type FramingEffect = Readonly<{
+  pressureDelta: number;
+  trustDelta: number;
+  dealIntentDelta: number;
+  controlDelta: number;
+  formulas: string[];
+}>;
+
+export type DisclosureEvaluation = Readonly<{
+  payload: EvidencePayload | null;
+  selection: DisclosureSelection;
+  framing: FramingEffect;
+  relevant: boolean;
+  repeatCount: number;
+  power: number;
+  relevanceFactor: number;
+}>;
+
 export type TruthVariant = {
   id: TruthVariantId;
   label: string;

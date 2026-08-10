@@ -4,7 +4,7 @@ import type {
   CaseDefinition,
   DialogueAction,
   EvidenceDefinition,
-  EvidenceStrength,
+  EvidencePayload,
   NegotiationState,
   NPCBehaviorId,
   NPCPhase,
@@ -24,6 +24,7 @@ import type {
   WorldState,
 } from "./types";
 import { TRUTH_VARIANT_IDS } from "./types.ts";
+import { evaluateDisclosure } from "./disclosure.ts";
 import {
   calculateNpcPosterior,
   calculatePosterior,
@@ -52,19 +53,6 @@ const stateLabels: Record<NPCStateKey, string> = {
   trust: "信任",
   dealIntent: "成交意愿",
   control: "控制感",
-};
-
-const evidencePower: Record<EvidenceStrength, number> = {
-  weak: 0.7,
-  medium: 1,
-  strong: 1.3,
-  anchor: 1.6,
-};
-
-const tonePressure: Record<ActionTone, number> = {
-  gentle: 0.72,
-  professional: 1,
-  firm: 1.25,
 };
 
 const toneLabels: Record<ActionTone, string> = {
@@ -152,12 +140,6 @@ function phaseFor(state: NPCState): NPCPhase {
   if (state.pressure >= 65) return "pressured";
   if (state.pressure >= 42 || state.trust < 46) return "cautious";
   return "relaxed";
-}
-
-function pressureDecay(pressure: number) {
-  if (pressure <= 40) return 1;
-  if (pressure <= 70) return 0.75;
-  return 0.5;
 }
 
 function makeChange(
@@ -277,16 +259,6 @@ function ensureActionAllowed(
       `议价容量不足：需要 ${bargainingCost}，当前 ${bargainingRemaining}`,
     );
   }
-}
-
-function getEvidence(
-  caseDefinition: CaseDefinition,
-  evidenceId: string | undefined,
-) {
-  if (!evidenceId) return undefined;
-  const evidence = caseDefinition.evidence[evidenceId];
-  if (!evidence) throw new Error(`未知证据：${evidenceId}`);
-  return evidence;
 }
 
 export type NpcStance =
@@ -844,13 +816,12 @@ function dialogueCandidates(
   state: WorldState,
   nextNpc: NPCState,
   action: DialogueAction,
-  evidence: EvidenceDefinition | undefined,
+  evidence: EvidencePayload | null,
   relevant: boolean,
   repeatCount: number,
+  power: number,
   storyletAlreadyTriggered: boolean,
 ) {
-  const power = evidence ? evidencePower[evidence.strength] : 0.5;
-
   return [
     behaviorCandidate(
       state,
@@ -957,103 +928,47 @@ function resolveDialogue(
   );
   if (!topic) throw new Error(`未知询问主题：${action.topicId}`);
 
-  const evidence = getEvidence(caseDefinition, action.evidenceId);
-  if (
-    evidence
-    && !state.discoveredEvidenceIds.includes(evidence.id)
-  ) {
-    throw new Error("不能引用尚未发现的证据");
-  }
-  const relevant = Boolean(
-    evidence
-    && (
-      topic.evidenceTopics.includes(evidence.topic)
-      || evidence.contradicts ===
-        caseDefinition.claims.find((claim) => claim.topic === topic.label)?.id
-    ),
-  );
-  const signature = `${action.topicId}:${action.evidenceId ?? "none"}:${action.tone}`;
-  const repeatCount = state.actionHistory.filter(
-    (turn) =>
-      turn.action.kind === "dialogue"
-      && `${turn.action.topicId}:${turn.action.evidenceId ?? "none"}:${turn.action.tone}` === signature,
-  ).length;
-  const power = evidence ? evidencePower[evidence.strength] : 0.5;
-  const relevanceFactor = evidence ? (relevant ? 1 : 0.45) : 1;
-  const decay = pressureDecay(state.npcState.pressure);
-  const contextModifier = evidence ? (relevant ? 2 : -2) : 0;
-  const pressureRaw =
-    (evidence ? 10 : 3)
-    * tonePressure[action.tone]
-    * power
-    * relevanceFactor
-    * decay
-    + contextModifier
-    + repeatCount;
-  const pressureDelta = clamp(Math.round(pressureRaw), 0, 28);
-  const trustDelta = clamp(
-    { gentle: 6, professional: 2, firm: -7 }[action.tone]
-       + (evidence ? 0 : { gentle: 2, professional: 1, firm: -2 }[action.tone])
-       + (evidence && !relevant ? -3 : 0)
-       - repeatCount * 2,
-    -15,
-    10,
-  );
-  const dealIntentDelta = clamp(
-    { gentle: 1, professional: -1, firm: -4 }[action.tone]
-      - (evidence ? Math.round(power * 2) : 0)
-      - repeatCount * 2,
-    -15,
-    5,
-  );
-  const controlDelta = evidence
-    ? -clamp(
-        Math.round(10 * tonePressure[action.tone] * power * relevanceFactor)
-          + repeatCount,
-        0,
-        24,
-      )
-    : { gentle: 2, professional: -2, firm: -4 }[action.tone];
+  const disclosure = evaluateDisclosure(caseDefinition, state, action);
+  const { payload: evidence, relevant, repeatCount, power, relevanceFactor } = disclosure;
+  const { framing } = disclosure;
 
   const resolved = applyChanges(state.npcState, [
     {
       key: "pressure",
-      delta: pressureDelta,
+      delta: framing.pressureDelta,
       reasons: [
         evidence ? `引用${evidence.name}` : "开放询问不要求证据",
         `态度：${toneLabels[action.tone]}`,
         `完全重复 ${repeatCount} 次`,
       ],
-      formula: `round(基础${evidence ? 10 : 3} × 态度${tonePressure[action.tone]} × 证据${power} × 相关${relevanceFactor} × 衰减${decay} + 情境${contextModifier} + 重复${repeatCount}) = ${pressureDelta}`,
+      formula: framing.formulas[0],
     },
     {
       key: "trust",
-      delta: trustDelta,
+      delta: framing.trustDelta,
       reasons: [
         `${toneLabels[action.tone]}表达`,
         evidence ? (relevant ? "证据与问题相关" : "引用无关证据") : "先固定原始说法",
         repeatCount ? "重复追问损害合作感" : "首次采用该行动组合",
       ],
-      formula: `态度基础 + 开放询问修正 + 相关性修正 - 重复${repeatCount}×2 = ${trustDelta}`,
+      formula: framing.formulas[1],
     },
     {
       key: "dealIntent",
-      delta: dealIntentDelta,
+      delta: framing.dealIntentDelta,
       reasons: [
         evidence ? "证据提高卖家承担的交易风险" : "普通询问保持交易空间",
         repeatCount ? "重复行动降低耐心" : "无重复惩罚",
       ],
-      formula: `态度基础 - 证据${evidence ? round1(power * 2) : 0} - 重复${repeatCount}×2 = ${dealIntentDelta}`,
+      formula: framing.formulas[2],
     },
     {
       key: "control",
-      delta: controlDelta,
+      delta: framing.controlDelta,
       reasons: [
         evidence ? "相关证据压缩叙事空间" : "开放询问让卖家保留主动叙述空间",
       ],
-      formula: evidence
-        ? `-round(10 × 态度${tonePressure[action.tone]} × 证据${power} × 相关${relevanceFactor}) - 重复${repeatCount} = ${controlDelta}`
-        : `开放询问态度修正 = ${controlDelta}`,
+      formula: framing.formulas[3],
     },
   ]);
 
@@ -1067,6 +982,7 @@ function resolveDialogue(
     evidence,
     relevant,
     repeatCount,
+    power,
     storyletAlreadyTriggered,
   );
   const selected = chooseBehavior(candidates);
@@ -1076,9 +992,9 @@ function resolveDialogue(
   next.npcState = resolved.next;
   const sharedEvidenceAdded: string[] = [];
   if (
-    evidence
+    disclosure.selection.newlyShared
+    && evidence
     && evidence.kind !== "statement"
-    && !next.sharedEvidenceIds.includes(evidence.id)
   ) {
     next.sharedEvidenceIds.push(evidence.id);
     sharedEvidenceAdded.push(evidence.id);

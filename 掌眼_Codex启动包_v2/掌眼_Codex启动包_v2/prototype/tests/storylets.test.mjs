@@ -43,3 +43,33 @@ test("partial admission is one-shot and statement signals remain one source", ()
   assert.deepEqual(state.npcPosterior, stateBefore.npcPosterior);
   assert.deepEqual(state.npcState, stateBefore.npcState);
 });
+
+test("recovered partial admission does not report evidence that already exists", () => {
+  const initial = createInitialWorldState(lacquerBoxCase);
+  const topic = lacquerBoxCase.dialogueTopics.find(
+    (item) => item.id === "repair-history",
+  );
+  assert.ok(topic);
+  const recoveredState = {
+    ...initial,
+    discoveredEvidenceIds: ["repair-admission"],
+    triggeredStoryletIds: [],
+  };
+  const baseline = resolveDialogueStorylet(
+    lacquerBoxCase,
+    initial,
+    topic,
+    "partial-admit",
+  );
+
+  const resolution = resolveDialogueStorylet(
+    lacquerBoxCase,
+    recoveredState,
+    topic,
+    "partial-admit",
+  );
+
+  assert.equal(resolution.newlyTriggered, true);
+  assert.deepEqual(resolution.evidenceAdded, []);
+  assert.equal(resolution.statement.signalId, baseline.statement.signalId);
+});

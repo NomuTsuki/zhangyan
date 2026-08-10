@@ -43,7 +43,9 @@ export function resolveDialogueStorylet(
     storyletId,
     newlyTriggered,
     evidenceAdded:
-      newlyTriggered && topic.responseEvidenceId
+      newlyTriggered
+      && topic.responseEvidenceId
+      && !state.discoveredEvidenceIds.includes(topic.responseEvidenceId)
         ? [topic.responseEvidenceId]
         : [],
     statement: {

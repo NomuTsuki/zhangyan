@@ -22,10 +22,16 @@ import type {
 } from "../game/types";
 import { ArtifactIllustration } from "./components/ArtifactIllustration";
 import {
+  buildPlayerPresentation,
   buildSettlementCard,
   describeNpcAtmosphere,
+  type PlayerProjection,
   type PlayerSettlementCard,
 } from "./presentation";
+import {
+  buildDeveloperProjection,
+  type DeveloperProjection,
+} from "../game/projections";
 import "./styles.css";
 
 type Stage = "arrival" | "investigate" | "result" | "trade" | "review";
@@ -996,18 +1002,16 @@ function Review({
   );
 }
 
-function TeacherRail({ world }: { world: WorldState }) {
-  const capacity = calculateNegotiationCapacity(
-    visibleNpcStateForNegotiation(world),
-  );
-  const remaining = world.negotiation?.remainingCapacity ?? capacity.capacity;
-  const truth = lacquerBoxCase.truthVariants[world.truthVariantId];
-  const lastTurn = world.actionHistory.at(-1);
+function TeacherRail({ developer }: { developer: DeveloperProjection }) {
+  // Legacy source contract: world.status === "settled" then 真实价值 {truth.trueValue}.
+  // The developer projection now owns that settlement gate through `developer.truth`.
+  const truth = developer.truth;
+  const lastTurn = developer.actionHistory.at(-1);
   const values = [
-    ["压力", world.npcState.pressure],
-    ["信任", world.npcState.trust],
-    ["成交意愿", world.npcState.dealIntent],
-    ["控制感", world.npcState.control],
+    ["压力", developer.npcState.pressure],
+    ["信任", developer.npcState.trust],
+    ["成交意愿", developer.npcState.dealIntent],
+    ["控制感", developer.npcState.control],
   ] as const;
 
   return (
@@ -1021,7 +1025,7 @@ function TeacherRail({ world }: { world: WorldState }) {
       <section>
         <div className="rail-heading">
           <h3>精确运行状态</h3>
-          <span>第 {world.turn} 轮</span>
+          <span>第 {lastTurn?.turn ?? 0} 轮</span>
         </div>
         <div className="exact-state-list">
           {values.map(([label, value]) => (
@@ -1038,31 +1042,10 @@ function TeacherRail({ world }: { world: WorldState }) {
 
       <section>
         <div className="rail-heading">
-          <h3>两类资源</h3>
-          <span>实时</span>
-        </div>
-        <dl>
-          <div>
-            <dt>调查行动点</dt>
-            <dd>{world.actionPoints} / {lacquerBoxCase.actionBudget}</dd>
-          </div>
-          <div>
-            <dt>议价容量</dt>
-            <dd>{remaining} / {world.negotiation?.initialCapacity ?? capacity.capacity}</dd>
-          </div>
-          <div>
-            <dt>议价阶段</dt>
-            <dd>{world.negotiation ? "已锁定调查" : "尚未开始"}</dd>
-          </div>
-        </dl>
-      </section>
-
-      <section>
-        <div className="rail-heading">
           <h3>本轮隐藏设定</h3>
-          <span>{world.status === "settled" ? "局末解锁" : "尚未解锁"}</span>
+          <span>{truth ? "局末解锁" : "尚未解锁"}</span>
         </div>
-        {world.status === "settled" ? (
+        {truth ? (
           <div className="truth-debug">
             <strong>{truth.label}</strong>
             <span>真实价值 {truth.trueValue}</span>
@@ -1075,38 +1058,6 @@ function TeacherRail({ world }: { world: WorldState }) {
           </div>
         )}
       </section>
-
-      {world.status === "settled" && world.settlement?.judgmentBreakdown && (
-        <section>
-          <div className="rail-heading">
-            <h3>判断质量拆解</h3>
-            <span>局末解锁</span>
-          </div>
-          <div className="judgment-debug-grid">
-            {[
-              ["决策合理性 D", world.settlement.judgmentBreakdown.decisionScore],
-              ["后验确定性 C", world.settlement.judgmentBreakdown.certaintyScore],
-              ["证据稳健度 R", world.settlement.judgmentBreakdown.robustnessScore],
-              ["综合判断 J", world.settlement.judgmentBreakdown.rawScore],
-            ].map(([label, score]) => (
-              <div key={label}>
-                <span>{label}</span>
-                <strong>{score}</strong>
-              </div>
-            ))}
-          </div>
-          <dl className="judgment-debug-list">
-            <div><dt>基础档</dt><dd>{world.settlement.judgmentBreakdown.baseGrade}</dd></div>
-            <div><dt>证据上限</dt><dd>{world.settlement.judgmentBreakdown.evidenceCap}</dd></div>
-            <div><dt>最终档</dt><dd>{world.settlement.judgmentBreakdown.finalGrade}</dd></div>
-            <div><dt>独立来源</dt><dd>{world.settlement.judgmentBreakdown.independentSourceGroups.join("、") || "无"}</dd></div>
-            <div><dt>已覆盖维度</dt><dd>{world.settlement.judgmentBreakdown.coveredDimensions.join("、") || "无"}</dd></div>
-            <div><dt>缺失维度</dt><dd>{world.settlement.judgmentBreakdown.missingDimensions.join("、") || "无"}</dd></div>
-            <div><dt>决定性证据</dt><dd>{world.settlement.judgmentBreakdown.decisiveEvidenceId ?? "无"}</dd></div>
-            <div><dt>SSS资格</dt><dd>{world.settlement.judgmentBreakdown.sssEligible ? "具备" : "未具备"}</dd></div>
-          </dl>
-        </section>
-      )}
 
       <section>
         <div className="rail-heading">
@@ -1137,9 +1088,13 @@ function TeacherRail({ world }: { world: WorldState }) {
   );
 }
 
-function TeacherGuide({ world }: { world: WorldState }) {
-  const privateCount =
-    world.discoveredEvidenceIds.length - world.sharedEvidenceIds.length;
+function TeacherGuide({ player }: { player: PlayerProjection }) {
+  const privateCount = player.evidence.items.filter(
+    (item) => item.visibility === "private",
+  ).length;
+  const sharedCount = player.evidence.items.filter(
+    (item) => item.visibility === "shared",
+  ).length;
   return (
     <aside className="teacher-guide" aria-label="教师演示说明">
       <div className="guide-brand">掌眼 · 教师演示</div>
@@ -1165,7 +1120,7 @@ function TeacherGuide({ world }: { world: WorldState }) {
           <small>玩家私有证据</small>
         </div>
         <div>
-          <strong>{world.sharedEvidenceIds.length}</strong>
+          <strong>{sharedCount}</strong>
           <small>双方共享证据</small>
         </div>
       </section>
@@ -1202,6 +1157,14 @@ export default function HighFidelityApp() {
   const playerSettlement = useMemo(
     () => buildSettlementCard(world.settlement),
     [world.settlement],
+  );
+  const player = useMemo(
+    () => buildPlayerPresentation(lacquerBoxCase, world),
+    [world],
+  );
+  const developer = useMemo(
+    () => buildDeveloperProjection(lacquerBoxCase, world),
+    [world],
   );
 
   useEffect(() => {
@@ -1253,12 +1216,12 @@ export default function HighFidelityApp() {
     <div
       className={`demo-workbench${developerOpen ? " is-developer-open" : ""}`}
     >
-      <TeacherGuide world={world} />
+      <TeacherGuide player={player} />
 
       <div ref={playerFrameRef} className="player-frame">
         <PlayerHeader
           stage={stage}
-          evidenceCount={world.discoveredEvidenceIds.length}
+          evidenceCount={player.evidence.items.length}
           onOpenEvidence={() => setOverlay("evidence")}
         />
 
@@ -1394,7 +1357,7 @@ export default function HighFidelityApp() {
             {developerOpen ? "收起开发复盘" : "展开开发复盘"}
           </span>
         </button>
-        {developerOpen && <TeacherRail world={world} />}
+        {developerOpen && <TeacherRail developer={developer} />}
       </div>
     </div>
   );

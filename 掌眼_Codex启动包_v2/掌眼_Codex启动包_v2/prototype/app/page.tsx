@@ -8,9 +8,12 @@ import {
   getDiscoveredEvidence,
   getStateLabels,
   getTestConsent,
-  getTruthForDebug,
   resolveTurn,
 } from "../game/resolve-action";
+import {
+  buildDeveloperProjection,
+  type DeveloperProjection,
+} from "../game/projections";
 import {
   calculateNegotiationCapacity,
   getNpcPricing,
@@ -413,15 +416,18 @@ function DebugTurnDetails({
   );
 }
 
+/*
 function DebugRail({
-  state,
+  developer,
   screen,
 }: {
-  state: WorldState;
+  developer: DeveloperProjection;
   screen: Screen;
 }) {
-  const revealSecrets = state.status === "settled";
-  const truth = revealSecrets ? getTruthForDebug(lacquerBoxCase, state) : null;
+  const state = developer.actionHistory.at(-1)?.after
+    ?? createInitialWorldState(lacquerBoxCase);
+  const revealSecrets = developer.truth !== null;
+  const truth = developer.truth;
   const playerPosterior = calculatePosterior(
     lacquerBoxCase,
     state.discoveredEvidenceIds,
@@ -632,6 +638,92 @@ function DebugRail({
   );
 }
 
+*/
+
+function DebugRail({
+  developer,
+  screen,
+}: {
+  developer: DeveloperProjection;
+  screen: Screen;
+}) {
+  const lastTurn = developer.actionHistory.at(-1);
+  const pageLabel =
+    screen === "evidence" || screen === "response"
+      ? "调查辅助"
+      : progress.find((item) => item.id === screen)?.label ?? screen;
+  const values = [
+    ["压力", developer.npcState.pressure],
+    ["信任", developer.npcState.trust],
+    ["成交意愿", developer.npcState.dealIntent],
+    ["控制感", developer.npcState.control],
+  ] as const;
+
+  return (
+    <aside className="debug-rail" aria-label="开发调试与规则进程">
+      <header className="debug-rail-header">
+        <p>DEVELOPMENT VIEW</p>
+        <h2>规则、状态与回放</h2>
+        <span>仅消费开发投影；不属于手机玩家界面</span>
+      </header>
+
+      <section className="debug-panel">
+        <div className="debug-panel-title"><h3>投影身份</h3><span>{pageLabel}</span></div>
+        <dl className="debug-snapshot">
+          <div><dt>案件</dt><dd>{developer.caseId} · {developer.caseVersion}</dd></div>
+          <div><dt>规则</dt><dd>{developer.rulesetId} · {developer.rulesetVersion}</dd></div>
+          <div><dt>轮次</dt><dd>{lastTurn?.turn ?? 0}</dd></div>
+        </dl>
+        <div className="debug-live-state">
+          {values.map(([label, value]) => (
+            <div key={label}>
+              <span>{label}</span>
+              <strong>{value}</strong>
+              <i><b style={{ width: `${value}%` }} /></i>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="debug-panel">
+        <div className="debug-panel-title"><h3>NPC后验</h3><span>开发侧可见</span></div>
+        <div className="dual-posterior-debug">
+          {developer.npcPosterior.map((entry) => (
+            <div key={entry.variantId}>
+              <strong>{entry.label}</strong>
+              <span>NPC {(entry.probability * 100).toFixed(1)}%</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="debug-panel">
+        <div className="debug-panel-title"><h3>最近规则结算</h3><span>{lastTurn?.title ?? "等待输入"}</span></div>
+        {developer.lastTrace ? (
+          <div className="debug-formula-stack">
+            {developer.lastTrace.formulaLog.map((line) => <code key={line}>{line}</code>)}
+          </div>
+        ) : (
+          <p className="debug-empty">开始检查或询问后，这里会显示本轮公式。</p>
+        )}
+      </section>
+
+      <section className="debug-panel">
+        <div className="debug-panel-title"><h3>局末真相</h3><span>{developer.truth ? "局末解锁" : "尚未解锁"}</span></div>
+        {developer.truth ? (
+          <div className="truth-debug">
+            <strong>{developer.truth.label}</strong>
+            <span>真实价值 {developer.truth.trueValue}</span>
+            <small>品质 {developer.truth.qualityGrade} · 综合封顶 {developer.truth.overallGradeCap}</small>
+          </div>
+        ) : (
+          <p className="debug-empty">结算后才会出现 truth。</p>
+        )}
+      </section>
+    </aside>
+  );
+}
+
 function visibleNpcStateForPricing(state: WorldState) {
   return {
     pressure: state.npcState.pressure,
@@ -676,6 +768,10 @@ export default function Home() {
   const [screen, setScreen] = useState<Screen>("home");
   const [worldState, setWorldState] = useState<WorldState>(() =>
     createInitialWorldState(lacquerBoxCase),
+  );
+  const developer = useMemo(
+    () => buildDeveloperProjection(lacquerBoxCase, worldState),
+    [worldState],
   );
   const [selectedTargetId, setSelectedTargetId] = useState("surface");
   const [selectedTopicId, setSelectedTopicId] = useState("repair-history");
@@ -1524,7 +1620,7 @@ export default function Home() {
         </footer>
       </section>
 
-      <DebugRail state={worldState} screen={screen} />
+      <DebugRail developer={developer} screen={screen} />
     </main>
   );
 }

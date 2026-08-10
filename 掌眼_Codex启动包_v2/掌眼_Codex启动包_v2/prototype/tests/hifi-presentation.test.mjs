@@ -10,6 +10,7 @@ import {
   getNpcPricing,
   resolveTurn,
 } from "../game/resolve-action.ts";
+import { buildDeveloperProjection } from "../game/projections.ts";
 import {
   buildEvidenceDisclosure,
   buildPlayerPresentation,
@@ -60,6 +61,33 @@ async function renderReview(world, playerSettlement) {
         onRestart: () => {},
       }),
     );
+  } finally {
+    await server.close();
+  }
+}
+
+async function renderTeacherRail(developer) {
+  const server = await createServer({
+    configFile: false,
+    logLevel: "error",
+    plugins: [
+      {
+        name: "expose-teacher-rail-for-render-test",
+        enforce: "pre",
+        transform(source, id) {
+          if (!id.endsWith("/hifi/HighFidelityApp.tsx")) return null;
+          return `${source}\nexport { TeacherRail as __testTeacherRail };`;
+        },
+      },
+    ],
+    server: { middlewareMode: true },
+  });
+
+  try {
+    const { __testTeacherRail: TeacherRail } = await server.ssrLoadModule(
+      "/hifi/HighFidelityApp.tsx",
+    );
+    return renderToStaticMarkup(createElement(TeacherRail, { developer }));
   } finally {
     await server.close();
   }
@@ -329,4 +357,22 @@ test("rendered Review judgment card consumes the player settlement projection", 
   ]) {
     assert.doesNotMatch(html, new RegExp(forbidden));
   }
+});
+
+test("rendered developer rail consumes a developer projection instead of WorldState", async () => {
+  const state = resolveTurn(lacquerBoxCase, start(), {
+    kind: "inspect",
+    targetId: "joint",
+  });
+  const developer = buildDeveloperProjection(lacquerBoxCase, state);
+  developer.npcState.pressure = 17;
+  const unsafeWorld = {
+    ...state,
+    npcState: { ...state.npcState, pressure: 99 },
+  };
+
+  const html = await renderTeacherRail(developer, unsafeWorld);
+
+  assert.match(html, />17</);
+  assert.doesNotMatch(html, />99</);
 });

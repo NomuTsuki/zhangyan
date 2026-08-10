@@ -1,6 +1,7 @@
 import { calculateNegotiationCapacity } from "../game/negotiation.ts";
 import type {
   CaseDefinition,
+  CaseStatus,
   EvidenceDefinition,
   NPCState,
   OutcomeGrade,
@@ -82,13 +83,19 @@ export type PlayerSettlementCard = {
   sections: SettlementCardSection[];
 };
 
-export type PlayerPresentation = {
+export type PlayerProjection = Readonly<{
+  status: CaseStatus;
+  currentPrice: number;
+  actionPoints: number;
+  negotiationRemaining: number | null;
   atmosphere: NpcAtmospherePresentation;
-  latestResponse: PlayerTurnSummary | null;
   resources: PlayerResourcePresentation;
   evidence: EvidenceDisclosurePresentation;
+  lastTurn: PlayerTurnSummary | null;
   settlement: PlayerSettlementCard | null;
-};
+}>;
+
+export type PlayerPresentation = PlayerProjection;
 
 export function describeNpcAtmosphere(
   npcState: NPCState,
@@ -332,10 +339,14 @@ export function buildPlayerPresentation(
   state: WorldState,
 ): PlayerPresentation {
   return {
+    status: state.status,
+    currentPrice: state.currentPrice,
+    actionPoints: state.actionPoints,
+    negotiationRemaining: state.negotiation?.remainingCapacity ?? null,
     atmosphere: describeNpcAtmosphere(state.npcState),
-    latestResponse: summarizeTurnForPlayer(state.actionHistory.at(-1)),
     resources: buildPlayerResources(caseDefinition, state),
     evidence: buildEvidenceDisclosure(caseDefinition, state),
+    lastTurn: summarizeTurnForPlayer(state.actionHistory.at(-1)),
     settlement: buildSettlementCard(state.settlement),
   };
 }

@@ -1,11 +1,18 @@
 import { calculateNegotiationCapacity } from "../game/negotiation.ts";
+import {
+  getDiscoveredEvidence,
+  getPlayerReferenceOffer,
+  getTestConsent,
+} from "../game/resolve-action.ts";
 import type {
+  ActionTone,
   CaseDefinition,
   CaseStatus,
   EvidenceDefinition,
   NPCState,
   OutcomeGrade,
   SettlementResult,
+  TruthVariant,
   TurnRecord,
   WorldState,
 } from "../game/types.ts";
@@ -96,6 +103,74 @@ export type PlayerProjection = Readonly<{
 }>;
 
 export type PlayerPresentation = PlayerProjection;
+
+export type PlayerEvidenceView = Readonly<{
+  id: string;
+  name: string;
+  kind: EvidenceDefinition["kind"];
+  strength: EvidenceDefinition["strength"];
+  detail: string;
+  inference: string;
+  lead: string;
+  topic: string;
+  shared: boolean;
+}>;
+
+export type PlayerTurnView = Readonly<{
+  turn: number;
+  action: { kind: TurnRecord["action"]["kind"] } & Partial<{
+    targetId: string;
+    topicId: string;
+    tone: ActionTone;
+    evidenceId: string;
+  }>;
+  actionLabel: string;
+  title: string;
+  description: string;
+  actionPointCost: number;
+  negotiationCapacityCost: number;
+  evidenceAdded: string[];
+  sharedEvidenceAdded: string[];
+  statement: TurnRecord["statement"];
+  priceChange: TurnRecord["priceChange"];
+  phaseBefore: NPCState["phase"];
+  phaseAfter: NPCState["phase"];
+}>;
+
+export type PlayerSettlementView = Readonly<{
+  endingTitle: string;
+  choiceLabel: string;
+  outcomeLabel: string;
+  overallGrade: OutcomeGrade;
+  qualityGrade: OutcomeGrade;
+  qualityCap: OutcomeGrade;
+  bargainingGrade: OutcomeGrade;
+  netGrade: OutcomeGrade;
+  judgmentGrade: OutcomeGrade;
+  judgmentLabel: string;
+  actualNet: number;
+  paidPrice: number;
+  regret: number;
+  truth: Pick<TruthVariant, "label" | "summary" | "facts" | "trueValue" | "qualityGrade" | "overallGradeCap">;
+}>;
+
+export type PlayerView = Readonly<{
+  projection: PlayerProjection;
+  status: CaseStatus;
+  actionPoints: number;
+  currentPrice: number;
+  feesPaid: number;
+  negotiation: { remainingCapacity: number; initialCapacity: number; offersMade: number } | null;
+  inspectedTargetIds: string[];
+  discoveredEvidence: PlayerEvidenceView[];
+  sharedEvidenceIds: string[];
+  statementHistory: NonNullable<TurnRecord["statement"]>[];
+  actionHistory: PlayerTurnView[];
+  lastTurn: PlayerTurnView | null;
+  testConsent: { allowed: boolean; reasons: string[] };
+  reference: ReturnType<typeof getPlayerReferenceOffer>;
+  settlement: PlayerSettlementView | null;
+}>;
 
 export function describeNpcAtmosphere(
   npcState: NPCState,
@@ -348,5 +423,111 @@ export function buildPlayerPresentation(
     evidence: buildEvidenceDisclosure(caseDefinition, state),
     lastTurn: summarizeTurnForPlayer(state.actionHistory.at(-1)),
     settlement: buildSettlementCard(state.settlement),
+  };
+}
+
+function buildPlayerTurnView(turn: TurnRecord): PlayerTurnView {
+  const action = turn.action;
+  return {
+    turn: turn.turn,
+    action: {
+      kind: action.kind,
+      ...(action.kind === "inspect" ? { targetId: action.targetId } : {}),
+      ...(action.kind === "dialogue"
+        ? {
+            topicId: action.topicId,
+            tone: action.tone,
+            ...(action.evidenceId ? { evidenceId: action.evidenceId } : {}),
+          }
+        : {}),
+    },
+    actionLabel: turn.actionLabel,
+    title: turn.title,
+    description: turn.description,
+    actionPointCost: turn.actionPointCost,
+    negotiationCapacityCost: turn.negotiationCapacityCost,
+    evidenceAdded: [...turn.evidenceAdded],
+    sharedEvidenceAdded: [...(turn.sharedEvidenceAdded ?? [])],
+    statement: turn.statement ? { ...turn.statement } : undefined,
+    priceChange: turn.priceChange ? { ...turn.priceChange } : undefined,
+    phaseBefore: turn.before.npcState.phase,
+    phaseAfter: turn.after.npcState.phase,
+  };
+}
+
+export function buildPlayerView(
+  caseDefinition: CaseDefinition,
+  state: WorldState,
+): PlayerView {
+  const discoveredEvidence = getDiscoveredEvidence(caseDefinition, state).map(
+    (evidence) => ({
+      id: evidence.id,
+      name: evidence.name,
+      kind: evidence.kind,
+      strength: evidence.strength,
+      detail: evidence.detail,
+      inference: evidence.inference,
+      lead: evidence.lead,
+      topic: evidence.topic,
+      shared: state.sharedEvidenceIds.includes(evidence.id),
+    }),
+  );
+  const reference = getPlayerReferenceOffer(caseDefinition, state);
+  const settlement = state.settlement;
+  const truth = settlement
+    ? caseDefinition.truthVariants[state.truthVariantId]
+    : null;
+
+  return {
+    projection: buildPlayerPresentation(caseDefinition, state),
+    status: state.status,
+    actionPoints: state.actionPoints,
+    currentPrice: state.currentPrice,
+    feesPaid: state.feesPaid,
+    negotiation: state.negotiation
+      ? {
+          remainingCapacity: state.negotiation.remainingCapacity,
+          initialCapacity: state.negotiation.initialCapacity,
+          offersMade: state.negotiation.offersMade,
+        }
+      : null,
+    inspectedTargetIds: [...state.inspectedTargetIds],
+    discoveredEvidence,
+    sharedEvidenceIds: [...state.sharedEvidenceIds],
+    statementHistory: state.statementHistory.map((statement) => ({ ...statement })),
+    actionHistory: state.actionHistory.map(buildPlayerTurnView),
+    lastTurn: state.actionHistory.at(-1)
+      ? buildPlayerTurnView(state.actionHistory.at(-1)!)
+      : null,
+    testConsent: (() => {
+      const consent = getTestConsent(caseDefinition, state);
+      return { allowed: consent.allowed, reasons: [...consent.reasons] };
+    })(),
+    reference,
+    settlement: settlement && truth
+      ? {
+          endingTitle: settlement.endingTitle,
+          choiceLabel: settlement.choiceLabel,
+          outcomeLabel: settlement.outcomeLabel,
+          overallGrade: settlement.overallGrade,
+          qualityGrade: settlement.qualityGrade,
+          qualityCap: settlement.qualityCap,
+          bargainingGrade: settlement.bargainingGrade,
+          netGrade: settlement.netGrade,
+          judgmentGrade: settlement.judgmentGrade,
+          judgmentLabel: settlement.judgmentLabel,
+          actualNet: settlement.actualNet,
+          paidPrice: settlement.paidPrice,
+          regret: settlement.regret,
+          truth: {
+            label: truth.label,
+            summary: truth.summary,
+            facts: [...truth.facts],
+            trueValue: truth.trueValue,
+            qualityGrade: truth.qualityGrade,
+            overallGradeCap: truth.overallGradeCap,
+          },
+        }
+      : null,
   };
 }

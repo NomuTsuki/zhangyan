@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import { lacquerBoxCase } from "../content/lacquer-box.ts";
@@ -58,4 +59,34 @@ test("developer projection is a deep copy and reveals truth only after settlemen
   assert.equal(settledProjection.truth?.id, "hidden-treasure");
   assert.notEqual(settledProjection.lastTrace, null);
   assert.notEqual(settledProjection.lastTrace, settled.actionHistory.at(-1));
+});
+
+test("player-facing app components route safe player props instead of WorldState", async () => {
+  const [hifiSource, appSource] = await Promise.all([
+    readFile(new URL("../hifi/HighFidelityApp.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+  ]);
+
+  for (const component of ["Investigation", "ResultScreen", "Trade", "Review"]) {
+    const signature = new RegExp(`function ${component}\\([\\s\\S]{0,900}?\\) \\{`);
+    const match = hifiSource.match(signature);
+    assert.ok(match, `${component} signature was not found`);
+    assert.doesNotMatch(match[0], /\bworld\b|WorldState/);
+  }
+  assert.doesNotMatch(hifiSource, /<(Investigation|ResultScreen|Trade|Review)[\s\S]{0,500}\bworld=\{world\}/);
+  assert.match(hifiSource, /const playerView = useMemo\([\s\S]+buildPlayerView/);
+  assert.match(hifiSource, /const developer = useMemo\([\s\S]+buildDeveloperProjection/);
+
+  assert.match(appSource, /const playerView = useMemo\([\s\S]+buildPlayerView/);
+  assert.match(appSource, /const developer = useMemo\([\s\S]+buildDeveloperProjection/);
+  assert.doesNotMatch(appSource, /<DebugRail\s+state=\{worldState\}/);
+
+  const executableHifi = hifiSource
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\/\/.*$/gm, "");
+  const executableApp = appSource
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\/\/.*$/gm, "");
+  assert.doesNotMatch(executableHifi, /\bworld\.(?!settlement\b)/);
+  assert.doesNotMatch(executableApp, /\bworldState\./);
 });

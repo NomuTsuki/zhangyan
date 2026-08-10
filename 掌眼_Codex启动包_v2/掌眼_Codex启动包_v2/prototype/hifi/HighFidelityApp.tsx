@@ -23,10 +23,13 @@ import type {
 import { ArtifactIllustration } from "./components/ArtifactIllustration";
 import {
   buildPlayerPresentation,
+  buildPlayerView,
   buildSettlementCard,
   describeNpcAtmosphere,
   type PlayerProjection,
+  type PlayerEvidenceView,
   type PlayerSettlementCard,
+  type PlayerView,
 } from "./presentation";
 import {
   buildDeveloperProjection,
@@ -37,27 +40,6 @@ import "./styles.css";
 type Stage = "arrival" | "investigate" | "result" | "trade" | "review";
 type InvestigationMode = "observe" | "ask";
 type Overlay = "evidence" | "reference" | null;
-
-function visibleNpcStateForNegotiation(world: WorldState) {
-  return {
-    pressure: world.npcState.pressure,
-    trust: world.npcState.trust,
-    dealIntent: world.npcState.dealIntent,
-    control: world.npcState.control,
-  };
-}
-
-function playerReferenceForWorld(world: WorldState) {
-  return getPlayerReferenceOffer({
-    posterior: calculatePosterior(
-      lacquerBoxCase,
-      world.discoveredEvidenceIds,
-      world.statementHistory,
-    ),
-    feesPaid: world.feesPaid,
-    currentPrice: world.currentPrice,
-  });
-}
 
 const toneOptions: Array<{
   id: ActionTone;
@@ -140,7 +122,7 @@ function EvidenceCard({
   shared,
   compact = false,
 }: {
-  evidence: EvidenceDefinition;
+  evidence: PlayerEvidenceView;
   shared: boolean;
   compact?: boolean;
 }) {
@@ -340,7 +322,7 @@ function Arrival({
 }
 
 function Investigation({
-  world,
+  player,
   mode,
   selectedTargetId,
   selectedTopicId,
@@ -358,7 +340,7 @@ function Investigation({
   onTrade,
   onReference,
 }: {
-  world: WorldState;
+  player: PlayerView;
   mode: InvestigationMode;
   selectedTargetId: string;
   selectedTopicId: string;
@@ -379,11 +361,11 @@ function Investigation({
   const selectedTarget =
     lacquerBoxCase.observationTargets.find((target) => target.id === selectedTargetId)
     ?? lacquerBoxCase.observationTargets[0];
-  const evidence = getDiscoveredEvidence(lacquerBoxCase, world);
-  const testConsent = getTestConsent(lacquerBoxCase, world);
-  const lastTurn = world.actionHistory.at(-1);
-  const lastStatement = [...world.statementHistory].at(-1);
-  const phase = describeNpcAtmosphere(world.npcState);
+  const evidence = player.discoveredEvidence;
+  const testConsent = player.testConsent;
+  const lastTurn = player.lastTurn;
+  const lastStatement = player.statementHistory.at(-1);
+  const phase = player.projection.atmosphere;
 
   return (
     <main
@@ -405,10 +387,10 @@ function Investigation({
       <div className="resource-rail">
         <ResourcePill
           label="调查行动"
-          value={`${world.actionPoints} / ${lacquerBoxCase.actionBudget}`}
-          emphasis={world.actionPoints <= 2}
+          value={`${player.actionPoints} / ${lacquerBoxCase.actionBudget}`}
+          emphasis={player.actionPoints <= 2}
         />
-        <ResourcePill label="当前要价" value={`${world.currentPrice} 点`} />
+        <ResourcePill label="当前要价" value={`${player.currentPrice} 点`} />
         <ResourcePill label="卖家状态" value={phase.label} />
       </div>
 
@@ -441,7 +423,7 @@ function Investigation({
             </div>
             <ArtifactIllustration
               selectedTargetId={selectedTargetId}
-              inspectedTargetIds={world.inspectedTargetIds}
+              inspectedTargetIds={player.inspectedTargetIds}
               onSelect={onSelectTarget}
             />
             <div className="target-copy" aria-live="polite">
@@ -451,10 +433,10 @@ function Investigation({
             </div>
             <button
               className="primary-button"
-              disabled={world.actionPoints < 1}
+              disabled={player.actionPoints < 1}
               onClick={onInspect}
             >
-              {world.inspectedTargetIds.includes(selectedTarget.id)
+              {player.inspectedTargetIds.includes(selectedTarget.id)
                 ? `复查${selectedTarget.label} · 消耗 1 点`
                 : `检查${selectedTarget.label} · 消耗 1 点`}
             </button>
@@ -540,7 +522,7 @@ function Investigation({
                 .map((item) => (
                   <option value={item.id} key={item.id}>
                     出示「{item.name}」
-                    {world.sharedEvidenceIds.includes(item.id) ? "（已公开）" : ""}
+                    {item.shared ? "（已公开）" : ""}
                   </option>
                 ))}
             </select>
@@ -567,7 +549,7 @@ function Investigation({
 
           <button
             className="primary-button"
-            disabled={world.actionPoints < 1}
+            disabled={player.actionPoints < 1}
             onClick={onAsk}
           >
             提问 · 消耗 1 点调查行动
@@ -599,15 +581,15 @@ function Investigation({
 }
 
 function ResultScreen({
-  world,
+  player,
   onCollect,
 }: {
-  world: WorldState;
+  player: PlayerView;
   onCollect: () => void;
 }) {
-  const lastTurn = world.actionHistory.at(-1);
+  const lastTurn = player.lastTurn;
   const evidenceIds = lastTurn?.evidenceAdded ?? [];
-  const evidence = getDiscoveredEvidence(lacquerBoxCase, world).filter((item) =>
+  const evidence = player.discoveredEvidence.filter((item) =>
     evidenceIds.includes(item.id),
   );
   const isTest = lastTurn?.action.kind === "test";
@@ -631,7 +613,7 @@ function ResultScreen({
         {evidence.map((item) => (
           <EvidenceCard
             evidence={item}
-            shared={world.sharedEvidenceIds.includes(item.id)}
+            shared={item.shared}
             key={item.id}
           />
         ))}
@@ -652,7 +634,7 @@ function ResultScreen({
 }
 
 function Trade({
-  world,
+  player,
   offerInput,
   notice,
   onOfferInput,
@@ -661,7 +643,7 @@ function Trade({
   onReject,
   onBack,
 }: {
-  world: WorldState;
+  player: PlayerView;
   offerInput: string;
   notice: string;
   onOfferInput: (value: string) => void;
@@ -670,15 +652,12 @@ function Trade({
   onReject: () => void;
   onBack: () => void;
 }) {
-  const capacityPreview = calculateNegotiationCapacity(
-    visibleNpcStateForNegotiation(world),
-  );
-  const capacity =
-    world.negotiation?.remainingCapacity ?? capacityPreview.capacity;
-  const initialCapacity =
-    world.negotiation?.initialCapacity ?? capacityPreview.capacity;
-  const reference = playerReferenceForWorld(world);
-  const lastTurn = world.actionHistory.at(-1);
+  const capacity = player.negotiation?.remainingCapacity
+    ?? player.projection.resources.bargaining.remaining;
+  const initialCapacity = player.negotiation?.initialCapacity
+    ?? player.projection.resources.bargaining.total;
+  const reference = player.reference;
+  const lastTurn = player.lastTurn;
   const quote = Number(offerInput);
   const quoteError =
     offerInput.trim() === ""
@@ -689,14 +668,14 @@ function Trade({
           ? "报价必须使用整数。"
           : quote <= 0
             ? "报价必须大于 0。"
-            : quote >= world.currentPrice
-              ? `报价需低于卖家当前要价 ${world.currentPrice} 点。`
+            : quote >= player.currentPrice
+              ? `报价需低于卖家当前要价 ${player.currentPrice} 点。`
               : "";
   const validQuote = quoteError === "";
   const quoteUnavailableReason =
     quoteError || (capacity < 1 ? "议价容量已经用尽；你仍可接受当前价或拒绝。" : "");
-  const locked = Boolean(world.negotiation);
-  const offersMade = world.negotiation?.offersMade ?? 0;
+  const locked = Boolean(player.negotiation);
+  const offersMade = player.negotiation?.offersMade ?? 0;
   const tradeScreenRef = useRef<HTMLElement>(null);
   const terminalActionsRef = useRef<HTMLDivElement>(null);
 
@@ -737,8 +716,7 @@ function Trade({
           value={`${capacity} / ${initialCapacity}`}
           emphasis={capacity <= 1}
         />
-        <ResourcePill label="卖家要价" value={`${world.currentPrice} 点`} />
-        <ResourcePill label="已付检测费" value={`${world.feesPaid} 点`} />
+        <ResourcePill label="卖家要价" value={`${player.currentPrice} 点`} />
       </div>
 
       {locked && (
@@ -762,7 +740,7 @@ function Trade({
         </p>
         <button
           className="quiet-button"
-          disabled={reference.suggestedOffer >= world.currentPrice}
+          disabled={reference.suggestedOffer >= player.currentPrice}
           onClick={() =>
             onOfferInput(
               String(reference.offer),
@@ -799,7 +777,7 @@ function Trade({
             type="number"
             inputMode="numeric"
             min="1"
-            max={Math.max(1, world.currentPrice - 1)}
+            max={Math.max(1, player.currentPrice - 1)}
             step="1"
             value={offerInput}
             aria-invalid={Boolean(quoteError)}
@@ -810,7 +788,7 @@ function Trade({
             aria-label="报价增加5点"
             onClick={() =>
               onOfferInput(
-                String(Math.min(world.currentPrice - 1, (quote || 0) + 5)),
+                String(Math.min(player.currentPrice - 1, (quote || 0) + 5)),
               )
             }
           >
@@ -835,7 +813,7 @@ function Trade({
       <div className="terminal-actions" ref={terminalActionsRef}>
         <button className="buy-button" onClick={onBuy}>
           <strong>按当前要价买下</strong>
-          <span>{world.currentPrice} 点 · 立即成交</span>
+          <span>{player.currentPrice} 点 · 立即成交</span>
         </button>
         <button className="reject-button" onClick={onReject}>
           <strong>拒绝交易</strong>
@@ -862,20 +840,20 @@ function Trade({
 }
 
 function Review({
-  world,
+  player,
   playerSettlement,
   onRestart,
 }: {
-  world: WorldState;
+  player: PlayerView;
   playerSettlement: PlayerSettlementCard;
   onRestart: () => void;
 }) {
-  const settlement = world.settlement!;
+  const settlement = player.settlement!;
   const judgment = playerSettlement.sections.find(
     (section) => section.id === "judgment",
   )!;
-  const truth = lacquerBoxCase.truthVariants[settlement.truthVariantId];
-  const discovered = getDiscoveredEvidence(lacquerBoxCase, world);
+  const truth = settlement.truth;
+  const discovered = player.discoveredEvidence;
   const overallIndex = GRADE_ORDER.indexOf(settlement.overallGrade);
 
   return (
@@ -915,7 +893,7 @@ function Review({
         <h2>{truth.label}</h2>
         <p>{truth.summary}</p>
         <div>
-          <strong>{settlement.trueValue}</strong>
+          <strong>{settlement.truth.trueValue}</strong>
           <em>真实价值</em>
           <strong>{settlement.paidPrice || "—"}</strong>
           <em>成交价格</em>
@@ -967,7 +945,7 @@ function Review({
           {discovered.map((item) => (
             <EvidenceCard
               evidence={item}
-              shared={world.sharedEvidenceIds.includes(item.id)}
+              shared={item.shared}
               compact
               key={item.id}
             />
@@ -983,7 +961,7 @@ function Review({
           </div>
         </div>
         <ol>
-          {world.actionHistory.map((turn) => (
+          {player.actionHistory.map((turn) => (
             <li key={turn.turn}>
               <i>{turn.turn}</i>
               <div>
@@ -1150,18 +1128,13 @@ export default function HighFidelityApp() {
   const playerFrameRef = useRef<HTMLDivElement>(null);
   const previousStageRef = useRef<Stage>(stage);
 
-  const evidence = useMemo(
-    () => getDiscoveredEvidence(lacquerBoxCase, world),
+  const playerView = useMemo(
+    () => buildPlayerView(lacquerBoxCase, world),
     [world],
   );
-  const playerSettlement = useMemo(
-    () => buildSettlementCard(world.settlement),
-    [world.settlement],
-  );
-  const player = useMemo(
-    () => buildPlayerPresentation(lacquerBoxCase, world),
-    [world],
-  );
+  const player = playerView.projection;
+  const evidence = playerView.discoveredEvidence;
+  const playerSettlement = player.settlement;
   const developer = useMemo(
     () => buildDeveloperProjection(lacquerBoxCase, world),
     [world],
@@ -1233,7 +1206,7 @@ export default function HighFidelityApp() {
         )}
         {stage === "investigate" && (
           <Investigation
-            world={world}
+            player={playerView}
             mode={mode}
             selectedTargetId={selectedTargetId}
             selectedTopicId={selectedTopicId}
@@ -1270,11 +1243,11 @@ export default function HighFidelityApp() {
           />
         )}
         {stage === "result" && (
-          <ResultScreen world={world} onCollect={() => setStage("investigate")} />
+          <ResultScreen player={playerView} onCollect={() => setStage("investigate")} />
         )}
         {stage === "trade" && (
           <Trade
-            world={world}
+            player={playerView}
             offerInput={offerInput}
             notice={notice}
             onOfferInput={setOfferInput}
@@ -1286,7 +1259,7 @@ export default function HighFidelityApp() {
         )}
         {stage === "review" && playerSettlement && (
           <Review
-            world={world}
+            player={playerView}
             playerSettlement={playerSettlement}
             onRestart={() => restart()}
           />
@@ -1301,17 +1274,17 @@ export default function HighFidelityApp() {
             <div className="evidence-sheet-summary">
               <span>仅你掌握</span>
               <strong>
-                {evidence.filter((item) => !world.sharedEvidenceIds.includes(item.id)).length}
+                {playerView.discoveredEvidence.filter((item) => !item.shared).length}
               </strong>
               <span>双方共享</span>
-              <strong>{world.sharedEvidenceIds.length}</strong>
+              <strong>{playerView.sharedEvidenceIds.length}</strong>
             </div>
             <div className="evidence-sheet-list">
               {evidence.length ? (
                 evidence.map((item) => (
                   <EvidenceCard
                     evidence={item}
-                    shared={world.sharedEvidenceIds.includes(item.id)}
+                    shared={item.shared}
                     key={item.id}
                   />
                 ))

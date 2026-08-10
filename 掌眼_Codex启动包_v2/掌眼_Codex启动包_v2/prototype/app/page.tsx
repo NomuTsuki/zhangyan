@@ -14,6 +14,7 @@ import {
   buildDeveloperProjection,
   type DeveloperProjection,
 } from "../game/projections";
+import { buildPlayerView } from "../hifi/presentation";
 import {
   calculateNegotiationCapacity,
   getNpcPricing,
@@ -773,6 +774,10 @@ export default function Home() {
     () => buildDeveloperProjection(lacquerBoxCase, worldState),
     [worldState],
   );
+  const playerView = useMemo(
+    () => buildPlayerView(lacquerBoxCase, worldState),
+    [worldState],
+  );
   const [selectedTargetId, setSelectedTargetId] = useState("surface");
   const [selectedTopicId, setSelectedTopicId] = useState("repair-history");
   const [selectedTone, setSelectedTone] =
@@ -788,17 +793,14 @@ export default function Home() {
     useState<"investigate" | "trade">("investigate");
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const discoveredEvidence = useMemo(
-    () => getDiscoveredEvidence(lacquerBoxCase, worldState),
-    [worldState],
-  );
+  const discoveredEvidence = playerView.discoveredEvidence;
   const privateEvidence = discoveredEvidence.filter(
     (evidence) =>
       evidence.kind !== "statement"
-      && !worldState.sharedEvidenceIds.includes(evidence.id),
+      && !evidence.shared,
   );
   const sharedEvidence = discoveredEvidence.filter(
-    (evidence) => worldState.sharedEvidenceIds.includes(evidence.id),
+    (evidence) => evidence.shared,
   );
   const statementEvidence = discoveredEvidence.filter(
     (evidence) => evidence.kind === "statement",
@@ -807,41 +809,35 @@ export default function Home() {
     (evidence) => evidence.id === selectedEvidenceId,
   );
   const selectedEvidenceIsShared = selectedEvidence
-    ? worldState.sharedEvidenceIds.includes(selectedEvidence.id)
+    ? selectedEvidence.shared
     : false;
   const selectedEvidenceRequiresDisclosure =
     Boolean(selectedEvidence)
     && selectedEvidence?.kind !== "statement"
     && !selectedEvidenceIsShared;
-  const playerReference = useMemo(
-    () => playerReferenceForState(worldState),
-    [worldState],
-  );
-  const negotiationPreview = useMemo(
-    () => calculateNegotiationCapacity(visibleNpcStateForPricing(worldState)),
-    [worldState.npcState],
-  );
+  const playerReference = playerView.reference;
+  const negotiationPreview = { capacity: playerView.projection.resources.bargaining.total };
   const bargainingRemaining =
-    worldState.negotiation?.remainingCapacity ?? negotiationPreview.capacity;
+    playerView.negotiation?.remainingCapacity ?? negotiationPreview.capacity;
   const offer = Number(offerInput);
   const buyoutOffer = Number(buyoutInput);
   const offerIsValid =
     Number.isInteger(offer)
     && offer > 0
-    && offer < worldState.currentPrice;
+    && offer < playerView.currentPrice;
   const buyoutIsValid =
     Number.isInteger(buyoutOffer)
     && buyoutOffer > 0
-    && buyoutOffer < worldState.currentPrice;
-  const lastTurn = worldState.actionHistory.at(-1);
+    && buyoutOffer < playerView.currentPrice;
+  const lastTurn = playerView.lastTurn;
   const selectedTarget = lacquerBoxCase.observationTargets.find(
     (item) => item.id === selectedTargetId,
   )!;
   const selectedTopic = lacquerBoxCase.dialogueTopics.find(
     (item) => item.id === selectedTopicId,
   )!;
-  const testConsent = getTestConsent(lacquerBoxCase, worldState);
-  const settlement = worldState.settlement;
+  const testConsent = playerView.testConsent;
+  const settlement = playerView.settlement;
   const currentStep =
     screen === "home"
       ? 0
@@ -1006,12 +1002,12 @@ export default function Home() {
               />
 
               <div className="resource-row resource-triple">
-                <div><span>调查行动点</span><strong>{worldState.actionPoints} / {lacquerBoxCase.actionBudget}</strong></div>
+                <div><span>调查行动点</span><strong>{playerView.actionPoints} / {lacquerBoxCase.actionBudget}</strong></div>
                 <div><span>证据账本</span><strong>{privateEvidence.length} 私有 · {sharedEvidence.length} 共享</strong></div>
-                <div><span>暂时报价</span><strong>{worldState.currentPrice}</strong></div>
+                <div><span>暂时报价</span><strong>{playerView.currentPrice}</strong></div>
               </div>
 
-              {worldState.actionPoints === 0 && (
+              {playerView.actionPoints === 0 && (
                 <div className="strategy-feedback" role="status">
                   调查预算已经耗尽。你仍可按当前价格购买或拒绝，不会陷入死局。
                 </div>
@@ -1024,7 +1020,7 @@ export default function Home() {
                 </div>
                 <div className="observation-targets">
                   {lacquerBoxCase.observationTargets.map((target) => {
-                    const inspected = worldState.inspectedTargetIds.includes(target.id);
+                    const inspected = playerView.inspectedTargetIds.includes(target.id);
                     return (
                       <button
                         className={selectedTargetId === target.id ? "selected" : ""}
@@ -1052,10 +1048,10 @@ export default function Home() {
                 </div>
                 <button
                   className="primary-button"
-                  disabled={worldState.actionPoints < 1}
+                  disabled={playerView.actionPoints < 1}
                   onClick={() => performAction({ kind: "inspect", targetId: selectedTarget.id })}
                 >
-                  {worldState.inspectedTargetIds.includes(selectedTarget.id)
+                  {playerView.inspectedTargetIds.includes(selectedTarget.id)
                     ? `复查${selectedTarget.label}（仍消耗 1 点）`
                     : `检查${selectedTarget.label}（-1 行动点）`}
                 </button>
@@ -1155,7 +1151,7 @@ export default function Home() {
 
                 <button
                   className="primary-button"
-                  disabled={worldState.actionPoints < 1}
+                  disabled={playerView.actionPoints < 1}
                   onClick={() => performAction({
                     kind: "dialogue",
                     topicId: selectedTopicId,
@@ -1225,7 +1221,7 @@ export default function Home() {
               <section className="statement-log">
                 <div className="section-title">
                   <h2>NPC陈述历史</h2>
-                  <span>{lacquerBoxCase.claims.length + worldState.statementHistory.length} 条</span>
+                  <span>{lacquerBoxCase.claims.length + playerView.statementHistory.length} 条</span>
                 </div>
                 {lacquerBoxCase.claims.map((claim) => (
                   <div className="statement-record is-initial" key={claim.id}>
@@ -1233,7 +1229,7 @@ export default function Home() {
                     <blockquote>“{claim.text}”</blockquote>
                   </div>
                 ))}
-                {worldState.statementHistory.map((statement) => (
+                {playerView.statementHistory.map((statement) => (
                   <div key={`${statement.turn}-${statement.topicId}`}>
                     <span>
                       第 {statement.turn} 轮 · {lacquerBoxCase.dialogueTopics.find((topic) => topic.id === statement.topicId)?.label}
@@ -1261,10 +1257,10 @@ export default function Home() {
                 description={lastTurn.actionLabel}
               />
 
-              {lastTurn.before.npcState.phase !== lastTurn.after.npcState.phase && (
+              {lastTurn.phaseBefore !== lastTurn.phaseAfter && (
                 <div className="observable-attitude-change">
                   <span>可观察反应</span>
-                  <strong>{observablePhaseLabels[lastTurn.after.npcState.phase]}</strong>
+                  <strong>{observablePhaseLabels[lastTurn.phaseAfter]}</strong>
                 </div>
               )}
 
@@ -1346,9 +1342,9 @@ export default function Home() {
                   <>
                     <button
                       className="primary-button"
-                      onClick={() => go(worldState.negotiation ? "trade" : "investigate")}
+                      onClick={() => go(playerView.negotiation ? "trade" : "investigate")}
                     >
-                      {worldState.negotiation ? "返回议价" : "继续调查"}
+                      {playerView.negotiation ? "返回议价" : "继续调查"}
                     </button>
                     <button className="secondary-button" onClick={() => go("trade")}>现在进入交易</button>
                     <button className="text-button" onClick={() => openEvidence("investigate")}>查看证据簿</button>
@@ -1367,9 +1363,9 @@ export default function Home() {
               />
 
               <div className="resource-row resource-triple">
-                <div><span>调查行动点</span><strong>{worldState.actionPoints}</strong></div>
-                <div><span>议价容量</span><strong>{bargainingRemaining} / {worldState.negotiation?.initialCapacity ?? negotiationPreview.capacity}</strong></div>
-                <div><span>卖家暂时报价</span><strong>{worldState.currentPrice}</strong></div>
+                <div><span>调查行动点</span><strong>{playerView.actionPoints}</strong></div>
+                <div><span>议价容量</span><strong>{bargainingRemaining} / {playerView.negotiation?.initialCapacity ?? negotiationPreview.capacity}</strong></div>
+                <div><span>卖家暂时报价</span><strong>{playerView.currentPrice}</strong></div>
               </div>
 
               <section className="conservative-reference-card">
@@ -1382,7 +1378,7 @@ export default function Home() {
                 </p>
                 <button
                   className="reference-fill-button"
-                  disabled={playerReference.suggestedOffer >= worldState.currentPrice}
+                  disabled={playerReference.suggestedOffer >= playerView.currentPrice}
                   onClick={() => {
                     const referenceOffer = String(playerReference.offer);
                     setOfferInput(referenceOffer);
@@ -1409,7 +1405,7 @@ export default function Home() {
               <div className="trade-actions">
                 <button onClick={() => performAction({ kind: "buy" })}>
                   <span><strong>按当前要价购买</strong><em>0 AP · 终局</em></span>
-                  <small>支付 {worldState.currentPrice} 价值点，接受卖家当前条件并立即成交。</small>
+                  <small>支付 {playerView.currentPrice} 价值点，接受卖家当前条件并立即成交。</small>
                 </button>
 
                 <section className="custom-offer-panel">
@@ -1423,7 +1419,7 @@ export default function Home() {
                       type="number"
                       inputMode="numeric"
                       min="1"
-                      max={Math.max(1, worldState.currentPrice - 1)}
+                      max={Math.max(1, playerView.currentPrice - 1)}
                       step="1"
                       value={offerInput}
                       onChange={(event) => setOfferInput(event.target.value)}
@@ -1431,7 +1427,7 @@ export default function Home() {
                   </label>
                   {!offerIsValid && (
                     <small className="input-guidance">
-                      报价必须是低于 {worldState.currentPrice} 的正整数。
+                      报价必须是低于 {playerView.currentPrice} 的正整数。
                     </small>
                   )}
                   <button
@@ -1457,7 +1453,7 @@ export default function Home() {
                       type="number"
                       inputMode="numeric"
                       min="1"
-                      max={Math.max(1, worldState.currentPrice - 1)}
+                      max={Math.max(1, playerView.currentPrice - 1)}
                       step="1"
                       value={buyoutInput}
                       onChange={(event) => setBuyoutInput(event.target.value)}
@@ -1465,7 +1461,7 @@ export default function Home() {
                   </label>
                   {!buyoutIsValid && (
                     <small className="input-guidance">
-                      买断价必须是低于 {worldState.currentPrice} 的正整数。
+                      买断价必须是低于 {playerView.currentPrice} 的正整数。
                     </small>
                   )}
                   <button
@@ -1515,10 +1511,10 @@ export default function Home() {
               </button>
               <button
                 className="text-button"
-                disabled={Boolean(worldState.negotiation)}
+                disabled={Boolean(playerView.negotiation)}
                 onClick={() => go("investigate")}
               >
-                {worldState.negotiation ? "正式议价已开始，调查已锁定" : "返回调查"}
+                {playerView.negotiation ? "正式议价已开始，调查已锁定" : "返回调查"}
               </button>
             </>
           )}
@@ -1539,9 +1535,9 @@ export default function Home() {
 
               <section className="truth-panel">
                 <div className="section-title"><h2>物品客观真相</h2><span>复盘解锁</span></div>
-                <h3>{settlement.truthLabel} · 真实价值 {settlement.trueValue}</h3>
+                <h3>{settlement.truth.label} · 真实价值 {settlement.truth.trueValue}</h3>
                 <ul>
-                  {lacquerBoxCase.truthVariants[settlement.truthVariantId].facts.map((fact) => (
+                  {settlement.truth.facts.map((fact) => (
                     <li key={fact}>{fact}</li>
                   ))}
                 </ul>
@@ -1558,9 +1554,9 @@ export default function Home() {
 
               <div className="review-evidence">
                 <div><span>本局发现</span><strong>{discoveredEvidence.length} 条证据</strong></div>
-                <div><span>信息公开</span><strong>{worldState.sharedEvidenceIds.length} 条共享</strong></div>
-                <div><span>有成本行动</span><strong>{worldState.actionHistory.filter((turn) => turn.actionPointCost > 0).length} 次</strong></div>
-                <div><span>检测费用</span><strong>{worldState.feesPaid} 点</strong></div>
+                <div><span>信息公开</span><strong>{playerView.sharedEvidenceIds.length} 条共享</strong></div>
+                <div><span>有成本行动</span><strong>{playerView.actionHistory.filter((turn) => turn.actionPointCost > 0).length} 次</strong></div>
+                <div><span>检测费用</span><strong>{playerView.feesPaid} 点</strong></div>
               </div>
 
               <section className="review-causal-timeline">
@@ -1569,7 +1565,7 @@ export default function Home() {
                   <span>玩家可见复盘</span>
                 </div>
                 <ol>
-                  {worldState.actionHistory.map((turn) => {
+                  {playerView.actionHistory.map((turn) => {
                     const newlyPrivateEvidence = turn.evidenceAdded
                       .filter((evidenceId) => !turn.sharedEvidenceAdded?.includes(evidenceId))
                       .map((evidenceId) => evidenceCatalog[evidenceId]?.name)

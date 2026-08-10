@@ -14,6 +14,7 @@ import { buildDeveloperProjection } from "../game/projections.ts";
 import {
   buildEvidenceDisclosure,
   buildPlayerPresentation,
+  buildPlayerView,
   buildPlayerResources,
   buildSettlementCard,
   describeNpcAtmosphere,
@@ -54,9 +55,10 @@ async function renderReview(world, playerSettlement) {
     const { __testReview: Review } = await server.ssrLoadModule(
       "/hifi/HighFidelityApp.tsx",
     );
+    const player = buildPlayerView(lacquerBoxCase, world);
     return renderToStaticMarkup(
       createElement(Review, {
-        world,
+        player,
         playerSettlement,
         onRestart: () => {},
       }),

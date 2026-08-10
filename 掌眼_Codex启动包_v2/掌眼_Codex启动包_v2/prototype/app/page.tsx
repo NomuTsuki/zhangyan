@@ -6,14 +6,16 @@ import {
   calculatePosterior,
   createInitialWorldState,
   getDiscoveredEvidence,
-  getNpcPricing,
-  getPlayerReferenceOffer,
   getStateLabels,
   getTestConsent,
   getTruthForDebug,
   resolveTurn,
 } from "../game/resolve-action";
-import { calculateNegotiationCapacity } from "../game/negotiation";
+import {
+  calculateNegotiationCapacity,
+  getNpcPricing,
+  getPlayerReferenceOffer,
+} from "../game/negotiation";
 import type {
   ActionTone,
   EvidenceDefinition,
@@ -632,7 +634,7 @@ function DebugRail({
 
 function defaultOfferForState(state: WorldState) {
   const reference = getPlayerReferenceOffer(lacquerBoxCase, state);
-  return Math.max(1, Math.min(reference.suggestedOffer, state.currentPrice - 1));
+  return reference.offer;
 }
 
 export default function Home() {
@@ -1251,15 +1253,7 @@ export default function Home() {
                   className="reference-fill-button"
                   disabled={playerReference.suggestedOffer >= worldState.currentPrice}
                   onClick={() => {
-                    const referenceOffer = String(
-                      Math.max(
-                        1,
-                        Math.min(
-                          playerReference.suggestedOffer,
-                          worldState.currentPrice - 1,
-                        ),
-                      ),
-                    );
+                    const referenceOffer = String(playerReference.offer);
                     setOfferInput(referenceOffer);
                     setBuyoutInput(referenceOffer);
                   }}

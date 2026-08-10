@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { lacquerBoxCase } from "../content/lacquer-box";
-import { calculateNegotiationCapacity } from "../game/negotiation";
+import {
+  calculateNegotiationCapacity,
+  getPlayerReferenceOffer,
+} from "../game/negotiation";
 import {
   createInitialWorldState,
   getDiscoveredEvidence,
-  getPlayerReferenceOffer,
   getTestConsent,
   resolveTurn,
 } from "../game/resolve-action";
@@ -734,7 +736,7 @@ function Trade({
           disabled={reference.suggestedOffer >= world.currentPrice}
           onClick={() =>
             onOfferInput(
-              String(Math.min(reference.suggestedOffer, world.currentPrice - 1)),
+              String(reference.offer),
             )
           }
         >

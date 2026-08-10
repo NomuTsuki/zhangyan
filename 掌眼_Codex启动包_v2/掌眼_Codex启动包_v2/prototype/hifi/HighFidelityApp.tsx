@@ -5,6 +5,7 @@ import {
   calculateNegotiationCapacity,
   getPlayerReferenceOffer,
 } from "../game/negotiation";
+import { GRADE_ORDER } from "../game/outcome-grades";
 import {
   calculatePosterior,
   createInitialWorldState,
@@ -68,8 +69,6 @@ const strengthCopy = {
   strong: "强证据",
   anchor: "锚点证据",
 } as const;
-
-const gradeOrder = ["D", "C", "B", "A", "S", "SS", "SSS"];
 
 function Icon({
   children,
@@ -871,7 +870,7 @@ function Review({
   )!;
   const truth = lacquerBoxCase.truthVariants[settlement.truthVariantId];
   const discovered = getDiscoveredEvidence(lacquerBoxCase, world);
-  const overallIndex = gradeOrder.indexOf(settlement.overallGrade);
+  const overallIndex = GRADE_ORDER.indexOf(settlement.overallGrade);
 
   return (
     <main
@@ -888,7 +887,7 @@ function Review({
         <h1>{settlement.endingTitle}</h1>
         <p>{settlement.outcomeLabel}</p>
         <div className="grade-scale" aria-label={`综合等级 ${settlement.overallGrade}`}>
-          {gradeOrder.map((grade, index) => (
+          {GRADE_ORDER.map((grade, index) => (
             <i
               className={
                 index === overallIndex

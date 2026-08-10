@@ -16,7 +16,6 @@ import type {
   SettlementChoice,
   SettlementResult,
   SpindleTrace,
-  StatementRecord,
   StateChange,
   StateSnapshot,
   TruthVariantId,
@@ -45,6 +44,7 @@ import {
   roundToTick,
 } from "./numeric.ts";
 import { behaviorJitter, seededUnit } from "./random.ts";
+import { resolveDialogueStorylet } from "./storylets.ts";
 
 const truthVariantIds = TRUTH_VARIANT_IDS;
 
@@ -1018,46 +1018,21 @@ function resolveDialogue(
     changes.push(exitChange);
   }
 
-  const statementSignal = topic.signals[selectedId];
-  const sourceKind: StatementRecord["sourceKind"] =
-    selectedId === "refuse" || selectedId === "exit"
-      ? "refusal"
-      : selectedId === "counter" || topic.id === "price"
-        ? "judgment"
-        : "memory";
-  const statementConfidence = {
-    cooperate: 0.65,
-    deflect: 0.45,
-    "partial-admit": 0.72,
-    counter: 0.55,
-    refuse: 0.2,
-    exit: 0.2,
-  }[selectedId];
-  const statement: StatementRecord = {
-    turn: state.turn + 1,
-    topicId: topic.id,
-    behaviorId: selectedId,
-    sourceKind,
-    confidence: statementConfidence,
-    text: topic.responses[selectedId],
-    signalId: statementSignal.id,
-    signalLabel: statementSignal.label,
-    likelihoods: { ...statementSignal.likelihoods },
-  };
+  const storylet = resolveDialogueStorylet(
+    caseDefinition,
+    state,
+    topic,
+    selectedId,
+  );
+  const { statement } = storylet;
   next.statementHistory.push(statement);
-  const evidenceAdded: string[] = [];
-  if (selectedId === "partial-admit") {
-    if (!next.triggeredStoryletIds.includes(storyletId)) {
-      next.triggeredStoryletIds.push(storyletId);
-    }
-    if (
-      topic.responseEvidenceId
-      && !next.discoveredEvidenceIds.includes(topic.responseEvidenceId)
-    ) {
-      next.discoveredEvidenceIds.push(topic.responseEvidenceId);
-      evidenceAdded.push(topic.responseEvidenceId);
+  if (storylet.newlyTriggered) next.triggeredStoryletIds.push(storylet.storyletId);
+  for (const evidenceId of storylet.evidenceAdded) {
+    if (!next.discoveredEvidenceIds.includes(evidenceId)) {
+      next.discoveredEvidenceIds.push(evidenceId);
     }
   }
+  const evidenceAdded = storylet.evidenceAdded;
 
   const priceChange =
     selectedId === "exit"

@@ -3,6 +3,7 @@ import type {
   CaseDefinition,
   NPCState,
   PosteriorEntry,
+  SettlementResult,
   TruthVariant,
   TurnRecord,
   WorldState,
@@ -16,6 +17,7 @@ export type DeveloperProjection = Readonly<{
   npcState: NPCState;
   npcPosterior: PosteriorEntry[];
   actionHistory: TurnRecord[];
+  settlement: SettlementResult | null;
   truth: TruthVariant | null;
   lastTrace: CalculationTrace | null;
 }>;
@@ -43,6 +45,7 @@ export function buildDeveloperProjection(
     npcState: state.npcState,
     npcPosterior: state.npcPosterior,
     actionHistory: state.actionHistory,
+    settlement: state.status === "settled" ? state.settlement ?? null : null,
     truth:
       state.status === "settled"
         ? caseDefinition.truthVariants[state.truthVariantId]

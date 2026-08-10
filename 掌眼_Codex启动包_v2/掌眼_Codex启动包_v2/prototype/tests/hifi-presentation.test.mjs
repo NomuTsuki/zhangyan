@@ -378,3 +378,37 @@ test("rendered developer rail consumes a developer projection instead of WorldSt
   assert.match(html, />17</);
   assert.doesNotMatch(html, />99</);
 });
+
+test("developer rail restores settled judgment diagnostics from DeveloperProjection", async () => {
+  const settled = resolveTurn(lacquerBoxCase, start(), { kind: "reject" });
+  const developer = buildDeveloperProjection(lacquerBoxCase, settled);
+
+  const html = await renderTeacherRail(developer);
+
+  for (const label of [
+    "决策合理性 D",
+    "后验确定性 C",
+    "证据稳健度 R",
+    "证据上限",
+    "缺失维度",
+  ]) {
+    assert.match(html, new RegExp(label));
+  }
+});
+
+test("developer rail keeps judgment diagnostics closed before settlement", async () => {
+  const developer = buildDeveloperProjection(lacquerBoxCase, start());
+
+  const html = await renderTeacherRail(developer);
+
+  for (const label of [
+    "判断质量拆解",
+    "决策合理性 D",
+    "后验确定性 C",
+    "证据稳健度 R",
+    "证据上限",
+    "缺失维度",
+  ]) {
+    assert.doesNotMatch(html, new RegExp(label));
+  }
+});

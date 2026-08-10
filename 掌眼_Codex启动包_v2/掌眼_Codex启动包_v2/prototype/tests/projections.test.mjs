@@ -37,6 +37,7 @@ test("developer projection carries identity and audit data without mutating stat
 
   assert.equal(projection.caseId, lacquerBoxCase.id);
   assert.equal(projection.rulesetVersion, "2.0.0-alpha.1");
+  assert.equal(projection.settlement, null);
   assert.equal(projection.truth, null);
   assert.deepEqual(state, before);
 });
@@ -50,6 +51,7 @@ test("developer projection is a deep copy and reveals truth only after settlemen
   assert.notEqual(active.npcState.pressure, 0);
   assert.notEqual(active.npcPosterior[0].probability, 0);
   assert.equal(activeProjection.truth, null);
+  assert.equal(activeProjection.settlement, null);
 
   const settled = resolveTurn(lacquerBoxCase, start("hidden-treasure"), {
     kind: "reject",
@@ -57,6 +59,7 @@ test("developer projection is a deep copy and reveals truth only after settlemen
   const settledProjection = buildDeveloperProjection(lacquerBoxCase, settled);
 
   assert.equal(settledProjection.truth?.id, "hidden-treasure");
+  assert.notEqual(settledProjection.settlement?.judgmentBreakdown, undefined);
   assert.notEqual(settledProjection.lastTrace, null);
   assert.notEqual(settledProjection.lastTrace, settled.actionHistory.at(-1));
 });

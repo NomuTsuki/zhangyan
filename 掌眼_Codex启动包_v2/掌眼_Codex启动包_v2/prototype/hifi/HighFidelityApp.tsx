@@ -985,6 +985,7 @@ function TeacherRail({ developer }: { developer: DeveloperProjection }) {
   // The developer projection now owns that settlement gate through `developer.truth`.
   const truth = developer.truth;
   const lastTurn = developer.actionHistory.at(-1);
+  const judgment = truth ? developer.settlement?.judgmentBreakdown : undefined;
   const values = [
     ["压力", developer.npcState.pressure],
     ["信任", developer.npcState.trust],
@@ -1017,6 +1018,62 @@ function TeacherRail({ developer }: { developer: DeveloperProjection }) {
           ))}
         </div>
       </section>
+
+      {judgment && (
+        <section>
+          <div className="rail-heading">
+            <h3>判断质量拆解</h3>
+            <span>局末解锁</span>
+          </div>
+          <div className="judgment-debug-grid">
+            {[
+              ["决策合理性 D", judgment.decisionScore],
+              ["后验确定性 C", judgment.certaintyScore],
+              ["证据稳健度 R", judgment.robustnessScore],
+              ["综合判断 J", judgment.rawScore],
+            ].map(([label, score]) => (
+              <div key={label}>
+                <span>{label}</span>
+                <strong>{score}</strong>
+              </div>
+            ))}
+          </div>
+          <dl className="judgment-debug-list">
+            <div>
+              <dt>基础档</dt>
+              <dd>{judgment.baseGrade}</dd>
+            </div>
+            <div>
+              <dt>证据上限</dt>
+              <dd>{judgment.evidenceCap}</dd>
+            </div>
+            <div>
+              <dt>最终档</dt>
+              <dd>{judgment.finalGrade}</dd>
+            </div>
+            <div>
+              <dt>独立来源</dt>
+              <dd>{judgment.independentSourceGroups.join("、") || "无"}</dd>
+            </div>
+            <div>
+              <dt>已覆盖维度</dt>
+              <dd>{judgment.coveredDimensions.join("、") || "无"}</dd>
+            </div>
+            <div>
+              <dt>缺失维度</dt>
+              <dd>{judgment.missingDimensions.join("、") || "无"}</dd>
+            </div>
+            <div>
+              <dt>决定性证据</dt>
+              <dd>{judgment.decisiveEvidenceId ?? "无"}</dd>
+            </div>
+            <div>
+              <dt>SSS资格</dt>
+              <dd>{judgment.sssEligible ? "具备" : "未具备"}</dd>
+            </div>
+          </dl>
+        </section>
+      )}
 
       <section>
         <div className="rail-heading">

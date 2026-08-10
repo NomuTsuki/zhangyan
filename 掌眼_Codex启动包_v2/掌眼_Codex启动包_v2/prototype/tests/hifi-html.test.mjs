@@ -3,11 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const publicHtmlUrl = new URL(
-  "../public/掌眼_高保真教师演示.html",
-  import.meta.url,
-);
-const distHtmlUrl = new URL(
-  "../dist/client/掌眼_高保真教师演示.html",
+  "../public/掌眼_V2_高保真演示.html",
   import.meta.url,
 );
 
@@ -26,7 +22,7 @@ test("high-fidelity build produces the offline teacher demo", async () => {
   assert.notEqual(
     html,
     null,
-    "expected public/掌眼_高保真教师演示.html to be generated",
+    "expected public/掌眼_V2_高保真演示.html to be generated",
   );
   assert.match(html, /^<!doctype html>/i);
   assert.match(html, /<html lang="zh-CN">/i);
@@ -51,17 +47,6 @@ test("high-fidelity teacher demo has no external runtime dependencies", async ()
     /\b(?:src|href)\s*=\s*["']https?:\/\//i,
   );
   assert.doesNotMatch(html, /@import\s+(?:url\()?["']?https?:\/\//i);
-});
-
-test("application build copies the exact teacher demo into dist/client", async () => {
-  const [publicHtml, distHtml] = await Promise.all([
-    readIfPresent(publicHtmlUrl),
-    readIfPresent(distHtmlUrl),
-  ]);
-
-  assert.notEqual(publicHtml, null, "expected the public teacher demo");
-  assert.notEqual(distHtml, null, "expected the dist/client teacher demo");
-  assert.equal(distHtml, publicHtml);
 });
 
 test("teacher demo exposes the approved player contract and keeps development data outside it", async () => {

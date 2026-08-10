@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const buildIndexUrl = new URL("./work/hifi/index.html", import.meta.url);
 const buildRoot = fileURLToPath(new URL("./work/hifi/", import.meta.url));
 const outputUrl = new URL(
-  "./public/掌眼_高保真教师演示.html",
+  "./public/掌眼_V2_高保真演示.html",
   import.meta.url,
 );
 

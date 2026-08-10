@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import test from "node:test";
@@ -12,6 +13,7 @@ const repositoryRoot = fileURLToPath(new URL("../../../../", import.meta.url));
 
 const canonicalSource =
   "掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_高保真教师演示.html";
+const V1_SHA256 = "8B46D415627A2BDAA6D90C68C61189496DEAACCC1D3F1213ADC45A794464925B";
 const excludedRuntimeArtifacts = [
   "掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_低保真交互原型.html",
   "掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_数值实验台.html",
@@ -115,4 +117,14 @@ test("V1 teacher package sources exist and remain offline self-contained", async
     assert.doesNotMatch(html, /@import\s+(?:url\s*\()?\s*["']?https?:/i);
     assert.doesNotMatch(html, /(?:[A-Z]:\\|file:\/\/\/)/i);
   }
+});
+
+test("V1 canonical teacher runtime remains byte-frozen", async () => {
+  const canonicalPath = resolve(repositoryRoot, ...canonicalSource.split("/"));
+  const canonicalBytes = await readFile(canonicalPath);
+
+  assert.equal(
+    createHash("sha256").update(canonicalBytes).digest("hex").toUpperCase(),
+    V1_SHA256,
+  );
 });

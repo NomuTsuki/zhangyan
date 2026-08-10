@@ -20,11 +20,24 @@ This starter does not use `wrangler.jsonc`.
 
 也可以直接离线打开：
 
-- `public/掌眼_高保真教师演示.html`：V1 canonical 正式主体，用于老师演示与玩家体验审查；桌面保留默认收起的开发栏，手机端只显示玩家界面；
+- `public/掌眼_高保真教师演示.html`：V1 canonical，按字节保留；
+- `public/掌眼_V2_高保真演示.html`：V2 high-fidelity HTML，只由构建产生；
 - `public/掌眼_低保真交互原型.html`：历史规则与调试快照，只用于回看早期设计，不代表当前规则；
 - `public/掌眼_数值实验台.html`：独立批量实验工具，参数仍是工作假设，不代表正式运行时。
 
-三份文件用途和权威等级不同。只有高保真教师演示由当前 TypeScript 规则核心构建并作为 V1 交付权威；历史低保真仍保留旧规则实现，数值实验台也使用独立实验模型。两者的统一属于 V2 已批准的数值权威源工程，不能为了让静态测试通过而把它们描述成已经同步。
+## 权威分类
+
+| Identity | Owner | Direction |
+|---|---|---|
+| 生产规则权威 | `game/` + `content/` | 可被投影、测试和生成链读取；不读取下列身份 |
+| 显示投影 | `hifi/presentation.ts` + `game/projections.ts` | 只读规则状态，不反向修改规则 |
+| 实验模型 | `public/掌眼_数值实验台.html` | 隔离实验，不证明生产一致或平衡 |
+| 调试轨迹 | `TurnRecord` / `CalculationTrace` | 解释输出，不参与下一轮计算 |
+| 历史资产 | V1 canonical、低保真 HTML/client | 按字节保留，不继续生成生产规则 |
+| 测试例证 | fixtures 与固定断言 | 检测漂移，不反向定义参数 |
+| 生成产物 | V2 high-fidelity HTML | 只由构建产生并携带 provenance |
+
+测试分为 `consistency`、`design-example`、`balance-simulation`、`human-experience` 四层。当前自动套件只覆盖前两层与隔离实验台内部一致性，不把它们称为真人体验或平衡证据。
 
 ## 当前范围
 
@@ -42,7 +55,7 @@ This starter does not use `wrangler.jsonc`.
 - `npm run dev`：启动现有 React 开发版
 - `npm run dev:hifi`：启动高保真教师演示开发版
 - `npm run build`：生成高保真单文件，并验证完整应用构建
-- `npm run build:hifi`：只生成 `public/掌眼_高保真教师演示.html`
+- `npm run build:hifi`：只生成 `public/掌眼_V2_高保真演示.html`
 - `npm test`：构建并检查服务端渲染、三份单文件、规则确定性与信息边界
 - `npm run test:hifi`：只运行高保真规则、展示边界与单文件测试
 - `npm run lint`：检查代码规范

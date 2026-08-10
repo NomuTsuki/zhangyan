@@ -2,6 +2,7 @@ import type { CaseDefinition } from "../game/types";
 
 export const lacquerBoxCase = {
   id: "lacquer-box-001",
+  caseVersion: "1.0.0",
   title: "民国漆木首饰盒",
   seller: {
     name: "刘先生",

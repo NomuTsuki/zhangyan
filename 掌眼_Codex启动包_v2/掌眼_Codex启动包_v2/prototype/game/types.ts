@@ -226,6 +226,7 @@ export type TestDefinition = {
 
 export type CaseDefinition = {
   id: string;
+  caseVersion: string;
   title: string;
   seller: {
     name: string;
@@ -402,6 +403,9 @@ export type SettlementResult = {
 
 export type WorldState = {
   caseId: string;
+  rulesetId: "zhangyan-core";
+  rulesetVersion: string;
+  caseVersion: string;
   seed: number;
   truthVariantId: TruthVariantId;
   npcProfileId: string;

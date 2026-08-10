@@ -26,6 +26,7 @@ import type {
 import { calculateNegotiationCapacity } from "./negotiation.ts";
 import { calculateOutcomeGrades, gradeIndex } from "./outcome-grades.ts";
 import { calculateJudgmentQuality } from "./judgment-quality.ts";
+import { DEFAULT_RULESET_IDENTITY } from "./ruleset.ts";
 
 const truthVariantIds: TruthVariantId[] = [
   "counterfeit",
@@ -828,6 +829,9 @@ export function createInitialWorldState(
   const npcPosterior = calculateNpcPosterior(caseDefinition, []);
   return {
     caseId: caseDefinition.id,
+    rulesetId: DEFAULT_RULESET_IDENTITY.rulesetId,
+    rulesetVersion: DEFAULT_RULESET_IDENTITY.rulesetVersion,
+    caseVersion: caseDefinition.caseVersion,
     seed,
     truthVariantId,
     npcProfileId: caseDefinition.npcProfile.id,

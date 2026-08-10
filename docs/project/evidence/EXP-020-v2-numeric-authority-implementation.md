@@ -14,7 +14,7 @@ Workstream：`V2-NUMERIC-AUTHORITY-EXEC-001`
 
 Task 1—14 的逐任务证据、失败/重试语义与提交链保留在 `.superpowers/sdd/2026-08-10-v2-numeric-authority/progress.md`。本次 Task 15 没有覆盖旧 PASS/FAIL；浏览器对 `file://` 的首次导航被浏览器 URL policy 阻止，随后以仅本机临时 HTTP 服务读取同一 V2 单文件完成回归，服务已停止。该策略失败不是产品失败，也未替换或删除先前记录。
 
-控制器最终复核提出四项 Important finding，本修复波全部接受并以 RED→GREEN 收敛：持久化状态四字段身份在 public resolve facade 与 reducer 双边界 fail closed；高保真交易输入从 `PlayerView.reference.offer` 初始化并在行动/重开后同步；`EvidenceMiniCard` 改为只接收 `PlayerEvidenceView`；canonical `npm test` 改为构建后由 Node 跨平台发现全部 `.test.mjs`。修复提交为 `7949cf19bb32fe59e46b997bd54bd9a5b2deea3b`。这不是独立最终复核通过；精确修复 diff 仍等待控制器 re-review。
+控制器最终复核提出四项 Important finding，本修复波全部接受并以 RED→GREEN 收敛：持久化状态四字段身份在 public resolve facade 与 reducer 双边界 fail closed；高保真交易输入从 `PlayerView.reference.offer` 初始化并在行动/重开后同步；`EvidenceMiniCard` 改为只接收 `PlayerEvidenceView`；canonical `npm test` 改为构建后由 Node 跨平台发现全部 `.test.mjs`。修复提交为 `7949cf19bb32fe59e46b997bd54bd9a5b2deea3b`，证据与干净生成物提交为 `87f517683fe7c5f1592ce7d34d812ab77203ab73`。随后独立 reviewer 对这两个提交做了唯一一次 scoped re-review，结论为 `0 Critical / 0 Important / 0 Minor`，原四项 Important 与两项证据 Minor 均为 Fixed。
 
 RED 证据保留为本轮命令输出：身份契约在 facade/reducer 两组四字段 mismatch 上共出现 10 个失败节点；投影测试因 `EvidenceMiniCard` 仍接收 `WorldState` 而失败；交易测试先证明状态参考报价由 `10 → 55`，再因缺少权威输入同步入口而失败；package 契约因显式列举 12 个测试文件而失败。GREEN 后，身份+replay `18/18`、投影 `7/7`、交易/呈现 `11/11`、package 契约 `3/3` 均通过，输入不变性与原 replay 行为得到回归覆盖。
 
@@ -51,7 +51,7 @@ RED 证据保留为本轮命令输出：身份契约在 facade/reducer 两组四
 
 - 已实现且已由本修复波自动验证：单一规则权威入口、四字段状态身份双边界 fail closed、确定性/版本化 replay、玩家投影边界、交易建议/输入/行动同步、全测试发现、V2 provenance、V1 immutable 与批准基线语义。桌面/移动核心演示路径只有上述 implementation-owner 浏览器证据，本修复波未独立重跑。
 - 未验证：数值平衡、一般玩家理解、真实微信/HTTPS/Safari 环境、第二案件与正式美术；这些不是本次回归可推出的结论。
-- 独立复核 provenance：Task 1—14 已有其各自记录；控制器的首轮最终复核产生四项 Important finding，本修复波由 implementation owner 执行并自验。修复后的精确 diff 尚未由独立 reviewer re-review，故 workstream 状态仍为 `Controller Review Pending`，不得据此宣称独立最终 QA PASS。
+- 独立复核 provenance：Task 1—14 已有其各自记录；控制器的首轮最终复核产生四项 Important finding，本修复波由 implementation owner 执行并自验。随后独立 reviewer 对 `9d4301d..87f5176` 精确 diff 执行 scoped re-review，独立复现 Node 全发现 `142/142`、TypeScript、lint、diff、项目记忆、V1/fixture 哈希与静态边界扫描，结论为 `0 Critical / 0 Important / 0 Minor`。它未执行会重写生成物的 `npm.cmd test` build phase，也未重新建立浏览器连接，因此桌面/移动 settlement、viewport overflow 与 console 仍只属于 implementation-owner evidence。workstream 状态据此进入 `Completed`，但不宣称平衡、真人体验或正式发布完成。
 
 ## 残余与重开触发
 

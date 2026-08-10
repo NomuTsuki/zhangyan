@@ -6,7 +6,7 @@
 
 ## 一句话状态
 
-V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 统一数值权威源的 Task 1—14 已按批准计划实现并逐项提交。Task 15 首轮最终复核的四项 Important finding 已在提交 `7949cf1` 修复并完成自动回归，等待控制器对精确修复 diff 做独立 re-review；尚未 push、merge 或部署。
+V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 统一数值权威源的 15 项任务、最终修复波与精确修复 diff 独立复核均已完成。四项 Important finding 已在提交 `7949cf1` 修复，独立 scoped re-review 结论为 `0 Critical / 0 Important / 0 Minor`；尚未 push、merge 或部署。
 
 ## V2 治理迁移
 
@@ -21,12 +21,12 @@ V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 
 
 ## Active Work Ledger
 
-- Workstream：`V2-NUMERIC-AUTHORITY-EXEC-001`；状态：Controller Review Pending；责任载体：Project Co-Leader 控制器 + 逐任务临时 Agent；
-- 当前检查点：Task 1—14 已闭环；Task 15 首轮最终复核的状态身份、交易输入、玩家投影与测试发现四项 Important finding 已全部修复。`npm.cmd test` 构建并自动发现全部测试，为 `142/142 PASS`；直接 Node 全发现也为 `142/142 PASS`；指定聚焦套件 `14/14 PASS`；TypeScript 通过；lint 为 `0 errors / 17 warnings`，warnings 位于本轮改动的两个应用文件，未误标为全部来自未改写表面。V1 canonical SHA-256 仍为 `8B46D415627A2BDAA6D90C68C61189496DEAACCC1D3F1213ADC45A794464925B`；V2 生成单文件 provenance 为 `7949cf19bb32fe59e46b997bd54bd9a5b2deea3b`/clean。既有桌面/移动 action chain 与截图属于 implementation-owner evidence，本修复波未独立重跑；修复后的独立 re-review 仍待控制器；
+- Workstream：`V2-NUMERIC-AUTHORITY-EXEC-001`；状态：Completed；责任载体：Project Co-Leader 控制器 + 逐任务临时 Agent；
+- 当前检查点：Task 1—15、最终修复波与精确修复 diff 的独立 scoped re-review 已闭环。四项 Important finding 全部修复，复审未发现 Critical、Important 或 Minor regression。`npm.cmd test` 构建并自动发现全部测试，为 `142/142 PASS`；独立 reviewer 直接 Node 全发现也为 `142/142 PASS`；TypeScript 通过；lint 为 `0 errors / 17 warnings`，warnings 位于本轮改动的两个应用文件，未误标为全部来自未改写表面。V1 canonical SHA-256 仍为 `8B46D415627A2BDAA6D90C68C61189496DEAACCC1D3F1213ADC45A794464925B`；V2 生成单文件 provenance 为 `7949cf19bb32fe59e46b997bd54bd9a5b2deea3b`/clean。既有桌面/移动 action chain 与截图属于 implementation-owner evidence；本次 scoped re-review 未独立重跑浏览器、settlement、viewport overflow 或 console，因此不把产品工程完成外推为独立视觉/真人体验验收；
 - 授权边界：允许按批准计划修改产品代码、使用逐任务临时 Agent，并在 `codex/v2-bootstrap` 中按每任务明确白名单创建本地 commit；不允许 stage/commit 既有无关改动，不允许 push/merge/deploy；
 - 已知 changed surface：Task 1—14 的批准迁移表面，以及最终修复波的 `game/ruleset.ts`、`game/resolve-action.ts`、`game/reducer.ts`、`game/types.ts`、`content/lacquer-box.ts`、`hifi/HighFidelityApp.tsx`、`app/page.tsx`、`package.json`、四个对应测试与 V2 生成单文件。已知 preserved surface：V1 canonical 与历史低保真字节、十场景首案语义、fixture、V1 tag/worktree、原工作区 31 项、教师交付包、作品集 capsule 与既有未提交资产；
 - 验证状态：Task 1 `11/11 PASS`；Task 2 `28/28` 与完整 `82/82 PASS`；Task 3 身份/基线/规则 `30/30 PASS`；最终修复波 RED 按四 finding 分别失败，GREEN 后完整 `142/142 PASS`、直接 Node 全发现 `142/142 PASS`、聚焦 `14/14 PASS`、TypeScript 通过、lint `0 errors / 17 warnings`。既有 implementation-owner 浏览器证据显示桌面 `1440×1000` 与移动 `390×844` 均无横向溢出、控制台 `0 errors / 0 warnings`，但本修复波未独立重跑。fixture SHA-256 持续为 `909075060FC994501D1D4B6505D203AB70A9B88F639488C803510523CAF0A522`；
-- Durable handoff：计划 `docs/superpowers/plans/2026-08-10-v2-numeric-authority.md`，运行账本 `.superpowers/sdd/2026-08-10-v2-numeric-authority/progress.md`，最终验证、finding 处置与 re-review 边界见 `EXP-020`；最后更新：2026-08-10；停止/重开触发：独立最终 re-review 出现 load-bearing finding、完整/类型/lint/authority/browser 任一门失败，或 V1/基线/provenance 漂移。治理 Minor：`AGENT-ROSTER.md` 缺失，需在最终 handoff 说明；当前会话没有 `project-agent-governance` capability，不擅自建立持久 Agent。
+- Durable handoff：计划 `docs/superpowers/plans/2026-08-10-v2-numeric-authority.md`，运行账本 `.superpowers/sdd/2026-08-10-v2-numeric-authority/progress.md`，最终验证、finding 处置与独立 scoped re-review 结论见 `EXP-020`；最后更新：2026-08-10；停止/重开触发：完整/类型/lint/authority 门失败，V1/基线/provenance 漂移，或后续发现 load-bearing second authority、真相泄漏或不受支持的完成声明。治理 Minor：`AGENT-ROSTER.md` 缺失；当前会话没有 `project-agent-governance` capability，不擅自建立持久 Agent。
 
 - Workstream：`V2-NUMERIC-AUTHORITY-PLAN-001`；状态：Completed；责任载体：Project Co-Leader（实施计划负责人）；
 - 当前检查点：统一数值权威源书面规格与 15 任务计划均已获用户批准；用户已选择 Subagent-Driven 执行；
@@ -136,7 +136,7 @@ V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造�
 ## 当前阻塞
 
 - V2 最小治理迁移没有技术阻塞；
-- 当前产品工作没有技术阻塞；当前流程门是控制器安排的独立最终只读复核，不应倒退为再次等待书面规格或实施计划批准；
+- 当前产品工作没有技术阻塞；统一数值权威源的最终独立只读复核已经通过；
 - `project-agent-governance` 是否会在新顶层任务中出现在可调用 Skill 清单，仍需现场核验；
 - 公开 H5 地址和微信内实机验证需要后续选择托管方式，不属于当前 V2 启动范围。
 
@@ -147,7 +147,7 @@ V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造�
 - 不迁移 Unity，不制作微信小游戏工程；
 - 不把高保真完成等同于玩法平衡或正式美术验收；
 - 不接真实市场价格、登录、云存档、支付或长期经济；
-- 独立最终复核前不宣称本 workstream 已完成；不安装候选框架、不扩写第二案件、不把自动回归替代平衡或真人体验证据。
+- 不安装候选框架、不扩写第二案件、不把自动回归或本次产品工程完成替代平衡、真人体验或正式发布证据。
 
 ## 关键记录
 

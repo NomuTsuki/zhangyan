@@ -8,15 +8,15 @@
 
 - V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；
 - V2 位于独立分支/worktree，启动只读审查已经完成，结论为“有条件通过”；
-- V1 冻结资产未变化；V2 Task 1—14 已完成统一数值权威迁移，Task 15 已完成静态、全量、浏览器与 handoff 门；
+- V1 冻结资产未变化；V2 Task 1—14 已完成统一数值权威迁移，Task 15 首轮最终复核的四项 Important finding 已在 `7949cf1` 修复，完整自动回归为 `142/142 PASS`；既有浏览器 action chain/截图由 implementation owner 产生，本修复波未独立重跑；
 - 原工作区 31 项、恢复点、教师交付包和浏览器证据均保持在原位置；
 - `V2-PORTFOLIO-001` 已完成：独立 QA、cross-cutting gates、一次性文本冻结、18 项 checksum、双 close、最终仓库/项目记忆门和精确 staging 清理均通过；
 - `V2-RESEARCH-001` 已完成：比较 boardgame.io、ink/inkjs、Yuka 与 OpenSpiel；未安装依赖、未复制代码、未修改产品；
-- 用户已批准 15 任务计划、选择 Subagent-Driven，并授权按任务白名单创建本地 commits；Task 1—14 已闭环。当前最小剩余门是控制器安排的独立只读最终复核；该门不应被本任务的自检替代。
+- 用户已批准 15 任务计划、选择 Subagent-Driven，并授权按任务白名单创建本地 commits；Task 1—14 已闭环。当前最小剩余门是控制器对最终修复提交、生成物 provenance 与本证据修订做独立只读 re-review；该门不应被 implementation owner 的自检替代。
 
 ## 推荐主路径
 
-1. 执行一次独立、只读的最终复核：对批准规格/计划、Task 15 diff、authority scans、V1/fixture/provenance 哈希与浏览器记录做交叉检查；若有 load-bearing finding，只重开最小受影响任务并保留本次运行记录；
+1. 执行一次独立、只读的最终 re-review：对批准规格/计划、`7949cf1` 修复 diff、自动发现的完整测试、authority scans、V1/fixture/provenance 哈希、本证据中的浏览器 provenance 限定做交叉检查；若仍有 load-bearing finding，只重开最小受影响任务并保留本次运行记录；
 2. 复核通过后，将 `V2-NUMERIC-AUTHORITY-EXEC-001` 标为 Completed，并把下一步限定为“客观收益与结算评分关系”的 Critical 证据设计，不自动调整平衡、扩写案件或改变叙事；
 3. 进入后续开发时按 README 的 milestone/1–2 周/重大迁移/最终 PDF 触发点做增量素材整理、备份与复查。
 

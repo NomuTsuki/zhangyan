@@ -1,5 +1,6 @@
 import type {
-  CaseDefinition,
+  DialogueTopic,
+  EvidenceDefinition,
   EvidenceSourceGroup,
   EvidenceStrength,
   OutcomeGrade,
@@ -8,6 +9,7 @@ import type {
   StatementRecord,
   TruthVariantId,
 } from "./types";
+import { GRADE_ORDER } from "./outcome-grades.ts";
 
 export type JudgmentQualityBreakdown = {
   decisionScore: number;
@@ -40,14 +42,29 @@ type SupportingSignal = {
   decisiveFor?: TruthVariantId[];
 };
 
+export type JudgmentQualityInput = Readonly<{
+  judgmentModel: Readonly<{
+    hypothesisOrder: readonly TruthVariantId[];
+    requiredDimensions: Readonly<
+      Record<TruthVariantId, readonly ReasoningDimension[]>
+    >;
+  }>;
+  evidenceById: Readonly<Record<string, EvidenceDefinition>>;
+  statementTopicsById: Readonly<Record<string, DialogueTopic>>;
+  posterior: readonly PosteriorEntry[];
+  discoveredEvidenceIds: readonly string[];
+  statementHistory: readonly StatementRecord[];
+  utilityGap: number;
+  redundantActionCount: number;
+  sellerExited: boolean;
+}>;
+
 const strengthRank: Record<EvidenceStrength, number> = {
   weak: 1,
   medium: 2,
   strong: 3,
   anchor: 4,
 };
-
-const grades: OutcomeGrade[] = ["D", "C", "B", "A", "S", "SS", "SSS"];
 
 function clamp(value: number) {
   return Math.max(0, Math.min(100, value));
@@ -64,12 +81,14 @@ function gradeForScore(score: number): OutcomeGrade {
 }
 
 function lowerGrade(left: OutcomeGrade, right: OutcomeGrade) {
-  return grades[Math.min(grades.indexOf(left), grades.indexOf(right))]!;
+  return GRADE_ORDER[
+    Math.min(GRADE_ORDER.indexOf(left), GRADE_ORDER.indexOf(right))
+  ]!;
 }
 
 function selectDominantVariant(
-  posterior: PosteriorEntry[],
-  hypothesisOrder: TruthVariantId[],
+  posterior: readonly PosteriorEntry[],
+  hypothesisOrder: readonly TruthVariantId[],
 ) {
   const probabilities = new Map(
     posterior.map((entry) => [entry.variantId, entry.probability]),
@@ -94,7 +113,7 @@ function supportsVariant(
 
 function selectBestByGroup(
   signals: SupportingSignal[],
-  requiredDimensions: ReasoningDimension[],
+  requiredDimensions: readonly ReasoningDimension[],
 ) {
   const selected = new Map<EvidenceSourceGroup, SupportingSignal>();
   for (const signal of signals) {
@@ -121,22 +140,15 @@ function selectBestByGroup(
   return [...selected.values()];
 }
 
-export function calculateJudgmentQuality(input: {
-  caseDefinition: CaseDefinition;
-  posterior: PosteriorEntry[];
-  discoveredEvidenceIds: string[];
-  statementHistory: StatementRecord[];
-  utilityGap: number;
-  redundantActionCount: number;
-  sellerExited: boolean;
-}): JudgmentQualityBreakdown {
-  const { caseDefinition } = input;
+export function calculateJudgmentQuality(
+  input: JudgmentQualityInput,
+): JudgmentQualityBreakdown {
   const dominantVariantId = selectDominantVariant(
     input.posterior,
-    caseDefinition.judgmentModel.hypothesisOrder,
+    input.judgmentModel.hypothesisOrder,
   );
   const requiredDimensions =
-    caseDefinition.judgmentModel.requiredDimensions[dominantVariantId];
+    input.judgmentModel.requiredDimensions[dominantVariantId];
   const decisionScore = clamp(
     Math.round(
       100
@@ -161,7 +173,7 @@ export function calculateJudgmentQuality(input: {
   input.discoveredEvidenceIds.forEach((evidenceId, order) => {
     if (seenEvidenceIds.has(evidenceId)) return;
     seenEvidenceIds.add(evidenceId);
-    const evidence = caseDefinition.evidence[evidenceId];
+    const evidence = input.evidenceById[evidenceId];
     if (
       !evidence
       || evidence.kind === "statement"
@@ -181,9 +193,7 @@ export function calculateJudgmentQuality(input: {
   input.statementHistory.forEach((statement, order) => {
     if (seenStatementIds.has(statement.signalId)) return;
     seenStatementIds.add(statement.signalId);
-    const topic = caseDefinition.dialogueTopics.find(
-      (candidate) => candidate.id === statement.topicId,
-    );
+    const topic = input.statementTopicsById[statement.topicId];
     if (!topic || !supportsVariant(statement.likelihoods, dominantVariantId)) return;
     signals.push({
       id: statement.signalId,

@@ -1,13 +1,67 @@
 import { calculatePosterior } from "./belief.ts";
-import { calculateJudgmentQuality } from "./judgment-quality.ts";
+import {
+  calculateJudgmentQuality,
+  type JudgmentQualityInput,
+} from "./judgment-quality.ts";
 import { getNpcPricing } from "./negotiation.ts";
 import { calculateOutcomeGrades, gradeIndex } from "./outcome-grades.ts";
 import type {
   CaseDefinition,
+  ReasoningDimension,
   SettlementChoice,
   SettlementResult,
+  TruthVariantId,
   WorldState,
 } from "./types.ts";
+
+function judgmentQualityInput(
+  caseDefinition: CaseDefinition,
+  state: WorldState,
+  posterior: ReturnType<typeof calculatePosterior>,
+  utilityGap: number,
+  sellerExited: boolean,
+): JudgmentQualityInput {
+  const evidenceById = Object.fromEntries(
+    [...new Set(state.discoveredEvidenceIds)].flatMap((evidenceId) => {
+      const evidence = caseDefinition.evidence[evidenceId];
+      return evidence ? [[evidenceId, evidence]] : [];
+    }),
+  );
+  const statementTopicsById = Object.fromEntries(
+    [...new Set(state.statementHistory.map((statement) => statement.topicId))]
+      .flatMap((topicId) => {
+        const topic = caseDefinition.dialogueTopics.find(
+          (candidate) => candidate.id === topicId,
+        );
+        return topic ? [[topicId, topic]] : [];
+      }),
+  );
+  const requiredDimensions: Record<TruthVariantId, readonly ReasoningDimension[]> = {} as Record<
+    TruthVariantId,
+    readonly ReasoningDimension[]
+  >;
+  for (const variantId of caseDefinition.judgmentModel.hypothesisOrder) {
+    requiredDimensions[variantId] = [
+      ...caseDefinition.judgmentModel.requiredDimensions[variantId],
+    ];
+  }
+
+  return {
+    judgmentModel: {
+      hypothesisOrder: [...caseDefinition.judgmentModel.hypothesisOrder],
+      requiredDimensions,
+    },
+    evidenceById,
+    statementTopicsById,
+    posterior,
+    discoveredEvidenceIds: state.discoveredEvidenceIds,
+    statementHistory: state.statementHistory,
+    utilityGap,
+    redundantActionCount: state.actionHistory.filter((turn) => turn.redundant)
+      .length,
+    sellerExited,
+  };
+}
 
 function settlementPricingInput(
   caseDefinition: CaseDefinition,
@@ -82,16 +136,15 @@ export function calculateSettlement(
   const chosenExpectedNet = acquired ? buyExpectedNet : 0;
   const bestExpectedNet = Math.max(0, buyExpectedNet);
   const utilityGap = Math.max(0, bestExpectedNet - chosenExpectedNet);
-  const judgmentBreakdown = calculateJudgmentQuality({
-    caseDefinition,
-    posterior,
-    discoveredEvidenceIds: state.discoveredEvidenceIds,
-    statementHistory: state.statementHistory,
-    utilityGap,
-    redundantActionCount: state.actionHistory.filter((turn) => turn.redundant)
-      .length,
-    sellerExited: choice === "seller-exited",
-  });
+  const judgmentBreakdown = calculateJudgmentQuality(
+    judgmentQualityInput(
+      caseDefinition,
+      state,
+      posterior,
+      utilityGap,
+      choice === "seller-exited",
+    ),
+  );
 
   const entryAsk = state.negotiation?.entryAsk ?? state.currentPrice;
   const entryFloor =

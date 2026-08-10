@@ -33,8 +33,28 @@ function scoreWithCase(
   const chosenExpectedNet = acquired ? buyExpectedNet : 0;
   const bestExpectedNet = Math.max(0, buyExpectedNet);
   const utilityGap = Math.max(0, bestExpectedNet - chosenExpectedNet);
+
+  const evidenceById = Object.fromEntries(
+    [...new Set(evidenceIds)].flatMap((evidenceId) => {
+      const evidence = caseDefinition.evidence[evidenceId];
+      return evidence ? [[evidenceId, evidence]] : [];
+    }),
+  );
+  const statementTopicsById = Object.fromEntries(
+    [...new Set(statementHistory.map((statement) => statement.topicId))].flatMap(
+      (topicId) => {
+        const topic = caseDefinition.dialogueTopics.find(
+          (candidate) => candidate.id === topicId,
+        );
+        return topic ? [[topicId, topic]] : [];
+      },
+    ),
+  );
+
   return calculateJudgmentQuality({
-    caseDefinition,
+    judgmentModel: caseDefinition.judgmentModel,
+    evidenceById,
+    statementTopicsById,
     posterior,
     discoveredEvidenceIds: evidenceIds,
     statementHistory,

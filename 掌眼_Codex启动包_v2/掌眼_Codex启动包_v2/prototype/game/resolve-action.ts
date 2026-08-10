@@ -12,6 +12,12 @@ export function resolveTurn(
 
 export { calculatePosterior, calculateNpcPosterior } from "./belief.ts";
 export {
+  assertReplayCompatible,
+  createReplayEnvelope,
+  replayActions,
+  replayEnvelope,
+} from "./replay.ts";
+export {
   createInitialWorldState,
   getDiscoveredEvidence,
   getNpcPricing,
@@ -20,5 +26,4 @@ export {
   getStateLabels,
   getTestConsent,
   getTruthForDebug,
-  replayActions,
 } from "./reducer.ts";

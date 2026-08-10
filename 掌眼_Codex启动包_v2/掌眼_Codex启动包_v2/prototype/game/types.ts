@@ -107,6 +107,16 @@ export type PlayerAction =
   | BuyoutAction
   | RejectAction;
 
+export type ReplayEnvelope = Readonly<{
+  caseId: string;
+  caseVersion: string;
+  rulesetId: string;
+  rulesetVersion: string;
+  seed: number;
+  truthVariantId: TruthVariantId;
+  actions: PlayerAction[];
+}>;
+
 export type EvidenceLikelihoods = Record<TruthVariantId, number>;
 
 type EvidenceDefinitionBase = {

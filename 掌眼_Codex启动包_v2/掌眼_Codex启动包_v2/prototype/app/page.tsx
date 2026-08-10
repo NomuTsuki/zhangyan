@@ -427,8 +427,8 @@ function DebugRail({
     state.discoveredEvidenceIds,
     state.statementHistory,
   );
-  const npcPricing = getNpcPricing(lacquerBoxCase, state);
-  const playerReference = getPlayerReferenceOffer(lacquerBoxCase, state);
+  const npcPricing = npcPricingForState(state);
+  const playerReference = playerReferenceForState(state);
   const sharedEvidence = state.sharedEvidenceIds
     .map((evidenceId) => evidenceCatalog[evidenceId])
     .filter((evidence): evidence is EvidenceDefinition => Boolean(evidence));
@@ -632,8 +632,43 @@ function DebugRail({
   );
 }
 
+function visibleNpcStateForPricing(state: WorldState) {
+  return {
+    pressure: state.npcState.pressure,
+    trust: state.npcState.trust,
+    dealIntent: state.npcState.dealIntent,
+    control: state.npcState.control,
+  };
+}
+
+function npcPricingForState(state: WorldState) {
+  return getNpcPricing({
+    npcProfile: {
+      outsideOption: lacquerBoxCase.npcProfile.outsideOption,
+      riskAversion: lacquerBoxCase.npcProfile.riskAversion,
+      urgency: lacquerBoxCase.npcProfile.urgency,
+      markup: lacquerBoxCase.npcProfile.markup,
+    },
+    npcState: visibleNpcStateForPricing(state),
+    npcPosterior: state.npcPosterior,
+    currentPrice: state.currentPrice,
+  });
+}
+
+function playerReferenceForState(state: WorldState) {
+  return getPlayerReferenceOffer({
+    posterior: calculatePosterior(
+      lacquerBoxCase,
+      state.discoveredEvidenceIds,
+      state.statementHistory,
+    ),
+    feesPaid: state.feesPaid,
+    currentPrice: state.currentPrice,
+  });
+}
+
 function defaultOfferForState(state: WorldState) {
-  const reference = getPlayerReferenceOffer(lacquerBoxCase, state);
+  const reference = playerReferenceForState(state);
   return reference.offer;
 }
 
@@ -683,11 +718,11 @@ export default function Home() {
     && selectedEvidence?.kind !== "statement"
     && !selectedEvidenceIsShared;
   const playerReference = useMemo(
-    () => getPlayerReferenceOffer(lacquerBoxCase, worldState),
+    () => playerReferenceForState(worldState),
     [worldState],
   );
   const negotiationPreview = useMemo(
-    () => calculateNegotiationCapacity(worldState.npcState),
+    () => calculateNegotiationCapacity(visibleNpcStateForPricing(worldState)),
     [worldState.npcState],
   );
   const bargainingRemaining =

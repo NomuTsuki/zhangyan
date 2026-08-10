@@ -6,6 +6,7 @@ import {
   getPlayerReferenceOffer,
 } from "../game/negotiation";
 import {
+  calculatePosterior,
   createInitialWorldState,
   getDiscoveredEvidence,
   getTestConsent,
@@ -29,6 +30,27 @@ import "./styles.css";
 type Stage = "arrival" | "investigate" | "result" | "trade" | "review";
 type InvestigationMode = "observe" | "ask";
 type Overlay = "evidence" | "reference" | null;
+
+function visibleNpcStateForNegotiation(world: WorldState) {
+  return {
+    pressure: world.npcState.pressure,
+    trust: world.npcState.trust,
+    dealIntent: world.npcState.dealIntent,
+    control: world.npcState.control,
+  };
+}
+
+function playerReferenceForWorld(world: WorldState) {
+  return getPlayerReferenceOffer({
+    posterior: calculatePosterior(
+      lacquerBoxCase,
+      world.discoveredEvidenceIds,
+      world.statementHistory,
+    ),
+    feesPaid: world.feesPaid,
+    currentPrice: world.currentPrice,
+  });
+}
 
 const toneOptions: Array<{
   id: ActionTone;
@@ -643,12 +665,14 @@ function Trade({
   onReject: () => void;
   onBack: () => void;
 }) {
-  const capacityPreview = calculateNegotiationCapacity(world.npcState);
+  const capacityPreview = calculateNegotiationCapacity(
+    visibleNpcStateForNegotiation(world),
+  );
   const capacity =
     world.negotiation?.remainingCapacity ?? capacityPreview.capacity;
   const initialCapacity =
     world.negotiation?.initialCapacity ?? capacityPreview.capacity;
-  const reference = getPlayerReferenceOffer(lacquerBoxCase, world);
+  const reference = playerReferenceForWorld(world);
   const lastTurn = world.actionHistory.at(-1);
   const quote = Number(offerInput);
   const quoteError =
@@ -974,7 +998,9 @@ function Review({
 }
 
 function TeacherRail({ world }: { world: WorldState }) {
-  const capacity = calculateNegotiationCapacity(world.npcState);
+  const capacity = calculateNegotiationCapacity(
+    visibleNpcStateForNegotiation(world),
+  );
   const remaining = world.negotiation?.remainingCapacity ?? capacity.capacity;
   const truth = lacquerBoxCase.truthVariants[world.truthVariantId];
   const lastTurn = world.actionHistory.at(-1);

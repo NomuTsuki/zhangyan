@@ -26,17 +26,12 @@ import {
 } from "./belief.ts";
 export { calculateNpcPosterior, calculatePosterior };
 import {
-  beginOrAdvanceNegotiation,
+  beginOrAdvanceNegotiation as advanceNegotiationSession,
   calculateNegotiationCapacity,
-  getNpcPricing,
-  getNpcStance,
-  getPlayerReferenceOffer,
-  refreshNpcPricing,
-} from "./negotiation.ts";
-export {
-  getNpcPricing,
-  getNpcStance,
-  getPlayerReferenceOffer,
+  getNpcPricing as calculateNpcPricing,
+  getNpcStance as calculateNpcStance,
+  getPlayerReferenceOffer as calculatePlayerReferenceOffer,
+  refreshNpcPricing as calculateNpcRepricing,
 } from "./negotiation.ts";
 import { calculateOutcomeGrades, gradeIndex } from "./outcome-grades.ts";
 import { calculateJudgmentQuality } from "./judgment-quality.ts";
@@ -63,6 +58,90 @@ const stateLabels: Record<NPCStateKey, string> = {
   dealIntent: "成交意愿",
   control: "控制感",
 };
+
+function visibleNpcState(npcState: NPCState) {
+  return {
+    pressure: npcState.pressure,
+    trust: npcState.trust,
+    dealIntent: npcState.dealIntent,
+    control: npcState.control,
+  };
+}
+
+function npcPricingInput(
+  caseDefinition: CaseDefinition,
+  state: WorldState,
+) {
+  return {
+    npcProfile: {
+      outsideOption: caseDefinition.npcProfile.outsideOption,
+      riskAversion: caseDefinition.npcProfile.riskAversion,
+      urgency: caseDefinition.npcProfile.urgency,
+      markup: caseDefinition.npcProfile.markup,
+    },
+    npcState: visibleNpcState(state.npcState),
+    npcPosterior: state.npcPosterior,
+    currentPrice: state.currentPrice,
+  };
+}
+
+export function getNpcStance(npcState: NPCState) {
+  return calculateNpcStance(visibleNpcState(npcState));
+}
+
+export function getNpcPricing(
+  caseDefinition: CaseDefinition,
+  state: WorldState,
+) {
+  return calculateNpcPricing(npcPricingInput(caseDefinition, state));
+}
+
+export function getPlayerReferenceOffer(
+  caseDefinition: CaseDefinition,
+  state: WorldState,
+) {
+  return calculatePlayerReferenceOffer({
+    posterior: calculatePosterior(
+      caseDefinition,
+      state.discoveredEvidenceIds,
+      state.statementHistory,
+    ),
+    feesPaid: state.feesPaid,
+    currentPrice: state.currentPrice,
+  });
+}
+
+function refreshNpcPricing(
+  caseDefinition: CaseDefinition,
+  before: WorldState,
+  next: WorldState,
+  force = false,
+) {
+  const priceChange = calculateNpcRepricing({
+    before: npcPricingInput(caseDefinition, before),
+    next: npcPricingInput(caseDefinition, next),
+    priceHistoryCount: next.priceHistory.length,
+    turn: before.turn + 1,
+    force,
+  });
+  if (priceChange) {
+    next.currentPrice = priceChange.after;
+    next.priceHistory.push(priceChange);
+  }
+  return priceChange;
+}
+
+function beginOrAdvanceNegotiation(
+  state: WorldState,
+  entryFloor: number,
+) {
+  return advanceNegotiationSession({
+    npcState: visibleNpcState(state.npcState),
+    session: state.negotiation,
+    currentPrice: state.currentPrice,
+    entryFloor,
+  });
+}
 
 const toneLabels: Record<ActionTone, string> = {
   gentle: "温和",
@@ -253,7 +332,7 @@ function ensureActionAllowed(
   const bargainingCost = negotiationCapacityCost(action);
   const bargainingRemaining =
     state.negotiation?.remainingCapacity
-    ?? calculateNegotiationCapacity(state.npcState).capacity;
+    ?? calculateNegotiationCapacity(visibleNpcState(state.npcState)).capacity;
   if (bargainingRemaining < bargainingCost) {
     throw new Error(
       `议价容量不足：需要 ${bargainingCost}，当前 ${bargainingRemaining}`,

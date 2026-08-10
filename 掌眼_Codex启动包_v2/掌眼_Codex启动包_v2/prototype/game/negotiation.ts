@@ -1,13 +1,9 @@
 import type {
-  CaseDefinition,
   NegotiationState,
-  NPCState,
   PosteriorEntry,
   PriceChange,
-  WorldState,
 } from "./types";
 import {
-  calculatePosterior,
   posteriorEntropy,
   posteriorExpectedValue,
   posteriorQuantile,
@@ -18,6 +14,48 @@ import {
   round1,
   roundToTick,
 } from "./numeric.ts";
+
+export type VisibleNpcState = Readonly<{
+  pressure: number;
+  trust: number;
+  dealIntent: number;
+  control: number;
+}>;
+
+export type NpcPricingProfile = Readonly<{
+  outsideOption: number;
+  riskAversion: number;
+  urgency: number;
+  markup: number;
+}>;
+
+export type NpcPricingInput = Readonly<{
+  npcProfile: NpcPricingProfile;
+  npcState: VisibleNpcState;
+  npcPosterior: readonly PosteriorEntry[];
+  currentPrice: number;
+}>;
+
+export type PlayerReferenceOfferInput = Readonly<{
+  posterior: readonly PosteriorEntry[];
+  feesPaid: number;
+  currentPrice: number;
+}>;
+
+export type NpcRepricingInput = Readonly<{
+  before: NpcPricingInput;
+  next: NpcPricingInput;
+  priceHistoryCount: number;
+  turn: number;
+  force?: boolean;
+}>;
+
+export type NegotiationSessionInput = Readonly<{
+  npcState: VisibleNpcState;
+  session: NegotiationState | null;
+  currentPrice: number;
+  entryFloor: number;
+}>;
 
 export type NegotiationCapacityResult = {
   capacity: number;
@@ -34,7 +72,7 @@ function clamp(value: number, min: number, max: number) {
 }
 
 export function calculateNegotiationCapacity(
-  npcState: NPCState,
+  npcState: VisibleNpcState,
 ): NegotiationCapacityResult {
   const adjustments = [
     {
@@ -93,7 +131,7 @@ export type NpcStance =
   | "guarded"
   | "resistant";
 
-export function getNpcStance(npcState: NPCState) {
+export function getNpcStance(npcState: VisibleNpcState) {
   const controlFit = 100 - Math.abs(npcState.control - 50);
   const score = round1(
     npcState.trust * 0.4
@@ -112,11 +150,8 @@ export function getNpcStance(npcState: NPCState) {
   return { stance, score };
 }
 
-export function getNpcPricing(
-  caseDefinition: CaseDefinition,
-  state: WorldState,
-) {
-  const posterior = state.npcPosterior;
+export function getNpcPricing(input: NpcPricingInput) {
+  const posterior = [...input.npcPosterior];
   const q10 = posteriorQuantile(posterior, 0.1);
   const q25 = posteriorQuantile(posterior, 0.25);
   const q50 = posteriorQuantile(posterior, 0.5);
@@ -124,7 +159,7 @@ export function getNpcPricing(
   const expectedValue = posteriorExpectedValue(posterior);
   const subjectiveCenter = q50 * 0.6 + expectedValue * 0.4;
   const spread = Math.max(0, (q75 - q25) / 2);
-  const profile = caseDefinition.npcProfile;
+  const profile = input.npcProfile;
   const outsideOption = Math.max(profile.outsideOption, q10 * 0.8);
   const certaintyEquivalent = Math.max(
     outsideOption,
@@ -132,7 +167,7 @@ export function getNpcPricing(
       - profile.riskAversion * 0.25 * spread
       - profile.urgency * 0.06 * subjectiveCenter,
   );
-  const { stance, score: stanceScore } = getNpcStance(state.npcState);
+  const { stance, score: stanceScore } = getNpcStance(input.npcState);
   const stanceMultiplier: Record<NpcStance, number> = {
     cooperative: 0.94,
     neutral: 1,
@@ -142,7 +177,7 @@ export function getNpcPricing(
   const uncappedAcceptLine = ceilToTick(
     Math.max(outsideOption, certaintyEquivalent * stanceMultiplier[stance]),
   );
-  const acceptLine = Math.min(state.currentPrice, uncappedAcceptLine);
+  const acceptLine = Math.min(input.currentPrice, uncappedAcceptLine);
   const certaintyDiscount =
     profile.riskAversion
     * profile.urgency
@@ -182,29 +217,22 @@ export function getNpcPricing(
     formula: [
       `主观中枢 = 0.6×Q50(${q50}) + 0.4×期望值(${round1(expectedValue)}) = ${round1(subjectiveCenter)}`,
       `确定性等价 = max(外部选项${round1(outsideOption)}, 主观中枢${round1(subjectiveCenter)} - 风险折减${round1(profile.riskAversion * 0.25 * spread)} - 急售折减${round1(profile.urgency * 0.06 * subjectiveCenter)}) = ${round1(certaintyEquivalent)}`,
-      `普通接受线 = min(当前报价${state.currentPrice}, 向上取整5(max(外部选项, 确定性等价×立场${stanceMultiplier[stance]}))) = ${acceptLine}`,
+      `普通接受线 = min(当前报价${input.currentPrice}, 向上取整5(max(外部选项, 确定性等价×立场${stanceMultiplier[stance]}))) = ${acceptLine}`,
       `无条件买断线 = 向下取整5(max(外部选项, 普通线 - 风险转移折价${round1(certaintyDiscount)})) = ${buyoutLine}`,
     ],
   };
 }
 
-export function getPlayerReferenceOffer(
-  caseDefinition: CaseDefinition,
-  state: WorldState,
-) {
-  const posterior = calculatePosterior(
-    caseDefinition,
-    state.discoveredEvidenceIds,
-    state.statementHistory,
-  );
+export function getPlayerReferenceOffer(input: PlayerReferenceOfferInput) {
+  const posterior = [...input.posterior];
   const q20 = posteriorQuantile(posterior, 0.2);
   const q50 = posteriorQuantile(posterior, 0.5);
   const expectedValue = posteriorExpectedValue(posterior);
   const safetyMargin = Math.max(5, q50 * 0.08);
   const suggestedOffer = floorToTick(
-    Math.max(5, q20 - state.feesPaid - safetyMargin),
+    Math.max(5, q20 - input.feesPaid - safetyMargin),
   );
-  const offer = Math.max(1, Math.min(suggestedOffer, state.currentPrice - 1));
+  const offer = Math.max(1, Math.min(suggestedOffer, input.currentPrice - 1));
   return {
     posterior,
     q20,
@@ -214,7 +242,7 @@ export function getPlayerReferenceOffer(
     safetyMargin,
     suggestedOffer,
     offer,
-    formula: `谨慎参考 = 向下取整5(max(5, 后验Q20(${q20}) - 已付检测费${state.feesPaid} - 安全垫${round1(safetyMargin)})) = ${suggestedOffer}`,
+    formula: `谨慎参考 = 向下取整5(max(5, 后验Q20(${q20}) - 已付检测费${input.feesPaid} - 安全垫${round1(safetyMargin)})) = ${suggestedOffer}`,
   };
 }
 
@@ -225,22 +253,22 @@ function dominantVariant(posterior: PosteriorEntry[]) {
 }
 
 export function refreshNpcPricing(
-  caseDefinition: CaseDefinition,
-  before: WorldState,
-  next: WorldState,
-  force = false,
+  input: NpcRepricingInput,
 ): PriceChange | undefined {
-  if (next.priceHistory.length >= 2) return undefined;
-  const beforeExpected = posteriorExpectedValue(before.npcPosterior);
-  const afterExpected = posteriorExpectedValue(next.npcPosterior);
+  const { before, next, force = false } = input;
+  if (input.priceHistoryCount >= 2) return undefined;
+  const beforePosterior = [...before.npcPosterior];
+  const afterPosterior = [...next.npcPosterior];
+  const beforeExpected = posteriorExpectedValue(beforePosterior);
+  const afterExpected = posteriorExpectedValue(afterPosterior);
   const relativeShift =
     beforeExpected > 0
       ? Math.abs(afterExpected / beforeExpected - 1)
       : 0;
-  const beforeMedian = posteriorQuantile(before.npcPosterior, 0.5);
-  const afterMedian = posteriorQuantile(next.npcPosterior, 0.5);
+  const beforeMedian = posteriorQuantile(beforePosterior, 0.5);
+  const afterMedian = posteriorQuantile(afterPosterior, 0.5);
   const dominantChanged =
-    dominantVariant(before.npcPosterior) !== dominantVariant(next.npcPosterior);
+    dominantVariant(beforePosterior) !== dominantVariant(afterPosterior);
   const beforeStance = getNpcStance(before.npcState).stance;
   const afterStance = getNpcStance(next.npcState).stance;
   const stanceChanged = beforeStance !== afterStance;
@@ -254,7 +282,7 @@ export function refreshNpcPricing(
     return undefined;
   }
 
-  const pricing = getNpcPricing(caseDefinition, next);
+  const pricing = getNpcPricing(next);
   const repriced = roundToTick(
     next.currentPrice * 0.1 + pricing.targetAsk * 0.9,
   );
@@ -273,7 +301,7 @@ export function refreshNpcPricing(
     reasons.push(`谈判立场由${beforeStance}转为${afterStance}`);
   }
   const event: PriceChange = {
-    turn: before.turn + 1,
+    turn: input.turn,
     before: next.currentPrice,
     after: repriced,
     publicReason: force
@@ -285,22 +313,19 @@ export function refreshNpcPricing(
           : "谈判立场发生变化，卖家重新表明当前报价。",
     reasons,
   };
-  next.currentPrice = repriced;
-  next.priceHistory.push(event);
   return event;
 }
 
 export function beginOrAdvanceNegotiation(
-  state: WorldState,
-  entryFloor: number,
+  input: NegotiationSessionInput,
 ): NegotiationState {
-  const preview = calculateNegotiationCapacity(state.npcState);
-  const session = state.negotiation ?? {
+  const preview = calculateNegotiationCapacity(input.npcState);
+  const session = input.session ?? {
     started: true,
     initialCapacity: preview.capacity,
     remainingCapacity: preview.capacity,
-    entryAsk: state.currentPrice,
-    entryFloor,
+    entryAsk: input.currentPrice,
+    entryFloor: input.entryFloor,
     offersMade: 0,
   };
   return {

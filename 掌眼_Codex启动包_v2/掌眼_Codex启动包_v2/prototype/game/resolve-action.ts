@@ -1,13 +1,18 @@
 import type { CaseDefinition, PlayerAction, WorldState } from "./types";
 import { reduceTurn } from "./reducer.ts";
-import { createRulesContext } from "./ruleset.ts";
+import {
+  assertWorldStateCompatible,
+  createRulesContext,
+} from "./ruleset.ts";
 
 export function resolveTurn(
   caseDefinition: CaseDefinition,
   state: WorldState,
   action: PlayerAction,
 ): WorldState {
-  return reduceTurn(createRulesContext(caseDefinition), state, action).state;
+  const context = createRulesContext(caseDefinition);
+  assertWorldStateCompatible(context, state);
+  return reduceTurn(context, state, action).state;
 }
 
 export { calculatePosterior, calculateNpcPosterior } from "./belief.ts";

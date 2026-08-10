@@ -1,4 +1,4 @@
-import type { CaseDefinition } from "./types";
+import type { CaseDefinition, WorldState } from "./types";
 
 export type RulesetIdentity = Readonly<{
   rulesetId: "zhangyan-core";
@@ -38,4 +38,24 @@ export function createRulesContext(caseDefinition: CaseDefinition): RulesContext
     rules: DEFAULT_RULESET_CONFIG,
     caseDefinition,
   };
+}
+
+export function assertWorldStateCompatible(
+  context: RulesContext,
+  state: WorldState,
+): void {
+  const expected = {
+    caseId: context.caseDefinition.id,
+    caseVersion: context.caseDefinition.caseVersion,
+    rulesetId: context.identity.rulesetId,
+    rulesetVersion: context.identity.rulesetVersion,
+  } as const;
+
+  for (const field of Object.keys(expected) as Array<keyof typeof expected>) {
+    if (state[field] !== expected[field]) {
+      throw new Error(
+        `WorldState ${field} mismatch: ${state[field]} (expected ${expected[field]})`,
+      );
+    }
+  }
 }

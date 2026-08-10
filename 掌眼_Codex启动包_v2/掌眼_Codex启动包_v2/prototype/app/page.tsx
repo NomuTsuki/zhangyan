@@ -14,7 +14,10 @@ import {
   buildDeveloperProjection,
   type DeveloperProjection,
 } from "../game/projections";
-import { buildPlayerView } from "../hifi/presentation";
+import {
+  buildPlayerView,
+  type PlayerEvidenceView,
+} from "../hifi/presentation";
 import {
   calculateNegotiationCapacity,
   getNpcPricing,
@@ -262,20 +265,16 @@ function StateTimelineChart({ state }: { state: WorldState }) {
 }
 
 function EvidenceMiniCard({
-  evidenceId,
-  state,
+  evidence,
 }: {
-  evidenceId: string;
-  state: WorldState;
+  evidence: PlayerEvidenceView;
 }) {
-  const evidence = evidenceCatalog[evidenceId];
-  const isShared = state.sharedEvidenceIds.includes(evidenceId);
   const visibility =
     evidence.kind === "statement"
       ? { label: "卖家陈述", className: "is-statement" }
       : evidence.kind === "test"
         ? { label: "共同检测", className: "is-test" }
-        : isShared
+        : evidence.shared
           ? { label: "双方已知", className: "is-shared" }
           : { label: "仅你掌握", className: "is-private" };
   return (
@@ -1205,8 +1204,7 @@ export default function Home() {
                 <div className="evidence-list">
                   {discoveredEvidence.map((evidence) => (
                     <EvidenceMiniCard
-                      evidenceId={evidence.id}
-                      state={worldState}
+                      evidence={evidence}
                       key={evidence.id}
                     />
                   ))}
@@ -1313,13 +1311,14 @@ export default function Home() {
               {lastTurn.evidenceAdded.length > 0 && (
                 <section className="new-evidence-stack">
                   <div className="section-title"><h2>本轮新增证据</h2><span>{lastTurn.evidenceAdded.length} 条</span></div>
-                  {lastTurn.evidenceAdded.map((evidenceId) => (
-                    <EvidenceMiniCard
-                      evidenceId={evidenceId}
-                      state={worldState}
-                      key={evidenceId}
-                    />
-                  ))}
+                  {lastTurn.evidenceAdded.map((evidenceId) => {
+                    const evidence = discoveredEvidence.find(
+                      (item) => item.id === evidenceId,
+                    );
+                    return evidence ? (
+                      <EvidenceMiniCard evidence={evidence} key={evidenceId} />
+                    ) : null;
+                  })}
                 </section>
               )}
 

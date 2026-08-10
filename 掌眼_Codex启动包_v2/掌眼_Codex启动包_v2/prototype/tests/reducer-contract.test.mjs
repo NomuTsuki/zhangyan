@@ -4,7 +4,60 @@ import test from "node:test";
 import { lacquerBoxCase } from "../content/lacquer-box.ts";
 import { reduceTurn } from "../game/reducer.ts";
 import { createRulesContext } from "../game/ruleset.ts";
-import { createInitialWorldState } from "../game/resolve-action.ts";
+import {
+  createInitialWorldState,
+  resolveTurn,
+} from "../game/resolve-action.ts";
+
+const IDENTITY_MISMATCHES = [
+  ["caseId", "other-case"],
+  ["caseVersion", "9.9.9"],
+  ["rulesetId", "other-ruleset"],
+  ["rulesetVersion", "9.9.9"],
+];
+
+test("resolveTurn rejects every persisted identity mismatch without mutating input", async (t) => {
+  for (const [field, mismatchedValue] of IDENTITY_MISMATCHES) {
+    await t.test(field, () => {
+      const input = {
+        ...createInitialWorldState(lacquerBoxCase),
+        [field]: mismatchedValue,
+      };
+      const before = structuredClone(input);
+
+      assert.throws(
+        () => resolveTurn(lacquerBoxCase, input, {
+          kind: "inspect",
+          targetId: "joint",
+        }),
+        new RegExp(field, "i"),
+      );
+      assert.deepEqual(input, before);
+    });
+  }
+});
+
+test("reduceTurn rejects every persisted identity mismatch without mutating input", async (t) => {
+  const context = createRulesContext(lacquerBoxCase);
+  for (const [field, mismatchedValue] of IDENTITY_MISMATCHES) {
+    await t.test(field, () => {
+      const input = {
+        ...createInitialWorldState(lacquerBoxCase),
+        [field]: mismatchedValue,
+      };
+      const before = structuredClone(input);
+
+      assert.throws(
+        () => reduceTurn(context, input, {
+          kind: "inspect",
+          targetId: "joint",
+        }),
+        new RegExp(field, "i"),
+      );
+      assert.deepEqual(input, before);
+    });
+  }
+});
 
 test("reduceTurn does not mutate inputs and derives audit outputs from its new turn", () => {
   const context = createRulesContext(lacquerBoxCase);

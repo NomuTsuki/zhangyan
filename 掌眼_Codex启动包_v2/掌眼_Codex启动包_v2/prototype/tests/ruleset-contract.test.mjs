@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { lacquerBoxCase } from "../content/lacquer-box.ts";
 import { createInitialWorldState } from "../game/resolve-action.ts";
@@ -37,4 +38,15 @@ test("rules context binds the default identity and configuration to its case", (
     },
     caseDefinition: lacquerBoxCase,
   });
+});
+
+test("canonical npm test builds before delegating to Node full test discovery", async () => {
+  const packageJson = JSON.parse(
+    await readFile(new URL("../package.json", import.meta.url), "utf8"),
+  );
+
+  assert.equal(
+    packageJson.scripts.test,
+    "npm run build && node --experimental-strip-types --test",
+  );
 });

@@ -292,7 +292,6 @@ export type CaseDefinition = {
     hypothesisOrder: TruthVariantId[];
     requiredDimensions: Record<TruthVariantId, ReasoningDimension[]>;
   };
-  suggestedDiscount: number;
 };
 
 export type StateChange = {

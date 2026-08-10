@@ -37,6 +37,7 @@ import {
 } from "./negotiation.ts";
 import { settleWorldState } from "./settlement.ts";
 import {
+  assertWorldStateCompatible,
   createRulesContext,
   DEFAULT_RULESET_IDENTITY,
   type RulesContext,
@@ -1158,6 +1159,7 @@ export function reduceTurn(
   state: WorldState,
   action: PlayerAction,
 ): TransitionResult {
+  assertWorldStateCompatible(context, state);
   const { caseDefinition } = context;
   ensureActionAllowed(state, action, caseDefinition);
   let next: WorldState;

@@ -19,7 +19,6 @@ export const lacquerBoxCase = {
       "hidden-treasure": ["material-era", "provenance-craft-identity"],
     },
   },
-  suggestedDiscount: 60,
   claims: [
     {
       id: "claim-inherited",

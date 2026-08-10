@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -94,6 +95,99 @@ async function renderTeacherRail(developer) {
     await server.close();
   }
 }
+
+async function renderTrade(player, offerInput) {
+  const server = await createServer({
+    configFile: false,
+    logLevel: "error",
+    plugins: [
+      {
+        name: "expose-trade-for-render-test",
+        enforce: "pre",
+        transform(source, id) {
+          if (!id.endsWith("/hifi/HighFidelityApp.tsx")) return null;
+          return `${source}\nexport { Trade as __testTrade };`;
+        },
+      },
+    ],
+    server: { middlewareMode: true },
+  });
+
+  try {
+    const { __testTrade: Trade } = await server.ssrLoadModule(
+      "/hifi/HighFidelityApp.tsx",
+    );
+    return renderToStaticMarkup(
+      createElement(Trade, {
+        player,
+        offerInput,
+        notice: "",
+        onOfferInput: () => {},
+        onQuote: () => {},
+        onBuy: () => {},
+        onReject: () => {},
+        onBack: () => {},
+      }),
+    );
+  } finally {
+    await server.close();
+  }
+}
+
+test("trade recommendation, input, and submitted action stay synchronized after state changes", async () => {
+  const initial = start("restored-genuine");
+  const inspectedSurface = resolveTurn(lacquerBoxCase, initial, {
+    kind: "inspect",
+    targetId: "surface",
+  });
+  const repricedReference = resolveTurn(lacquerBoxCase, inspectedSurface, {
+    kind: "inspect",
+    targetId: "bottom",
+  });
+  const playerViews = [initial, repricedReference].map((state) =>
+    buildPlayerView(lacquerBoxCase, state),
+  );
+
+  assert.deepEqual(
+    playerViews.map((player) => player.reference.offer),
+    [10, 55],
+  );
+  for (const player of playerViews) {
+    const offerInput = String(player.reference.offer);
+    const html = await renderTrade(player, offerInput);
+    assert.match(
+      html,
+      new RegExp(`reference-offer[\\s\\S]*?<strong>${offerInput}</strong>`),
+    );
+    assert.match(html, new RegExp(`<input[^>]+value="${offerInput}"`));
+  }
+
+  const source = await readFile(
+    new URL("../hifi/HighFidelityApp.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.match(
+    source,
+    /function offerInputForPlayerView\([\s\S]{0,200}?String\(player\.reference\.offer\)/,
+  );
+  assert.match(
+    source,
+    /useState\(\(\) =>[\s\S]{0,120}?offerInputForPlayerView\([\s\S]{0,120}?buildPlayerView\(lacquerBoxCase, world\)/,
+  );
+  assert.match(
+    source,
+    /const next = resolveTurn[\s\S]{0,240}?setOfferInput\([\s\S]{0,120}?offerInputForPlayerView\([\s\S]{0,120}?buildPlayerView\(lacquerBoxCase, next\)/,
+  );
+  assert.match(
+    source,
+    /function restart[\s\S]{0,500}?setOfferInput\([\s\S]{0,120}?offerInputForPlayerView\([\s\S]{0,120}?buildPlayerView\(lacquerBoxCase, next\)/,
+  );
+  assert.match(
+    source,
+    /onQuote=\{\(\) => perform\(\{ kind: "discount", offer: Number\(offerInput\) \}\)\}/,
+  );
+  assert.doesNotMatch(source, /useState\("60"\)|setOfferInput\("60"\)/);
+});
 
 test("player presentation never exposes hidden truth or exact NPC state fields", () => {
   const state = start("hidden-treasure");

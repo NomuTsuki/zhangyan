@@ -839,6 +839,10 @@ function Trade({
   );
 }
 
+function offerInputForPlayerView(player: PlayerView): string {
+  return String(player.reference.offer);
+}
+
 function Review({
   player,
   playerSettlement,
@@ -1179,7 +1183,9 @@ export default function HighFidelityApp() {
   const [selectedTopicId, setSelectedTopicId] = useState("repair-history");
   const [selectedTone, setSelectedTone] = useState<ActionTone>("professional");
   const [selectedEvidenceId, setSelectedEvidenceId] = useState("");
-  const [offerInput, setOfferInput] = useState("60");
+  const [offerInput, setOfferInput] = useState(() =>
+    offerInputForPlayerView(buildPlayerView(lacquerBoxCase, world)),
+  );
   const [notice, setNotice] = useState("");
   const [developerOpen, setDeveloperOpen] = useState(false);
   const playerFrameRef = useRef<HTMLDivElement>(null);
@@ -1212,6 +1218,7 @@ export default function HighFidelityApp() {
     try {
       const next = resolveTurn(lacquerBoxCase, world, action);
       setWorld(next);
+      setOfferInput(offerInputForPlayerView(buildPlayerView(lacquerBoxCase, next)));
       setNotice(next.actionHistory.at(-1)?.description ?? "行动已完成");
       if (next.status === "settled") {
         setStage("review");
@@ -1237,7 +1244,7 @@ export default function HighFidelityApp() {
     setSelectedTopicId("repair-history");
     setSelectedTone("professional");
     setSelectedEvidenceId("");
-    setOfferInput("60");
+    setOfferInput(offerInputForPlayerView(buildPlayerView(lacquerBoxCase, next)));
     setNotice("");
     setDeveloperOpen(false);
   }

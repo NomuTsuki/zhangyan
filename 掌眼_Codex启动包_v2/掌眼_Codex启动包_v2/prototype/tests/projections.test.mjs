@@ -85,6 +85,17 @@ test("player-facing app components route safe player props instead of WorldState
   assert.match(appSource, /const developer = useMemo\([\s\S]+buildDeveloperProjection/);
   assert.doesNotMatch(appSource, /<DebugRail\s+state=\{worldState\}/);
 
+  const evidenceMiniCardSignature = appSource.match(
+    /function EvidenceMiniCard\([\s\S]{0,500}?\) \{/,
+  );
+  assert.ok(evidenceMiniCardSignature, "EvidenceMiniCard signature was not found");
+  assert.match(evidenceMiniCardSignature[0], /evidence:\s*PlayerEvidenceView/);
+  assert.doesNotMatch(evidenceMiniCardSignature[0], /WorldState|\bstate\s*:/);
+  assert.doesNotMatch(
+    appSource,
+    /<EvidenceMiniCard[\s\S]{0,250}\b(?:state|world)=\{worldState\}/,
+  );
+
   const executableHifi = hifiSource
     .replace(/\/\*[\s\S]*?\*\//g, "")
     .replace(/\/\/.*$/gm, "");

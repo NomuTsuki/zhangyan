@@ -1101,6 +1101,10 @@ function resolveTerminal(
   });
 }
 
+function copyEventPayload<T>(payload: T): T {
+  return structuredClone(payload);
+}
+
 function eventsFromTurn(
   state: WorldState,
   record: TurnRecord,
@@ -1113,10 +1117,16 @@ function eventsFromTurn(
     events.push({ kind: "evidence-shared", evidenceId });
   }
   if (record.priceChange) {
-    events.push({ kind: "price-changed", priceChange: record.priceChange });
+    events.push({
+      kind: "price-changed",
+      priceChange: copyEventPayload(record.priceChange),
+    });
   }
   if (state.settlement) {
-    events.push({ kind: "case-settled", settlement: state.settlement });
+    events.push({
+      kind: "case-settled",
+      settlement: copyEventPayload(state.settlement),
+    });
   }
   return events;
 }

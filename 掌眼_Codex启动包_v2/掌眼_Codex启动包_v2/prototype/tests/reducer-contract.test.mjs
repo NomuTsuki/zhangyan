@@ -78,3 +78,40 @@ test("trace is output-only and cannot mutate the state carried into the next tur
   assert.deepEqual(result.state, before);
   assert.equal(reduceTurn(context, result.state, { kind: "reject" }).state.turn, 3);
 });
+
+test("event payloads cannot mutate state or receive later state mutations", () => {
+  const context = createRulesContext(lacquerBoxCase);
+  let state = createInitialWorldState(lacquerBoxCase);
+  state = reduceTurn(context, state, { kind: "inspect", targetId: "joint" }).state;
+  const repriced = reduceTurn(context, state, {
+    kind: "dialogue",
+    topicId: "repair-history",
+    tone: "professional",
+    evidenceId: "modern-adhesive-trace",
+  });
+  const priceEvent = repriced.events.find((event) => event.kind === "price-changed");
+  const repricedBefore = structuredClone(repriced.state);
+
+  priceEvent.priceChange.reasons.push("event-only reason");
+
+  assert.deepEqual(repriced.state, repricedBefore);
+  const eventReasons = [...priceEvent.priceChange.reasons];
+  repriced.state.priceHistory.at(-1).reasons.push("state-only reason");
+  assert.deepEqual(priceEvent.priceChange.reasons, eventReasons);
+
+  const settled = reduceTurn(
+    context,
+    createInitialWorldState(lacquerBoxCase),
+    { kind: "reject" },
+  );
+  const settlementEvent = settled.events.find((event) => event.kind === "case-settled");
+  const settledBefore = structuredClone(settled.state);
+
+  settlementEvent.settlement.objectiveFormula.push("event-only formula");
+  settlementEvent.settlement.judgmentBreakdown.supportingSignalIds.push("event-only signal");
+
+  assert.deepEqual(settled.state, settledBefore);
+  const eventFormula = [...settlementEvent.settlement.gradeFormula];
+  settled.state.settlement.gradeFormula.push("state-only formula");
+  assert.deepEqual(settlementEvent.settlement.gradeFormula, eventFormula);
+});

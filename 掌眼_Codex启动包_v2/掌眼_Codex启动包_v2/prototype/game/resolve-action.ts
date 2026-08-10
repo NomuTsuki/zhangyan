@@ -4,7 +4,6 @@ import type {
   CaseDefinition,
   DialogueAction,
   EvidenceDefinition,
-  EvidencePayload,
   NegotiationState,
   NPCBehaviorId,
   NPCPhase,
@@ -43,7 +42,14 @@ import {
   round1,
   roundToTick,
 } from "./numeric.ts";
-import { behaviorJitter, seededUnit } from "./random.ts";
+import { seededUnit } from "./random.ts";
+import {
+  buildDialogueCandidates,
+  chooseBehavior,
+  createFixedCandidate,
+  dialogueTitle,
+  NPC_BEHAVIOR_LABELS,
+} from "./npc-decision.ts";
 import { resolveDialogueStorylet } from "./storylets.ts";
 
 const truthVariantIds = TRUTH_VARIANT_IDS;
@@ -59,15 +65,6 @@ const toneLabels: Record<ActionTone, string> = {
   gentle: "温和",
   professional: "专业",
   firm: "强硬",
-};
-
-const behaviorLabels: Record<NPCBehaviorId, string> = {
-  cooperate: "补充说明",
-  deflect: "模糊回应",
-  "partial-admit": "部分承认",
-  counter: "反向质疑",
-  refuse: "拒绝回答",
-  exit: "结束交易",
 };
 
 function cloneNpcState(state: NPCState): NPCState {
@@ -739,185 +736,6 @@ function resolveInspect(
   });
 }
 
-function behaviorCandidate(
-  state: WorldState,
-  id: NPCBehaviorId,
-  eligible: boolean,
-  rawComponents: BehaviorCandidate["components"],
-  filterReasons: string[],
-) {
-  const components = rawComponents.map((component) => ({
-    ...component,
-    value: round1(component.value),
-  }));
-  const baseScore = round1(
-    components.reduce((sum, component) => sum + component.value, 0),
-  );
-  const randomJitter = eligible
-    ? behaviorJitter(state.seed, state.turn + 1, id)
-    : 0;
-  const finalScore = eligible ? round1(baseScore + randomJitter) : -999;
-  return {
-    id,
-    label: behaviorLabels[id],
-    eligible,
-    components,
-    baseScore,
-    jitter: randomJitter,
-    finalScore,
-    score: finalScore,
-    formula: eligible
-      ? `${components.map((component) => `${component.label}${component.value >= 0 ? "+" : ""}${component.value}`).join(" ")} = 基础${baseScore} + seed扰动${randomJitter} = ${finalScore}`
-      : `${components.map((component) => `${component.label}${component.value >= 0 ? "+" : ""}${component.value}`).join(" ")} = 基础${baseScore}；硬条件过滤`,
-    filterReasons,
-    reasons: filterReasons,
-  } satisfies BehaviorCandidate;
-}
-
-function fixedCandidate(
-  id: string,
-  label: string,
-  eligible: boolean,
-  rawComponents: BehaviorCandidate["components"],
-  filterReasons: string[],
-) {
-  const components = rawComponents.map((component) => ({
-    ...component,
-    value: round1(component.value),
-  }));
-  const baseScore = round1(
-    components.reduce((sum, component) => sum + component.value, 0),
-  );
-  const finalScore = eligible ? baseScore : -999;
-  return {
-    id,
-    label,
-    eligible,
-    components,
-    baseScore,
-    jitter: 0,
-    finalScore,
-    score: finalScore,
-    formula: eligible
-      ? `${components.map((component) => `${component.label}${component.value >= 0 ? "+" : ""}${component.value}`).join(" ")} = ${finalScore}`
-      : `${components.map((component) => `${component.label}${component.value >= 0 ? "+" : ""}${component.value}`).join(" ")} = 基础${baseScore}；硬条件过滤`,
-    filterReasons,
-    reasons: filterReasons,
-  } satisfies BehaviorCandidate;
-}
-
-function chooseBehavior(candidates: BehaviorCandidate[]) {
-  const eligible = candidates.filter((candidate) => candidate.eligible);
-  if (eligible.length === 0) throw new Error("NPC没有合法候选行为");
-  return [...eligible].sort((left, right) => right.score - left.score)[0];
-}
-
-function dialogueCandidates(
-  state: WorldState,
-  nextNpc: NPCState,
-  action: DialogueAction,
-  evidence: EvidencePayload | null,
-  relevant: boolean,
-  repeatCount: number,
-  power: number,
-  storyletAlreadyTriggered: boolean,
-) {
-  return [
-    behaviorCandidate(
-      state,
-      "cooperate",
-      nextNpc.trust >= 40 && nextNpc.dealIntent >= 25,
-      [
-        { label: "固定", value: 10 },
-        { label: "信任×0.35", value: nextNpc.trust * 0.35 },
-        { label: "成交×0.25", value: nextNpc.dealIntent * 0.25 },
-        { label: "压力×-0.15", value: -nextNpc.pressure * 0.15 },
-        { label: "开放询问", value: evidence ? 0 : 8 },
-        { label: "重复×-12", value: -repeatCount * 12 },
-      ],
-      ["信任至少40", "成交意愿至少25"],
-    ),
-    behaviorCandidate(
-      state,
-      "deflect",
-      nextNpc.control >= 22,
-      [
-        { label: "固定", value: 8 },
-        { label: "控制×0.35", value: nextNpc.control * 0.35 },
-        { label: "低压力×0.12", value: (100 - nextNpc.pressure) * 0.12 },
-        { label: "弱证据", value: power < 1 ? 6 : 0 },
-        { label: "重复×4", value: repeatCount * 4 },
-      ],
-      ["仍保有叙事控制空间"],
-    ),
-    behaviorCandidate(
-      state,
-      "partial-admit",
-      Boolean(evidence && relevant && power >= 1 && !storyletAlreadyTriggered),
-      [
-        { label: "固定", value: 5 },
-        { label: "压力×0.28", value: nextNpc.pressure * 0.28 },
-        { label: "失控×0.25", value: (100 - nextNpc.control) * 0.25 },
-        { label: "成交×0.15", value: nextNpc.dealIntent * 0.15 },
-        { label: "证据效力×12", value: power * 12 },
-      ],
-      [
-        evidence ? `引用${evidence.name}` : "没有引用证据",
-        relevant ? "证据与问题相关" : "证据与问题不相关",
-        storyletAlreadyTriggered ? "一次性承认已触发" : "一次性承认尚未触发",
-      ],
-    ),
-    behaviorCandidate(
-      state,
-      "counter",
-      nextNpc.pressure >= 45 || action.tone === "firm",
-      [
-        { label: "固定", value: 6 },
-        { label: "压力×0.25", value: nextNpc.pressure * 0.25 },
-        { label: "不信任×0.22", value: (100 - nextNpc.trust) * 0.22 },
-        { label: "控制×0.18", value: nextNpc.control * 0.18 },
-        { label: "强硬触发", value: action.tone === "firm" ? 8 : 0 },
-      ],
-      ["压力达到45或玩家采用强硬表达"],
-    ),
-    behaviorCandidate(
-      state,
-      "refuse",
-      nextNpc.pressure >= 65 || repeatCount >= 1,
-      [
-        { label: "固定", value: 4 },
-        { label: "压力×0.28", value: nextNpc.pressure * 0.28 },
-        { label: "不信任×0.25", value: (100 - nextNpc.trust) * 0.25 },
-        { label: "重复×20", value: repeatCount * 20 },
-      ],
-      ["高压力或完全重复问题"],
-    ),
-    behaviorCandidate(
-      state,
-      "exit",
-      nextNpc.dealIntent <= 20
-        || (nextNpc.pressure >= 82 && nextNpc.trust <= 32),
-      [
-        { label: "压力×0.3", value: nextNpc.pressure * 0.3 },
-        { label: "不信任×0.3", value: (100 - nextNpc.trust) * 0.3 },
-        { label: "低成交×0.4", value: (100 - nextNpc.dealIntent) * 0.4 },
-      ],
-      ["成交意愿≤20，或压力≥82且信任≤32"],
-    ),
-  ];
-}
-
-function dialogueTitle(behaviorId: NPCBehaviorId) {
-  return {
-    cooperate: "对方补充了可以继续核验的说法",
-    deflect: "对方仍试图保持叙事空间",
-    "partial-admit": "证据迫使对方收窄原说法",
-    counter: "对方开始反向质疑你的判断",
-    refuse: "重复或高压让对方拒绝继续回答",
-    exit: "关系与成交意愿跌破安全线",
-  }[behaviorId];
-}
-
 function resolveDialogue(
   caseDefinition: CaseDefinition,
   state: WorldState,
@@ -975,14 +793,11 @@ function resolveDialogue(
   const storyletId = `${topic.id}:partial-admit`;
   const storyletAlreadyTriggered =
     state.triggeredStoryletIds.includes(storyletId);
-  const candidates = dialogueCandidates(
+  const candidates = buildDialogueCandidates(
     state,
     resolved.next,
     action,
-    evidence,
-    relevant,
-    repeatCount,
-    power,
+    disclosure,
     storyletAlreadyTriggered,
   );
   const selected = chooseBehavior(candidates);
@@ -1050,7 +865,7 @@ function resolveDialogue(
     ],
     candidates,
     selectedId,
-    selectedLabel: behaviorLabels[selectedId],
+    selectedLabel: NPC_BEHAVIOR_LABELS[selectedId],
     convergence: [
       `选择最高合法效用：${selected.label} ${selected.score}`,
       selectedId === "partial-admit"
@@ -1200,7 +1015,7 @@ function resolveTest(
       `当前NPC状态：压力${state.npcState.pressure} / 信任${state.npcState.trust} / 成交${state.npcState.dealIntent} / 控制${state.npcState.control}`,
     ],
     candidates: [
-      fixedCandidate(
+      createFixedCandidate(
         "approve-test",
         "同意专项检测",
         true,
@@ -1212,7 +1027,7 @@ function resolveTest(
         ],
         ["同意分达到50"],
       ),
-      fixedCandidate(
+      createFixedCandidate(
         "reject-test",
         "拒绝专项检测",
         false,
@@ -1338,7 +1153,7 @@ function resolveDiscount(
       || next.npcState.pressure > 75
     );
   const candidates: BehaviorCandidate[] = [
-    fixedCandidate(
+    createFixedCandidate(
       "accept-offer",
       "接受报价",
       gap <= 0,
@@ -1348,7 +1163,7 @@ function resolveDiscount(
       ],
       [gap <= 0 ? "报价达到可接受线" : "报价未达到可接受线"],
     ),
-    fixedCandidate(
+    createFixedCandidate(
       "counter-offer",
       "提出还价",
       gap > 0 && gap <= 8,
@@ -1358,7 +1173,7 @@ function resolveDiscount(
       ],
       ["差额在1—8之间"],
     ),
-    fixedCandidate(
+    createFixedCandidate(
       "reject-offer",
       "拒绝报价",
       gap > 8,
@@ -1368,7 +1183,7 @@ function resolveDiscount(
       ],
       ["报价明显低于接受线"],
     ),
-    fixedCandidate(
+    createFixedCandidate(
       "exit",
       "结束交易",
       exitEligible,
@@ -1472,7 +1287,7 @@ function resolveBuyout(
   const pricing = getNpcPricing(caseDefinition, state);
   const accepted = action.offer >= pricing.buyoutLine;
   const candidates = [
-    fixedCandidate(
+    createFixedCandidate(
       "accept-buyout",
       "接受无条件买断",
       accepted,
@@ -1486,7 +1301,7 @@ function resolveBuyout(
           : `报价未达到无条件买断线${pricing.buyoutLine}`,
       ],
     ),
-    fixedCandidate(
+    createFixedCandidate(
       "reject-buyout",
       "拒绝并结束交易",
       !accepted,

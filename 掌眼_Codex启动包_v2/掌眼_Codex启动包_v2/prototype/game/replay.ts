@@ -16,7 +16,9 @@ export function createReplayEnvelope(
   caseDefinition: CaseDefinition,
   actions: PlayerAction[],
   seed = caseDefinition.seed,
-  truthVariantId: TruthVariantId = "restored-genuine",
+  truthVariantId: TruthVariantId = caseDefinition.judgmentModel.hypothesisOrder.includes("restored-genuine")
+    ? "restored-genuine"
+    : caseDefinition.judgmentModel.hypothesisOrder[0],
 ): ReplayEnvelope {
   return {
     caseId: caseDefinition.id,
@@ -70,7 +72,9 @@ export function replayActions(
   caseDefinition: CaseDefinition,
   actions: PlayerAction[],
   seed = caseDefinition.seed,
-  truthVariantId: TruthVariantId = "restored-genuine",
+  truthVariantId: TruthVariantId = caseDefinition.judgmentModel.hypothesisOrder.includes("restored-genuine")
+    ? "restored-genuine"
+    : caseDefinition.judgmentModel.hypothesisOrder[0],
 ): WorldState {
   return replayEnvelope(
     caseDefinition,

@@ -22,6 +22,7 @@ This starter does not use `wrangler.jsonc`.
 
 - `public/掌眼_高保真教师演示.html`：V1 canonical，按字节保留；
 - `public/掌眼_V2_高保真演示.html`：V2 high-fidelity HTML，只由构建产生；
+- `public/掌眼_V2_玩家试玩版.html`：当前 V2 玩家入口，只由玩家构建产生；
 - `public/掌眼_低保真交互原型.html`：历史规则与调试快照，只用于回看早期设计，不代表当前规则；
 - `public/掌眼_数值实验台.html`：独立批量实验工具，参数仍是工作假设，不代表正式运行时。
 
@@ -35,7 +36,7 @@ This starter does not use `wrangler.jsonc`.
 | 调试轨迹 | `TurnRecord` / `CalculationTrace` | 解释输出，不参与下一轮计算 |
 | 历史资产 | V1 canonical、低保真 HTML/client | 按字节保留，不继续生成生产规则 |
 | 测试例证 | fixtures 与固定断言 | 检测漂移，不反向定义参数 |
-| 生成产物 | V2 high-fidelity HTML | 只由构建产生并携带 provenance |
+| 生成产物 | V2 high-fidelity 与玩家 HTML | 只由各自构建产生并携带 provenance；前者是开发诊断面，后者是玩家入口 |
 
 测试分为 `consistency`、`design-example`、`balance-simulation`、`human-experience` 四层。当前自动套件只覆盖前两层与隔离实验台内部一致性，不把它们称为真人体验或平衡证据。
 

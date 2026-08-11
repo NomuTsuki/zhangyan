@@ -2,11 +2,11 @@
 
 > 只保存项目此刻的真实状态。历史结论进入 Decision、Evidence 或 archive。
 
-更新时间：2026-08-10
+更新时间：2026-08-11
 
 ## 一句话状态
 
-V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 统一数值权威源的 15 项任务、最终修复波与精确修复 diff 独立复核均已完成。四项 Important finding 已在提交 `7949cf1` 修复，独立 scoped re-review 结论为 `0 Critical / 0 Important / 0 Minor`；尚未 push、merge 或部署。
+V1 冻结资产保持不变；本文件所在的本地提交“研究数值系统前的快照”收录了进入数值研究前的全部工作树内容，包括玩家试玩版、项目记录、作品集登记和验证截图。该快照未 push、merge 或部署；现行数值系统的只读梳理已完成，等待用户选择下一批数值语义。
 
 ## V2 治理迁移
 
@@ -20,6 +20,34 @@ V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 
 - 启动审查收口：2026-08-04 已完成冻结点、数值来源与 Agent 框架只读审查，证据见 `EXP-016`；该门不再作为未来重开条件。
 
 ## Active Work Ledger
+
+- Workstream：`V2-PRE-NUMERIC-RESEARCH-SNAPSHOT-001`；状态：Completed（本条与快照在同一提交中）；责任载体：Project Co-Leader（提交范围、验证与 Git 检查点负责人）；
+- 当前检查点：以 `b211e64132c1217bb6fc008cc9993710db8755c1` 为父提交，用户明确批准把当时全部 70 条未提交状态（18 个已跟踪修改、52 个未跟踪文件）收录为本地提交，提交信息为“研究数值系统前的快照”；
+- 授权边界：允许 `git add -A` 和一次普通本地 commit，覆盖当时全部未提交内容；不允许修改产品语义来追求通过、不允许 push、merge、rebase、reset、clean、部署或发布；
+- 已知 changed surface：V2 玩家版／三案例／估值与评分实现、对应测试和生成 HTML、项目治理与证据记录、V1 作品集证据登记／验证脚本，以及 EXP-022／023 的 11 张截图。已知 preserved surface：V1 canonical 字节、V1 tag/worktree、原工作区、外部证据 capsule 与未授权外部系统；
+- 验证状态：预提交范围为新增约 2.619 MB，无嵌套 Git、重解析点、依赖缓存、大型压缩包或真实凭据命中；完整 `npm.cmd test` 为 `176/176 PASS`，`npx.cmd tsc --noEmit` 通过，lint 为 `0 errors / 20 warnings`，作品集登记验证器单测为 `59/59 PASS`。以上证明构建／自动一致性与快照范围，不证明数值平衡、文化准确性、审美批准或真人趣味；
+- Durable handoff：本条所在、主题为“研究数值系统前的快照”的本地 Git commit；最终 SHA 以 Git 对象为准。最后更新：2026-08-11；重开触发：该提交不存在、提交后工作树不干净、暂存范围与 70 条批准状态不一致，或后续要求 push／merge／发布。
+
+- Workstream：`V2-NUMERIC-SYSTEM-ORIENTATION-001`；状态：Completed（只读盘点与工具调研，等待用户选择下一批）；责任载体：Project Co-Leader（仓库盘点、解释与项目记忆负责人）+ 临时只读研究者；
+- 当前检查点：已把当前手机切片的文件与证据身份结构化停放，并把 `prototype/public` 五个 HTML 分成当前玩家入口、较早 V2 开发诊断面、V1 canonical、历史低保真和 V1 隔离数值实验；已从现行 `content/ + game/` 形成中文架构图、行动影响、权威文件和 12 项优先风险；已比较 Understand Anything、Repomix、GitHub Copilot 与 Sourcegraph Cody；
+- 授权边界：允许只读检查工作树、构建清单、生成物、测试和 GitHub／官方资料，并新增或更新仓库内项目记录与研究证据；不修改产品代码或数值，不安装或运行候选工具，不上传仓库，不创建外部 issue／PR，不 stage/commit/push/merge/deploy；
+- 已知 changed surface：`README.md`、`prototype/README.md`、`01-SYSTEM-MAP.md`、`02-CURRENT-STATE.md`、`03-NEXT-ACTIONS.md` 与新证据 `EXP-024`—`EXP-026`。已知 preserved surface：五个 `public` HTML 的现有字节、全部产品／数值模块、V1 冻结点、作品集 capsule、原工作区和既有未提交资产；
+- 验证状态：五个 HTML 的文件名、大小、SHA-256、`public`／`dist/client` 字节一致性、release manifest、生成脚本与测试引用已交叉核对；四个现行数值缺口已有静态锚点和只读最小复现。候选工具结论来自官方仓库／文档，但未安装或本机试跑，因此不是兼容性、安全性或中文质量验收；
+- Durable handoff：[EXP-024](evidence/EXP-024-current-checkpoint-and-public-html-inventory.md)、[EXP-025](evidence/EXP-025-natural-language-codebase-tools.md) 与 [EXP-026](evidence/EXP-026-current-numeric-system-atlas.md)；最后更新：2026-08-11；重开触发：用户批准 Understand Anything 限定试点，或批准统一 NPC 实际议价／N 分解释模型及其记账语义的书面规格。若工具需要上传私有代码、外部付费服务、持久 Agent、额外权限或不可逆索引，必须先停止并重新授权。
+
+- Workstream：`V2-HUMAN-OBJECT-REDESIGN-001`；状态：Parked（第一批实现与独立只读 QA 完成，视觉精修暂不继续）；责任载体：Project Co-Leader（实现、验证与项目记忆负责人）+ 临时只读代码探索者 + 独立只读审查者；
+- 当前检查点：漆器 `390×844` 调查与议价已保持器物／NPC／人物气泡同屏；中性半身占位、`细看／询问`行动层、组外只读案卷、独立“形成判断”入口和终局回复停留已接入。默认调查、细看、询问、案卷、拒绝、还价、接受与玩家离场截图、生成 HTML 哈希和独立 QA 结论已经固化；用户明确暂不继续打磨画面；
+- 授权边界：允许修改玩家 React／CSS 展示层、对应聚焦 UI/HTML 测试和构建生成的独立玩家 HTML，并增量更新项目记录／本批浏览器证据；不得修改器物后验、NPC 决策、议价数值、评分、seed、replay、案例真相或 V1／教师资产，不安装依赖，不整理无关脏文件，不 stage/commit/push/merge/deploy；
+- 已知 changed surface：既有文档固化记录和两张基线截图；本批 `player/PlayerApp.tsx`、`player/styles.css`、`tests/player-v2-html.test.mjs`、新增 `tests/player-v2-ui.test.mjs`、生成的独立玩家 HTML、`EXP-023` 与九张状态截图。已知 preserved surface：全部 V1 冻结资产、V2 规则／内容／评分／回放模块、教师入口、作品集 capsule、原工作区和其他既有未提交资产；
+- 验证状态：实现负责人完成 TypeScript、完整构建与自动回归 `176/176 PASS`、玩家聚焦 `34/34 PASS`、lint `0 errors / 20 warnings`（均为既有非玩家 warning）及 Chrome `390×844`／`1440×1000` 状态链，无横向溢出，手机器物／NPC／气泡同屏且 console `0 errors / 0 warnings`。独立只读审查者直接重跑玩家聚焦 `34/34`、TypeScript、聚焦 ESLint、16 文件保留哈希、生成物／截图哈希和项目记忆门，结论 `pass-with-known-risk`、`0 Critical / 0 Important / 0 Minor`；其未独立重跑浏览器。V1 canonical 哈希不变；以上均不代表真人体验或用户视觉批准；
+- Durable handoff：[DEC-014](decisions/DEC-014-human-object-dual-appraisal.md)、[EXP-022](evidence/EXP-022-human-object-player-trial-audit.md) 与 [EXP-023](evidence/EXP-023-first-mobile-human-object-slice.md)；最后更新：2026-08-11；重开触发：用户重新选择视觉精修，或完成数值系统理解后另行授权漆器证据图与 8 AP。未获授权前不得跨入证据拓扑、D20、连续对话、受控误导、察人分或其他案例内容迁移。
+
+- Workstream：`V2-PLAYER-TRIAL-001`；状态：Completed；责任载体：Project Co-Leader（实现与验证，非独立 QA）；
+- 当前检查点：独立 `掌眼_V2_玩家试玩版.html`、三案例目录、稳定局号、提交鉴定、玩家估值、公开议价效用与双轨结算已完成；旧综合成果等级和 Q20 自动报价已由 DEC-013 取代。完整 `npm.cmd test` 为 `170/170 PASS`；新增聚焦测试为 `28/28 PASS`；
+- 授权边界：允许修改本计划列出的产品、测试、构建与项目记录；不允许覆盖 V1/教师历史、整理无关脏文件、stage/commit/push/merge/deploy。本轮未调用 Superpowers、未创建子 Agent、未新增生产依赖；
+- 已知 changed surface：`AGENTS.md`，玩家案例/估值/评分/状态/结算模块，独立玩家 React/CSS/构建链，自包含玩家 HTML，新测试，DEC-013、EXP-021、系统图、当前状态与下一行动。已知 preserved surface：V1 canonical/tag/worktree、旧 authority fixture、原工作区、教师入口、作品集 capsule 与既有未提交记录；
+- 验证状态：10,000 局分布通过；27 组固定回放深度一致；14 个手算场景通过；后验、区间、分数和隐藏信息边界通过；`375×812` 与 `1440×1000` 无横向溢出且控制台 0/0。浏览器证据属于 implementation-owner verification，不代表独立 QA、文化校订、平衡或真人趣味验收；
+- Durable handoff：[DEC-013](decisions/DEC-013-v2-player-trial-and-dual-track-scoring.md) 与 [EXP-021](evidence/EXP-021-v2-player-trial-and-dual-track-scoring.md)；最后更新：2026-08-10；重开触发：确定性/分布/评分/HTML 边界失败，文化专家指出实质错误，或后续平衡验证要求调整已批准评分规则。
 
 - Workstream：`V2-NUMERIC-AUTHORITY-EXEC-001`；状态：Completed；责任载体：Project Co-Leader 控制器 + 逐任务临时 Agent；
 - 当前检查点：Task 1—15、最终修复波与精确修复 diff 的独立 scoped re-review 已闭环。四项 Important finding 全部修复，复审未发现 Critical、Important 或 Minor regression。`npm.cmd test` 构建并自动发现全部测试，为 `142/142 PASS`；独立 reviewer 直接 Node 全发现也为 `142/142 PASS`；TypeScript 通过；lint 为 `0 errors / 17 warnings`，warnings 位于本轮改动的两个应用文件，未误标为全部来自未改写表面。V1 canonical SHA-256 仍为 `8B46D415627A2BDAA6D90C68C61189496DEAACCC1D3F1213ADC45A794464925B`；V2 生成单文件 provenance 为 `7949cf19bb32fe59e46b997bd54bd9a5b2deea3b`/clean。既有桌面/移动 action chain 与截图属于 implementation-owner evidence；本次 scoped re-review 未独立重跑浏览器、settlement、viewport overflow 或 console，因此不把产品工程完成外推为独立视觉/真人体验验收；
@@ -69,15 +97,17 @@ V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 
 - 完整构建与测试为 `81/81`，TypeScript 与 ESLint 通过；canonical 与 `dist/client` 哈希一致；
 - V1 最终提交与 annotated tag 已形成明确冻结点；没有合并或移动 `main`，也没有推送、部署或公开托管。本 V2 迁移不修改教师交付内容。
 
-## 三份可运行文件
+## 五份可运行文件
 
 | 文件 | 当前用途 |
 |---|---|
-| `掌眼_低保真交互原型.html` | 历史规则定位、对照与开发调试；不是当前生产规则权威 |
-| `掌眼_数值实验台.html` | 批量模拟、参数实验与公式检查；结论仍是工作假设 |
-| `掌眼_高保真教师演示.html` | V1 唯一 canonical，供老师演示与玩家体验审查 |
+| `掌眼_V2_玩家试玩版.html` | 当前 V2 玩家入口；三案例、稳定局号与双轨结算；不含教师／开发表面 |
+| `掌眼_V2_高保真演示.html` | V2 非公开首案开发／诊断运行时；当前文件来自较早构建检查点，可用于技术解释但不能替代当前玩家版 |
+| `掌眼_高保真教师演示.html` | V1 唯一 canonical 冻结演示；只作老师旧演示、回归和历史对照 |
+| `掌眼_低保真交互原型.html` | 历史规则定位与调试快照；当前数值和产品决策可忽略 |
+| `掌眼_数值实验台.html` | V1 时期隔离实验模型；只证明自身内部一致，不代表当前生产数值或平衡 |
 
-高保真没有覆盖低保真。它使用独立界面源文件，但复用同一案件内容和 TypeScript 规则核心。
+五份文件的精确大小、哈希、生成身份和关注级别见 [EXP-024](evidence/EXP-024-current-checkpoint-and-public-html-inventory.md)。`public` 与 `dist/client` 字节一致只证明复制完整，不证明其身份仍是当前产品权威。
 
 ## 已完成且已验证
 
@@ -108,7 +138,7 @@ V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 
 
 - 当前等级阈值、议价容量、参考报价、NPC 状态权重和案件费用仍是工作参数，尚未证明平衡或有趣；
 - 用户已确认老师能够找到关键入口、理解证据公开并完成交易；这一确认只适用于当前老师与演示闭环，尚不能外推为一般目标玩家验证；
-- 当前只有一个低级场教学案，不能代表中级场、高级场和厚尾价值体验已经成立；
+- V2 已有三个类别案例，但内容仍是初始样本，尚未经过文化专家校订或一般玩家测试，不能代表中级场、高级场和长期厚尾价值体验已经成立；
 - 高保真器物图仍是程序内联二维插画，不是最终正式美术资产；
 - 精品、珍品局末写实器物讲解图只被记录为后续方向，本轮没有制作；
 - 单文件可以离线展示，但公开托管、HTTPS、微信聊天内置浏览器和公众号链接实机仍未验证；
@@ -117,7 +147,9 @@ V1 已冻结在提交 `f0b20b8` 与 annotated tag `v1.0.0-teacher-handoff`；V2 
 
 ## 已批准但尚未实现
 
-- V2 启动审查、书面规格、15 任务实施、Task 15 自动/浏览器验证均已完成；这里不再把“统一数值权威源尚未开始”作为当前事实，最终独立只读复核仍待控制器；
+- [DEC-014](decisions/DEC-014-human-object-dual-appraisal.md) 已批准“器物／NPC 同屏、人物表现替代事实标签、统一案卷、三张证据图、双后验、连续对话、受控 NPC 误导、D20 洞察附加层、人物鉴定与单列察人分”。其中第一批共享展示外壳与漆器手机切片已经实现；三张证据图、8 AP、双后验拆分、连续对话、受控误导、D20 与察人分仍未实现；
+- 第一批产品检查点已经停在用户视觉确认门，不自动进入证据图或 D20。下一规则批次仍需用户确认本切片并单独授权；
+- “客观收益与能力评分关系”继续作为后续 Critical 证据设计，排在本轮体验／系统重构和评分维度稳定之后；
 - `V2-RESEARCH-001` 已完成；`EXP-019` 的“内部确定性规则核 + 可替换适配层”已经落实为本轮实现。任何后续新生产依赖仍需单独证明必要性；
 - 面向老师的自动化、低认知门槛层继续作为后续上层能力，不在治理迁移中提前编码；
 - `project-agent-governance` 的本机文件可找到，但当前可调用 Skill 清单尚未暴露它；若以后需要持久 Agent 拓扑，必须现场核验注册状态，不能假装已调用。
@@ -129,14 +161,17 @@ V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造�
 1. 未来改动可能重新让实验台、历史单文件、生成文件或测试成为第二数值权威；本轮已完成生产权威收敛，`EXP-020` 记录当前审计边界；
 2. 若整体引入 boardgame.io、Yuka、OpenSpiel 或让 ink 持有生产数值，会新增第二状态机或与现有回放骨架重复；
 3. 根工作区仍保存 31 项历史混合改动，V2 不能把这些内容整包导入或误认成冻结基线；
-4. 当前只有一个简单教学案，无法证明数值平衡、不同案件的信息披露与一般玩家体验；
-5. 新任务若未正确加载 V2 Skill 或错误同时启用 V1/V2，会破坏单一项目负责人入口；
-6. 公开 H5 的依赖安全、真实微信环境和一般目标玩家体验仍未验证。
+4. 当前三个初始案例尚未经专家校订或一般玩家测试，无法证明文化准确性、数值平衡、不同案件的信息披露与一般玩家体验；
+5. 当前证据仍是平铺来源／维度覆盖，NPC 行为模板又能通过作者似然直接影响器物后验；在拆分人物可信度与器物推断前加入 D20 会放大错误因果；
+6. 当前人物事实标签和中文文案解析同时参与议价评分，显示文案与规则参数尚未解耦；
+7. 新任务若未正确加载 V2 Skill 或错误同时启用 V1/V2，会破坏单一项目负责人入口；
+8. 公开 H5 的依赖安全、真实微信环境和一般目标玩家体验仍未验证。
 
 ## 当前阻塞
 
 - V2 最小治理迁移没有技术阻塞；
-- 当前产品工作没有技术阻塞；统一数值权威源的最终独立只读复核已经通过；
+- 第一批漆器手机场景没有技术阻塞，已按用户选择结构化停放；视觉确认不是当前数值审计的前置依赖；
+- 数值理解没有技术阻塞；下一用户拥有字段是：继续使用现有中文地图，还是批准限定 Understand Anything 试点；以及是否把“统一 NPC 实际议价与 N 分解释模型”作为下一份书面规格；
 - `project-agent-governance` 是否会在新顶层任务中出现在可调用 Skill 清单，仍需现场核验；
 - 公开 H5 地址和微信内实机验证需要后续选择托管方式，不属于当前 V2 启动范围。
 
@@ -146,8 +181,10 @@ V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造�
 - 不创建持久 Agent、不扩大 Agent 权限、不改变决策权限、不移除独立验证边界；
 - 不迁移 Unity，不制作微信小游戏工程；
 - 不把高保真完成等同于玩法平衡或正式美术验收；
+- 当前文档批准不等于产品已实现；没有真实截图确认前，不把无溢出或自动测试外推为手机布局获批；
 - 不接真实市场价格、登录、云存档、支付或长期经济；
-- 不安装候选框架、不扩写第二案件、不把自动回归或本次产品工程完成替代平衡、真人体验或正式发布证据。
+- 不安装候选框架或仓库解释工具、不上传本地仓库、不启用自动 Git hook；不继续扩写第四案例，不把自动回归或本次产品工程完成替代平衡、真人体验或正式发布证据；
+- 在用户批准新数值语义前，不修复 N／D、接受概率、`priceTick` 或其他只读审查 finding。
 
 ## 关键记录
 
@@ -168,5 +205,14 @@ V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造�
 - [EXP-019：V2 同类框架与社区方案只读调研](evidence/EXP-019-v2-framework-research.md)
 - [CH-003：必检 run 失败后的可审计重试语义](challenges/resolved/CH-003-verification-run-retry-semantics.md)
 - [DEC-012：必检 run 使用追加式 supersession](decisions/DEC-012-verification-run-supersession.md)
+- [DEC-013：V2 独立玩家试玩版与双轨结算](decisions/DEC-013-v2-player-trial-and-dual-track-scoring.md)
+- [CH-005：NPC 受控误导与人与物双重鉴定边界](challenges/resolved/CH-005-human-object-dual-appraisal-boundary.md)
+- [DEC-014：人与物双重鉴定、证据拓扑与洞察附加层](decisions/DEC-014-human-object-dual-appraisal.md)
+- [EXP-021：V2 玩家试玩版、三案例与双轨评分验证](evidence/EXP-021-v2-player-trial-and-dual-track-scoring.md)
+- [EXP-022：玩家试玩版“人与物”体验、数值与证据结构审查](evidence/EXP-022-human-object-player-trial-audit.md)
+- [EXP-023：首个手机“人与物同屏”玩家切片](evidence/EXP-023-first-mobile-human-object-slice.md)
+- [EXP-024：当前检查点与 public HTML 身份清单](evidence/EXP-024-current-checkpoint-and-public-html-inventory.md)
+- [EXP-025：自然语言仓库解释工具只读调研](evidence/EXP-025-natural-language-codebase-tools.md)
+- [EXP-026：现行 V2 数值系统自然语言地图](evidence/EXP-026-current-numeric-system-atlas.md)
 - [V1 基线与作品集原始证据保全设计](../superpowers/specs/2026-08-04-v1-portfolio-evidence-preservation-design.md)
 - [V1 作品集证据保全实施计划](../superpowers/plans/2026-08-04-v1-portfolio-evidence-preservation.md)

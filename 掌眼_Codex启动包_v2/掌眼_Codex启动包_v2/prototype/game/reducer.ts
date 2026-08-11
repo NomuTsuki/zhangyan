@@ -20,7 +20,6 @@ import type {
   TurnRecord,
   WorldState,
 } from "./types";
-import { TRUTH_VARIANT_IDS } from "./types.ts";
 import { evaluateDisclosure } from "./disclosure.ts";
 import {
   calculateNpcPosterior,
@@ -55,8 +54,6 @@ import {
   NPC_BEHAVIOR_LABELS,
 } from "./npc-decision.ts";
 import { resolveDialogueStorylet } from "./storylets.ts";
-
-const truthVariantIds = TRUTH_VARIANT_IDS;
 
 const stateLabels: Record<NPCStateKey, string> = {
   pressure: "压力",
@@ -179,6 +176,7 @@ function cloneState(state: WorldState): WorldState {
     })),
     triggeredStoryletIds: [...state.triggeredStoryletIds],
     actionHistory: [...state.actionHistory],
+    appraisal: state.appraisal ? { ...state.appraisal } : null,
     settlement: state.settlement
       ? {
           ...state.settlement,
@@ -302,7 +300,7 @@ function investigationPointCost(
   action: PlayerAction,
   caseDefinition: CaseDefinition,
 ) {
-  if (action.kind === "buy" || action.kind === "reject") return 0;
+  if (action.kind === "buy" || action.kind === "reject" || action.kind === "appraise") return 0;
   if (action.kind === "discount" || action.kind === "buyout") return 0;
   if (action.kind === "test") return caseDefinition.test.actionPointCost;
   return 1;
@@ -319,8 +317,21 @@ function ensureActionAllowed(
 ) {
   if (state.status !== "active") throw new Error("本局已经结束");
   if (state.npcState.phase === "exited") throw new Error("卖家已经离场");
+  if (action.kind === "appraise") {
+    if (state.appraisal) throw new Error("本局鉴定判断已经提交");
+    if (!caseDefinition.truthVariants[action.hypothesisId]) {
+      throw new Error(`未知鉴定结论：${action.hypothesisId}`);
+    }
+  }
   if (
-    state.negotiation
+    caseDefinition.requiresAppraisal
+    && (action.kind === "discount" || action.kind === "buyout" || action.kind === "buy" || action.kind === "reject")
+    && !state.appraisal
+  ) {
+    throw new Error("进入交易前必须先提交鉴定判断");
+  }
+  if (
+    (state.negotiation || state.appraisal)
     && (
       action.kind === "inspect"
       || action.kind === "dialogue"
@@ -349,7 +360,9 @@ function ensureActionAllowed(
 export function createInitialWorldState(
   caseDefinition: CaseDefinition,
   seed = caseDefinition.seed,
-  truthVariantId: TruthVariantId = "restored-genuine",
+  truthVariantId: TruthVariantId = caseDefinition.judgmentModel.hypothesisOrder.includes("restored-genuine")
+    ? "restored-genuine"
+    : caseDefinition.judgmentModel.hypothesisOrder[0],
 ): WorldState {
   if (!Number.isInteger(seed)) throw new Error("seed 必须是整数");
   if (!caseDefinition.truthVariants[truthVariantId]) {
@@ -381,6 +394,7 @@ export function createInitialWorldState(
     statementHistory: [],
     triggeredStoryletIds: [],
     actionHistory: [],
+    appraisal: null,
   };
 }
 
@@ -618,7 +632,7 @@ function resolveDialogue(
     formulaLog: [
       `行动点 = ${state.actionPoints} - 1 = ${next.actionPoints}`,
       ...changes.map((change) => `${change.label}：${change.formula}`),
-      `陈述信号：${statement.signalLabel}；似然 ${truthVariantIds.map((variantId) => `${variantId}=${statement.likelihoods[variantId]}`).join(" / ")}`,
+      `陈述信号：${statement.signalLabel}；似然 ${caseDefinition.judgmentModel.hypothesisOrder.map((variantId) => `${variantId}=${statement.likelihoods[variantId]}`).join(" / ")}`,
       evidence
         ? `信息可见性：${evidence.kind === "statement" ? `「${evidence.name}」来自卖家既有陈述，不重复写入NPC账本` : sharedEvidenceAdded.length ? `首次公开「${evidence.name}」，写入双方共享账本` : `「${evidence.name}」此前已经公开，本轮不重复计权`}`
         : "信息可见性：未出示物证，NPC后验不读取玩家私有证据",
@@ -1102,6 +1116,38 @@ function resolveTerminal(
   });
 }
 
+function resolveAppraisal(
+  caseDefinition: CaseDefinition,
+  state: WorldState,
+  action: Extract<PlayerAction, { kind: "appraise" }>,
+) {
+  const next = cloneState(state);
+  next.appraisal = {
+    hypothesisId: action.hypothesisId,
+    confidence: action.confidence,
+    submittedTurn: state.turn + 1,
+  };
+  const confidenceLabel = {
+    reserved: "保留判断（55%）",
+    confident: "较有把握（75%）",
+    certain: "非常确定（90%）",
+  }[action.confidence];
+  return appendTurn(state, next, {
+    action: { ...action },
+    actionLabel: `提交鉴定 · ${caseDefinition.truthVariants[action.hypothesisId].label}`,
+    actionPointCost: 0,
+    changes: [],
+    evidenceAdded: [],
+    title: "鉴定判断已经落笔",
+    description: `${caseDefinition.truthVariants[action.hypothesisId].label} · ${confidenceLabel}`,
+    formulaLog: [
+      "鉴定提交不消耗行动点，但会锁定调查阶段。",
+      `结论 = ${action.hypothesisId}；置信档 = ${action.confidence}`,
+    ],
+    redundant: false,
+  });
+}
+
 function copyEventPayload<T>(payload: T): T {
   return structuredClone(payload);
 }
@@ -1173,6 +1219,8 @@ export function reduceTurn(
     next = resolveDiscount(caseDefinition, state, action);
   } else if (action.kind === "buyout") {
     next = resolveBuyout(caseDefinition, state, action);
+  } else if (action.kind === "appraise") {
+    next = resolveAppraisal(caseDefinition, state, action);
   } else {
     next = resolveTerminal(caseDefinition, state, action);
   }
@@ -1189,7 +1237,9 @@ export function replayActions(
   caseDefinition: CaseDefinition,
   actions: PlayerAction[],
   seed = caseDefinition.seed,
-  truthVariantId: TruthVariantId = "restored-genuine",
+  truthVariantId: TruthVariantId = caseDefinition.judgmentModel.hypothesisOrder.includes("restored-genuine")
+    ? "restored-genuine"
+    : caseDefinition.judgmentModel.hypothesisOrder[0],
 ) {
   return actions.reduce(
     (state, action) => reduceTurn(createRulesContext(caseDefinition), state, action).state,

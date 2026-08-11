@@ -2,7 +2,7 @@
 
 > 推荐能够以较低成本减少最大重要未知、风险或阻塞的行动，而不是机械维护功能清单。
 
-更新时间：2026-08-10
+更新时间：2026-08-11
 
 ## 当前检查点
 
@@ -13,12 +13,28 @@
 - `V2-PORTFOLIO-001` 已完成：独立 QA、cross-cutting gates、一次性文本冻结、18 项 checksum、双 close、最终仓库/项目记忆门和精确 staging 清理均通过；
 - `V2-RESEARCH-001` 已完成：比较 boardgame.io、ink/inkjs、Yuka 与 OpenSpiel；未安装依赖、未复制代码、未修改产品；
 - 用户已批准 15 任务计划、选择 Subagent-Driven，并授权按任务白名单创建本地 commits；15 项任务、最终修复波和独立只读 re-review 均已闭环。分支仍未 push、merge 或 deploy。
+- `V2-PLAYER-TRIAL-001` 已完成：独立玩家单文件、三案例、稳定局号、提交鉴定和双轨评分已实现；完整自动验证 `170/170 PASS`，两目标视口无横向溢出且控制台 0/0；该验证不是文化、平衡或真人体验结论。
+- `V2-HUMAN-OBJECT-REDESIGN-001` 已完成第一批产品切片：漆器 `390×844` 人物／器物同屏、占位立绘、漫画气泡、行动模式、只读案卷和终局回复停留已实现；`176/176` 自动回归和真实 Chrome 状态链通过，独立只读 QA 为 `pass-with-known-risk`、`0 Critical / 0 Important / 0 Minor`。用户已决定暂不继续打磨画面，该工作流结构化停放，不外推为审美或真人体验批准。
+- 当前转向 `V2-NUMERIC-SYSTEM-ORIENTATION-001`：已保存工作树锚点与五个 HTML 身份清单，并从现行 `content/ + game/` 形成自然语言数值地图；本批次只读，没有改数值、安装解释工具或执行 Git 写操作。
+- 用户已批准把此前全部未提交内容收录进本地提交“研究数值系统前的快照”；当前玩家 HTML、玩家源码目录与 `generate-player.mjs` 随该提交成为可从 Git 恢复的资产。仍没有独立 player release manifest，且该提交未 push、merge 或部署。
 
 ## 推荐主路径
 
-1. 保持 `V2-NUMERIC-AUTHORITY-EXEC-001` 为 Completed；分支整合方式由用户另行选择，不自动 push、merge 或 deploy；
-2. 下一项建议但尚未授权实施的核心工作，是“客观收益与结算评分关系”的 Critical 证据设计；先定义收益、评分版本、样本/种子、阈值与允许反例，不自动调整平衡、扩写案件或改变叙事；
-3. 进入后续开发时按 README 的 milestone/1–2 周/重大迁移/最终 PDF 触发点做轻量增量素材整理、备份与复查，只保留关键设计转折和成果截图。
+1. 用户先阅读 [EXP-026](evidence/EXP-026-current-numeric-system-atlas.md) 的自然语言架构、行动影响和风险清单；后续所有数值讨论都从现行 `content/ + game/` 出发，不再从旧数值实验台反推规则；
+2. 默认先用现有 Codex／Project Co-Leader 生成中文解释，不安装第三方工具。若用户希望获得可长期浏览的知识图谱，再单独审批一个限定目录、不开自动更新、不上传仓库的 Understand Anything 试点；
+3. 第一项建议规格化的问题是“NPC 实际议价与 N 分可见解释模型的一致性”：同时处理“不急出售”被误判为急售、买断／离场报价漏出 N、D 把购买尝试改写成拒绝，以及普通还价绕过 `priceTick`；在用户批准语义前不修代码；
+4. 该批闭环后，再依次审计旧评分／Q20 残余消费面、证据相关性重复计权、NPC 未生效字段、询问与细看的职责分配，以及三案件数值骨架差异；
+5. 规则语义稳定后才进入批量种子、支配策略和“客观收益与能力评分关系”的 Critical 平衡验证；文化专家校订安排在正式平衡前；
+6. 视觉切片保持停放；后续仍按 milestone／1—2 周／重大迁移／最终 PDF 触发点做轻量素材整理、备份与复查，只保留关键设计转折和成果截图。
+
+## 已停放视觉批次的自动门（保留为历史检查点）
+
+- 产品改动只落在漆器手机场景与共享展示外壳；16 个内容／规则保留文件前后 SHA-256 一致；
+- `390×844` 首屏同时看见器物、NPC 和当前人物回复；议价页 NPC 不消失，拒绝／还价／接受都有占位人物气泡；
+- 人物入口不再渲染卖家事实摘要或实时接受概率，也不读取 `publicTraits` 驱动画面；
+- `细看／询问`是行动模式，案卷只读且可关闭返回，形成判断是独立提交；
+- TypeScript、HTML 构建与完整 `176/176` 自动回归通过；Chrome 手机／桌面无横向溢出且 console 0/0；
+- 这些证据不等于用户视觉批准。该批次当前保持停放，没有提前实现证据拓扑、8 AP、D20、受控误导、察人分或书画／瓷器内容迁移；视觉确认不再是只读数值审计的前置依赖。
 
 ## 已完成迁移的保留复核点
 
@@ -27,6 +43,8 @@
 - 最终复核应确认 V1 tag/canonical、基线 fixture 与 provenance 哈希未漂移，并按记录区分自动一致性、平衡与真人体验证据。
 
 ## 完成标准
+
+以下首先保留已完成统一数值工程的审计边界；当前人与物重构的最近一批完成标准以上文“下一检查点完成标准”为准。
 
 独立 scoped re-review 已得出可审计通过结论；该结论只覆盖统一数值权威源产品工程，不外推为数值平衡或真人体验。后续 Critical 证据设计至少必须：
 
@@ -83,7 +101,7 @@
 
 - `project-co-leader-v2` 已加载并负责当前工作流；
 - `project-agent-governance` 若以后可调用，只预览最小能力与责任拓扑；创建持久 Agent、扩大权限或改变决策权仍需另行批准；
-- 本轮框架研究未创建子 Agent 或持久 Agent；项目仍没有持久 Agent 拓扑。
+- 本轮人与物审查使用临时只读审查者作为运行池，没有创建持久 Agent、扩大权限或改变决策权；项目仍没有持久 Agent 拓扑。
 
 ## 暂时不做
 
@@ -91,8 +109,11 @@
 - 不在最终复核中顺手修改产品数值、构建物、单文件或测试；发现问题时只重开最小受影响任务；
 - 不安装 boardgame.io、Yuka、inkjs 或 OpenSpiel，不把研究推荐误当依赖批准；
 - 不创建持久 Agent，不扩大 Agent 权限，不取消独立验证；
-- 不增加第二案件、长期经济、低中高级场或微信小游戏工程；
+- 不继续增加第四案例、长期经济、低中高级场或微信小游戏工程；
 - 不制作最终作品集，不推送、部署、上传或公开发布材料。
+- 不安装或运行仓库解释候选，不把本地仓库上传到外部服务，不启用自动 Git hook；任何试点必须先披露限定目录、模型、费用／token、数据去向与生成文件边界并取得批准。
+- 在用户批准新的数值语义规格前，不修复本次审查发现的 N／D、接受曲线、`priceTick` 或其他实现问题；不把只读发现误报成已修复。
+- 视觉工作保持停放；证据图、8 AP、连续对话、D20、受控误导、察人分或其他案例内容迁移仍需各自边界与授权。
 
 ## 当前证据与决定
 
@@ -108,5 +129,14 @@
 - [V2 统一数值权威源逐步实施计划](../superpowers/plans/2026-08-10-v2-numeric-authority.md)
 - [必检 run 失败后的可审计重试语义](challenges/resolved/CH-003-verification-run-retry-semantics.md)
 - [必检 run 使用追加式 supersession](decisions/DEC-012-verification-run-supersession.md)
+- [V2 独立玩家试玩版与双轨结算](decisions/DEC-013-v2-player-trial-and-dual-track-scoring.md)
+- [V2 玩家试玩版、三案例与双轨评分验证](evidence/EXP-021-v2-player-trial-and-dual-track-scoring.md)
+- [NPC 受控误导与人与物双重鉴定边界](challenges/resolved/CH-005-human-object-dual-appraisal-boundary.md)
+- [人与物双重鉴定、证据拓扑与洞察附加层](decisions/DEC-014-human-object-dual-appraisal.md)
+- [玩家试玩版“人与物”体验、数值与证据结构审查](evidence/EXP-022-human-object-player-trial-audit.md)
+- [首个手机“人与物同屏”玩家切片](evidence/EXP-023-first-mobile-human-object-slice.md)
+- [当前检查点与 public HTML 身份清单](evidence/EXP-024-current-checkpoint-and-public-html-inventory.md)
+- [自然语言仓库解释工具只读调研](evidence/EXP-025-natural-language-codebase-tools.md)
+- [现行 V2 数值系统自然语言地图](evidence/EXP-026-current-numeric-system-atlas.md)
 - [V1 基线与作品集原始证据保全设计](../superpowers/specs/2026-08-04-v1-portfolio-evidence-preservation-design.md)
 - [V1 作品集证据保全实施计划](../superpowers/plans/2026-08-04-v1-portfolio-evidence-preservation.md)

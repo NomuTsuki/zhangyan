@@ -39,3 +39,15 @@ Status: enabled
 - When disabled, do not invoke the Skill or update project memory implicitly; an explicit `$project-co-leader-v2` request may still use it for one task.
 
 <!-- project-co-leader-v2:end -->
+
+<!-- superpowers-policy:start -->
+
+## Superpowers
+
+Status: opt-in only
+
+- Do not invoke `superpowers:*` Skills by default for planning, implementation, debugging, testing, review, or handoff.
+- Invoke a Superpowers Skill only when the user explicitly names it for the current task, or when a higher-priority platform instruction makes it mandatory. If the latter occurs, disclose that constraint before using it.
+- Keep the plugin installed; this policy changes invocation behavior only.
+
+<!-- superpowers-policy:end -->

@@ -1,10 +1,12 @@
 import { calculatePosterior } from "./belief.ts";
+import { calculateAbilityBreakdown } from "./ability-scoring.ts";
 import {
   calculateJudgmentQuality,
   type JudgmentQualityInput,
 } from "./judgment-quality.ts";
 import { getNpcPricing } from "./negotiation.ts";
 import { calculateOutcomeGrades, gradeIndex } from "./outcome-grades.ts";
+import { calculatePlayerValuation } from "./player-valuation.ts";
 import type {
   CaseDefinition,
   ReasoningDimension,
@@ -101,21 +103,21 @@ export function calculateSettlement(
   // Objective outcome reads the hidden truth only in this local branch.
   const actualNet = acquired
     ? truth.trueValue - paidPrice - state.feesPaid
-    : 0;
+    : state.feesPaid === 0 ? 0 : -state.feesPaid;
   const oracleOptions = [
     {
       label: "开局直接拒绝",
-      net: 0,
+      net: -state.feesPaid,
     },
     {
       label: `按开价${caseDefinition.seller.openingPrice}买下`,
-      net: truth.trueValue - caseDefinition.seller.openingPrice,
+      net: truth.trueValue - caseDefinition.seller.openingPrice - state.feesPaid,
     },
   ];
   if (buyoutLine < caseDefinition.seller.openingPrice) {
     oracleOptions.push({
       label: `完全知情时按${buyoutLine}点最低可达买断线成交`,
-      net: truth.trueValue - buyoutLine,
+      net: truth.trueValue - buyoutLine - state.feesPaid,
     });
   }
   const oracleBestNet = Math.max(...oracleOptions.map((option) => option.net));
@@ -145,6 +147,41 @@ export function calculateSettlement(
       choice === "seller-exited",
     ),
   );
+  const valuation = calculatePlayerValuation(posterior);
+  const appraisal = state.appraisal ?? {
+    hypothesisId: [...posterior].sort(
+      (left, right) => right.probability - left.probability,
+    )[0].variantId,
+    confidence: "reserved" as const,
+    submittedTurn: state.turn,
+  };
+  const ability = calculateAbilityBreakdown({
+    caseDefinition,
+    state,
+    appraisal,
+    truthVariantId: truth.id,
+    valuation,
+    choice: acquired ? "buy" : "reject",
+    acquisitionPrice: acquired ? paidPrice : state.currentPrice,
+    ...(choice === "discount-buy"
+      ? {
+          terminalOffer: {
+            offer: paidPrice,
+            currentAsk: state.negotiation?.entryAsk ?? caseDefinition.seller.openingPrice,
+          },
+        }
+      : {}),
+  });
+  const objectiveOutcome = {
+    actualNet,
+    missedValue: acquired
+      ? 0
+      : Math.max(0, truth.trueValue - state.currentPrice - state.feesPaid),
+    acquired,
+    trueValue: truth.trueValue,
+    paidPrice,
+    feesPaid: state.feesPaid,
+  };
 
   const entryAsk = state.negotiation?.entryAsk ?? state.currentPrice;
   const entryFloor =
@@ -231,7 +268,9 @@ export function calculateSettlement(
     objectiveFormula: [
       acquired
         ? `实际净结果 = ${truth.trueValue}（真实价值）- ${paidPrice}（成交价）- ${state.feesPaid}（检测费） = ${actualNet}`
-        : `未成交净结果 = 0；已发生检测费 ${state.feesPaid} 在调试成本中单列`,
+        : state.feesPaid > 0
+          ? `未成交净结果 = -${state.feesPaid}（已发生检测费） = ${actualNet}`
+          : "未成交净结果 = 0；已发生检测费 0 在调试成本中单列",
       `完全知情可达方案 = ${oracleOptions.map((option) => `${option.label}:${option.net}`).join("；")}`,
       `完全知情最佳净结果 = max(${oracleOptions.map((option) => option.net).join(", ")}) = ${oracleBestNet}`,
       `机会损失 = max(0, ${oracleBestNet} - ${actualNet}) = ${regret}`,
@@ -239,6 +278,9 @@ export function calculateSettlement(
     ],
     judgmentFormula: judgmentBreakdown.formula,
     gradeFormula: grades.formula,
+    valuation,
+    ability,
+    objectiveOutcome,
   };
 }
 

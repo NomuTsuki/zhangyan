@@ -14,7 +14,9 @@ export const TRUTH_VARIANT_IDS = [
 ] as const;
 
 export type NPCStateKey = (typeof NPC_STATE_KEYS)[number];
-export type TruthVariantId = (typeof TRUTH_VARIANT_IDS)[number];
+// V1 kept one global three-item union. V2 cases own their hypothesis ids, while
+// the legacy constant remains available to historical fixtures.
+export type TruthVariantId = string;
 export type OutcomeGrade = "D" | "C" | "B" | "A" | "S" | "SS" | "SSS";
 export type OutcomeTag =
   | "profitable"
@@ -98,6 +100,20 @@ export type RejectAction = {
   kind: "reject";
 };
 
+export type AppraisalConfidence = "reserved" | "confident" | "certain";
+
+export type AppraisalAction = {
+  kind: "appraise";
+  hypothesisId: TruthVariantId;
+  confidence: AppraisalConfidence;
+};
+
+export type PlayerAppraisal = Readonly<{
+  hypothesisId: TruthVariantId;
+  confidence: AppraisalConfidence;
+  submittedTurn: number;
+}>;
+
 export type PlayerAction =
   | InspectAction
   | DialogueAction
@@ -105,7 +121,38 @@ export type PlayerAction =
   | DiscountAction
   | BuyAction
   | BuyoutAction
-  | RejectAction;
+  | RejectAction
+  | AppraisalAction;
+
+export type PlayerValuation = Readonly<{
+  expectedValue: number;
+  q10: number;
+  q90: number;
+  normalizedEntropy: number;
+  uncertaintyLabel: "低" | "中" | "高";
+}>;
+
+export type AbilityBreakdown = Readonly<{
+  appraisalScore: number;
+  decisionScore: number;
+  negotiationScore: number | null;
+  rawScore: number;
+  finalGrade: OutcomeGrade;
+  cap: OutcomeGrade | null;
+  capReasons: string[];
+  appraisalCalibrationScore: number;
+  evidenceStructureScore: number;
+  visibleDecisionRegret: number;
+}>;
+
+export type ObjectiveOutcome = Readonly<{
+  actualNet: number;
+  missedValue: number;
+  acquired: boolean;
+  trueValue: number;
+  paidPrice: number;
+  feesPaid: number;
+}>;
 
 export type ReplayEnvelope = Readonly<{
   caseId: string;
@@ -275,6 +322,7 @@ export type CaseDefinition = {
   };
   actionBudget: number;
   seed: number;
+  requiresAppraisal?: boolean;
   claims: Array<{
     id: string;
     text: string;
@@ -438,6 +486,9 @@ export type SettlementResult = {
   objectiveFormula: string[];
   judgmentFormula: string[];
   gradeFormula: string[];
+  valuation: PlayerValuation;
+  ability: AbilityBreakdown;
+  objectiveOutcome: ObjectiveOutcome;
 };
 
 export type WorldState = {
@@ -464,6 +515,7 @@ export type WorldState = {
   statementHistory: StatementRecord[];
   triggeredStoryletIds: string[];
   actionHistory: TurnRecord[];
+  appraisal: PlayerAppraisal | null;
   settlement?: SettlementResult;
 };
 

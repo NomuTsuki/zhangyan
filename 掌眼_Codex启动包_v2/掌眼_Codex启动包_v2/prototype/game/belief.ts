@@ -1,6 +1,5 @@
 import { DEFAULT_RULESET_CONFIG } from "./ruleset.ts";
 import type { RulesContext } from "./ruleset.ts";
-import { TRUTH_VARIANT_IDS } from "./types.ts";
 import type {
   CaseDefinition,
   PosteriorEntry,
@@ -74,11 +73,12 @@ export function calculatePosterior(
       statementHistory.map((statement) => [statement.signalId, statement]),
     ).values(),
   ];
-  const weights = TRUTH_VARIANT_IDS.map((variantId) => {
+  const hypothesisIds = caseDefinition.judgmentModel.hypothesisOrder;
+  const weights = hypothesisIds.map((variantId) => {
     const evidenceLikelihood = independentEvidenceIds.reduce((product, evidenceId) => {
       const evidence = caseDefinition.evidence[evidenceId];
       return product * (evidence?.likelihoods[variantId] ?? 1);
-    }, 1 / TRUTH_VARIANT_IDS.length);
+    }, 1 / hypothesisIds.length);
     const statementLikelihood = uniqueStatementSignals.reduce(
       (product, statement) =>
         product
@@ -108,7 +108,8 @@ export function calculateNpcPosterior(
   const uniqueSharedEvidenceIds = [...new Set(sharedEvidenceIds)].filter(
     (evidenceId) => caseDefinition.evidence[evidenceId]?.kind !== "statement",
   );
-  const rawWeights = TRUTH_VARIANT_IDS.map((variantId) => {
+  const hypothesisIds = caseDefinition.judgmentModel.hypothesisOrder;
+  const rawWeights = hypothesisIds.map((variantId) => {
     const privateWeight = caseDefinition.npcProfile.privateSignals.reduce(
       (product, signal) =>
         product
@@ -116,7 +117,7 @@ export function calculateNpcPosterior(
           Math.max(rules.minimumLikelihood, signal.likelihoods[variantId]),
           signal.confidence,
         ),
-      1 / TRUTH_VARIANT_IDS.length,
+      1 / hypothesisIds.length,
     );
     const sharedWeight = uniqueSharedEvidenceIds.reduce((product, evidenceId) => {
       const likelihood =

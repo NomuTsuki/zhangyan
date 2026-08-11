@@ -23,6 +23,13 @@ export const AUTHORITY_SCENARIOS = [
 ];
 
 export function semanticState(state) {
+  // This fixture deliberately preserves the approved pre-refactor contract.
+  // V2's additive player-only settlement fields have their own rule tests and
+  // must not force us to rewrite or erase the historical authority baseline.
+  const legacySettlement = state.settlement
+    ? (({ valuation, ability, objectiveOutcome, ...legacy }) => legacy)(state.settlement)
+    : null;
+
   return JSON.parse(JSON.stringify({
     status: state.status,
     turn: state.turn,
@@ -52,7 +59,7 @@ export function semanticState(state) {
       spindle: turn.spindle,
       redundant: turn.redundant,
     })),
-    settlement: state.settlement,
+    settlement: legacySettlement,
   }));
 }
 

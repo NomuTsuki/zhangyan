@@ -1,20 +1,21 @@
-# 《掌眼》V1/V2 项目说明与仓库入口
+# 《掌眼》V1/V2/V3 项目说明与仓库入口
 
 《掌眼》是一款面向手机竖屏的古玩鉴定与交易决策游戏。玩家在有限调查资源与信息不对称中观察器物、询问来客、选择是否公开证据、进行有限议价，并在交易结束后同时复盘客观经营结果和判断过程。
 
-本仓库已封存 **V1 教师演示版**，并在独立 V2 工作树中生成了不含教师/开发表面的 **V2 玩家试玩版**。V2 的产品范围到此结束：冻结批次完成后由 `v2.0.0-player-prototype-freeze` 标记这个可运行、可回放的玩家试玩底座；标签是否已经创建以 Git 现场为准。真正的物品真相拓扑与玩家推断进入独立 V3 设计阶段。低保真单文件只保留作历史与调试对照，数值实验台只用于参数实验。
+本仓库已封存 **V1 教师演示版**，并以 annotated tag `v2.0.0-player-prototype-freeze` 冻结了可运行、可回放的 **V2 玩家试玩底座**。当前分支是独立的 **V3 物品真相拓扑设计阶段**：原话与研究已经带哈希迁入，但节点语义、经济终局和第一张拓扑尚未批准，产品代码没有变化。
 
 ## 从哪里开始
 
 | 目的 | 入口 |
 |---|---|
 | 我想用几分钟理解项目现在在做什么（推荐） | [`docs/project/overview/00-START-HERE.md`](docs/project/overview/00-START-HERE.md) |
+| 查看 V3 原话、研究与来源哈希 | [`docs/project/evidence/v3-design/README.md`](docs/project/evidence/v3-design/README.md) |
 | 给老师阅读和演示 | [`docs/teacher/00_请先看.txt`](docs/teacher/00_请先看.txt) |
 | 直接打开正式游戏演示 | [`掌眼_高保真教师演示.html`](掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_高保真教师演示.html) |
 | 直接试玩 V2 玩家版 | [`掌眼_V2_玩家试玩版.html`](掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_V2_玩家试玩版.html) |
 | 查看 V2 首案开发诊断面 | [`掌眼_V2_高保真演示.html`](掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_V2_高保真演示.html) |
 | 查看项目当前事实 | [`docs/project/02-CURRENT-STATE.md`](docs/project/02-CURRENT-STATE.md) |
-| 查看 V2 冻结边界与 V3 交接 | [`docs/project/03-NEXT-ACTIONS.md`](docs/project/03-NEXT-ACTIONS.md) |
+| 查看 V3 当前决策门与下一步 | [`docs/project/03-NEXT-ACTIONS.md`](docs/project/03-NEXT-ACTIONS.md) |
 | 查看正式交付白名单 | [`release/v1-teacher-handoff.json`](release/v1-teacher-handoff.json) |
 
 正式演示 HTML 已将样式、脚本与插画全部内联，解压后可直接用现代浏览器打开，无需联网、安装 Node.js 或运行服务器。

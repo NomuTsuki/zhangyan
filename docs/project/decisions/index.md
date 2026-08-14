@@ -1,5 +1,7 @@
 # Decision Index
 
+> V3 继承说明：DEC-001—015 保留其 V1/V2 历史状态和因果，不因出现在本分支就自动成为 V3 当前规格。DEC-016 明确当前 Adopt／Borrow／Reject／Unknown；以后 V3 产品决定必须新增或明确 supersede，不能静默改写历史。
+
 | ID | 决定 | 状态 | 最近复查 | 文件 |
 |---|---|---|---|---|
 | DEC-001 | 游戏本体验收与工作优先级 | Active | 2026-07-22 | [DEC-001](DEC-001-delivery-and-priority.md) |
@@ -17,7 +19,8 @@
 | DEC-013 | V2 独立玩家试玩版与能力/客观结果双轨结算 | Active | 2026-08-11 | [DEC-013](DEC-013-v2-player-trial-and-dual-track-scoring.md) |
 | DEC-014 | 人与物双重鉴定、证据拓扑与洞察附加层 | Archived | 2026-08-14 | [DEC-014](DEC-014-human-object-dual-appraisal.md) |
 | DEC-015 | 冻结 V2 玩家试玩基线并从其启动 V3 设计阶段 | Active | 2026-08-14 | [DEC-015](DEC-015-v2-freeze-and-v3-bootstrap.md) |
+| DEC-016 | V3 从物品真相拓扑设计阶段启动 | Active | 2026-08-14 | [DEC-016](DEC-016-v3-design-stage-bootstrap.md) |
 
 状态使用：`Active`、`Experimental`、`Superseded`、`Archived`。
 
-DEC-005、DEC-007 与 DEC-013 仍描述 V2 的有效实现／设计历史。DEC-014 已按 V2 终态归档；其中未实现方向只有被 V3 新 Decision 明确采用后才成为 V3 当前规格。版本交接规则见 DEC-015。
+DEC-005、DEC-007 与 DEC-013 仍描述 V2 的有效实现／设计历史。DEC-014 已按 V2 终态归档；其中未实现方向只有被 V3 新 Decision 明确采用后才成为 V3 当前规格。版本交接见 DEC-015，V3 当前采用边界见 DEC-016。

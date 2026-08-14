@@ -6,6 +6,8 @@ Status: Active
 
 > 2026-08-11 修订说明：本决定的“NPC 知道真相并主动欺骗”重开条件已经触发，并由 [DEC-014](DEC-014-human-object-dual-appraisal.md) 解决。物品真相、NPC 认知与交易条件的隔离继续有效；受控误导只能基于 NPC 自身知识／信念生成，不能让 NPC 读取隐藏真相。
 
+> 2026-08-13 术语范围：本决定中的“NPC 认知”只指 NPC 对器物的认知；NPC 对玩家的认知、局内关系状态和成交意愿由 [DEC-014](DEC-014-human-object-dual-appraisal.md) 分账澄清。
+
 ## 当前决定
 
 物品客观真相、NPC 对物品的认知和 NPC 的交易底线属于三个不同层次：

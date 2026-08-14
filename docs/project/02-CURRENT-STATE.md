@@ -2,11 +2,11 @@
 
 > 只保存项目此刻的真实状态。历史结论进入 Decision、Evidence 或 archive。
 
-更新时间：2026-08-11
+更新时间：2026-08-14
 
 ## 一句话状态
 
-V1 冻结资产保持不变；本文件所在的本地提交“研究数值系统前的快照”收录了进入数值研究前的全部工作树内容，包括玩家试玩版、项目记录、作品集登记和验证截图。该快照未 push、merge 或部署；现行数值系统的只读梳理已完成，等待用户选择下一批数值语义。
+V2 项目内收口和冻结前验证已经完成；commit、annotated tag 与 V3 worktree 属于本记录所在 tree 形成后的外部 Git 身份门，实际结果必须从现场核对。V2 的产品代码保持不变，真实终点是“可运行、可回放、单一数值权威的玩家试玩底座”，不是“物品真相拓扑已经实现”；拓扑与玩家推断工作台只作为 V3 设计输入。
 
 ## V2 治理迁移
 
@@ -20,6 +20,34 @@ V1 冻结资产保持不变；本文件所在的本地提交“研究数值系�
 - 启动审查收口：2026-08-04 已完成冻结点、数值来源与 Agent 框架只读审查，证据见 `EXP-016`；该门不再作为未来重开条件。
 
 ## Active Work Ledger
+
+- Workstream：`V2-FREEZE-V3-BOOTSTRAP-001`；状态：Completed（项目内收口与 pre-tag 验证；commit／tag／V3 worktree 结果不由本文件自证）；责任载体：Project Co-Leader（版本边界、文档收口、验证、Git 冻结与 V3 交接负责人）+ 临时只读复核者；
+- 当前检查点：分支为 `codex/v2-bootstrap`，本批开始前 HEAD 为 `bfca0667500dce446932fcb4d40d079b1f350c0c`；隔离完整回归 `176/176`、TypeScript、lint `0 errors / 20 warnings`、项目记忆、静态文档、V1／V2 哈希和产品 diff 门均通过。单次本地提交、annotated tag 与 V3 独立工作树必须在提交后从 Git 现场核对；
+- 授权边界：允许收口并提交当前 V2 文档／治理／证据批次，创建本地 V2 冻结标签、V3 分支与独立 worktree，并在 V3 中提交仅文档与设计证据的启动批次；不得修改产品代码、推送、部署、公开发布或调用 Superpowers；
+- 已知 changed surface：最终提交前为 27 份治理、领域、证据、overview 与轻量作品集文件（17 tracked modifications＋10 untracked）；已知 preserved surface：全部产品源码、案例数值、生成 HTML、V1 tag／canonical／证据 capsule、原工作区与外部系统；
+- 验证状态：完整结果与运行位置见 [EXP-029](evidence/EXP-029-v2-player-prototype-freeze.md)。通过只代表版本可复现、自动规则未回归和文档边界成立，不代表平衡、文化准确性、真人趣味、视觉批准或发布可用；
+- Durable handoff：本批将形成 `DEC-015`、`EXP-029`、本地 annotated tag `v2.0.0-player-prototype-freeze` 与独立 V3 工作树；最后更新：2026-08-14；停止／重开触发：产品路径出现意外差异、回归／哈希失败、标签或工作树名称冲突、迁入证据哈希不一致，或文档把 Draft 误写成已批准／已实现。
+
+- Workstream：`V2-EVIDENCE-BEFORE-DECISION-001`；状态：Completed（治理、证据、作品集轻量固化与兼容／独立前向验证均完成，由 V2 冻结提交收口）；责任载体：Project Co-Leader（全局 Skill、项目记录、作品集轻量固化与验证负责人）+ 临时只读调查者与前向测试者；
+- 当前检查点：两段双向认知回答已逐字符保存，重大产品决定调查门已加入全局 Skill 与掌眼配置，系统边界转折已形成轻量候选作品集卡；下一讨论已改为“两部分游戏”范围收敛，但没有预设答案。全局 Skill 修改前恢复点的 `27/27` 文件哈希仍一致；
+- 授权边界：允许修改已安装的 `project-co-leader-v2` Skill、配置／AGENTS 模板、配置检查器和掌眼治理／证据／宏观／轻量作品集记录；允许只读外部资料复核、临时目录初始化测试和临时只读 Agent 前向测试；不得修改产品代码、案例数值、玩家／教师 HTML 或 V1 证据，不安装依赖，不 stage/commit/push/merge/deploy，不调用 Superpowers；
+- 已知 changed surface：全局 Skill 的 `SKILL.md`、新调查参考、UI metadata、项目配置／AGENTS 模板与配置检查器；掌眼配置、AGENTS、Project Compass、System Map、Current State、Next Actions、DEC-014、风险、overview、`EXP-027`／`EXP-028` 和一张轻量 V2 作品集卡。已知 preserved surface：全部产品源码、案例数值、生成 HTML、V1 冻结资产／作品集 capsule、原工作区与 Git 历史；
+- 验证状态：两段附录与 JSONL 原文逐字符一致，分别匹配 `4347 / 9497 bytes / 753069...` 与 `1699 / 4103 bytes / ee04bf...`；备份清单 `27/27`、Skill 结构与引用、Python AST、当前配置 `0 errors / 0 warnings`、新项目初始化与二次不覆盖、旧配置 warning、坏配置 error 均通过。四次独立只读前向运行覆盖五个行为面：“新玩法先调查、普通修错不研究、新算法只暂停相关分支、核心架构自动 Deep、证据饱和后停放旁支”；最后两个行为面来自同一次组合压力输入。`git diff --check` 通过，暂存、产品路径与冻结 V1 路径均为 `0`；独立只读 QA 为 `Critical 0 / Important 0 / Minor 0`、verdict `pass`。官方 Skill Creator 因本机缺 `PyYAML` 未启动，本批未安装依赖；Mermaid 仅做静态检查、未渲染验收；
+- Durable handoff：[EXP-027](evidence/EXP-027-bidirectional-cognition-design-turning-point.md)、[EXP-028](evidence/EXP-028-project-co-leader-research-before-decision-gate.md) 与 [轻量作品集转折卡](../portfolio/v2-process/2026-08-13-system-boundary-turning-point.md)；最后更新：2026-08-13；停止/重开触发：原文哈希不一致、备份无法恢复、新旧项目配置兼容失败、调查门对普通编码造成仪式化阻塞、产品／V1 路径被误改，或下一轮未经用户决定就把“两部分”写成既定方案。
+
+- Workstream：`V2-BIDIRECTIONAL-COGNITION-001`；状态：Completed（领域澄清与文档同步已实现并验证，由 V2 冻结提交收口）；责任载体：Project Co-Leader（领域边界、权威记录与宏观投影同步负责人）；
+- 当前检查点：用户已明确认可“五个开发责任区，不是五套孤立引擎”；玩家认知与 NPC 认知各自扩展为“辨物＋识人”。当时确认的下一依赖是漆器客观真相与证据拓扑；它未在 V2 实现，现作为 V3 设计输入；
+- 授权边界：允许更新统一词汇、DEC-014、系统图、当前状态、下一行动、风险和宏观驾驶舱；不得修改产品代码、案例数值、玩家／教师 HTML、历史资产或全局 Skill，不 stage/commit/push/merge/deploy，不调用 Superpowers；
+- 已知 changed surface：根 `CONTEXT.md`、README、Project Compass、System Map、Current State、Next Actions、DEC-005／006／007／014、HYP-002／004、索引、风险登记与宏观驾驶舱；已知 preserved surface：全部产品源码、生成物、V1 冻结资产、作品集 capsule、Git 历史与全局 Skill；
+- 验证状态：项目记忆检查 `0 errors / 0 warnings`；20 份变更中的 Markdown、156 个本地链接与 7 个 Mermaid 图块通过静态检查；必需术语齐全且当前入口不存在“玩家信念／NPC 信念／双后验拆分／当前转向”等旧称；`git diff --check` 通过，21 条脏路径中 staged 为 0、越界为 0、产品路径为 0。独立只读复核覆盖 8/8 个核心文件，未发现语义矛盾；其指出的“旧局部状态机可能被误读成人物模型已完成”已补充消歧。Mermaid 本轮未做渲染视觉验收；
+- Durable handoff：DEC-014 的 2026-08-13 澄清、[EXP-027](evidence/EXP-027-bidirectional-cognition-design-turning-point.md)、根 `CONTEXT.md` 与 `docs/project/overview/`；最后更新：2026-08-13；停止/重开触发：文档把两种认知误写成共用答案、把玩家内心自动系统化、把人物认知直接改写器物真相，或本批越过纯文档边界。
+
+- Workstream：`V2-HUMAN-READABLE-COMMS-001`；状态：Completed（治理与文档已实现并验证，由 V2 冻结提交收口）；责任载体：Project Co-Leader（全局 Skill 升级、掌眼宏观投影与验证负责人）+ 三个临时只读前向测试者；
+- 当前检查点：`2.3-human-readable-steering` 已加入人话优先、两层信息、阶段交接理解门、Mermaid 关系图和直接但可覆盖的追兔子刹车；掌眼 `docs/project/overview/` 已成为只读宏观投影。它现在作为已验证基线，由 `V2-EVIDENCE-BEFORE-DECISION-001` 的 `2.4` 调查门增量扩展，不改写当时验证历史；
+- 授权边界：允许修改已安装的 `project-co-leader-v2` Skill、其脚手架／校验器和掌眼治理／概览／项目记录；允许在临时目录运行初始化验证并使用临时只读 Agent 做无答案泄漏的前向测试；不得修改产品代码、案例数值、玩家 HTML 或历史资产，不安装依赖，不 stage/commit/push/merge/deploy，不启用 Superpowers；
+- 已知 changed surface：全局 Skill 的 `SKILL.md`、沟通参考、UI metadata、项目模板和初始化／检查脚本，以及掌眼 `AGENTS.md`、`.project-co-leader-v2.yaml`、README、`docs/project/overview/`、风险／当前状态／下一行动。已知 preserved surface：全部产品源码、案例与规则数值、玩家／教师 HTML、V1 冻结资产、作品集 capsule、原工作区和 Git 历史；
+- 验证状态：修改前全局 Skill 已完整备份，22/22 文件哈希一致、差异为 0；临时新项目 preview/apply、二次 apply 不覆盖、旧项目缺失 overview 仅警告均通过；掌眼项目记忆检查为 `0 errors / 0 warnings`，8 个 overview 模板／实例的相对链接、围栏、Mermaid 静态结构和权威声明检查通过；三个无答案泄漏的独立只读前向测试分别通过阶段交接、追兔子刹车和轻量局部任务。官方 Skill Creator `quick_validate.py` 因本机缺少 `PyYAML` 未启动，本轮未安装依赖，改用 frontmatter／命名／引用／行数／YAML 结构、Python AST 与模板同步检查；Mermaid 未做渲染视觉验收；
+- Durable handoff：[宏观入口](overview/00-START-HERE.md)、[五阶段路线图](overview/01-ROADMAP.md)、[树和剪影模型](overview/02-MENTAL-MODEL.md)、[阶段卡](overview/03-MILESTONES.md)，以及可恢复备份 `C:\Users\ASUS\.codex\backups\project-co-leader-v2\pre-human-readable-steering-20260812-221521`；最后更新：2026-08-12；重开触发：备份无法恢复、Skill 结构或初始化回归失败、宏观投影成为第二活动账本、真实沟通不能稳定触发阶段交接／追兔子刹车／轻量模式，或改动越过批准的治理与文档边界。
 
 - Workstream：`V2-PRE-NUMERIC-RESEARCH-SNAPSHOT-001`；状态：Completed（本条与快照在同一提交中）；责任载体：Project Co-Leader（提交范围、验证与 Git 检查点负责人）；
 - 当前检查点：以 `b211e64132c1217bb6fc008cc9993710db8755c1` 为父提交，用户明确批准把当时全部 70 条未提交状态（18 个已跟踪修改、52 个未跟踪文件）收录为本地提交，提交信息为“研究数值系统前的快照”；
@@ -145,10 +173,10 @@ V1 冻结资产保持不变；本文件所在的本地提交“研究数值系�
 - Safari、320px 极窄屏、软键盘遮挡、真实设备 safe-area 尚未做专项验证。
 - 既有 `npm audit --omit=dev` 记录曾报告 Next.js 服务端依赖链有 3 项高危公告；2026-08-03 冻结前刷新因 npm registry `ECONNRESET` 未取得在线结果。离线单文件不使用该服务端，但公开部署前必须在网络可用时重新审计、升级并回归。
 
-## 已批准但尚未实现
+## V2 未实现并转交 V3 重新采用的候选
 
-- [DEC-014](decisions/DEC-014-human-object-dual-appraisal.md) 已批准“器物／NPC 同屏、人物表现替代事实标签、统一案卷、三张证据图、双后验、连续对话、受控 NPC 误导、D20 洞察附加层、人物鉴定与单列察人分”。其中第一批共享展示外壳与漆器手机切片已经实现；三张证据图、8 AP、双后验拆分、连续对话、受控误导、D20 与察人分仍未实现；
-- 第一批产品检查点已经停在用户视觉确认门，不自动进入证据图或 D20。下一规则批次仍需用户确认本切片并单独授权；
+- [DEC-014](decisions/DEC-014-human-object-dual-appraisal.md) 在 V2 曾批准“器物／NPC 同屏、人物表现替代事实标签、统一案卷、三张证据图、器物双后验、双向人物认知、连续对话、受控 NPC 误导、D20 洞察附加层、人物鉴定与单列察人分”。其中第一批共享展示外壳、漆器手机切片和器物双后验已经实现；三张证据图及其可见性／共享元数据、玩家人物线索与明确提交、NPC 器物知识账本与对玩家模型、画像／关系／成交意愿分账、8 AP、连续对话、受控误导、D20 与察人分仍未实现。DEC-014 已归档，这些未实现方向只有在 V3 重新 Adopt／Borrow 后才生效；
+- 第一批产品检查点已经按用户决定停放，不自动进入视觉精修、证据图代码或 D20。范围讨论形成的 V3 设计材料在独立版本中继续收敛，不回写 V2；
 - “客观收益与能力评分关系”继续作为后续 Critical 证据设计，排在本轮体验／系统重构和评分维度稳定之后；
 - `V2-RESEARCH-001` 已完成；`EXP-019` 的“内部确定性规则核 + 可替换适配层”已经落实为本轮实现。任何后续新生产依赖仍需单独证明必要性；
 - 面向老师的自动化、低认知门槛层继续作为后续上层能力，不在治理迁移中提前编码；
@@ -156,24 +184,27 @@ V1 冻结资产保持不变；本文件所在的本地提交“研究数值系�
 
 ## 当前最大风险
 
-V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造多套权威和治理误配：
+V1 已有明确冻结引用；V2 已批准冻结标签名称，实际引用须在提交后从 Git 现场确认。当前最大风险转为 V3 继承时重新制造多套权威、把草稿冒充规格或产生治理误配：
 
 1. 未来改动可能重新让实验台、历史单文件、生成文件或测试成为第二数值权威；本轮已完成生产权威收敛，`EXP-020` 记录当前审计边界；
 2. 若整体引入 boardgame.io、Yuka、OpenSpiel 或让 ink 持有生产数值，会新增第二状态机或与现有回放骨架重复；
 3. 根工作区仍保存 31 项历史混合改动，V2 不能把这些内容整包导入或误认成冻结基线；
 4. 当前三个初始案例尚未经专家校订或一般玩家测试，无法证明文化准确性、数值平衡、不同案件的信息披露与一般玩家体验；
 5. 当前证据仍是平铺来源／维度覆盖，NPC 行为模板又能通过作者似然直接影响器物后验；在拆分人物可信度与器物推断前加入 D20 会放大错误因果；
-6. 当前人物事实标签和中文文案解析同时参与议价评分，显示文案与规则参数尚未解耦；
-7. 新任务若未正确加载 V2 Skill 或错误同时启用 V1/V2，会破坏单一项目负责人入口；
-8. 公开 H5 的依赖安全、真实微信环境和一般目标玩家体验仍未验证。
+6. 若把器物估值、人物认知、关系状态、成交意愿和行为仲裁压成一个轴，人物反应会失真；若直接随机排列画像参数，又会产生不可解释的组合爆炸；
+7. 当前人物事实标签和中文文案解析同时参与议价评分，显示文案与规则参数尚未解耦；
+8. 新任务若未正确加载 V2 Skill 或错误同时启用 V1/V2，会破坏单一项目负责人入口；
+9. 公开 H5 的依赖安全、真实微信环境和一般目标玩家体验仍未验证。
 
 ## 当前阻塞
 
-- V2 最小治理迁移没有技术阻塞；
-- 第一批漆器手机场景没有技术阻塞，已按用户选择结构化停放；视觉确认不是当前数值审计的前置依赖；
-- 数值理解没有技术阻塞；下一用户拥有字段是：继续使用现有中文地图，还是批准限定 Understand Anything 试点；以及是否把“统一 NPC 实际议价与 N 分解释模型”作为下一份书面规格；
+以下只描述 V2 冻结／交接时仍需从现场确认的事项，不再承载 V3 活动计划：
+
+- V2 冻结前的项目内验证没有技术阻塞；提交与 annotated tag 是提交外部身份门，结果必须从 Git 现场核对；
+- 第一批漆器手机场景已按用户选择结构化停放，V2 不再继续视觉精修、证据图代码、人物认知、Understand Anything 试点、议价／N 分规格或产品数值修改；
+- “两部分游戏”的范围讨论及其后的真相拓扑构思已转入 V3 设计材料；它们不再是 V2 当前检查点，也不自动成为 V3 已批准规格；
 - `project-agent-governance` 是否会在新顶层任务中出现在可调用 Skill 清单，仍需现场核验；
-- 公开 H5 地址和微信内实机验证需要后续选择托管方式，不属于当前 V2 启动范围。
+- 公开 H5 地址和微信内实机验证需要后续选择托管方式，不属于当前 V2 冻结／交接范围。
 
 ## 当前边界
 
@@ -188,6 +219,8 @@ V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造�
 
 ## 关键记录
 
+- [统一领域语境](../../CONTEXT.md)
+- [宏观驾驶舱入口](overview/00-START-HERE.md)
 - [DEC-003：调查与议价资源](decisions/DEC-003-integrated-investigation-loop.md)
 - [DEC-004：等级制结算](decisions/DEC-004-objective-outcome-and-judgment.md)
 - [DEC-007：具体证据公开](decisions/DEC-007-dual-belief-and-strategic-disclosure.md)
@@ -208,11 +241,16 @@ V1 已有明确冻结引用，当前最大风险转为 V2 演进时重新制造�
 - [DEC-013：V2 独立玩家试玩版与双轨结算](decisions/DEC-013-v2-player-trial-and-dual-track-scoring.md)
 - [CH-005：NPC 受控误导与人与物双重鉴定边界](challenges/resolved/CH-005-human-object-dual-appraisal-boundary.md)
 - [DEC-014：人与物双重鉴定、证据拓扑与洞察附加层](decisions/DEC-014-human-object-dual-appraisal.md)
+- [DEC-015：冻结 V2 玩家试玩基线并从其启动 V3 设计阶段](decisions/DEC-015-v2-freeze-and-v3-bootstrap.md)
 - [EXP-021：V2 玩家试玩版、三案例与双轨评分验证](evidence/EXP-021-v2-player-trial-and-dual-track-scoring.md)
 - [EXP-022：玩家试玩版“人与物”体验、数值与证据结构审查](evidence/EXP-022-human-object-player-trial-audit.md)
 - [EXP-023：首个手机“人与物同屏”玩家切片](evidence/EXP-023-first-mobile-human-object-slice.md)
 - [EXP-024：当前检查点与 public HTML 身份清单](evidence/EXP-024-current-checkpoint-and-public-html-inventory.md)
 - [EXP-025：自然语言仓库解释工具只读调研](evidence/EXP-025-natural-language-codebase-tools.md)
 - [EXP-026：现行 V2 数值系统自然语言地图](evidence/EXP-026-current-numeric-system-atlas.md)
+- [EXP-027：双向认知边界与 NPC 混合行为架构转折](evidence/EXP-027-bidirectional-cognition-design-turning-point.md)
+- [EXP-028：Project Co-leader V2 决策前调查门禁](evidence/EXP-028-project-co-leader-research-before-decision-gate.md)
+- [EXP-029：V2 玩家试玩原型冻结](evidence/EXP-029-v2-player-prototype-freeze.md)
+- [V2 轻量作品集系统边界转折卡](../portfolio/v2-process/2026-08-13-system-boundary-turning-point.md)
 - [V1 基线与作品集原始证据保全设计](../superpowers/specs/2026-08-04-v1-portfolio-evidence-preservation-design.md)
 - [V1 作品集证据保全实施计划](../superpowers/plans/2026-08-04-v1-portfolio-evidence-preservation.md)

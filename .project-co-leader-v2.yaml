@@ -1,5 +1,5 @@
 version: 2
-workflow_revision: "2.2-agent-topology"
+workflow_revision: "2.4-evidence-before-decision"
 mode: "auto"
 question_horizon: "next-verifiable-checkpoint"
 question_posture: "adaptive-inquiry-forward"
@@ -17,6 +17,22 @@ deferred_question_requires_trigger: true
 verification_contract_mode: "risk-based"
 docs_root: "docs/project"
 language: "zh-CN"
+communication_profile:
+  mode: "human-readable-first"
+  technical_detail: "on-demand"
+  stage_handoff: "required"
+  comprehension_gate: "before-stage-transition"
+  rabbit_brake: "direct-overridable"
+  visual_summary: "when-relational-or-before-after"
+  overview_path: "docs/project/overview"
+decision_research_gate:
+  mode: "adaptive"
+  trigger: "product-impact"
+  minimum_evidence: "triangulated"
+  stop_rule: "evidence-saturation"
+  source_priority: "local-then-primary-then-practice"
+  coding_boundary: "reopen-on-emergent-product-decision"
+  durable_recording: "material-events-only"
 auto_update_project_memory: true
 auto_git_commit: false
 document_update_frequency: "event-driven"

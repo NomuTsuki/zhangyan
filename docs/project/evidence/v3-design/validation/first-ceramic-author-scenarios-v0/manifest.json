@@ -1,0 +1,88 @@
+{
+  "formatVersion": "v3-author-scenario-manifest/1",
+  "status": "validation-only",
+  "productCode": false,
+  "runtime": "Node.js ESM, built-ins only",
+  "numericIdentity": "All priors, compatibility weights and thresholds in this directory are fixture-only technical values selected to exercise structural branches. They are not product likelihoods, prices, balance parameters or calibration evidence.",
+  "precedence": "The v0.3 author-model delta overrides conflicting archive, domain-capability and illustrative-route statements in v0.2/v0.1. Every unmentioned v0.2 invariant remains inherited.",
+  "sources": [
+    {
+      "path": "../../2026-08-15-first-ceramic-paper-evidence-topology-v0.md",
+      "sha256": "DDCD4E6FDB89375D6A4EAEE0DD51CACA798C9EA9325D266A7CBA0540A9B4C41B",
+      "role": "inherit-selected-sections-only",
+      "inheritHeadings": [
+        "### 条件价值情景 `s`（Draft）",
+        "### 推断轴路由合同",
+        "## 调查动作",
+        "## 事实卡与依赖推断单元",
+        "### 只读推断 Findings",
+        "### 依赖处理不变量"
+      ],
+      "forbiddenHeadings": [
+        "## v0.1 当时的人话版结构（阶段解释已废止）",
+        "## 候选完整解释（Draft 假设空间）",
+        "## 主张、证明与恢复",
+        "## v0.1 旧确定性场景演算清单（暂停）"
+      ]
+    },
+    {
+      "path": "../../2026-08-17-first-ceramic-three-result-author-model-v0-2.md",
+      "sha256": "073A10D52E8337361AE21DFBFB69256592CEDD2567EF5E188454E652DD023A00",
+      "role": "inherited-author-structure",
+      "authority": [
+        "12 packages",
+        "G1/G2/G3 base meanings",
+        "joint support",
+        "early-acquire/late-understand/count-once",
+        "negative-result and scoped-counterevidence semantics"
+      ]
+    },
+    {
+      "path": "../../2026-08-21-first-ceramic-three-result-author-model-v0-3.md",
+      "sha256": "F1D9A2B3C7CA4265049A8A3D0A991806A6E886D11C00FA3418F9E916F244DD03",
+      "role": "authoritative-delta",
+      "authority": [
+        "archive relationship questions and states",
+        "G2 documented proof route",
+        "G3 T2/T3 archive relations",
+        "xray/material/surface/stability capability boundaries",
+        "soft G2 archive-attention pivot"
+      ]
+    },
+    {
+      "path": "../../2026-08-21-first-ceramic-concrete-session-v0-1.md",
+      "sha256": "D184168F6193268563184FA5EE374C9FFC5F0DDBEF3CE2FE0C80B2AAE94343B3",
+      "role": "illustrative-route-and-order-input",
+      "notAuthorityFor": [
+        "unique action order",
+        "product numbers",
+        "player UI"
+      ]
+    },
+    {
+      "path": "../../2026-08-21-first-ceramic-limited-domain-review-closure-v0.md",
+      "sha256": "1FD21487059B52D51A395C08D82D2AF3BC21ADE84500827EC9E4F4EE0F3E3E08",
+      "role": "domain-to-author-mapping-closure",
+      "notAuthorityFor": [
+        "named external expert approval",
+        "player understanding",
+        "gameplay or balance"
+      ]
+    },
+    {
+      "path": "../../2026-08-20-first-ceramic-independent-structural-review-v0.md",
+      "sha256": "898A138E432872F96004F24C9284DF90A5BCEB554D734FE414F714CF19983A03",
+      "role": "historical-v0-independent-review-only",
+      "notAuthorityFor": [
+        "v0.3 changes",
+        "current independent pass",
+        "domain accuracy"
+      ]
+    }
+  ],
+  "forbiddenImports": [
+    "prototype/**",
+    "V2 reducer/replay/random modules",
+    "V2 fixtures, content, numbers or stage semantics"
+  ]
+}

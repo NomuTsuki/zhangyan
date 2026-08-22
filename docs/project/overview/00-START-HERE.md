@@ -29,7 +29,7 @@
 
 ## 当前只做什么
 
-当前处于 **玩家知识地图交互方向重开**。旧工作台原型已经删除，新版原型仍暂停；现在先决定是否建立 Git 检查点，并确认两项 UI／UX Skills 能够单目录安装和干净退出。完成后才从“地图的基本地理是什么”开始逐项讨论。具名专家、实物可达性、路线成本、玩家理解、趣味、平衡、UI、正式数值、架构和产品代码仍未成立。
+当前处于 **玩家知识地图交互方向重开**。旧工作台原型已经删除并建立 Git 检查点；两项 UI／UX Skills 已按固定来源安装到项目内、逐文件核验并确认可单目录退出。新版原型仍暂停，现在从“地图的基本地理是什么”开始逐项讨论。具名专家、实物可达性、路线成本、玩家理解、趣味、平衡、UI、正式数值、架构和产品代码仍未成立。
 
 ```mermaid
 flowchart LR
@@ -46,8 +46,8 @@ flowchart LR
     R --> V03["v0.3 关系与能力修订<br/>独立 Pass"]
     V03 --> E["用户批准作者规格<br/>DEC-024 已完成"]
     E --> M["文字／面板原型<br/>已否决并删除"]
-    M --> U["当前：选择 UI／UX Skills<br/>暂停新版原型"]
-    U --> K["逐项对齐<br/>渐进知识地图"]
+    M --> U["项目级 UI／UX Skills<br/>已安装并核验"]
+    U --> K["当前：逐项对齐<br/>渐进知识地图"]
     K --> N["地图微循环测试<br/>再进入数值模拟"]
     N --> F["整局原型<br/>与真人盲测"]
     F --> Audit["V2 技术审查"]
@@ -60,7 +60,7 @@ flowchart LR
 - 不自动生成器物真相、证据语义、价值因果或完整拓扑，也不让未来生成器反向限制首案；
 - 不为没有调查、停手或价值作用的器物个性继续扩张考据，也不把这些选择逐项交给用户；
 - 不修改正式产品代码或把 Experimental 数字写成玩法定稿；隔离校验器、模拟脚本和可丢弃原型只服务代码前验证；
-- 旧工作台原型已经删除，新版地图原型尚未开始；当前只审查 Git 检查点与 Skill 安装／退出边界，不把历史 Routine 线路检查称为真人体验 Pass；
+- 旧工作台原型已经删除，新版地图原型尚未开始；项目级 Skill 安装门已关闭，当前只讨论地图语义，不把历史 Routine 线路检查称为真人体验 Pass；
 - 不把 V2 漆木盒、固定三真相、旧证据或数值直接带入 V3；
 - V3 不包含 V2 NPC 认知、D20、说谎、议价、人物生成或关系状态逻辑；
 - 不做正式美术和最终作品集 PDF；
@@ -72,4 +72,4 @@ flowchart LR
 2. 现实可信是护栏，游戏性决定在可信方案中选哪一种；深挖不能只奖励或只惩罚玩家；
 3. 系统证据估值、玩家挂牌价、客观市场结果是三件不同的事。
 
-详细权威记录：[项目罗盘](../00-PROJECT-COMPASS.md) · [当前状态](../02-CURRENT-STATE.md) · [下一行动](../03-NEXT-ACTIONS.md) · [DEC-017](../decisions/DEC-017-v3-stage-claims-stopping-and-fixed-price-listing.md) · [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md) · [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md) · [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md) · [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md) · [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md) · [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md) · [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md) · [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md)。已删除原型的失败记录：[微循环三分支 v0](../evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md)。当前冻结作者规格：[三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md) · [具体一局 v0.1](../evidence/v3-design/2026-08-21-first-ceramic-concrete-session-v0-1.md) · [确定性作者侧场景演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)；[v0.2](../evidence/v3-design/2026-08-17-first-ceramic-three-result-author-model-v0-2.md)保留为历史基线。
+详细权威记录：[项目罗盘](../00-PROJECT-COMPASS.md) · [当前状态](../02-CURRENT-STATE.md) · [下一行动](../03-NEXT-ACTIONS.md) · [DEC-017](../decisions/DEC-017-v3-stage-claims-stopping-and-fixed-price-listing.md) · [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md) · [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md) · [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md) · [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md) · [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md) · [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md) · [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md) · [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md)。已删除原型的失败记录：[微循环三分支 v0](../evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md)；[项目级 Skill 安装回执](../evidence/v3-design/2026-08-22-ui-ux-skill-install-receipt.md)。当前冻结作者规格：[三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md) · [具体一局 v0.1](../evidence/v3-design/2026-08-21-first-ceramic-concrete-session-v0-1.md) · [确定性作者侧场景演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)；[v0.2](../evidence/v3-design/2026-08-17-first-ceramic-three-result-author-model-v0-2.md)保留为历史基线。

@@ -25,7 +25,8 @@
 - [第一器物确定性作者场景独立复核 v1](2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)：封存负责人 `38/38` 后的首轮独立 Fail、修复后 `39/40` 失败、最终负责人／同一只读复核者 `40/40` 与 Pass；六个 T2／T3 关系槽、三阶段时间冲突和既有攻击均被重放。该 Pass 只验证冻结作者合同的结构后果；
 - [第一器物确定性作者场景独立复核 v0](2026-08-20-first-ceramic-deterministic-author-scenarios-v0.md)：保留多轮独立 Fail、负责人 false-green 与最终修复史；冻结快照最终为 `4/4 node --check`、`37/37` 测试、22 场景 × 324 状态、34 条声明合法顺序，且第五轮同一只读任务给出 Pass。该 Pass 只验证作者合同的确定性结构后果；
 - [玩家知识工作台微循环三分支 v0（失败方向证据）](2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md)：曾以同一 G2 软转折内容实现三个隔离低保真分支，并取得静态合同 `6/6`、真实浏览器交互 `15/15`。用户随后否决其文字／面板／TODO 式核心交互，并于 2026-08-22 要求删除五个未提交原型文件；本记录只保存失败转折与历史验证边界；
-- [UI／UX Skill 候选核验](2026-08-21-ui-ux-skill-candidate-research.md)：从实际 `SKILL.md`、许可证、自包含安装、维护状态与项目风险比较 GitHub 候选；最终推荐受控安装 Magnus `product-design-and-ux` 作为 UX／HCI 主导、安装 PracticalSwan `frontend-design` 作为审美表达层，并保留本机 `ui-task-flow-review` 作为独立复核。当前尚未安装；
+- [UI／UX Skill 候选核验](2026-08-21-ui-ux-skill-candidate-research.md)：从实际 `SKILL.md`、许可证、自包含安装、维护状态与项目风险比较 GitHub 候选；最终推荐受控安装 Magnus `product-design-and-ux` 作为 UX／HCI 主导、安装 PracticalSwan `frontend-design` 作为审美表达层，并保留本机 `ui-task-flow-review` 作为独立复核；
+- [UI／UX 项目级 Skill 安装回执](2026-08-22-ui-ux-skill-install-receipt.md)：记录用户授权、两个固定上游提交、仓库内安装路径、逐文件 Git blob 核验、许可证补齐、全局零副本、能力边界与干净退出方法。只证明安装完整且可追溯，不证明 Skill 建议、UI 或玩家体验成立；
 - [作品集过程资产候选](2026-08-13-object-truth-topology-portfolio-process-asset.md)：已轻量续记“概念证据地形 → 可攻击作者合同 → 独立 Fail／修复／Pass → 用户批准”的过程；仍须与未来玩家画面和盲测证据配对后才可筛选进入最终作品集；
 - [当日决策与数值治理过程资产（派生）](2026-08-14-v3-decision-and-numeric-governance-portfolio-process-asset.md)：整理 V3 启动后的产品语义、推理方式与项目治理转折；不属于六项原始证据哈希集合，也不代表实现或验证完成；
 - [用户批注参考图](assets/2026-08-14-ron-gilbert-topology-user-annotated.png)：私有研究参考，公开使用前必须自行重绘并核对图像权利。

@@ -24,6 +24,10 @@ V3 第一陶瓷切片在修改正式产品代码前，按以下依赖顺序推�
 - 常驻层显示当前问题缺口和若干调查方向，更具体的行动与救援提示由玩家主动展开；第一切片不预设自动“卡住”判断；
 - 作者完整图、隐藏证明门和完整后验轨迹只在成交或挂牌期满后随局末揭示显示。
 
+## 2026-08-23 后续澄清
+
+上述“自然语言首层”在首轮文字／面板原型被用户否决后，已由 [DEC-026](DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md) 收窄为渐进显影地图上的就地解释；文字不再承担玩家认知结构的主骨架。“常驻方向、提示按需加深”继续有效，并具体化为问题级探索前沿、按需行动类别和玩家主动请求时的当前最优调查。该最强提示只按本局当前已知信息计算，不读取作者隐藏真相或保证结果。
+
 领域复核只阻断材料、检测能力、保护与价值因果上的不可能、越权或严重误导；器物个性、证据分布、关卡节奏和视觉选择仍由游戏性与用户批准边界决定。
 
 ## 背景和问题
@@ -76,5 +80,6 @@ V3 第一陶瓷切片在修改正式产品代码前，按以下依赖顺序推�
 - [DEC-017：阶段主张、手动停手与单次挂牌](DEC-017-v3-stage-claims-stopping-and-fixed-price-listing.md)
 - [DEC-018：暂定阶段阈值与估值投影](DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md)
 - [DEC-022：开放证据网与三档结论门](DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md)
+- [DEC-026：渐进玩家知识地图与当前最优按需提示](DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)
 - [玩家引导与认知脚手架研究](../evidence/v3-design/2026-08-13-player-guidance-and-cognitive-scaffolding-research.md)
 - [当前状态](../02-CURRENT-STATE.md)

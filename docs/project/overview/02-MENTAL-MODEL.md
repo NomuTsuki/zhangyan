@@ -2,7 +2,7 @@
 
 > 这是面向人的简化投影，不是新的项目权威或活动账本。若本摘要与权威项目记录或现场证据冲突，以权威记录和现场证据为准。
 
-最后更新：2026-08-21
+最后更新：2026-08-23
 
 ## 核心比喻
 
@@ -28,7 +28,7 @@ flowchart LR
 | 责任区 | 人话解释 | V3 当前状态 |
 |---|---|---|
 | 1. 物品客观真相 | 山本身：身份、历史、状态、品质与价值 | **当前作者门已完成**；真相包已固定，限定领域映射已闭环，三档作者模型 v0.3 在首轮独立 Fail 修复后取得独立结构／确定性 Pass，并由 DEC-024 获得用户批准 |
-| 2. 玩家认知 | 玩家怎样根据事实形成、修正并表达判断 | **当前主线／低保真设计**；系统整理本局已知图，玩家确认关注、判断与停手；文字首层、粗数按需、常驻方向与主动加深提示，具体表达正在进入两至三个分支比较 |
+| 2. 玩家认知 | 玩家怎样根据事实形成、修正并表达判断 | **当前主线／地图语义已批准**；系统用地点、两态道路、地标、足迹与罗盘整理本局已知图，玩家确认关注、判断与停手；问题前沿常驻，帮助逐级加深，最强按需层点名当前最优调查。新版低保真表达尚未开始 |
 | 3. NPC 对器物／玩家的认知 | V2 曾设想 NPC 怎样理解器物与玩家 | **不属于 V3**；只保留历史记录 |
 | 4. NPC 画像与目标 | V2 曾设想人物差异、目标与关系 | **不属于 V3**；不是待办或停放功能 |
 | 5. NPC 局内状态与行为 | V2 曾设想连续对话、D20、议价、评分和行为仲裁 | **不属于 V3**；未来若重开须另立项目范围 |
@@ -41,10 +41,10 @@ flowchart LR
 |---|---|---|
 | 作者真相模型 | 完整历史、身份、状态与客观价值 | 否，结果后才揭示 |
 | 作者证明／依赖图 | 哪些事实和主张怎样支持、反驳、替代与恢复 | 否，结果后可看完整拓扑 |
-| 玩家知识图 | 已发现事实、允许知道的关系、当前主张与开放问题 | 是，但只显示玩家已知部分 |
-| 概率与行动层 | 真相包后验、证据估值、成本和继续／停止 | 部分，用自然语言和分层价值情景表达 |
+| 玩家知识图 | 已发现事实、允许知道的关系、竞争解释、调查足迹、当前地标与探索前沿 | 是，但只显示玩家已知部分；纯黑只表示尚无信息 |
+| 概率与行动层 | 真相包后验、证据估值、成本、继续／停止与当前行动排序 | 部分；粗概率仍未决定，最强按需层可给出按当前信念计算的最优调查 |
 
-Ron Gilbert 的依赖图可以帮助作者检查分叉、汇合、瓶颈和死路，但不能原样复制给玩家。玩家图更像一张属于玩家的案卷：帮助回忆和争辩，不是攻略。
+Ron Gilbert 的依赖图可以帮助作者检查分叉、汇合、瓶颈和死路，但不能原样复制给玩家。玩家图更像一张随着调查逐步点亮的地图：帮助回忆、争辩和发现下一片值得探索的未知，不预描答案。只有玩家主动请求最强帮助时，系统才会基于当前已知信息点名当下最优调查；这仍不是隐藏真相攻略。
 
 ## 一个不绑定器物品类的解释性例子
 
@@ -65,7 +65,7 @@ Ron Gilbert 的依赖图可以帮助作者检查分叉、汇合、瓶颈和死�
 
 现实考据在这里更像“山不能违反地质规律”，不是“必须照着现实中某一座山复刻”。材料、检测能力与价值因果必须可信；但具体哪一面是陡坡、哪一处藏着好消息，由关卡需要决定。无玩法作用的器物个性由作者直接处理，不再逐项交给用户。
 
-因此当前顺序是：先手工完成真相包与三档作者拓扑，让独立结构复核、确定性场景和限定领域复核寻找错误；领域复核触发的 v0.3 又经历首轮独立 Fail 与修复复查，冻结作者合同最终取得独立 Pass，并由用户通过 DEC-024 批准。现在依次制作玩家微循环、做无答案真人测试、模拟数值、串成整局并再次盲测，最后审查 V2 继承和技术方案；全部证据门通过后仍须由用户明确批准正式产品代码开工。程序化生成只有在不同手工案例显露出稳定语法后才可能重开，目前仍是 `Unknown`。
+因此当前顺序是：先手工完成真相包与三档作者拓扑，让独立结构复核、确定性场景和限定领域复核寻找错误；领域复核触发的 v0.3 又经历首轮独立 Fail 与修复复查，冻结作者合同最终取得独立 Pass，并由用户通过 DEC-024 批准。旧文字工作台失败后，DEC-026 先固定渐进地图语义；现在继续补齐地标变化等剩余问题，再制作新版微循环、做无答案真人测试、模拟数值、串成整局并再次盲测，最后审查 V2 继承和技术方案；全部证据门通过后仍须由用户明确批准正式产品代码开工。程序化生成只有在不同手工案例显露出稳定语法后才可能重开，目前仍是 `Unknown`。
 
 ## 三个价格概念不能互换
 
@@ -75,4 +75,4 @@ Ron Gilbert 的依赖图可以帮助作者检查分叉、汇合、瓶颈和死�
 
 因此，卖得快不自动证明推理正确，没卖出也不自动证明当时的证据判断毫无道理。成交或期满未成交之后，游戏再并列揭示完整真相、作者拓扑、玩家路线、冻结判断、挂牌与市场结果。
 
-统一词义见 [领域语境](../../../CONTEXT.md)。详细研究见 [V3 设计证据包](../evidence/v3-design/README.md)。具体数值仅见 [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md)，目前仍是 Experimental；第一器物与 V2 继承边界见 [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md)，对象结构与核心争议见 [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md)，作者客观真相包见 [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md)，三档作者结果边界见 [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md)，代码前验证顺序与玩家首轮投影方向见 [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md)，作者规格批准与阶段入口见 [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md)，当前冻结作者规格见 [三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md)，结构证据见 [确定性作者侧场景演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)。
+统一词义见 [领域语境](../../../CONTEXT.md)。详细研究见 [V3 设计证据包](../evidence/v3-design/README.md)。具体数值仅见 [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md)，目前仍是 Experimental；第一器物与 V2 继承边界见 [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md)，对象结构与核心争议见 [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md)，作者客观真相包见 [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md)，三档作者结果边界见 [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md)，代码前验证顺序与玩家首轮投影方向见 [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md)，作者规格批准与阶段入口见 [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md)，玩家责任见 [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md)，渐进地图与最强按需提示见 [DEC-026](../decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)，当前冻结作者规格见 [三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md)，结构证据见 [确定性作者侧场景演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)。

@@ -2,11 +2,11 @@
 
 > 只保存 V3 此刻的真实状态。V2 终态由 frozen tag 与对应项目记录保留。
 
-更新时间：2026-08-22
+更新时间：2026-08-23
 
 ## 一句话状态
 
-V2 已冻结为可运行、可回放的玩家试玩底座；V3 当前是 **Design / 玩家知识地图交互方向重开，进入地图语义对齐**。旧三个分支曾通过静态合同和真实浏览器 Routine 检查，但用户已否决其文字／面板／TODO 式核心交互；失败原型已经删除并建立 Git 检查点。两项 UI／UX Skills 已按固定来源安装到本仓库并完成逐文件核验。新版界面、真人测试合同、正式数值与产品代码继续锁定。
+V2 已冻结为可运行、可回放的玩家试玩底座；V3 当前是 **Design / 玩家知识地图核心语义已对齐，尚未开始新版低保真表达**。DEC-026 已固定渐进显影地图、探索前沿、竞争路线保留和最强按需层的当前最优调查；粗概率、具体布局、行动排序数值、真人测试合同、正式数值与产品代码继续锁定。
 
 ## 已完成且已验证
 
@@ -24,8 +24,9 @@ V2 已冻结为可运行、可回放的玩家试玩底座；V3 当前是 **Desig
 - [DEC-020](decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md) 已批准 Hong Bowl 修复史的虚构外销瓷大碗类比结构，并固定“18 世纪末中国外销瓷基本成立，但重组／补绘程度与价值仍不清楚”为核心争议；阶段交接补充已记录“真相先于证据、首案手工设计、程序化生成后期 Unknown”。DEC-021 已补齐具体作者真相包，第一纸面拓扑也已形成 Design Candidate；确定性结构演算已通过，正式数值、领域与玩法验证仍未完成；
 - [DEC-021](decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md) 已在用户直接确认的“无外来旧片、非游戏性器物个性不再逐项上交”边界内，固定珠江商馆与帆船图大碗的同器原片、多阶段修复、空间材料图、两条文档链和正向／负向／转向发现；这是作者真相设计，不是已验证玩法、文化结论或市场数值；
 - [DEC-022](decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md) 已固定第一陶瓷切片的三档结果、开放调查路线、意义门而非行动门、早期证据保留／后续重释、结果 2 可停手与结果 3 多证据汇合边界；三档精确 `proofRule`、玩家表现和数值未批准；
-- [DEC-023](decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md) 已固定正式产品代码前依次通过作者结构／演算、限定领域、用户作者规格、玩家微循环／真人测试、数值模拟、整局原型／真人测试、V2 技术审查和明确开工批准；系统整理／玩家确认、粗数按需、常驻方向／提示按需加深继续有效。其“文字首层”的具体交互解释已被用户本轮反馈重开：文字可作就地解释，但不得继续充当玩家知识结构的主骨架；具体替代 UI、测试合同、正式数值和产品实现仍未批准；
+- [DEC-023](decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md) 已固定正式产品代码前依次通过作者结构／演算、限定领域、用户作者规格、玩家微循环／真人测试、数值模拟、整局原型／真人测试、V2 技术审查和明确开工批准；系统整理／玩家确认、粗数按需、常驻方向／提示按需加深继续有效。其“文字首层”已经由 DEC-026 收窄为地图上的就地解释，不再充当玩家知识结构的主骨架；具体替代 UI、测试合同、正式数值和产品实现仍未批准；
 - [DEC-024](decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md) 已记录用户批准当前冻结作者规格作为玩家微循环输入；批准不扩张结构 Pass，也不批准具体 UI、粗概率组件、真人测试合同、数值或产品代码；
+- [DEC-026](decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md) 已固定玩家图的地点／两态道路／地标／足迹／罗盘语法、纯黑与显影不变量、竞争解释保留、由已知内容生长的问题级探索前沿，以及玩家主动请求最强帮助时点名当前最优调查。该决定批准的是产品语义与排序原则，不批准具体界面、概率组件、行动权重、并列规则、焦点作用域、测试或代码；
 - [第一器物纸面证据拓扑 v0.1](evidence/v3-design/2026-08-15-first-ceramic-paper-evidence-topology-v0.md) 已把真相包拆成原始观察、只读推断 Finding、依赖单元、八个互斥身份／修复史／关键材料解释、条件价值情景、Draft 主张／摘要、调查动作、估值连接和经济终局。其事实分账、联合后验、分轴、替代／回退和区域覆盖继续作为结构底稿；“单身份锚点＋并列深挖”阶段解释及旧演算入口已经废止；
 - [第一器物三档作者覆盖层 v0.1](evidence/v3-design/2026-08-16-first-ceramic-three-result-gate-author-overlay-v0.md) 保留为方向纠偏记录；[三档作者模型 v0.2](evidence/v3-design/2026-08-17-first-ceramic-three-result-author-model-v0-2.md) 已把修复史细化为三态，逐包枚举 12 个核心候选解释，写出 G1／G2／G3 联合支持与 `proofRule`、G3 允许未知、结果 2—3 局部成果、“证据可提前、意义延迟、只计一次”合同，以及新区分／独立印证／重复／反向四类探测回报、负向结果能力门和按主张范围生效的反证层级。静态规格与确定性场景已分别取得独立 Pass；领域、玩家、成本、数值和趣味仍未验证；
 - [第一器物具体一局与作者侧对抗复核 v0](evidence/v3-design/2026-08-20-first-ceramic-concrete-session-and-owner-structural-review-v0.md) 已用 15 拍演示路线和四条换序把抽象模型落回具体行动、观察、判断、停手和市场揭示，并完成模型负责人对抗复核。三项表达／前置问题及一项 G3 外推歧义已修复，后续补入重复信息、阴性能力门与抽象反证作用域验收，复核输入扩为 `OR-01—12`；精确概率、调查成本、路线非支配、玩家概率组件与独立 QA 仍未验证；
@@ -44,7 +45,7 @@ V2 已冻结为可运行、可回放的玩家试玩底座；V3 当前是 **Desig
 ## Active Work Ledger
 
 - Workstream：`V3-FIRST-PAPER-TOPOLOGY-001`；状态：Completed / Independent structural-deterministic Pass / User author-spec approved；责任载体：V3 作者模型负责人；最终检查点：v0.3、具体一局 v0.1、领域闭环和隔离夹具已经完成，首轮独立 Fail 暴露的六槽争议优先与三阶段时间冲突缺口已修复，同一只读复核者最终独立重算并给出 `40/40` Pass；用户于 2026-08-21 通过 DEC-024 批准该冻结作者规格作为玩家微循环输入。冻结文件、哈希、失败史和未验证边界继续保留；
-- Workstream：`V3-PLAYER-KNOWLEDGE-MICROCYCLE-001`；状态：In progress / Project-level UI／UX Skills installed and source-verified / Map semantics alignment next；责任载体：Project Co-Leader（玩家投影设计与阶段交接）；当前检查点：DEC-025 的可选中途快照、注意力焦点与收手最终快照责任继续有效。旧三个分支历史上取得 `node --check` Pass、合同测试 `6/6`、Chrome／Playwright 交互 `15/15`、控制台错误 `0`，但用户否决其主交互；五个从未提交的静态原型文件及空目录已经移除，只保留[失败方向文字证据](evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md)。Git 检查点 `12836c0` 已建立；用户随后明确授权安装，Magnus `product-design-and-ux@d68c1b3` 与 PracticalSwan `frontend-design@300310f` 已写入仓库 `.agents/skills/`，29/29 本地文件与固定上游 blob 匹配，全局同名目录为 0；安装与记录经独立只读复核后，用户又授权建立这一个本地 Git 检查点并继续语义讨论。授权边界：本次提交只含上述项目级 Skills 与对应项目记录，不推送；检查点后只允许加载相关 Skills 讨论渐进知识地图语义，不制作新版界面、不修改正式产品代码、不决定正式概率／价格／成本、不执行真人测试、不部署或发布。changed surface：新增两个项目 Skill 目录、补齐 Magnus 根 MIT 许可证、增加安装回执并同步当前状态；preserved surface：`AGENTS.md`、Agent 权限、作者完整图、作者验证、DEC-025 玩家责任和产品开工门均未改变。durable handoff：[UI／UX 项目级 Skill 安装回执](evidence/v3-design/2026-08-22-ui-ux-skill-install-receipt.md)；最后更新：2026-08-22。下一检查点：从“玩家知识地图的基本地理是什么”开始一次对齐一个语义问题。stop／reopen trigger：Skill 来源字节漂移、出现全局同名副本、需要超出批准范围的依赖／写入、无法单目录退出，或任何 Skill 试图改变 Agent 权限、产品决策权或正式开工边界；
+- Workstream：`V3-PLAYER-KNOWLEDGE-MICROCYCLE-001`；状态：In progress / Core map semantics approved / Replacement prototype not started；责任载体：Project Co-Leader（玩家投影设计与阶段交接）；当前检查点：旧文字／面板／TODO 式分支已经否决、删除并保留[失败证据](evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md)，项目级 UI／UX Skills 已在提交 `6976f97` 建立可退出检查点。用户于 2026-08-22—23 逐项批准地点／两态道路／地标／足迹／罗盘、黑暗与不可逆覆盖、竞争路线与历史、问题级探索前沿、逐级帮助，以及最强按需层点名当前最优调查；DEC-026 已形成 durable handoff。授权边界：本轮只允许把上述已批准语义写入项目记录并做一致性复核；不制作新版原型或正式 UI，不修改产品代码，不决定粗概率、行动排序权重／并列规则、正式价格／成本，不执行真人测试。用户随后另行授权把上述 16 份 Markdown 建立一个本地 Git 检查点，仍不推送、部署或发布。changed surface：新增 DEC-026，并同步既有 Decision、根领域词义、Compass、System Map、当前状态、下一行动、overview、风险和证据导航；preserved surface：作者冻结图与哈希、DEC-025 玩家责任、DEC-018 Experimental 数值、三轨经济、H5 路线、Agent 权限和产品开工门均未改变。verification：独立只读 QA 首轮 Fail 指出四处未决视觉／类型措辞被写得过实，并发现根 `CONTEXT.md` 仍绝对禁止唯一最优行动；负责人收窄为语义／Unknown 并补齐最强按需例外后，同一复核者最终 Verdict **Pass**。`git diff --check` 通过，项目记忆为 `0 errors / 0 warnings`，16 份变更 Markdown 共 250 个本地链接 `0 broken`、围栏奇数文件 `0`，非 Markdown、产品路径、AGENTS／config／权限文件差异均为 `0`；这些检查不证明实际 UI、玩家理解、排序数值或真人体验。durable handoff：[DEC-026](decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)；最后更新：2026-08-23。下一检查点：先对齐 G1／G2／G3 与局部 Finding 成为地标后怎样改变地图，再形成新版低保真表达；stop／reopen trigger：地图必须预描隐藏作者节点、调查结果需擦回纯黑、焦点开始隐藏／锁行动、最强提示读取真相或保证结果，或需新增产品数值、验证通过线、产品实现与 Git／外部写入权限；
 - 档案关系模型修订已获授权（2026-08-21）：用户确认档案归属是玩家可感知的正式推理轴，深档案调查以 G2 为软转折而非动作锁，多份记录可分别真实、部分相关、误归属或指向不同修复阶段；“记录彼此、记录与现器、所述事件与现存物证”三个关系问题持续更新，只约束系统能否负责地建立主张，不限制玩家凭直觉判断、调查、报价或收手。授权不包含玩家 UI、正式产品代码、产品数值、真人测试、Git 暂存／提交／推送或发布。preserved surface：12 个核心对象候选包、G1—G3 含义、开放顺序、早拿后懂、手动停手、玩家／系统可分歧、纯物证替代路线。verification：首轮独立 **Fail** 已按原规格修复，同一只读 Agent 最终复查为 **Pass**；任一三档含义、玩家／作者边界或冻结输入变化立即重开。owner：V3 作者模型负责人；最后更新：2026-08-21；durable handoff：[确定性作者侧场景演算 v1](evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)；
 - 历史静态检查基线（已由下方最终验证更新）：撤回误升格举例后，v0.2 SHA-256 为 `073A10D52E8337361AE21DFBFB69256592CEDD2567EF5E188454E652DD023A00`，具体一局／作者复核记录 SHA-256 为 `E4EA127106D5D57BF43E432FD71CF23D52E8251022E26B5B91964387A3991BFE`；12 包与蕴含计数、`OR-01—12`、四类探测回报、阴性语义、抽象反证作用域及文档静态检查均通过。该检查在当时只支持“撤回与路线同步已经落实且静态自洽”，其后续独立静态 Pass、确定性失败修复史与最终执行 Pass 分别由对应 Evidence 和下方检查点保存，不以本条替代。
 - 用户中断／安全暂停检查点（2026-08-20）：所有临时 Agent 已完成或中断，无后台任务继续。确定性夹具第 4 轮独立复核结论为 **Fail**：v0.2 已批准的档案路线 `T2 来源组 +（现器具名修复图 OR 跨时点对应）` 被求解器静默收紧为必须有现器修复图；其余重放探针无新增发现。修复停在中间态：`solver.mjs`、`fixtures.mjs`、`golden.mjs`、`contract.test.mjs` 与夹具 `README.md` 已写入显式档案跨时点证明槽、OR 逻辑及正向场景骨架，但负向探针尚未补完，补丁后尚未运行 `node --check` 或测试，也未交回独立复核。当前五文件 SHA-256 依次为 `621BD1540FA7D5BFB77B3BDD0A35712C05A53FC04839C9125BD16E51D46D2381`、`6580BD10454EB16280E944BDA6F07037003754E4A4323F1949BA90EED5F94250`、`9817145B69BB5E05578C09A0C72A9E567005ED4F7C3816FA5A695344F1AE1A85`、`F71A0591DB024772AC1763AE204D12C25D2B73930261ACED37BD56FA39BC5FFC`、`DA3519F9A4AFCD78B1327278C9E7423C562B1CAF2352374D484598D98CFA6574`；`manifest.json` 未改，暂存 `0`、冲突 `0`、产品路径差异 `0`。恢复触发仅为用户明确要求继续；恢复后第一步是只读检查这五个文件的半成品，再补完负向探针、运行首次测试、修复并以新哈希交回同一只读复核者。在取得 Pass 前不得进入限定领域复核。
@@ -69,19 +70,19 @@ V2 已冻结为可运行、可回放的玩家试玩底座；V3 当前是 **Desig
 
 ## 当前阻塞
 
-当前没有新暴露且未回答的作者侧分歧。用户已经批准 v0.3 作为玩家微循环输入；现在的第一个设计前沿已经从“如何排工作台”退回到更根本的问题：玩家的认知地图以器物部位、抽象推理关系还是二者耦合为基本地理，并怎样从黑暗逐步显影而不泄露作者图或变成图形化 TODO list。
+当前没有新暴露且未回答的作者侧分歧。玩家知识地图的核心语义已经由 DEC-026 关闭：它以信息来源地点和逐步形成的关系耦合组织，不直接投影作者图，也不退化为图形化 TODO list。下一项尚需与用户对齐的设计前沿是：G1／G2／G3 与局部 Finding 作为地标成立时，地图应怎样汇合、重排或继续保留未决区域，而不把三档重新画成固定阶梯。
 
-v0.3 已取得当前冻结输入的独立结构／确定性 Pass，并由 DEC-024 完成用户作者规格门。旧玩家微循环三分支只保留为失败证据；UI／UX Skill 选择、Git 检查点和项目级受控安装已经完成，当前逐项对齐渐进知识地图语义。新方向形成低保真表达、粗概率与最强提示边界对齐后，仍须按 DEC-023 单独披露并批准无答案真人测试合同，再做数值模拟、整局原型／真人测试、V2 技术审查和用户明确开工批准，才可修改正式产品代码。任何阶段都不把 DEC-018 的 Experimental 数值称为玩法定稿。
+v0.3 已取得当前冻结输入的独立结构／确定性 Pass，并由 DEC-024 完成用户作者规格门；DEC-025 与 DEC-026 已分别固定玩家责任和地图语义。下一步仍须先完成地标变化等剩余语义、形成新版低保真表达并决定粗概率，再按 DEC-023 单独披露并批准无答案真人测试合同；之后才是数值模拟、整局原型／真人测试、V2 技术审查和用户明确开工批准。任何阶段都不把 DEC-018 的 Experimental 数值或“当前最优调查”的未校准排序称为玩法定稿。
 
 ## 当前边界
 
-- V3 总范围包含物品真相、证据拓扑、玩家知识图、玩家后验与调查／停止后果；**作者侧责任区已完成当前门，两项项目级 UI／UX Skills 已安装，当前暂停新版原型并只讨论玩家渐进知识地图语义，不进入正式 UI 或产品实现**；
+- V3 总范围包含物品真相、证据拓扑、玩家知识图、玩家后验与调查／停止后果；**作者侧责任区已完成当前门，玩家地图核心语义已批准；当前继续补齐地标变化等剩余玩家语义，新版原型尚未开始，不进入正式 UI 或产品实现**；
 - 第一切片完整手工设计；自动化先限于结构校验与作者辅助，程序化器物真相／证据语义／完整拓扑保持后期 `Unknown`；
 - 第一切片不使用器物物损；调查机会和专业检测费用与器物价值分账；
 - 系统证据估值、玩家一次挂牌价和客观市场结算严格分离；结果后才揭示完整真相与拓扑；
 - V2 的 NPC 认知、人物画像、关系状态、连续对话、D20、受控误导、议价和人物评分只保留历史身份，不进入 V3；
 - V2 代码可以被 V3 后续显式 Adopt／Borrow，但不能静默继承固定三真相、平铺似然或评分公式；
-- 玩家图不得直接显示完整作者图、隐藏节点数量、真实边权或唯一最优动作；
+- 玩家图不得直接显示完整作者图、隐藏节点数量、真实边权或隐藏真相路线；常驻层不指定唯一动作，只有玩家主动请求最强帮助时才显示按本局已知信息计算的当前最优调查；
 - 作品集材料保持轻量，最终以完成成果、界面、自动化和玩家证据为主；
 - 不 push、deploy、发布，不制作最终 PDF，不公开使用私有批注图。
 
@@ -97,6 +98,8 @@ v0.3 已取得当前冻结输入的独立结构／确定性 Pass，并由 DEC-02
 - [第一陶瓷切片三档结果与开放证据网](decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md)
 - [正式产品代码前验证与玩家投影边界](decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md)
 - [第一陶瓷切片作者规格批准与玩家微循环阶段入口](decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md)
+- [玩家知识工作台快照、焦点与最终判断责任](decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md)
+- [渐进玩家知识地图与当前最优按需提示](decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)
 - [第一器物候选家族筛选研究](evidence/v3-design/2026-08-14-first-object-candidate-screening-research.md)
 - [陶瓷／瓷器具体对象候选研究](evidence/v3-design/2026-08-15-ceramic-specific-object-candidates.md)
 - [第一外销瓷真相包与关卡创作／自动化边界研究](evidence/v3-design/2026-08-15-first-ceramic-truth-package-and-authoring-boundary-research.md)

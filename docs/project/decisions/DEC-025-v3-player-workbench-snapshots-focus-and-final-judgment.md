@@ -29,7 +29,7 @@ Status: Active
 
 - 三个低保真表达分支中的最终布局选择；
 - 粗概率使用区间、十格图还是近似百分比；
-- 最强按需提示具体到问题、行动类别还是单项行动；
+- 最强按需提示具体到问题、行动类别还是单项行动（本决定记录时未决；2026-08-23 已由 DEC-026 解决为“逐级展开，最强层点名当前最优调查”）；
 - 真人测试合同、通过线、正式 UI、正式产品代码、数值、经济参数或部署。
 
 ## 原型合同
@@ -50,10 +50,11 @@ Status: Active
 - 焦点排序事实上隐藏内容、限制行动或形成系统命令；
 - 中途快照必须影响系统后验、提示或市场才能让循环成立；
 - 最终快照阻止玩家在证据有限时凭直觉收手；
-- 原型必须泄露作者完整图、隐藏证明门或唯一最优行动才能被理解。
+- 原型必须在常驻层泄露作者完整图、隐藏证明门或唯一行动才能被理解，或把最强按需层的当前最优调查误装成隐藏真相的唯一正确路线。
 
 ## 相关记录
 
 - [DEC-023：正式产品代码前的验证顺序与玩家投影边界](DEC-023-v3-pre-product-validation-and-player-projection-boundary.md)
 - [DEC-024：作者规格批准与玩家微循环入口](DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md)
+- [DEC-026：渐进玩家知识地图与当前最优按需提示](DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)
 - [玩家知识工作台微循环三分支失败记录](../evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md)

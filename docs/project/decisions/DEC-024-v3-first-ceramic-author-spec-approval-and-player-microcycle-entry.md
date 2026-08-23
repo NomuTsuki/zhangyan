@@ -19,6 +19,10 @@ Status: Active
 
 下一责任区切换为玩家知识工作台微循环：用同一段已批准内容制作两至三个低保真表达分支，比较事实、当前解释、开放问题、调查方向和按需粗概率怎样组织。系统整理玩家已知内容，玩家保留关注、判断、继续与停手责任；作者完整图、隐藏证明门、精确边权和唯一最优动作不进入局中投影。
 
+## 2026-08-23 后续澄清
+
+上段“唯一最优动作不进入局中投影”继续约束常驻地图、普通提示以及读取隐藏真相的唯一通关路线。后续 [DEC-026](DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md) 只在玩家主动请求的最强帮助层开放一个按**本局当前已知信息、可用资源与成本**计算的当前最优调查；它不是作者答案，也不保证结果。该澄清不改变本决定批准的作者规格或产品代码开工门。
+
 ## 批准不包含
 
 - 具体 UI 布局、视觉风格、组件或最终交互；
@@ -49,5 +53,6 @@ Status: Active
 ## 相关记录
 
 - [DEC-023：正式产品代码前的验证顺序与玩家投影边界](DEC-023-v3-pre-product-validation-and-player-projection-boundary.md)
+- [DEC-026：渐进玩家知识地图与当前最优按需提示](DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)
 - [当前状态](../02-CURRENT-STATE.md)
 - [下一行动](../03-NEXT-ACTIONS.md)

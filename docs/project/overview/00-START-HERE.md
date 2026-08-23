@@ -2,7 +2,7 @@
 
 > 这是面向人的简化投影，不是新的项目权威或活动账本。若本摘要与权威项目记录或现场证据冲突，以权威记录和现场证据为准。
 
-最后更新：2026-08-22
+最后更新：2026-08-23
 
 ## 项目是什么
 
@@ -24,12 +24,13 @@
 - 用户已确认主要乐趣不是局末真假反转，而是开放调查路线逐步汇合成三档清楚结果：结果 2 是“身份＋显著重组／补绘基本成立”的平庸完整胜利，结果 3 才是多证据较硬汇合。门禁限制系统能说什么，不限制玩家能先查什么；DEC-022 已记录，玩家界面以后再做。
 - 三档作者模型 v0.2 已把身份、三态修复史和关键材料组合成 12 个核心候选解释包；限定领域复核随后触发 v0.3，把档案改为六个 T2／T3 关系槽，并按区域、点位、材料层和条件收窄检测能力。首轮独立复核发现五槽争议漏项与时间冲突探针缺口，负责人修复后由同一只读复核者独立重放为 Pass。G2 仍须由“老器且重大重组”的联合支持建立，纯物证路线仍可独立形成 G2；G3 允许非关键地图未探索，但关系或时间冲突会阻断对应更深主张。
 - 一条具体一局和四条换序已经把“看器物—形成 G1—查身份与事故进入 G2—用紫外／X 射线／试窗／状态检查形成 G3—挂牌与揭示”完整讲通；作者负责人对抗复核及后续语义校准形成 `OR-01—12`，但尚不是独立 QA，也没有证明路线成本与趣味。用户用“比如／比方说／举例”说明概念时不再自动升格为真相、夹具或数值；此前被误固定的反证案例已经撤回，只保留抽象作用域规则。
-- DEC-023 已固定正式产品代码前的顺序：作者独立复核与确定性演算、限定领域复核、用户批准作者规格、玩家微循环及真人测试、数值模拟、整局原型及真人测试、V2 技术审查，最后再由用户明确批准开工。系统整理、粗数按需和提示不锁行动继续有效；“文字首层”作为主交互的解释已被本轮反馈重开。
+- DEC-023 已固定正式产品代码前的顺序：作者独立复核与确定性演算、限定领域复核、用户批准作者规格、玩家微循环及真人测试、数值模拟、整局原型及真人测试、V2 技术审查，最后再由用户明确批准开工。系统整理、粗数按需和提示不锁行动继续有效；“文字首层”作为主交互已被否决，DEC-026 将文字收窄为渐进地图上的就地解释。
 - DEC-024 已记录用户批准当前冻结作者规格作为玩家知识工作台微循环的输入；DEC-025 的可选中途快照、注意力焦点和收手最终快照责任继续有效。三个文字／面板主导的低保真分支虽通过 Routine 线路检查，但用户已否决其核心体验，并于 2026-08-22 要求删除五个未提交原型文件；当前只保留轻量失败记录。
+- DEC-026 已把替代方向的核心语义固定下来：玩家看到的是从纯黑逐步显影的进度地图。信息来源是地点；已成立关系和伸向未知的问题前沿是两种不同道路；阶段成果、调查历史与注意力分别表现为地标、足迹和罗盘。玩家主动请求最强帮助时，系统点名按本局当前已知信息与成本计算的当前最优调查，但不读取隐藏真相或保证结果。
 
 ## 当前只做什么
 
-当前处于 **玩家知识地图交互方向重开**。旧工作台原型已经删除并建立 Git 检查点；两项 UI／UX Skills 已按固定来源安装到项目内、逐文件核验并确认可单目录退出。新版原型仍暂停，现在从“地图的基本地理是什么”开始逐项讨论。具名专家、实物可达性、路线成本、玩家理解、趣味、平衡、UI、正式数值、架构和产品代码仍未成立。
+当前处于 **玩家知识地图核心语义已批准、剩余语义继续对齐**。旧工作台原型已经删除并建立 Git 检查点；两项 UI／UX Skills 已按固定来源安装、核验并确认可单目录退出。新版原型仍未开始，下一步先讨论 G1／G2／G3 与局部 Finding 成为地标时地图怎样变化，而不重新变成固定阶梯。粗概率、行动排序数值、具名专家、实物可达性、路线成本、玩家理解、趣味、平衡、正式 UI、架构和产品代码仍未成立。
 
 ```mermaid
 flowchart LR
@@ -47,8 +48,9 @@ flowchart LR
     V03 --> E["用户批准作者规格<br/>DEC-024 已完成"]
     E --> M["文字／面板原型<br/>已否决并删除"]
     M --> U["项目级 UI／UX Skills<br/>已安装并核验"]
-    U --> K["当前：逐项对齐<br/>渐进知识地图"]
-    K --> N["地图微循环测试<br/>再进入数值模拟"]
+    U --> K["渐进地图核心语义<br/>DEC-026 已完成"]
+    K --> L["当前：地标变化等<br/>剩余语义"]
+    L --> N["地图微循环测试<br/>再进入数值模拟"]
     N --> F["整局原型<br/>与真人盲测"]
     F --> Audit["V2 技术审查"]
     Audit --> G["用户批准<br/>正式产品代码开工"]
@@ -60,7 +62,7 @@ flowchart LR
 - 不自动生成器物真相、证据语义、价值因果或完整拓扑，也不让未来生成器反向限制首案；
 - 不为没有调查、停手或价值作用的器物个性继续扩张考据，也不把这些选择逐项交给用户；
 - 不修改正式产品代码或把 Experimental 数字写成玩法定稿；隔离校验器、模拟脚本和可丢弃原型只服务代码前验证；
-- 旧工作台原型已经删除，新版地图原型尚未开始；项目级 Skill 安装门已关闭，当前只讨论地图语义，不把历史 Routine 线路检查称为真人体验 Pass；
+- 旧工作台原型已经删除，新版地图原型尚未开始；项目级 Skill 安装门已关闭，当前只补齐已批准地图方向的剩余语义，不把历史 Routine 线路检查称为真人体验 Pass；
 - 不把 V2 漆木盒、固定三真相、旧证据或数值直接带入 V3；
 - V3 不包含 V2 NPC 认知、D20、说谎、议价、人物生成或关系状态逻辑；
 - 不做正式美术和最终作品集 PDF；
@@ -72,4 +74,4 @@ flowchart LR
 2. 现实可信是护栏，游戏性决定在可信方案中选哪一种；深挖不能只奖励或只惩罚玩家；
 3. 系统证据估值、玩家挂牌价、客观市场结果是三件不同的事。
 
-详细权威记录：[项目罗盘](../00-PROJECT-COMPASS.md) · [当前状态](../02-CURRENT-STATE.md) · [下一行动](../03-NEXT-ACTIONS.md) · [DEC-017](../decisions/DEC-017-v3-stage-claims-stopping-and-fixed-price-listing.md) · [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md) · [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md) · [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md) · [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md) · [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md) · [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md) · [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md) · [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md)。已删除原型的失败记录：[微循环三分支 v0](../evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md)；[项目级 Skill 安装回执](../evidence/v3-design/2026-08-22-ui-ux-skill-install-receipt.md)。当前冻结作者规格：[三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md) · [具体一局 v0.1](../evidence/v3-design/2026-08-21-first-ceramic-concrete-session-v0-1.md) · [确定性作者侧场景演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)；[v0.2](../evidence/v3-design/2026-08-17-first-ceramic-three-result-author-model-v0-2.md)保留为历史基线。
+详细权威记录：[项目罗盘](../00-PROJECT-COMPASS.md) · [当前状态](../02-CURRENT-STATE.md) · [下一行动](../03-NEXT-ACTIONS.md) · [DEC-017](../decisions/DEC-017-v3-stage-claims-stopping-and-fixed-price-listing.md) · [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md) · [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md) · [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md) · [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md) · [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md) · [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md) · [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md) · [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md) · [DEC-026](../decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)。已删除原型的失败记录：[微循环三分支 v0](../evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md)；[项目级 Skill 安装回执](../evidence/v3-design/2026-08-22-ui-ux-skill-install-receipt.md)。当前冻结作者规格：[三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md) · [具体一局 v0.1](../evidence/v3-design/2026-08-21-first-ceramic-concrete-session-v0-1.md) · [确定性作者侧场景演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)；[v0.2](../evidence/v3-design/2026-08-17-first-ceramic-three-result-author-model-v0-2.md)保留为历史基线。

@@ -2,7 +2,7 @@
 
 > 这是面向人的简化投影，不是新的项目权威或活动账本。若本摘要与权威项目记录或现场证据冲突，以权威记录和现场证据为准。
 
-最后更新：2026-08-22
+最后更新：2026-08-23
 
 ## 总路线
 
@@ -26,7 +26,8 @@ flowchart LR
     V03 --> Author["用户批准作者规格<br/>DEC-024 已完成"]
     Author --> OldMicro["文字／面板原型<br/>已否决并删除"]
     OldMicro --> Skills["项目级 UI／UX Skills<br/>已安装并核验"]
-    Skills --> Map["当前：对齐并验证<br/>渐进知识地图"]
+    Skills --> MapCore["渐进地图核心语义<br/>DEC-026 已完成"]
+    MapCore --> Map["当前：剩余语义<br/>与地图微循环验证"]
     Map --> Numeric["数值与经济模拟"]
     Numeric --> Full["整局原型<br/>与真人盲测"]
     Full --> Audit["V2 继承与<br/>正式技术审查"]
@@ -37,9 +38,9 @@ flowchart LR
 
 ## 当前阶段
 
-当前位置是 **V3 Design / 玩家知识地图方向重开后的语义对齐**。
+当前位置是 **V3 Design / 玩家知识地图核心语义已批准，剩余语义继续对齐**。
 
-不是在决定器物身世，也不是在写正式产品代码、正式界面或美术。DEC-021 已固定客观真相；DEC-022 已确认开放证据网汇合成三档结果；v0.3 作者模型已独立 Pass，DEC-024 已批准其进入玩家微循环。DEC-025 的快照与焦点责任继续有效，但文字／面板主导原型已被用户否决并删除，只保留轻量失败记录。Git 检查点已经建立，两项 UI／UX Skills 已按固定来源装入项目并确认可干净退出；当前从“地图的基本地理是什么”开始，逐项对齐从黑暗到清晰的知识地图。后续验证与代码开工门全部保持。
+不是在决定器物身世，也不是在写正式产品代码、正式界面或美术。DEC-021 已固定客观真相；DEC-022 已确认开放证据网汇合成三档结果；v0.3 作者模型已独立 Pass，DEC-024 已批准其进入玩家微循环。DEC-025 的快照与焦点责任继续有效，DEC-026 又固定了地点／两态道路／地标／足迹／罗盘、纯黑与显影、竞争路线、探索前沿和最强按需层的当前最优调查。旧文字／面板原型已否决并删除；新版原型尚未开始。当前先对齐阶段地标怎样改变地图，再进入低保真表达、粗概率和无答案测试。后续验证与代码开工门全部保持。
 
 ## 为什么仍不能直接画五种拓扑
 
@@ -67,7 +68,7 @@ flowchart LR
 ## 停放区
 
 - 第二到第五种拓扑；
-- 玩家知识图、迷雾／提示、面板与移动端交互的**正式执行**；旧微循环原型已经删除，项目级 Skill 安装门已关闭，当前只处理地图语义讨论；
+- 玩家知识图、迷雾／提示、面板与移动端交互的**正式执行**；旧微循环原型已经删除，项目级 Skill 安装门已关闭，当前只处理剩余地图语义和之后的隔离低保真验证；
 - 程序化器物真相／证据语义／完整拓扑；只有不同手工案例和玩家证据出现后才可另批受约束实验；
 - 正式美术、面向发布的文化／市场文案终校、最终 PDF；限定领域复核属于当前代码前主线，不在此停放；
 - 公开托管、依赖安全升级和微信内实机。
@@ -77,4 +78,4 @@ flowchart LR
 - V2 的 NPC 认知、画像、关系状态、连续对话、D20、议价、人物评分和行为仲裁不进入 V3；
 - V2 漆木盒内容、固定三真相、旧热点、似然、价格和卖家规则不作为第一器物默认。
 
-权威来源：[当前状态](../02-CURRENT-STATE.md) · [下一行动](../03-NEXT-ACTIONS.md) · [DEC-017](../decisions/DEC-017-v3-stage-claims-stopping-and-fixed-price-listing.md) · [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md) · [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md) · [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md) · [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md) · [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md) · [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md) · [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md) · [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md) · [微循环三分支 v0](../evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md) · [项目级 Skill 安装回执](../evidence/v3-design/2026-08-22-ui-ux-skill-install-receipt.md) · [三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md) · [确定性演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)
+权威来源：[当前状态](../02-CURRENT-STATE.md) · [下一行动](../03-NEXT-ACTIONS.md) · [DEC-017](../decisions/DEC-017-v3-stage-claims-stopping-and-fixed-price-listing.md) · [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md) · [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md) · [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md) · [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md) · [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md) · [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md) · [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md) · [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md) · [DEC-026](../decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md) · [微循环三分支 v0](../evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md) · [项目级 Skill 安装回执](../evidence/v3-design/2026-08-22-ui-ux-skill-install-receipt.md) · [三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md) · [确定性演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)

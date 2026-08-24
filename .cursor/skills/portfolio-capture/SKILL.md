@@ -28,7 +28,8 @@ Store under `docs/portfolio/<date>-<slug>/` with a one-line README each:
 ## Rules
 
 - Never overwrite an old capture; date-prefix everything.
-- Screenshots at the real target viewport (mobile portrait for Zhangyan,
-  desktop for Prior Probability), UI language as it ships.
+- Screenshots at the real target viewport. Zhangyan V3 captures at desktop
+  browser size per the 2026-08-24 viewport decision; its V1/V2 archive assets
+  stay mobile portrait. Prior Probability is desktop. UI language as it ships.
 - Mark each capture set with its candidate spread slot (concept / system /
   process / outcome / reflection) so assembly is a sort, not an excavation.

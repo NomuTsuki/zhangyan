@@ -1,23 +1,8 @@
-<!-- project-co-lead:start -->
-
-## Project Co-lead
-
-Status: disabled
-
-- When enabled, use the installed `project-co-lead` Skill as the default workflow for project-level orientation, design, implementation, experiments, review, and handoff.
-- Keep local, reversible, low-risk edits lightweight; do not create ceremony or durable records without a material project event.
-- Read `docs/project/00-PROJECT-COMPASS.md`, `02-CURRENT-STATE.md`, and `03-NEXT-ACTIONS.md` first, then only task-relevant records.
-- Do not silently cross an approved major decision, core value, scope, experience, or system boundary; open a Challenge and request approval.
-- Return material evidence to project memory at task closeout and distinguish implemented from verified.
-- When disabled, do not invoke the Skill or update project memory implicitly; an explicit `$project-co-lead` request may still use it for one task.
-
-<!-- project-co-lead:end -->
-
-<!-- project-co-leader-v2:start -->
-
 ## 项目事实
 
-- 古董鉴定与交易的**认知策略游戏**:玩家在信息不对称下检查器物、询问来客、决定披露与报价。手机竖屏 Web(H5),TypeScript/React,无需安装。
+- 古董鉴定与交易的**认知策略游戏**:玩家在信息不对称下检查器物、询问来客、决定披露与报价。Web(H5),TypeScript/React,无需安装。
+- **交付与用途**:本项目是用户在企业实习中独立负责的项目,导师最终要的交付物是一份**策划案**,不是手机尺寸原型或正式上线页面;同时本项目**首要服务作品集制作**(594×210mm 跨页)。项目不涉及隐私或保密协议,过程资产可自由留存、截图与展示。
+- **视口政策(2026-08-24 用户决定)**:V3 的一切切片、草图与验证**先按电脑浏览器尺寸制作,暂不受手机竖屏约束**。手机竖屏是 V1/V2 的历史事实,对 V3 不是当前约束。**提醒触发:一旦开始制作高保真原型或正式页面,必须主动提醒用户重新决定移动端约束,不得默认沿用桌面尺寸。**
 - 版本边界:V1(教师演示,冻结)/ V2(玩家试玩底座,冻结于 tag `v2.0.0-player-prototype-freeze`,不许改动)/ **V3(当前)**:物品真相拓扑与玩家知识地图,分支 `codex/v3-object-truth-topology`。
 - V3 当前状态:知识地图核心语义已批准(DEC-026);**下一步是低保真可玩切片**。正式数值、产品代码开工、真人测试均未批准,以 `docs/project/03-NEXT-ACTIONS.md` 为准。
 - 设计核心(不可动摇):作者真相模型(隐藏、固定)与玩家知识图(渐进显影)严格分离;证据≠结论;意义可以延迟、证据只计一次;玩家手动停手;双轨结算(客观结果 + 判断质量)。
@@ -60,21 +45,13 @@ Status: disabled
 - 实质工作完成后,主动用 `$learning-handoff` 讲解关键概念与取舍(用户在持续学习中)。
 - 输出语言:中文;代码与提交信息:英文。
 
+## 治理边界(本文件是本项目唯一治理权威)
+
+- 本文件不使用托管块,任何工具不得整段覆写它;规则变更只由人明确决定。
+- 本项目自带 skill 在 `.cursor/skills/`:`reorient`、`playtest-protocol`、`tune-params`、`research-decision`、`portfolio-capture`。`evidence-before-done` 与 `learning-handoff` 是全局 skill,不在仓库内,换机器会失效。
+- 默认停用,只在用户当次点名时用一次:旧治理体系 `project-co-lead` / `project-co-leader-v2` / `project-agent-governance`、`superpowers:*`、`structured-handoff`(其收尾格式与上面的完成定义冲突)、`ui-task-flow-review`,以及仓库内 `.agents/skills/` 的 `frontend-design` 与 `product-design-and-ux`(保留备查,不默认调用)。
+
 ## 元规则(防再度膨胀)
 
 - 新增全局规则,需要同一失败出现两次以上;优先把修复写进本文件(项目知识),而不是全局 skill(通用流程)。
 - 本文件超过 120 行时,先删后加。
-
-<!-- project-co-leader-v2:end -->
-
-<!-- superpowers-policy:start -->
-
-## Superpowers
-
-Status: opt-in only
-
-- Do not invoke `superpowers:*` Skills by default for planning, implementation, debugging, testing, review, or handoff.
-- Invoke a Superpowers Skill only when the user explicitly names it for the current task, or when a higher-priority platform instruction makes it mandatory. If the latter occurs, disclose that constraint before using it.
-- Keep the plugin installed; this policy changes invocation behavior only.
-
-<!-- superpowers-policy:end -->

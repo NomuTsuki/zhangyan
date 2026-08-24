@@ -8,7 +8,7 @@
 
 ## 当前检查点
 
-V2 冻结、DEC-017—027、客观真相、开放证据网和三档结果继续有效。v0.3 作者模型的旧六文件已经独立重放 Pass 并由 DEC-024 完成用户作者规格门；DEC-027 不改这些冻结字节，只把永久 G2 降级重分类为通用防御／未来案件测试，并固定首案正常后段以更丰富且付出成本的 G2 收手。追加范围覆盖层已完成负责人 `6/6` 并取得只读独立 Pass。DEC-028 已定案地标汇合与重排语义（画在证据道路的汇合口，只重排醒目度不搬位置），依据是三个候选模型的静态线框草图与实际渲染比较；作者规格夹具已在迁移后的仓库独立重放 `40/40` Pass。DEC-029 已定案罗盘与最强按需层排序范围的关系（不限定定义域、严格并列破平、越界必须标注），**可玩切片已无未决的语义前置条件**。行动排序数值、真人测试合同与可玩切片均尚未开始；粗概率呈现形式与“越界时给一条还是两条”已改为切片内变体验证。旧 v0／v0.2 的 Pass 继续只作历史证据。
+V2 冻结、DEC-017—029、客观真相、开放证据网和三档结果继续有效。v0.3 作者模型的旧六文件已经独立重放 Pass 并由 DEC-024 完成用户作者规格门；DEC-027 不改这些冻结字节，只把永久 G2 降级重分类为通用防御／未来案件测试，并固定首案正常后段以更丰富且付出成本的 G2 收手。追加范围覆盖层已完成负责人 `6/6` 并取得只读独立 Pass。DEC-028 已定案地标汇合与重排语义（画在证据道路的汇合口，只重排醒目度不搬位置），依据是三个候选模型的静态线框草图与实际渲染比较；作者规格夹具已在迁移后的仓库独立重放 `40/40` Pass。DEC-029 已定案罗盘与最强按需层排序范围的关系（不限定定义域、严格并列破平、越界必须标注），**可玩切片已无未决的语义前置条件**。行动排序数值、真人测试合同与可玩切片均尚未开始；粗概率呈现形式与“越界时给一条还是两条”已改为切片内变体验证。旧 v0／v0.2 的 Pass 继续只作历史证据。
 
 ## 推荐主路径
 
@@ -119,6 +119,9 @@ flowchart LR
 - [玩家知识工作台快照、焦点与最终判断责任](decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md)
 - [渐进玩家知识地图与当前最优按需提示](decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)
 - [首案稳定 G2 与后段回退边界](decisions/DEC-027-v3-first-ceramic-stable-g2-and-post-g2-fallback.md)
+- [G 地标画在证据道路的汇合口，并压缩验证顺序](decisions/DEC-028-v3-landmarks-at-evidence-junctions-and-compressed-validation-order.md)
+- [罗盘不限定“当前最优调查”的排序范围](decisions/DEC-029-v3-compass-does-not-restrict-best-investigation-ranking.md)
+- [地标模型草图 v0（三模型静态线框与渲染比较）](evidence/v3-design/validation/knowledge-map-sketches-v0/README.md)
 - [G2 稳定性与场景范围重分类](evidence/v3-design/2026-08-23-first-ceramic-g2-stability-and-scenario-scope-reclassification-v0.md)
 - [玩家知识工作台微循环三分支 v0](evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md)
 - [UI／UX Skill 候选核验](evidence/v3-design/2026-08-21-ui-ux-skill-candidate-research.md)

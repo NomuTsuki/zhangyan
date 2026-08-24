@@ -9,6 +9,7 @@ description: >-
   specifications to spec-driven-development.
 license: MIT
 compatibility: Works with any agent framework supporting the Agent Skills format; no design tool, frontend framework, or proprietary service required.
+disable-model-invocation: true
 ---
 
 # Product Design and UX

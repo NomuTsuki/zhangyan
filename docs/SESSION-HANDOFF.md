@@ -40,4 +40,4 @@
 
 - portfolio-as-code 样张已验证技术可行(594×210 精确 PDF,Chrome 无头导出),
   用户判定版面秩序够但可读性与节奏感不足;裁决(代码 vs Figma)推迟到素材齐备后。
-- 一切作品集排版工作冻结至开发完成;素材沉淀由 $portfolio-capture 随里程碑进行。
+- 一切作品集排版工作冻结至开发完成;素材沉淀由 /portfolio-capture 随里程碑进行。

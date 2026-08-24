@@ -15,7 +15,7 @@
 
 ## 完成定义(强制)
 
-- 任何"完成"声明之前,执行 `$evidence-before-done` 并附其报告:能运行的必须运行并贴出输出;改玩法或手感的,必须附一份给用户的试玩清单(`$playtest-protocol`);未验证项显式列出。
+- 任何"完成"声明之前,执行 `/evidence-before-done` 并附其报告:能运行的必须运行并贴出输出;改玩法或手感的,必须附一份给用户的试玩清单(`/playtest-protocol`);未验证项显式列出。
 - 没有证据的完成不是完成。"implemented but unverified" 是合法且受欢迎的表述。
 - 收尾汇报只用这一种格式,不再产出其他收尾仪式。
 - **触发式审查门**:执行任务完成后自查五信号——①触碰计划范围外的文件 ②修改了任何测试、基线或容差(无条件送审)③执行中单方面解决了计划模糊点 ④触碰核心系统文件(规则核/求解器)⑤改动无测试覆盖。命中任一,在报告中声明 `review required` 并列出命中项;裁决权在用户转交的独立审查会话,执行者只举手不裁决。
@@ -36,20 +36,21 @@
 - 用户以"比如/比方说/举例"标记的措辞只作说明;未经明确采纳,不得升格为事实、数值或决策。
 - 证据与已批准决策冲突时开门见山,不许静默偏离;失败后不许静默重生成基线、放宽容差或只调到测试通过为止。
 - 模拟不能证明好玩;涉及体验的结论一律标注"待真人验证"。
-- 新会话、上下文压缩后或长间隔重入:先跑 `$reorient`(git status / diff / CURRENT-STATE),再动手;会话摘要只作导航,不作事实。
-- 产品数值的改动走 `$tune-params`:登记旧值、新值、理由、回滚条件。
+- 新会话、上下文压缩后或长间隔重入:先跑 `/reorient`(git status / diff / CURRENT-STATE),再动手;会话摘要只作导航,不作事实。
+- 产品数值的改动走 `/tune-params`:登记旧值、新值、理由、回滚条件。
 
 ## 沟通偏好
 
 - 人话优先:先说解决了什么问题、改了什么、对方向的影响;技术细节随后**完整**给出——不省略,也不考试(不需要理解力确认、阶段交接仪式、反思格式块)。
-- 实质工作完成后,主动用 `$learning-handoff` 讲解关键概念与取舍(用户在持续学习中)。
+- 实质工作完成后,主动用 `/learning-handoff` 讲解关键概念与取舍(用户在持续学习中)。
 - 输出语言:中文;代码与提交信息:英文。
 
 ## 治理边界(本文件是本项目唯一治理权威)
 
 - 本文件不使用托管块,任何工具不得整段覆写它;规则变更只由人明确决定。
 - 本项目自带 skill 在 `.cursor/skills/`:`reorient`、`playtest-protocol`、`tune-params`、`research-decision`、`portfolio-capture`。`evidence-before-done` 与 `learning-handoff` 是全局 skill,不在仓库内,换机器会失效。
-- 默认停用,只在用户当次点名时用一次:旧治理体系 `project-co-lead` / `project-co-leader-v2` / `project-agent-governance`、`superpowers:*`、`structured-handoff`(其收尾格式与上面的完成定义冲突)、`ui-task-flow-review`,以及仓库内 `.agents/skills/` 的 `frontend-design` 与 `product-design-and-ux`(保留备查,不默认调用)。
+- 记法:Cursor 用 `/skill-name` 手动触发(不是 Codex 的 `$`);Cursor 同时读取 `.cursor/skills/`、`.agents/skills/`、`.claude/skills/`、`~/.codex/skills/`,所以旧体系仍会被看见,靠下一条停用清单约束而非删文件。
+- 默认停用,只在用户当次点名时用一次:旧治理体系 `project-co-lead` / `project-co-leader-v2` / `project-agent-governance`、`superpowers:*`、`structured-handoff`(其收尾格式与上面的完成定义冲突)、`ui-task-flow-review`,以及仓库内 `.agents/skills/` 的 `frontend-design` 与 `product-design-and-ux`。后两个已加 `disable-model-invocation: true` 机械禁用;前面那些装在仓库外的用户目录里,只能靠本条文字约束。
 
 ## 元规则(防再度膨胀)
 

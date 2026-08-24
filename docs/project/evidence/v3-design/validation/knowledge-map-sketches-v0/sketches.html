@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>玩家知识地图表达草图 v0 — 三个地标模型比较</title>
+<style>
+  :root{
+    --bg:#16181b;
+    --panel:#1e2125;
+    --panel2:#24282d;
+    --line:#3a4048;
+    --ink:#e6e3dd;
+    --ink2:#a7a49d;
+    --ink3:#6f6d68;
+    --accent:#c8a24a;      /* 已建立 / 地标 */
+    --warn:#c2603c;        /* 争议 */
+    --fog:#2a2e34;
+    --dead:#5a5651;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter","Segoe UI","Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1420px;margin:0 auto;padding:40px 32px 80px}
+  h1{font-size:26px;font-weight:650;letter-spacing:.01em;margin:0 0 6px}
+  h2{font-size:19px;font-weight:650;margin:0 0 4px}
+  .sub{color:var(--ink2);font-size:14px;line-height:1.7;margin:0}
+  .warnbar{margin:20px 0 32px;padding:12px 16px;border-left:3px solid var(--warn);
+    background:#22201e;color:var(--ink2);font-size:13.5px;line-height:1.7;border-radius:0 4px 4px 0}
+  .warnbar b{color:var(--ink)}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:0 0 34px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px}
+  .card h3{margin:0 0 10px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);font-weight:650}
+  .card p{margin:0;font-size:13px;line-height:1.75;color:var(--ink2)}
+  .card b{color:var(--ink);font-weight:600}
+  .kv{font-size:12.5px;line-height:1.9;color:var(--ink2)}
+  .kv span{color:var(--ink);font-variant-numeric:tabular-nums}
+
+  .legend{display:flex;flex-wrap:wrap;gap:8px 26px;margin:0 0 12px;padding:14px 18px;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:12.5px;color:var(--ink2)}
+  .legend i{display:inline-block;vertical-align:middle;margin-right:8px}
+
+  section{margin:0 0 56px}
+  .mhead{display:flex;align-items:baseline;gap:14px;margin:0 0 4px}
+  .tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);
+    background:var(--accent);padding:3px 9px;border-radius:3px;font-weight:700}
+  .bet{color:var(--ink2);font-size:13.5px;margin:0 0 16px;line-height:1.7;max-width:110ch}
+  .bet b{color:var(--ink)}
+  .stage{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px;
+    display:flex;gap:10px;align-items:stretch}
+  .stage svg{display:block;width:100%;height:auto;background:#121417;border-radius:4px}
+  .rail{flex:0 0 268px;background:#121417;border-radius:4px;padding:16px 18px;border:1px solid #262a30}
+  .rail h4{margin:0 0 12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:650}
+  .rr{display:flex;align-items:center;gap:9px;font-size:13px;padding:7px 0;border-bottom:1px solid #1e2126}
+  .rr:last-of-type{border-bottom:0}
+  .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+  .on{background:var(--accent)} .off{background:#33383e}
+  .blocked{margin:14px 0 0;padding-top:12px;border-top:1px solid #1e2126}
+  .blocked p{margin:0 0 7px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+  .blocked ul{margin:0;padding-left:16px;font-size:12.5px;line-height:1.85;color:var(--ink2)}
+  .cap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0 0}
+  .cap div{font-size:13px;line-height:1.75;color:var(--ink2)}
+  .cap h4{margin:0 0 5px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:650}
+  .good h4{color:#7f9a6a} .bad h4{color:#b0705a}
+  .look{margin:12px 0 0;padding:12px 16px;background:var(--panel2);border-radius:4px;
+    font-size:13px;line-height:1.75;color:var(--ink2)}
+  .look b{color:var(--ink)}
+  footer{margin-top:8px;padding-top:24px;border-top:1px solid var(--line);color:var(--ink2);font-size:13.5px;line-height:1.8}
+  footer b{color:var(--ink)}
+
+  /* SVG shared type */
+  text{font-family:"Inter","Segoe UI","Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif}
+  .nl{font-size:13px;fill:#d8d5cf}
+  .nl2{font-size:11.5px;fill:#8d8a84}
+  .fl{font-size:12.5px;fill:#c8a24a;font-weight:600}
+  .gl{font-size:13.5px;fill:#16181b;font-weight:700}
+  .gs{font-size:11px;fill:#c8a24a}
+  .rl{font-size:11px;fill:#6f6d68}
+  .zone{font-size:11px;fill:#4a4f57;letter-spacing:.16em}
+  /* dark halo so labels stay readable where they cross roads */
+  .nl,.nl2,.fl,.gs,.rl,.zone{paint-order:stroke;stroke:#121417;stroke-width:4px;stroke-linejoin:round}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>玩家知识地图表达草图 v0</h1>
+  <p class="sub">为 DEC-026 未决的<b>地标汇合与重排语义</b>提供可看的比较对象 · 2026-08-24 · 电脑浏览器尺寸</p>
+
+  <div class="warnbar">
+    <b>这是线框草图,不是视觉方向。</b> 配色刻意保持中性灰加单一强调色。美术与叙事方向须由用户批准,本文件不预设。
+    三张图<b>渲染的是同一份中局状态</b>,内容取自已批准的作者规格夹具(<code>fixtures.mjs</code>,<code>40/40</code> 已在本仓库重放通过),不是新编内容。
+    本文件不提供关于趣味、可玩性或玩家理解的任何证据——那些只能由无答案真人测试举证。
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>被渲染的中局状态</h3>
+      <p>物证路线已建立 <b>G2</b>(现器具名修复图 + 逐区结构读数 + 跨时点重大变化)。档案归属路线处于 <b>contested</b>,按"争议优先"不得升格为已证明。<b>G3 被四项未知阻断</b>。</p>
+    </div>
+    <div class="card">
+      <h3>足迹(12 次调查)</h3>
+      <p class="kv">有效推进 <span>10</span><br>重复·无新信息 <span>1</span>(证据只计一次)<br>能力不足阴性 <span>1</span>(不得推出"不存在")<br>已排除死路 <span>1</span></p>
+    </div>
+    <div class="card">
+      <h3>罗盘(只重排醒目度)</h3>
+      <p>当前倾向:<b>重大重组成立,补绘范围未知</b><br>首要疑点:<b>表面判定边界</b><br>罗盘不改变系统后验、不隐藏内容、不锁行动。</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i><svg width="30" height="8"><line x1="0" y1="4" x2="30" y2="4" stroke="#c8a24a" stroke-width="2.5"/></svg></i>已建立的关系</span>
+    <span><i><svg width="30" height="8"><line x1="0" y1="4" x2="30" y2="4" stroke="#5f6570" stroke-width="2" stroke-dasharray="5 5"/></svg></i>探索前沿(伸向迷雾,不代表隐藏关系成立)</span>
+    <span><i><svg width="30" height="8"><line x1="0" y1="4" x2="30" y2="4" stroke="#c2603c" stroke-width="2" stroke-dasharray="3 3"/></svg></i>争议中</span>
+    <span><i><svg width="30" height="8"><line x1="0" y1="4" x2="30" y2="4" stroke="#5a5651" stroke-width="2"/></svg></i>已排除死路(留在足迹层)</span>
+    <span><i><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="#2b3037" stroke="#8d8a84" stroke-width="1.5"/></svg></i>地点(信息来源)</span>
+    <span><i><svg width="14" height="14"><rect x="2.5" y="2.5" width="9" height="9" transform="rotate(45 7 7)" fill="#c8a24a"/></svg></i>局部 Finding</span>
+    <span><i><svg width="16" height="14"><polygon points="8,1 15,5 15,10 8,14 1,10 1,5" fill="#c8a24a"/></svg></i>G 阶段地标</span>
+  </div>
+
+  <!-- ============ shared base map in defs ============ -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+
+    <linearGradient id="fogR" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#121417" stop-opacity="0"/>
+      <stop offset="1" stop-color="#2a2e34" stop-opacity=".85"/>
+    </linearGradient>
+    <linearGradient id="fogB" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#121417" stop-opacity="0"/>
+      <stop offset="1" stop-color="#2a2e34" stop-opacity=".8"/>
+    </linearGradient>
+    <filter id="sheet" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity=".55"/>
+    </filter>
+
+    <!-- base map: locations, findings, roads, fog. NO G landmarks. -->
+    <g id="baseMap">
+      <!-- fog -->
+      <rect x="900" y="0" width="420" height="700" fill="url(#fogR)"/>
+      <rect x="0" y="540" width="1320" height="160" fill="url(#fogB)"/>
+      <text class="zone" x="1240" y="36" text-anchor="end">未 探 索</text>
+
+      <!-- established roads -->
+      <g fill="none" stroke="#c8a24a" stroke-width="2.5" stroke-linejoin="round">
+        <polyline points="140,170 270,225 420,300"/>
+        <line x1="120" y1="330" x2="400" y2="100"/>
+        <polyline points="400,100 550,95 700,130"/>
+        <polyline points="700,130 570,215 420,300"/>
+        <polyline points="165,500 290,520 800,480"/>
+        <line x1="420" y1="300" x2="500" y2="385"/>
+      </g>
+
+      <!-- negative-capability road -->
+      <line x1="165" y1="500" x2="330" y2="620" stroke="#6b6864" stroke-width="2"/>
+
+      <!-- dead end -->
+      <line x1="400" y1="100" x2="303" y2="44" stroke="#5a5651" stroke-width="2"/>
+      <g stroke="#5a5651" stroke-width="2"><line x1="296" y1="37" x2="310" y2="51"/><line x1="310" y1="37" x2="296" y2="51"/></g>
+      <text class="rl" x="288" y="30" text-anchor="middle">重复比对 · 无新信息</text>
+
+      <!-- contested road, stops short of G2 -->
+      <line x1="800" y1="480" x2="737" y2="411" stroke="#c2603c" stroke-width="2" stroke-dasharray="3 3"/>
+      <circle cx="731" cy="404" r="7.5" fill="none" stroke="#c2603c" stroke-width="2"/>
+      <line x1="726" y1="409" x2="736" y2="399" stroke="#c2603c" stroke-width="2"/>
+      <text x="752" y="401" class="rl" fill="#c2603c">记录—现器归属 · 争议中</text>
+      <text x="752" y="417" class="rl" fill="#8d8a84">争议优先,不得升格为已证明</text>
+
+      <!-- frontier roads -->
+      <g fill="none" stroke="#5f6570" stroke-width="2" stroke-dasharray="5 5">
+        <path d="M420,300 Q760,200 1112,296"/>
+        <path d="M290,520 Q430,610 606,636"/>
+        <path d="M800,480 Q960,510 1102,518"/>
+        <path d="M700,130 Q840,100 962,120"/>
+      </g>
+
+      <!-- fog locations (unexplored) -->
+      <g fill="#1b1e23" stroke="#5f6570" stroke-width="1.6" stroke-dasharray="3 3">
+        <circle cx="1130" cy="300" r="12"/><circle cx="620" cy="640" r="12"/>
+        <circle cx="1120" cy="520" r="12"/><circle cx="980" cy="120" r="12"/>
+      </g>
+      <g class="nl" fill="#8d8a84">
+        <text x="1130" y="332" text-anchor="middle">材料基底 · 层序</text>
+        <text x="620" y="672" text-anchor="middle">表面综合</text>
+        <text x="1120" y="552" text-anchor="middle">T3 后期处理档案</text>
+        <text x="980" y="152" text-anchor="middle">稳定性评估</text>
+      </g>
+
+      <!-- visited locations -->
+      <g fill="#2b3037" stroke="#a7a49d" stroke-width="1.8">
+        <circle cx="140" cy="170" r="13"/><circle cx="120" cy="330" r="13"/>
+        <circle cx="165" cy="500" r="13"/><circle cx="400" cy="100" r="13"/>
+        <circle cx="700" cy="130" r="13"/><circle cx="420" cy="300" r="13"/>
+        <circle cx="800" cy="480" r="13"/>
+      </g>
+      <circle cx="330" cy="620" r="13" fill="#22252a" stroke="#6b6864" stroke-width="1.8"/>
+      <g stroke="#6b6864" stroke-width="2"><line x1="324" y1="620" x2="336" y2="620"/></g>
+
+      <g class="nl">
+        <text x="140" y="146" text-anchor="middle">器物 · 整体</text>
+        <text x="120" y="364" text-anchor="middle">器物 · 底足</text>
+        <text x="150" y="534" text-anchor="middle">器物 · 纹饰区</text>
+        <text x="400" y="76" text-anchor="middle">同类比对</text>
+        <text x="700" y="106" text-anchor="middle">T1 历史影像</text>
+        <text x="420" y="276" text-anchor="middle">X 光逐区影像</text>
+        <text x="800" y="456" text-anchor="middle">T2 事故档案</text>
+        <text x="330" y="654" text-anchor="middle" fill="#8d8a84">紫外筛查</text>
+      </g>
+      <text class="nl2" x="330" y="672" text-anchor="middle">阴性 · 能力不足,不得推出"不存在"</text>
+
+      <!-- findings -->
+      <g fill="#c8a24a">
+        <rect x="262" y="217" width="16" height="16" transform="rotate(45 270 225)"/>
+        <rect x="492" y="377" width="16" height="16" transform="rotate(45 500 385)"/>
+        <rect x="562" y="207" width="16" height="16" transform="rotate(45 570 215)"/>
+        <rect x="282" y="512" width="16" height="16" transform="rotate(45 290 520)"/>
+      </g>
+      <g class="fl">
+        <text x="270" y="206" text-anchor="middle">现器具名修复图</text>
+        <text x="500" y="410" text-anchor="middle">逐区结构读数</text>
+        <text x="570" y="196" text-anchor="middle">跨时点重大变化</text>
+        <text x="290" y="501" text-anchor="middle">接缝与补绘观察</text>
+      </g>
+    </g>
+
+    <!-- G landmarks placed at road junctions (model 1 & 3) -->
+    <g id="gLayer">
+      <g fill="none" stroke="#c8a24a" stroke-width="4.5" stroke-opacity=".55">
+        <line x1="270" y1="225" x2="640" y2="320"/>
+        <line x1="500" y1="385" x2="640" y2="320"/>
+        <line x1="570" y1="215" x2="640" y2="320"/>
+      </g>
+      <polygon points="550,72 574,85 574,110 550,123 526,110 526,85" fill="#c8a24a"/>
+      <text class="gl" x="550" y="102" text-anchor="middle">G1</text>
+      <text class="gs" x="550" y="140" text-anchor="middle">可信问题方向</text>
+
+      <polygon points="640,286 670,303 670,337 640,354 610,337 610,303" fill="#c8a24a"/>
+      <text class="gl" x="640" y="326" text-anchor="middle">G2</text>
+      <text class="gs" x="640" y="374" text-anchor="middle">身份 + 重大重组成立</text>
+      <text class="gs" x="640" y="392" text-anchor="middle" fill="#8d8a84">由三条道路在此汇合</text>
+    </g>
+  </defs></svg>
+
+  <!-- ============ MODEL 1 ============ -->
+  <section>
+    <div class="mhead"><span class="tag">模型一</span><h2>地标是证据的汇合点,画在路口</h2></div>
+    <p class="bet">G 地标形成在建立它的几条道路的<b>交汇处</b>,位置由本局实际走出来的路线决定——不同局的 G2 会长在地图的不同地方。
+    局部 Finding 不被吸收,仍然看得见,G 地标在视觉上"由它们构成"。新证据只改变道路状态与地标的辩护强度,<b>不搬动任何东西</b>,所以"重排"是醒目程度的重排,不是位置的重排。
+    被推翻的地标留在原地转为"已排除",道路在足迹层变成死路。押的是<b>空间可追溯性</b>。</p>
+    <div class="stage">
+      <svg viewBox="0 0 1320 700"><use href="#baseMap"/><use href="#gLayer"/></svg>
+    </div>
+    <div class="cap">
+      <div class="good"><h4>它做到了</h4>阶梯感天然消失:G2 不是第二级台阶,是一个路口。任何结论都能顺着粗道路走回它的三个 Finding,"证据≠结论"在视觉上成立。
+      DEC-027 的"G2 稳定"变成结构性后果而非特例规则——G2 由若干 Finding 构成,外围被推翻只会让它变轻,核心不倒它就不倒。</div>
+      <div class="bad"><h4>它的代价</h4>路口天然拥挤:三条粗道路 + G2 + 附近的 X 光地点和逐区结构读数挤在中央一小块。布局需要动态计算,而且不同局的汇合位置不同意味着<b>没有固定构图</b>,难以为它设计版式。</div>
+    </div>
+    <p class="look"><b>请重点看:</b>中央 G2 那一块你是否觉得挤到影响阅读;以及你能不能一眼看出 G2 是"由三条线汇合而成"而不是"一个独立的成就徽章"。</p>
+  </section>
+
+  <!-- ============ MODEL 2 ============ -->
+  <section>
+    <div class="mhead"><span class="tag">模型二</span><h2>G 不是地标,是地图的读数</h2></div>
+    <p class="bet">图上<b>只有局部 Finding 一种地标</b>;"你现在到了 G2"作为地图连通程度的读数显示在图外。
+    押的是<b>极简与反阶梯的彻底性</b>,实现最省。注意:它与 DEC-026 已批准的"地标包含 G1／G2／G3 阶段性综合判断"<b>直接冲突</b>,采用它需要改这条决策。</p>
+    <div class="stage">
+      <svg viewBox="0 0 1320 700" style="flex:1 1 auto"><use href="#baseMap"/></svg>
+      <div class="rail">
+        <h4>阶段读数</h4>
+        <div class="rr"><i class="dot on"></i><span>G1 &nbsp;可信问题方向</span></div>
+        <div class="rr"><i class="dot on"></i><span>G2 &nbsp;身份 + 重大重组</span></div>
+        <div class="rr"><i class="dot off"></i><span style="color:#8d8a84">G3 &nbsp;较完整解释</span></div>
+        <div class="blocked">
+          <p>G3 仍被阻断,因为</p>
+          <ul>
+            <li>表面判定边界</li>
+            <li>关键材料核心区</li>
+            <li>承力稳定性</li>
+            <li>三阶段关系</li>
+          </ul>
+        </div>
+        <div class="blocked">
+          <p>争议中</p>
+          <ul><li style="color:#c2603c">记录—现器归属</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="cap">
+      <div class="good"><h4>它做到了</h4>地图彻底干净,中央不再拥挤,所有注意力都在"我查到了什么、还有哪些前沿"。读数把四项阻断未知<b>写成了文字清单</b>,比在图上找哪里没连通更直接。实现最简单,不需要动态布局。</div>
+      <div class="bad"><h4>它的代价</h4>G 从空间里消失了,达成感变弱——你在图上看不到"我攻下了什么"。更要紧的是,读数是一个<b>系统给你的判定</b>,而地图本来的用意是让玩家自己形成解释;把阶段判定挪到图外,反而更像系统在替你打分。右侧栏还吃掉了地图宽度。</div>
+    </div>
+    <p class="look"><b>请重点看:</b>右侧读数栏是不是让你觉得"系统已经替我判断完了";以及去掉 G 之后,地图是不是变得更好读还是更没劲。</p>
+  </section>
+
+  <!-- ============ MODEL 3 ============ -->
+  <section>
+    <div class="mhead"><span class="tag">模型三</span><h2>Finding 底图 + 可折叠结论层</h2></div>
+    <p class="bet">局部 Finding 在底图,G 判断在一个可以叠上来、也可以收起的<b>结论层</b>,玩家在"我查到了什么"和"我认为这是什么"之间切换。
+    押的是<b>信息密度可控</b>。下图画的是结论层<b>已展开</b>的状态,所以你能直接看到它遮挡了多少底图。</p>
+    <div class="stage">
+      <svg viewBox="0 0 1320 700">
+        <use href="#baseMap" opacity=".38"/>
+        <g filter="url(#sheet)">
+          <rect x="212" y="52" width="586" height="382" rx="8" fill="#1a1d21" fill-opacity=".93" stroke="#3f454e" stroke-width="1.5"/>
+        </g>
+        <rect x="212" y="52" width="586" height="30" rx="8" fill="#24282d"/>
+        <rect x="212" y="72" width="586" height="10" fill="#24282d"/>
+        <text x="228" y="72" style="font-size:11.5px;fill:#a7a49d;letter-spacing:.08em">结论层 · 已展开</text>
+        <polygon points="332,66 342,66 337,73" fill="#a7a49d"/>
+        <text x="782" y="72" text-anchor="end" style="font-size:11.5px;fill:#6f6d68">底图已淡出</text>
+        <use href="#gLayer"/>
+        <text x="505" y="424" text-anchor="middle" style="font-size:11.5px;fill:#b0705a">汇合线从本层边缘冒出,因为支撑 G2 的三个 Finding 和三个地点正好被这一层遮住</text>
+      </svg>
+    </div>
+    <div class="cap">
+      <div class="good"><h4>它做到了</h4>两种认知不混在一张图上:查证与下结论分开,单屏信息密度可控。收起结论层时,底图恢复成纯粹的"我走过哪里"。</div>
+      <div class="bad"><h4>它的代价</h4>展开时<b>遮挡了三个地点和两个 Finding</b>——恰好是支撑 G2 的那几个,于是"结论由证据支撑"的即视感被自己的分层弄没了。玩家也可能根本不切换那一层,等于白做。另外它多出一个"当前在看哪一层"的状态,是本设计里唯一需要玩家记住模式的地方。</div>
+    </div>
+    <p class="look"><b>请重点看:</b>被遮住的那几个 Finding 是否正是你想同时看到的东西。如果是,那这个分层的代价就落在了最关键的地方。</p>
+  </section>
+
+  <footer>
+    <b>要定的是什么。</b> 三张图差别不在美术,在"G 阶段判断到底是空间里的一个物件,还是图外的一个读数,还是另一层"。
+    这个选择会决定切片的数据结构:地标怎么汇合决定状态机,罗盘是否限定排序范围决定最优提示函数的签名。
+    <br><br>
+    <b>本文件不能证明的事。</b> 好不好玩、玩家看不看得懂、有没有能动性,一律未验证,只能由无答案真人测试举证。
+    上面每个"代价"都是结构性推论,不是观测到的玩家行为。
+  </footer>
+
+</div>
+</body>
+</html>

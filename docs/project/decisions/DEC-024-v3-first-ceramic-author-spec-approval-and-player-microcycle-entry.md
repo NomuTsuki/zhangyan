@@ -23,6 +23,8 @@ Status: Active
 
 上段“唯一最优动作不进入局中投影”继续约束常驻地图、普通提示以及读取隐藏真相的唯一通关路线。后续 [DEC-026](DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md) 只在玩家主动请求的最强帮助层开放一个按**本局当前已知信息、可用资源与成本**计算的当前最优调查；它不是作者答案，也不保证结果。该澄清不改变本决定批准的作者规格或产品代码开工门。
 
+[DEC-027](DEC-027-v3-first-ceramic-stable-g2-and-post-g2-fallback.md) 又把冻结夹具中的三个永久 G2 降级场景重分类为通用防御／未来案件专用。v0.3 与既有六文件哈希、`40/40` 历史 Pass 均不改写；但该 Pass 不再被解释为“首案正常游玩包含永久 G2→G1”。首案当前内容边界是纯物证或其他充分路线建立 G2 后，局部档案／时间关系可失败，G3 可以不形成，最高全局里程碑仍为有成本的 G2。
+
 ## 批准不包含
 
 - 具体 UI 布局、视觉风格、组件或最终交互；
@@ -46,7 +48,7 @@ Status: Active
 
 - 玩家分支只能通过泄露作者槽位或隐藏门才能讲清；
 - 玩家确认无法改变关注、暂存判断、行动或停手，只剩装饰性按钮；
-- 玩家原型暴露作者合同中新的因果冲突、硬门或纯物证 G2 回退；
+- 玩家原型暴露作者合同中新的因果冲突、硬门，或要求把纯物证 G2 的永久回退重新写入首案正常内容；
 - 领域证据要求重开客观事实、检测能力或档案关系；
 - 用户改变 G1—G3、开放调查、手动停手或作者图／玩家图边界。
 
@@ -54,5 +56,6 @@ Status: Active
 
 - [DEC-023：正式产品代码前的验证顺序与玩家投影边界](DEC-023-v3-pre-product-validation-and-player-projection-boundary.md)
 - [DEC-026：渐进玩家知识地图与当前最优按需提示](DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)
+- [DEC-027：首案稳定 G2 与后段回退边界](DEC-027-v3-first-ceramic-stable-g2-and-post-g2-fallback.md)
 - [当前状态](../02-CURRENT-STATE.md)
 - [下一行动](../03-NEXT-ACTIONS.md)

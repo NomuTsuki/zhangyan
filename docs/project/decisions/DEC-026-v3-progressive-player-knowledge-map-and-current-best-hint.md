@@ -32,6 +32,12 @@ V3 第一切片的玩家知识图不采用作者完整拓扑的缩略版，也�
 - 一条路线被真正排除后，可以退出当前解释层，但必须在足迹／历史层留下可回看的死路；原始事实与已发生调查不消失；
 - 局中不显示 12 个作者候选世界、隐藏节点数量、真实边权、证明门或尚未被本局证据触及的作者答案轮廓。
 
+### 第一器物的稳定 G2 地标
+
+[DEC-027](DEC-027-v3-first-ceramic-stable-g2-and-post-g2-fallback.md) 进一步限定第一器物的地标变化：G2 由充分证据建立后保持为首案稳定的全局里程碑；后段档案关系、局部 Finding、道路和 G3 前沿仍可增强、受质疑、改道或被排除。若深挖没有形成 G3，地图保留更大的已探索覆盖、失败路线和已付成本，玩家以更丰富的 G2 收手；它不把 G2 擦回 G1。候选路线在 G2 建立前被排除而仍停在 G1，不属于阶段降级。
+
+这项补充只固定状态责任，不决定稳定地标、死路或未形成 G3 的具体视觉表现。
+
 ### 探索前沿与逐级帮助
 
 常驻地图只给出**问题级探索前沿**：哪里仍未闭合，以及为什么当前证据使它值得调查。前沿只能从玩家本局已知内容中尚未闭合的问题生长，不能先描出作者隐藏节点的轮廓；具体前沿类型与视觉形态不在本决定中固定。
@@ -52,6 +58,7 @@ V3 第一切片的玩家知识图不采用作者完整拓扑的缩略版，也�
 - DEC-025 的可选中途快照、注意力焦点与收手最终快照继续有效；它留下的“最强按需提示到哪一层”问题由本决定解决；
 - DEC-016、DEC-024 和早期研究中“唯一最优动作不进入玩家投影”的边界继续约束常驻地图、普通提示和隐藏真相唯一路线。本决定只在玩家明确请求的最强帮助层开放**按当前已知信息计算的当前最优行动**，不是作者答案或保证正确的唯一通关路径；
 - DEC-018 的阶段、价值与成本数值仍为 Experimental；本决定没有批准新的权重、阈值、价格或成本。
+- DEC-027 将永久 G2 降级排除在首案正常内容之外，但不删除通用系统面对真正矛盾输入时的防御性降级能力。
 
 ## 证据门分类
 
@@ -93,6 +100,7 @@ V3 第一切片的玩家知识图不采用作者完整拓扑的缩略版，也�
 - [DEC-023：正式产品代码前的验证顺序与玩家投影边界](DEC-023-v3-pre-product-validation-and-player-projection-boundary.md)
 - [DEC-024：作者规格批准与玩家微循环入口](DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md)
 - [DEC-025：玩家快照、焦点与最终判断责任](DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md)
+- [DEC-027：首案稳定 G2 与后段回退边界](DEC-027-v3-first-ceramic-stable-g2-and-post-g2-fallback.md)
 - [定量真相、信息价值与停止研究](../evidence/v3-design/2026-08-14-quantitative-truth-value-of-information-and-stopping-research.md)
 - [ISPOR Value of Information Task Force：EVSI 与成本](https://pmc.ncbi.nlm.nih.gov/articles/PMC7373630/)
 - [PlayStation Game Help：由玩家主动展开更具体提示](https://blog.playstation.com/2021/06/11/a-closer-look-at-ps5s-game-help-feature/)

@@ -27,7 +27,8 @@ flowchart LR
     Author --> OldMicro["文字／面板原型<br/>已否决并删除"]
     OldMicro --> Skills["项目级 UI／UX Skills<br/>已安装并核验"]
     Skills --> MapCore["渐进地图核心语义<br/>DEC-026 已完成"]
-    MapCore --> Map["当前：剩余语义<br/>与地图微循环验证"]
+    MapCore --> StableG2["稳定 G2 与范围分界<br/>DEC-027 已批准"]
+    StableG2 --> Map["当前：补齐剩余地图语义"]
     Map --> Numeric["数值与经济模拟"]
     Numeric --> Full["整局原型<br/>与真人盲测"]
     Full --> Audit["V2 继承与<br/>正式技术审查"]
@@ -38,9 +39,9 @@ flowchart LR
 
 ## 当前阶段
 
-当前位置是 **V3 Design / 玩家知识地图核心语义已批准，剩余语义继续对齐**。
+当前位置是 **V3 Design / 玩家知识地图核心语义与首案稳定 G2 已批准，范围复核已通过，正在补齐剩余地图语义**。
 
-不是在决定器物身世，也不是在写正式产品代码、正式界面或美术。DEC-021 已固定客观真相；DEC-022 已确认开放证据网汇合成三档结果；v0.3 作者模型已独立 Pass，DEC-024 已批准其进入玩家微循环。DEC-025 的快照与焦点责任继续有效，DEC-026 又固定了地点／两态道路／地标／足迹／罗盘、纯黑与显影、竞争路线、探索前沿和最强按需层的当前最优调查。旧文字／面板原型已否决并删除；新版原型尚未开始。当前先对齐阶段地标怎样改变地图，再进入低保真表达、粗概率和无答案测试。后续验证与代码开工门全部保持。
+不是在决定器物身世，也不是在写正式产品代码、正式界面或美术。DEC-021 已固定客观真相；DEC-022 已确认开放证据网汇合成三档结果；v0.3 旧六文件已独立 Pass，DEC-024 已批准其进入玩家微循环。DEC-025／026 固定玩家责任与地图语义；DEC-027 又规定首案建立 G2 后，局部路线可失败而 G2 地标保持，永久 G2 降级只属通用防御／未来案件。追加范围覆盖层已经独立 Pass；当前继续阶段地标语义，之后才进入低保真表达、粗概率和无答案测试。后续验证与代码开工门全部保持。
 
 ## 为什么仍不能直接画五种拓扑
 
@@ -78,4 +79,4 @@ flowchart LR
 - V2 的 NPC 认知、画像、关系状态、连续对话、D20、议价、人物评分和行为仲裁不进入 V3；
 - V2 漆木盒内容、固定三真相、旧热点、似然、价格和卖家规则不作为第一器物默认。
 
-权威来源：[当前状态](../02-CURRENT-STATE.md) · [下一行动](../03-NEXT-ACTIONS.md) · [DEC-017](../decisions/DEC-017-v3-stage-claims-stopping-and-fixed-price-listing.md) · [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md) · [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md) · [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md) · [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md) · [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md) · [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md) · [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md) · [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md) · [DEC-026](../decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md) · [微循环三分支 v0](../evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md) · [项目级 Skill 安装回执](../evidence/v3-design/2026-08-22-ui-ux-skill-install-receipt.md) · [三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md) · [确定性演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)
+权威来源：[当前状态](../02-CURRENT-STATE.md) · [下一行动](../03-NEXT-ACTIONS.md) · [DEC-017](../decisions/DEC-017-v3-stage-claims-stopping-and-fixed-price-listing.md) · [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md) · [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md) · [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md) · [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md) · [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md) · [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md) · [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md) · [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md) · [DEC-026](../decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md) · [DEC-027](../decisions/DEC-027-v3-first-ceramic-stable-g2-and-post-g2-fallback.md) · [G2 范围重分类](../evidence/v3-design/2026-08-23-first-ceramic-g2-stability-and-scenario-scope-reclassification-v0.md) · [微循环三分支 v0](../evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md) · [三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md) · [确定性演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)

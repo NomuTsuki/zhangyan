@@ -57,7 +57,7 @@ Ron Gilbert 的依赖图可以帮助作者检查分叉、汇合、瓶颈和死�
 - **行动：** 从另一独立证据域检查主体年代，或用专业检测验证部件材料；
 - **收手与挂牌：** 玩家可以接受“后配基本成立、主体仍待确认”的阶段成果收手，也可以承担成本继续补证。
 
-事实一旦可靠观察到就是事实；真正变化的是主张和候选真相的可信度。阶段成立后仍可继续，继续但没有建立更高主张时，可以回到此前稳定主张收手，但已经花掉的调查机会和检测费不退。
+事实一旦可靠观察到就是事实；真正变化的是主张和候选真相的可信度。阶段成立后仍可继续。对第一陶瓷切片而言，G2 是稳定里程碑：继续但没有建立 G3 时，局部路线可以失败或被排除，玩家仍以更丰富的 G2 收手，已经花掉的调查机会和检测费不退。通用系统面对真正与主张矛盾的输入仍可降级，但这不是首案正常内容。
 
 ## 为什么第一座山必须手工塑造
 
@@ -65,7 +65,7 @@ Ron Gilbert 的依赖图可以帮助作者检查分叉、汇合、瓶颈和死�
 
 现实考据在这里更像“山不能违反地质规律”，不是“必须照着现实中某一座山复刻”。材料、检测能力与价值因果必须可信；但具体哪一面是陡坡、哪一处藏着好消息，由关卡需要决定。无玩法作用的器物个性由作者直接处理，不再逐项交给用户。
 
-因此当前顺序是：先手工完成真相包与三档作者拓扑，让独立结构复核、确定性场景和限定领域复核寻找错误；领域复核触发的 v0.3 又经历首轮独立 Fail 与修复复查，冻结作者合同最终取得独立 Pass，并由用户通过 DEC-024 批准。旧文字工作台失败后，DEC-026 先固定渐进地图语义；现在继续补齐地标变化等剩余问题，再制作新版微循环、做无答案真人测试、模拟数值、串成整局并再次盲测，最后审查 V2 继承和技术方案；全部证据门通过后仍须由用户明确批准正式产品代码开工。程序化生成只有在不同手工案例显露出稳定语法后才可能重开，目前仍是 `Unknown`。
+因此当前顺序是：先手工完成真相包与三档作者拓扑，让独立结构复核、确定性场景和限定领域复核寻找错误；领域复核触发的 v0.3 又经历首轮独立 Fail 与修复复查，冻结作者合同最终取得独立 Pass，并由用户通过 DEC-024 批准。旧文字工作台失败后，DEC-026 固定渐进地图语义；DEC-027 再把首案稳定 G2 与通用降级能力分账，其范围覆盖层也已独立 Pass。当前补齐地标变化，再制作新版微循环、做无答案真人测试、模拟数值、串成整局并再次盲测，最后审查 V2 继承和技术方案；全部证据门通过后仍须由用户明确批准正式产品代码开工。
 
 ## 三个价格概念不能互换
 
@@ -75,4 +75,4 @@ Ron Gilbert 的依赖图可以帮助作者检查分叉、汇合、瓶颈和死�
 
 因此，卖得快不自动证明推理正确，没卖出也不自动证明当时的证据判断毫无道理。成交或期满未成交之后，游戏再并列揭示完整真相、作者拓扑、玩家路线、冻结判断、挂牌与市场结果。
 
-统一词义见 [领域语境](../../../CONTEXT.md)。详细研究见 [V3 设计证据包](../evidence/v3-design/README.md)。具体数值仅见 [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md)，目前仍是 Experimental；第一器物与 V2 继承边界见 [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md)，对象结构与核心争议见 [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md)，作者客观真相包见 [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md)，三档作者结果边界见 [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md)，代码前验证顺序与玩家首轮投影方向见 [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md)，作者规格批准与阶段入口见 [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md)，玩家责任见 [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md)，渐进地图与最强按需提示见 [DEC-026](../decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)，当前冻结作者规格见 [三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md)，结构证据见 [确定性作者侧场景演算 v1](../evidence/v3-design/2026-08-21-first-ceramic-deterministic-author-scenarios-v1.md)。
+统一词义见 [领域语境](../../../CONTEXT.md)。详细研究见 [V3 设计证据包](../evidence/v3-design/README.md)。具体数值仅见 [DEC-018](../decisions/DEC-018-v3-provisional-claim-thresholds-and-valuation-projection.md)，目前仍是 Experimental；第一器物与 V2 继承边界见 [DEC-019](../decisions/DEC-019-v3-evidence-rich-first-object-and-legacy-npc-exclusion.md)，对象结构与核心争议见 [DEC-020](../decisions/DEC-020-v3-first-ceramic-object-and-core-dispute.md)，作者客观真相包见 [DEC-021](../decisions/DEC-021-v3-first-ceramic-objective-truth-package-and-gameplay-first-authorship.md)，三档作者结果边界见 [DEC-022](../decisions/DEC-022-v3-first-ceramic-three-result-gates-over-branching-evidence.md)，代码前验证顺序与玩家首轮投影方向见 [DEC-023](../decisions/DEC-023-v3-pre-product-validation-and-player-projection-boundary.md)，作者规格批准与阶段入口见 [DEC-024](../decisions/DEC-024-v3-first-ceramic-author-spec-approval-and-player-microcycle-entry.md)，玩家责任见 [DEC-025](../decisions/DEC-025-v3-player-workbench-snapshots-focus-and-final-judgment.md)，渐进地图与最强按需提示见 [DEC-026](../decisions/DEC-026-v3-progressive-player-knowledge-map-and-current-best-hint.md)，首案稳定 G2 与通用降级分界见 [DEC-027](../decisions/DEC-027-v3-first-ceramic-stable-g2-and-post-g2-fallback.md)，当前冻结作者规格见 [三档作者模型 v0.3](../evidence/v3-design/2026-08-21-first-ceramic-three-result-author-model-v0-3.md)，当前范围证据见 [G2 稳定性与场景重分类](../evidence/v3-design/2026-08-23-first-ceramic-g2-stability-and-scenario-scope-reclassification-v0.md)。

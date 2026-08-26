@@ -1,0 +1,4208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>知识地图可玩切片 v0 — 第一器物</title>
+<style>
+  :root{--bg:#0e1013;--panel:#15181c;--panel2:#1b1f24;--line:#22262b;
+    --ink:#e8e4dc;--ink2:#a6a39c;--ink3:#6d6b66;--gold:#c8a24a;--warn:#c2603c;
+    --cyan:#4a9ec8;--road:#8d9aa6}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1560px;margin:0 auto;padding:22px 26px 60px}
+  h1{margin:0 0 4px;font-size:21px;font-weight:600;letter-spacing:.02em}
+  .sub{margin:0 0 16px;font-size:12.5px;color:var(--ink3)}
+  .sub code{background:var(--panel2);padding:1px 5px;border-radius:3px;font-size:11.5px}
+
+  .warnbar{margin:0 0 18px;padding:12px 16px;border-left:3px solid var(--warn);
+    background:#221f1d;color:var(--ink2);font-size:12.5px;line-height:1.75;border-radius:0 4px 4px 0}
+  .warnbar b{color:var(--ink)}
+  .grid{display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:start}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    padding:14px 16px;margin:0 0 14px}
+  .card h3{margin:0 0 9px;font-size:11.5px;font-weight:600;letter-spacing:.1em;
+    color:var(--ink3);text-transform:uppercase}
+  .card p{margin:0;font-size:13px;line-height:1.75;color:var(--ink2)}
+
+  .mapbox{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px}
+  svg{display:block;width:100%;height:auto;background:#0b0d0f;border-radius:4px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0 0 12px;padding:12px 16px;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    font-size:12px;color:var(--ink2)}
+  .legend i{display:inline-block;vertical-align:middle;margin-right:6px}
+
+  .bar{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:11px 14px;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;flex-wrap:wrap}
+  button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);
+    border-radius:4px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer}
+  button:hover:not(:disabled){border-color:#3a4046;background:#22262b}
+  button:disabled{opacity:.35;cursor:default}
+  button.on{border-color:var(--gold);color:var(--gold)}
+  button.stop{border-color:var(--warn);color:#e0a08a}
+  .barlabel{font-size:12px;color:var(--ink3);margin-right:2px}
+
+  .kv{display:flex;justify-content:space-between;gap:10px;font-size:13px;
+    padding:5px 0;border-bottom:1px solid var(--line)}
+  .kv:last-child{border-bottom:0}
+  .kv span:first-child{color:var(--ink2)}
+  .kv span:last-child{color:var(--ink);font-variant-numeric:tabular-nums}
+  .stage{font-size:19px;font-weight:600;color:var(--gold);letter-spacing:.06em}
+  .stage.none{color:var(--ink3)}
+
+  ul.claims{margin:0;padding:0;list-style:none}
+  ul.claims li{font-size:13px;line-height:1.65;padding:6px 0 6px 15px;position:relative;
+    border-bottom:1px solid var(--line);color:var(--ink)}
+  ul.claims li:last-child{border-bottom:0}
+  ul.claims li:before{content:"";position:absolute;left:2px;top:13px;width:5px;height:5px;
+    border-radius:50%;background:var(--gold)}
+  .empty{font-size:13px;color:var(--ink3);font-style:normal}
+
+  .rel{font-size:12.5px;padding:7px 0;border-bottom:1px solid var(--line)}
+  .rel:last-child{border-bottom:0}
+  .rel b{color:var(--ink);font-weight:600}
+  .rel div{color:var(--ink3);margin-top:2px}
+  .rel em{font-style:normal;color:var(--ink2)}
+  .rel em.ok{color:var(--gold)}
+  .rel em.bad{color:var(--warn)}
+
+  .acts{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:9px;
+    margin:12px 0 0}
+  .act{background:var(--panel);border:1px solid var(--line);border-radius:5px;
+    padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:3px;
+    font:inherit;color:var(--ink);cursor:pointer}
+  .act:hover:not(:disabled){border-color:#3a4046}
+  .act:disabled{cursor:default;opacity:1}
+  .act .n{font-size:13px;font-weight:600;line-height:1.4}
+  .act .q{font-size:11.5px;color:var(--ink3);line-height:1.5}
+  .act .m{font-size:11px;color:var(--ink2);display:flex;gap:8px;margin-top:2px}
+  .act.blocked{opacity:.5}
+  .act.blocked .n{font-weight:400}
+  .act .why{font-size:11px;color:var(--warn);line-height:1.5;margin-top:2px}
+  .act .did{font-size:11px;color:var(--gold)}
+  .sect{margin:20px 0 0;font-size:11.5px;font-weight:600;letter-spacing:.1em;
+    color:var(--ink3);text-transform:uppercase}
+
+  .feed{max-height:210px;overflow:auto;font-size:12.5px}
+  .feed div{padding:5px 0;border-bottom:1px solid var(--line);color:var(--ink2)}
+  .feed div:last-child{border-bottom:0}
+  .feed b{color:var(--ink);font-weight:600}
+  .feed .t-progress{color:var(--gold)}
+  .feed .t-repeat,.feed .t-deadend{color:var(--ink3)}
+  .feed .t-negative{color:var(--warn)}
+
+  .nl{font-size:11.5px;fill:var(--ink)}
+  .nl2{font-size:11.5px;fill:#7d7a74}
+  .fl{font-size:11px;fill:var(--gold);font-weight:600}
+  .gl{font-size:13px;fill:#241d0e;font-weight:700}
+  .gs{font-size:10.5px;fill:var(--gold)}
+  .ql{font-size:11px;fill:#9daab6}
+  .sl{font-size:10.5px;fill:var(--road);letter-spacing:.06em}
+  .nl,.nl2,.fl,.gs,.ql,.sl{paint-order:stroke;stroke:#0b0d0f;stroke-width:4px;stroke-linejoin:round}
+
+  .foot{margin:22px 0 0;padding:14px 16px;background:var(--panel);border:1px solid var(--line);
+    border-radius:6px;font-size:12.5px;line-height:1.8;color:var(--ink2)}
+  .foot b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>知识地图可玩切片 v0 — 第一器物</h1>
+  <p class="sub">自由探索 · 手动停手 · 桌面尺寸 · 离线单文件 · 规则由<b>已冻结的作者求解器</b>实算 · <span id="stampline"></span></p>
+
+  <div class="warnbar">
+    <b>这是可丢弃的验证切片,不是产品,也不是视觉方向。</b>
+    规则结算全部来自已冻结的作者求解器(<code>solveFixture</code>),本页只负责玩家侧投影。
+    <br><b>刻意没有做三件事。</b>① 不显示求解器的 <code>supports</code>／<code>marginals</code>——夹具 <code>manifest.json</code> 声明它们是 fixture-only technical values,不是产品概率;
+    ② 不做「当前最优调查」排序——那需要期望决策价值,而 DEC-018 没有批准任何相关数值,编一个排序就是拿假数值冒充玩法;
+    ③ 不做报价与市场结算——本切片只验调查→显影→停手这一段。
+    <br><b>费用是四档定性档位,不是货币</b>;调查机会总数是登记在 <code>PARAMS.md</code> 的 experimental 占位值。
+    好不好玩、看不看得懂、有没有能动性,<b>本页一概不能证明</b>——只能由无答案真人测试举证。
+  </div>
+
+  <div class="legend">
+    <span><i><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="#2b3037" stroke="#a6a39c" stroke-width="1.5"/></svg></i>去过的地点</span>
+    <span><i><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="#1a1d21" stroke="#5f6570" stroke-width="1.4" stroke-dasharray="3 3"/></svg></i>可用但没去过</span>
+    <span><i><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="#141619" stroke="#33383e" stroke-width="1.3" stroke-dasharray="2 3"/></svg></i>还去不了(有理由)</span>
+    <span><i><svg width="14" height="14"><line x1="2" y1="12" x2="12" y2="2" stroke="#6b6864" stroke-width="2"/><circle cx="7" cy="7" r="5.5" fill="none" stroke="#6b6864" stroke-width="1.4"/></svg></i>去过但阴性／无新信息</span>
+    <span><i><svg width="13" height="13"><polygon points="6.5,0 13,6.5 6.5,13 0,6.5" fill="#c8a24a"/></svg></i>局部 Finding</span>
+    <span><i><svg width="26" height="10"><line x1="0" y1="5" x2="26" y2="5" stroke="#c8a24a" stroke-width="2.5"/></svg></i>已建立的关系</span>
+    <span><i><svg width="16" height="16"><circle cx="8" cy="8" r="7" fill="none" stroke="#8d9aa6" stroke-width="1.3"/></svg></i>站位(刚查完的路口)</span>
+    <span><i><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#8d9aa6" stroke-width="2.2" stroke-dasharray="7 4"/></svg></i>从路口通出去的路</span>
+  </div>
+
+  <div class="bar">
+    <span class="barlabel">路口层</span>
+    <button id="tj" class="on">开</button>
+    <span class="barlabel" style="margin-left:8px">DEC-031:只作呈现,醒目度不进入任何计算</span>
+    <span style="flex:1"></span>
+    <button id="stop" class="stop">收手,看这一局的答案</button>
+    <button id="reset">重开一局</button>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="mapbox"><svg id="map" viewBox="0 0 1240 820" preserveAspectRatio="xMidYMid meet"></svg></div>
+      <div class="sect">行动 —— 随便点,顺序自由。做过的不消失,再做一次也允许(重复要看得见)</div>
+      <div class="acts" id="acts"></div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>阶段</h3>
+        <div class="kv"><span>当前</span><span class="stage none" id="stage">—</span></div>
+        <div class="kv"><span>调查机会</span><span id="budget">—</span></div>
+        <div class="kv"><span>费用档合计</span><span id="cost">—</span></div>
+      </div>
+      <div class="card">
+        <h3>你现在能主张什么</h3>
+        <ul class="claims" id="claims"></ul>
+      </div>
+      <div class="card">
+        <h3>从这个路口通出去的路</h3>
+        <div id="outlist"></div>
+        <p style="margin-top:10px;padding-top:9px;border-top:1px solid var(--line);
+          font-size:11.5px;color:var(--ink3)">不显示:费用之外的难度、成功率、那边有没有 Finding。走过去才知道。</p>
+      </div>
+      <div class="card">
+        <h3>档案三关系</h3>
+        <div id="archive"></div>
+      </div>
+      <div class="card">
+        <h3>足迹</h3>
+        <div id="prints"></div>
+      </div>
+      <div class="card">
+        <h3>挂起与阴性</h3>
+        <div id="held"></div>
+      </div>
+      <div class="card">
+        <h3>这一局做过什么</h3>
+        <div class="feed" id="feed"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const STAMP = {
+  "builtAt": "2026-08-26",
+  "fixtures": "B3ED4F357B8FB84EAAB4F14CAF4629E62BF11F9C44BEFA5AAD6730C3393E0FDD",
+  "solver": "E217CAF56A9961EA7C46151E1CA6B0546A6C408CCC8ECDDB21E4B9DA66EE72D1",
+  "case": "779D93B7EB68B6369F20FCAC3BD2F030E8FBF1309B49661FDB86571141C5A675",
+  "exports": {
+    "FIXTURES": 13,
+    "SOLVER": 10,
+    "CASE": 5
+  }
+};
+</script>
+<script>
+/* ==== FIXTURES ==== */
+const FIXTURES = (() => {
+const FIXTURE_WEIGHT = 25;
+
+const thresholds = Object.freeze({
+  identity: 0.75,
+  major: 0.75,
+  g2Joint: 0.75,
+  g3Profile: 0.5,
+});
+
+const expectedProfile = Object.freeze({
+  Identity: "LATE18_EXPORT",
+  RepairHistory: "THREE_PHASE",
+  KeyMaterial: "KEY_MATERIAL_PRESERVED",
+  Surface: "MIXED_CROSS_OVERPAINT",
+  Stability: "DISPLAYABLE_LOCAL_RISK",
+  Documentation: "COHERENT_PARTIAL",
+});
+
+const claimScopeRequirements = Object.freeze({
+  "CLAIM.IDENTITY.LATE18_EXPORT": Object.freeze({
+    object: "OBJECT.FIRST",
+    region: "manufacture-identity-scope",
+    time: "manufacture",
+    materialLayer: "ceramic-body-glaze",
+    quantifier: "necessary-condition",
+  }),
+  "CLAIM.REPAIR.MAJOR_REASSEMBLY": Object.freeze({
+    object: "OBJECT.FIRST",
+    region: "necessary-major-scope",
+    time: "T2",
+    materialLayer: "structural-substrate",
+    quantifier: "necessary-condition",
+  }),
+});
+
+const unknownRegistry = Object.freeze({
+  "exact-treatment-formula": Object.freeze({ g3Allowed: true }),
+  "noncritical-region": Object.freeze({ g3Allowed: true }),
+  "documentation-conflict": Object.freeze({ g3Allowed: false }),
+  "identity-whether-late18": Object.freeze({ g3Allowed: false }),
+  "key-material-core-regions": Object.freeze({ g3Allowed: false }),
+  "load-path-stability": Object.freeze({ g3Allowed: false }),
+  "surface-decision-boundary": Object.freeze({ g3Allowed: false }),
+  "three-phase-relation": Object.freeze({ g3Allowed: false }),
+});
+
+const PROOF_ROLES = Object.freeze({
+  CURRENT_REPAIR_MAP: "PROOF.CURRENT.NAMED_REPAIR_MAP",
+  T2_RECORD_COHERENCE: "PROOF.ARCHIVE.T2.RECORD_COHERENCE",
+  T2_OBJECT_ATTRIBUTION: "PROOF.ARCHIVE.T2.OBJECT_ATTRIBUTION",
+  T2_CURRENT_CORROBORATION: "PROOF.ARCHIVE.T2.EVENT_CURRENT_CORROBORATION",
+  T2_CROSS_TIME_CORROBORATION: "PROOF.ARCHIVE.T2.EVENT_CROSS_TIME_CORROBORATION",
+  T3_RECORD_COHERENCE: "PROOF.ARCHIVE.T3.RECORD_COHERENCE",
+  T3_OBJECT_ATTRIBUTION: "PROOF.ARCHIVE.T3.OBJECT_ATTRIBUTION",
+  T3_CURRENT_CORROBORATION: "PROOF.ARCHIVE.T3.EVENT_CURRENT_CORROBORATION",
+  PHYSICAL_STRUCTURE_MAP: "PROOF.MAJOR.PHYSICAL.STRUCTURE_MAP",
+  PHYSICAL_CROSS_TIME: "PROOF.MAJOR.PHYSICAL.CROSS_TIME",
+});
+
+const proofRoleContracts = Object.freeze({
+  [PROOF_ROLES.CURRENT_REPAIR_MAP]: Object.freeze({
+    acquisitionActionId: "A.OBSERVE.WHOLE",
+    method: "visual",
+    coverage: Object.freeze({ object: "OBJECT.FIRST", region: "whole-visible" }),
+    requiredFacts: Object.freeze(["currentRepairMap"]),
+    requiredSourceIds: Object.freeze(["source.physical.current"]),
+    minimumSourceCount: 1,
+  }),
+  [PROOF_ROLES.T2_RECORD_COHERENCE]: Object.freeze({
+    acquisitionActionId: "A.RESEARCH.ACCIDENT",
+    method: "archive",
+    coverage: Object.freeze({ object: "ARCHIVE.CANDIDATE.T2", region: "declared-record-group" }),
+    requiredFacts: Object.freeze([
+      "t2RecordGroupCoherent",
+      "t2RecordClaimsDamageExtent",
+      "t2RecordClaimsReassembly",
+    ]),
+    requiredSourceIds: Object.freeze([
+      "source.event.accident.insurance",
+      "source.event.accident.photo",
+    ]),
+    minimumSourceCount: 2,
+  }),
+  [PROOF_ROLES.T2_OBJECT_ATTRIBUTION]: Object.freeze({
+    acquisitionActionId: "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+    method: "object-attribution",
+    coverage: Object.freeze({ object: "RELATION.ARCHIVE_T2_OBJECT_FIRST", region: "stable-noncomposition-anchors" }),
+    requiredFacts: Object.freeze(["t2ArchiveObjectAttribution"]),
+    requiredSourceIds: Object.freeze([
+      "source.archive.t2.object-register",
+      "source.physical.t2.stable-anchors",
+    ]),
+    allowedSourceIds: Object.freeze([
+      "source.archive.t2.object-register",
+      "source.physical.t2.stable-anchors",
+    ]),
+    minimumSourceCount: 2,
+  }),
+  [PROOF_ROLES.T2_CURRENT_CORROBORATION]: Object.freeze({
+    acquisitionActionId: "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+    method: "record-current",
+    coverage: Object.freeze({ object: "RELATION.ARCHIVE_T2_EVENT_OBJECT_FIRST", region: "declared-major-scope" }),
+    requiredFacts: Object.freeze(["t2EventPhysicalCorrespondence", "appearanceRestore"]),
+    requiredSourceIds: Object.freeze([
+      "source.archive.t2.repair-diagram",
+      "source.physical.current-repair-map",
+    ]),
+    allowedSourceIds: Object.freeze([
+      "source.archive.t2.repair-diagram",
+      "source.physical.current-repair-map",
+    ]),
+    minimumSourceCount: 2,
+  }),
+  [PROOF_ROLES.T2_CROSS_TIME_CORROBORATION]: Object.freeze({
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    method: "cross-time",
+    coverage: Object.freeze({ object: "RELATION.ARCHIVE_T2_EVENT_OBJECT_FIRST", region: "declared-major-scope" }),
+    requiredFacts: Object.freeze(["t2EventPhysicalCorrespondence", "appearanceRestore"]),
+    requiredSourceIds: Object.freeze([
+      "source.archive.major-region-pre",
+      "source.physical.major-region-current",
+    ]),
+    allowedSourceIds: Object.freeze([
+      "source.archive.major-region-pre",
+      "source.physical.major-region-current",
+    ]),
+    minimumSourceCount: 2,
+  }),
+  [PROOF_ROLES.T3_RECORD_COHERENCE]: Object.freeze({
+    acquisitionActionId: "A.RESEARCH.LATE_TREATMENT",
+    method: "archive",
+    coverage: Object.freeze({ object: "ARCHIVE.CANDIDATE.T3", region: "declared-treatment-records" }),
+    requiredFacts: Object.freeze(["t3RecordGroupCoherent", "t3RecordClaimsLocalTreatment"]),
+    requiredSourceIds: Object.freeze([
+      "source.archive.t3.condition-report",
+      "source.archive.t3.treatment-map",
+    ]),
+    allowedSourceIds: Object.freeze([
+      "source.archive.t3.condition-report",
+      "source.archive.t3.treatment-map",
+    ]),
+    minimumSourceCount: 2,
+  }),
+  [PROOF_ROLES.T3_OBJECT_ATTRIBUTION]: Object.freeze({
+    acquisitionActionId: "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+    method: "object-attribution",
+    coverage: Object.freeze({ object: "RELATION.ARCHIVE_T3_OBJECT_FIRST", region: "stable-noncomposition-anchors" }),
+    requiredFacts: Object.freeze(["t3ArchiveObjectAttribution"]),
+    requiredSourceIds: Object.freeze([
+      "source.archive.t3.object-register",
+      "source.physical.t3.stable-anchors",
+    ]),
+    allowedSourceIds: Object.freeze([
+      "source.archive.t3.object-register",
+      "source.physical.t3.stable-anchors",
+    ]),
+    minimumSourceCount: 2,
+  }),
+  [PROOF_ROLES.T3_CURRENT_CORROBORATION]: Object.freeze({
+    acquisitionActionId: "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+    method: "record-current",
+    coverage: Object.freeze({ object: "RELATION.ARCHIVE_T3_EVENT_OBJECT_FIRST", region: "declared-treatment-scope" }),
+    requiredFacts: Object.freeze(["t3EventPhysicalCorrespondence"]),
+    requiredSourceIds: Object.freeze([
+      "source.archive.t3.post-treatment-photo",
+      "source.physical.t3.current-zone",
+    ]),
+    allowedSourceIds: Object.freeze([
+      "source.archive.t3.post-treatment-photo",
+      "source.physical.t3.current-zone",
+    ]),
+    minimumSourceCount: 2,
+  }),
+  [PROOF_ROLES.PHYSICAL_STRUCTURE_MAP]: Object.freeze({
+    acquisitionActionId: "A.IMAGE.XRAY",
+    method: "xray",
+    coverage: Object.freeze({ object: "OBJECT.FIRST", region: "declared-major-scope-multi-view-readable" }),
+    requiredFacts: Object.freeze(["currentStructureReadoutByRegion"]),
+    allowedSourceIds: Object.freeze([
+      "source.instrument.structure",
+      "source.instrument.xray",
+    ]),
+    minimumSourceCount: 1,
+  }),
+  [PROOF_ROLES.PHYSICAL_CROSS_TIME]: Object.freeze({
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    method: "cross-time",
+    coverage: Object.freeze({ object: "OBJECT.FIRST", region: "declared-major-scope" }),
+    requiredFacts: Object.freeze(["crossTimeMajorChange"]),
+    requiredSourceIds: Object.freeze([
+      "source.archive.major-region-pre",
+      "source.physical.major-region-current",
+    ]),
+    minimumSourceCount: 2,
+  }),
+});
+
+function methodContract({
+  direct = [],
+  contextual = [],
+  capability = [],
+  negativeRaw = [],
+  proofRoles = [],
+  axes = [],
+  requiredContextFacts = [],
+  fixtureOnly = false,
+}) {
+  return Object.freeze({
+    allowedDirectFacts: Object.freeze(direct),
+    allowedContextualFacts: Object.freeze(contextual),
+    allowedCapabilityFacts: Object.freeze(capability),
+    allowedNegativeRawFacts: Object.freeze(negativeRaw),
+    allowedProofRoles: Object.freeze(proofRoles),
+    allowedAxes: Object.freeze(axes),
+    requiredContextFacts: Object.freeze(requiredContextFacts),
+    fixtureOnly,
+  });
+}
+
+function actionContract(methods) {
+  return Object.freeze({ methods: Object.freeze(methods) });
+}
+
+const actionContracts = Object.freeze({
+  "A.OBSERVE.WHOLE": actionContract({
+    visual: methodContract({
+      direct: [
+        "currentBody",
+        "currentDecor",
+        "currentRepairMap",
+        "interventionObservation",
+      ],
+      proofRoles: [PROOF_ROLES.CURRENT_REPAIR_MAP],
+    }),
+  }),
+  "A.OBSERVE.BASE": actionContract({
+    visual: methodContract({ direct: ["baseManufacture"] }),
+  }),
+  "A.COMPARE.CORPUS": actionContract({
+    corpus: methodContract({
+      direct: ["directionCorpus", "identityComparisonExclusion"],
+      axes: ["Identity"],
+    }),
+    fixture: methodContract({
+      direct: ["directionCorpus", "identityComparisonExclusion"],
+      fixtureOnly: true,
+    }),
+    "capable-identity": methodContract({
+      direct: ["negativeSignalObserved"],
+      capability: ["scopedAbsenceSupported"],
+      negativeRaw: ["negativeSignalObserved"],
+      axes: ["Identity"],
+    }),
+  }),
+  "A.COMPARE.CORPUS.RECHECK": actionContract({
+    corpus: methodContract({
+      direct: ["directionCorpus", "identityComparisonExclusion", "repeatObservation"],
+      axes: ["Identity"],
+    }),
+  }),
+  "A.VERIFY.OBJECT_CONTINUITY": actionContract({
+    "cross-time": methodContract({
+      direct: ["directionHistoricCandidate", "identityObjectContinuity"],
+      axes: ["Identity"],
+    }),
+  }),
+  "A.RESEARCH.ACCIDENT": actionContract({
+    archive: methodContract({
+      direct: [
+        "t2RecordGroupCoherent",
+        "t2RecordClaimsAppearanceRestore",
+        "t2RecordClaimsDamageExtent",
+        "t2RecordClaimsReassembly",
+      ],
+      axes: ["RepairHistory"],
+      proofRoles: [PROOF_ROLES.T2_RECORD_COHERENCE],
+    }),
+    fixture: methodContract({
+      direct: [
+        "t2RecordClaimsAppearanceRestore",
+        "t2RecordClaimsDamageExtent",
+        "t2RecordClaimsReassembly",
+      ],
+      fixtureOnly: true,
+    }),
+    contested: methodContract({ direct: ["t2ArchiveRecordCoherenceContested"] }),
+  }),
+  "A.RELATE.ARCHIVE.T2_TO_OBJECT": actionContract({
+    "object-attribution": methodContract({
+      direct: ["t2ArchiveObjectAttribution", "t2ArchiveObjectLinkCandidate"],
+      proofRoles: [PROOF_ROLES.T2_OBJECT_ATTRIBUTION],
+    }),
+    contested: methodContract({ direct: ["t2ArchiveObjectAttributionContested"] }),
+  }),
+  "A.CORROBORATE.ARCHIVE.T2_CURRENT": actionContract({
+    "record-current": methodContract({
+      direct: ["appearanceRestore", "t2EventPhysicalCorrespondence"],
+      proofRoles: [PROOF_ROLES.T2_CURRENT_CORROBORATION],
+    }),
+    contested: methodContract({ direct: ["t2EventPhysicalCorrespondenceContested"] }),
+  }),
+  "A.OBSERVE.REGION_DECOR": actionContract({
+    visual: methodContract({ direct: ["appearanceRestore", "glueLineObserved"] }),
+  }),
+  "A.IMAGE.XRAY": actionContract({
+    xray: methodContract({
+      direct: [
+        "currentStructureReadoutByRegion",
+        "xrayReadingsByRegionAcquired",
+        "xraySingleReadingAcquired",
+      ],
+      contextual: ["currentStructureReadoutByRegion"],
+      axes: ["RepairHistory"],
+      requiredContextFacts: ["identityObjectContinuity"],
+      proofRoles: [PROOF_ROLES.PHYSICAL_STRUCTURE_MAP],
+    }),
+  }),
+  "A.LOCATE.HISTORIC_IMAGE": actionContract({
+    archive: methodContract({
+      direct: ["t1ReadingAcquired"],
+      contextual: ["t1Established"],
+      axes: ["RepairHistory"],
+      requiredContextFacts: ["identityObjectContinuity"],
+    }),
+  }),
+  "A.RESEARCH.LATE_TREATMENT": actionContract({
+    archive: methodContract({
+      direct: ["t3RecordGroupCoherent", "t3RecordClaimsLocalTreatment"],
+      axes: ["RepairHistory"],
+      proofRoles: [PROOF_ROLES.T3_RECORD_COHERENCE],
+    }),
+    contested: methodContract({ direct: ["t3ArchiveRecordCoherenceContested"] }),
+  }),
+  "A.RELATE.ARCHIVE.T3_TO_OBJECT": actionContract({
+    "object-attribution": methodContract({
+      direct: ["t3ArchiveObjectAttribution", "t3ArchiveObjectLinkCandidate"],
+      proofRoles: [PROOF_ROLES.T3_OBJECT_ATTRIBUTION],
+    }),
+    contested: methodContract({ direct: ["t3ArchiveObjectAttributionContested"] }),
+  }),
+  "A.CORROBORATE.ARCHIVE.T3_CURRENT": actionContract({
+    "record-current": methodContract({
+      direct: ["t3EventPhysicalCorrespondence"],
+      proofRoles: [PROOF_ROLES.T3_CURRENT_CORROBORATION],
+    }),
+    contested: methodContract({ direct: ["t3EventPhysicalCorrespondenceContested"] }),
+  }),
+  "A.RELATE.PHASE.CHRONOLOGY": actionContract({
+    contested: methodContract({ direct: ["threePhaseChronologyContested"] }),
+  }),
+  "A.MAP.REGION_CONTINUITY": actionContract({
+    "cross-time": methodContract({
+      direct: [
+        "appearanceRestore",
+        "crossTimeMajorChange",
+        "keyMaterialResolved",
+        "t2EventPhysicalCorrespondence",
+      ],
+      axes: ["KeyMaterial", "RepairHistory"],
+      proofRoles: [PROOF_ROLES.T2_CROSS_TIME_CORROBORATION, PROOF_ROLES.PHYSICAL_CROSS_TIME],
+    }),
+    "capable-structural": methodContract({
+      direct: ["negativeSignalObserved"],
+      capability: ["scopedAbsenceSupported"],
+      negativeRaw: ["negativeSignalObserved"],
+      axes: ["RepairHistory"],
+    }),
+    "limited-structural": methodContract({
+      direct: ["negativeSignalObserved"],
+      capability: ["scopedAbsenceSupported"],
+      negativeRaw: ["negativeSignalObserved"],
+      axes: ["RepairHistory"],
+    }),
+  }),
+  "A.INSPECT.WINDOWS": actionContract({
+    layering: methodContract({
+      direct: ["surfaceBadNews", "surfacePointLayering"],
+      axes: ["Surface"],
+    }),
+  }),
+  "A.SYNTHESIZE.SURFACE_REGIONS": actionContract({
+    "regional-synthesis": methodContract({
+      direct: ["surfaceRegionalCoverage", "surfaceResolved"],
+      axes: ["Surface"],
+    }),
+  }),
+  "A.ANALYZE.MATERIAL.SUBSTRATE": actionContract({
+    "point-analysis": methodContract({ direct: ["keyMaterialSubstrateReadings"] }),
+  }),
+  "A.INSPECT.MATERIAL.LAYER_SEQUENCE": actionContract({
+    "micro-layering": methodContract({
+      direct: ["keyMaterialLayerSequenceReadings"],
+      axes: ["KeyMaterial"],
+    }),
+  }),
+  "A.ASSESS.TREATED_AND_UNTREATED": actionContract({
+    condition: methodContract({
+      direct: ["displayConditionSpecified", "stabilityBadNews", "stabilityResolved"],
+      axes: ["Stability"],
+    }),
+  }),
+  "A.TRACE.PROVENANCE_CHAIN": actionContract({
+    archive: methodContract({
+      direct: ["documentationBoundary", "documentationNoConflict"],
+      axes: ["Documentation"],
+    }),
+  }),
+  "A.SCREEN.UV": actionContract({
+    "uv-screen": methodContract({
+      direct: ["negativeSignalObserved"],
+      negativeRaw: ["negativeSignalObserved"],
+      axes: ["Surface"],
+    }),
+  }),
+});
+
+function axisFactor(id, axis, favored, favoredWeight = FIXTURE_WEIGHT) {
+  const values = {
+    Identity: ["REPRODUCTION", "LATE18_EXPORT"],
+    RepairHistory: [
+      "NO_MAJOR_REASSEMBLY",
+      "MAJOR_REASSEMBLY_NOT_THREE_PHASE",
+      "THREE_PHASE",
+    ],
+    KeyMaterial: ["KEY_RECONSTRUCTED", "KEY_MATERIAL_PRESERVED"],
+    Surface: [
+      "ORIGINAL_SURFACE_PREDOMINANT",
+      "MIXED_CROSS_OVERPAINT",
+      "KEY_IDENTITY_IMAGE_RECONSTRUCTED",
+    ],
+    Stability: ["SYSTEMIC_RISK", "DISPLAYABLE_LOCAL_RISK", "DISPLAYABLE_STABLE"],
+    Documentation: [
+      "CONFLICTED_OR_UNMATCHED",
+      "COHERENT_PARTIAL",
+      "COHERENT_SUFFICIENT",
+    ],
+  }[axis];
+  const favoredValues = Array.isArray(favored) ? favored : [favored];
+  return Object.freeze({
+    id,
+    affectsAxes: Object.freeze([axis]),
+    weights: Object.freeze(
+      values.map((value) =>
+        Object.freeze({
+          when: Object.freeze({ [axis]: value }),
+          weight: favoredValues.includes(value) ? favoredWeight : 1,
+        }),
+      ),
+    ),
+  });
+}
+
+const factorIdentityOld = axisFactor(
+  "fixture.factor.identity.old",
+  "Identity",
+  "LATE18_EXPORT",
+);
+const factorMajor = axisFactor(
+  "fixture.factor.repair.major",
+  "RepairHistory",
+  ["MAJOR_REASSEMBLY_NOT_THREE_PHASE", "THREE_PHASE"],
+);
+const factorThreePhaseWeak = axisFactor(
+  "fixture.factor.repair.three-phase-source",
+  "RepairHistory",
+  "THREE_PHASE",
+  5,
+);
+const factorKeyPreserved = axisFactor(
+  "fixture.factor.key.preserved",
+  "KeyMaterial",
+  "KEY_MATERIAL_PRESERVED",
+);
+const factorSurfaceMixed = axisFactor(
+  "fixture.factor.surface.mixed",
+  "Surface",
+  "MIXED_CROSS_OVERPAINT",
+);
+const factorSurfaceOriginal = axisFactor(
+  "fixture.factor.surface.original",
+  "Surface",
+  "ORIGINAL_SURFACE_PREDOMINANT",
+);
+const factorStabilityLocalRisk = axisFactor(
+  "fixture.factor.stability.local-risk",
+  "Stability",
+  "DISPLAYABLE_LOCAL_RISK",
+);
+const factorStabilitySystemic = axisFactor(
+  "fixture.factor.stability.systemic",
+  "Stability",
+  "SYSTEMIC_RISK",
+);
+const factorDocumentationPartial = axisFactor(
+  "fixture.factor.documentation.partial",
+  "Documentation",
+  "COHERENT_PARTIAL",
+);
+const factorNoMajor = axisFactor(
+  "fixture.factor.repair.no-major",
+  "RepairHistory",
+  "NO_MAJOR_REASSEMBLY",
+  5,
+);
+const factorNoMajorWeak = axisFactor(
+  "fixture.factor.repair.no-major-weak",
+  "RepairHistory",
+  "NO_MAJOR_REASSEMBLY",
+  5,
+);
+const factorReproduction = axisFactor(
+  "fixture.factor.identity.reproduction",
+  "Identity",
+  "REPRODUCTION",
+  5,
+);
+
+function makeEvent({
+  observationId,
+  sourceIds,
+  sharedLatentIds = [],
+  dependencyUnitId,
+  acquisitionActionId,
+  coverage,
+  facts = [],
+  capabilityFacts = [],
+  contextualFacts = [],
+  proofRoles = [],
+  requiresContextFacts = [],
+  acquisitionRequires = [],
+  factor,
+  negativeResult,
+  counterevidence,
+}) {
+  return Object.freeze({
+    observationId,
+    sourceIds: Object.freeze(sourceIds),
+    sharedLatentIds: Object.freeze(sharedLatentIds),
+    dependencyUnitId,
+    acquisitionActionId,
+    coverage: Object.freeze(coverage),
+    facts: Object.freeze(facts),
+    capabilityFacts: Object.freeze(capabilityFacts),
+    contextualFacts: Object.freeze(contextualFacts),
+    proofRoles: Object.freeze(proofRoles),
+    requiresContextFacts: Object.freeze(requiresContextFacts),
+    acquisitionRequires: Object.freeze(acquisitionRequires),
+    ...(factor ? { factor } : {}),
+    ...(negativeResult ? { negativeResult: Object.freeze(negativeResult) } : {}),
+    ...(counterevidence ? { counterevidence: Object.freeze(counterevidence) } : {}),
+  });
+}
+
+const events = Object.freeze({
+  whole: makeEvent({
+    observationId: "obs.current.whole",
+    sourceIds: ["source.physical.current"],
+    sharedLatentIds: ["latent.current-craft", "latent.repair-map"],
+    dependencyUnitId: "dep.fact.current-whole",
+    acquisitionActionId: "A.OBSERVE.WHOLE",
+    coverage: { object: "OBJECT.FIRST", region: "whole-visible", method: "visual" },
+    facts: ["currentBody", "currentDecor", "currentRepairMap", "interventionObservation"],
+    proofRoles: [PROOF_ROLES.CURRENT_REPAIR_MAP],
+  }),
+  wholeWithoutRepairMap: makeEvent({
+    observationId: "obs.current.whole.without-repair-map",
+    sourceIds: ["source.physical.current"],
+    sharedLatentIds: ["latent.current-craft"],
+    dependencyUnitId: "dep.fact.current-whole-without-repair-map",
+    acquisitionActionId: "A.OBSERVE.WHOLE",
+    coverage: { object: "OBJECT.FIRST", region: "whole-visible", method: "visual" },
+    facts: ["currentBody", "currentDecor", "interventionObservation"],
+  }),
+  base: makeEvent({
+    observationId: "obs.current.base",
+    sourceIds: ["source.physical.current"],
+    sharedLatentIds: ["latent.current-craft"],
+    dependencyUnitId: "dep.fact.current-base",
+    acquisitionActionId: "A.OBSERVE.BASE",
+    coverage: { object: "OBJECT.FIRST", region: "base-and-inner", method: "visual" },
+    facts: ["baseManufacture"],
+  }),
+  corpus: makeEvent({
+    observationId: "obs.corpus.identity",
+    sourceIds: ["source.corpus.set-01"],
+    sharedLatentIds: ["latent.current-craft"],
+    dependencyUnitId: "dep.corpus.identity",
+    acquisitionActionId: "A.COMPARE.CORPUS",
+    coverage: { object: "OBJECT.FIRST", region: "manufacture-comparison", method: "corpus" },
+    acquisitionRequires: ["currentBody", "baseManufacture"],
+    facts: ["directionCorpus", "identityComparisonExclusion"],
+    factor: factorIdentityOld,
+  }),
+  corpusDuplicate: makeEvent({
+    observationId: "obs.corpus.identity.repeat",
+    sourceIds: ["source.corpus.set-01"],
+    sharedLatentIds: ["latent.current-craft"],
+    dependencyUnitId: "dep.corpus.identity",
+    acquisitionActionId: "A.COMPARE.CORPUS.RECHECK",
+    coverage: { object: "OBJECT.FIRST", region: "manufacture-comparison", method: "corpus" },
+    acquisitionRequires: ["currentBody", "baseManufacture"],
+    facts: ["directionCorpus", "identityComparisonExclusion", "repeatObservation"],
+    factor: factorIdentityOld,
+  }),
+  identityContinuity: makeEvent({
+    observationId: "obs.object.continuity",
+    sourceIds: ["source.archive.image", "source.physical.current"],
+    sharedLatentIds: ["latent.object-match"],
+    dependencyUnitId: "dep.object.continuity",
+    acquisitionActionId: "A.VERIFY.OBJECT_CONTINUITY",
+    coverage: { object: "OBJECT.FIRST", region: "stable-anchors", method: "cross-time" },
+    acquisitionRequires: ["baseManufacture"],
+    facts: ["directionHistoricCandidate", "identityObjectContinuity"],
+    factor: factorIdentityOld,
+  }),
+  accident: makeEvent({
+    observationId: "obs.accident.major",
+    sourceIds: ["source.event.accident.photo", "source.event.accident.insurance"],
+    sharedLatentIds: ["latent.accident-event"],
+    dependencyUnitId: "dep.accident.major",
+    acquisitionActionId: "A.RESEARCH.ACCIDENT",
+    coverage: { object: "ARCHIVE.CANDIDATE.T2", region: "declared-record-group", method: "archive" },
+    facts: [
+      "t2RecordGroupCoherent",
+      "t2RecordClaimsAppearanceRestore",
+      "t2RecordClaimsDamageExtent",
+      "t2RecordClaimsReassembly",
+    ],
+    proofRoles: [PROOF_ROLES.T2_RECORD_COHERENCE],
+    factor: factorMajor,
+  }),
+  t2Attribution: makeEvent({
+    observationId: "obs.archive.t2.object-attribution",
+    sourceIds: [
+      "source.archive.t2.object-register",
+      "source.physical.t2.stable-anchors",
+    ],
+    sharedLatentIds: ["latent.archive-t2-object-relation"],
+    dependencyUnitId: "dep.archive.t2.object-attribution",
+    acquisitionActionId: "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+    coverage: {
+      object: "RELATION.ARCHIVE_T2_OBJECT_FIRST",
+      region: "stable-noncomposition-anchors",
+      method: "object-attribution",
+    },
+    facts: ["t2ArchiveObjectAttribution", "t2ArchiveObjectLinkCandidate"],
+    proofRoles: [PROOF_ROLES.T2_OBJECT_ATTRIBUTION],
+  }),
+  t2AttributionContested: makeEvent({
+    observationId: "obs.archive.t2.object-attribution-contested",
+    sourceIds: ["source.archive.t2.conflicting-object-register"],
+    sharedLatentIds: ["latent.archive-t2-object-relation"],
+    dependencyUnitId: "dep.archive.t2.object-attribution",
+    acquisitionActionId: "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+    coverage: {
+      object: "RELATION.ARCHIVE_T2_OBJECT_FIRST",
+      region: "stable-noncomposition-anchors",
+      method: "contested",
+    },
+    facts: ["t2ArchiveObjectAttributionContested"],
+  }),
+  t2RecordCoherenceContested: makeEvent({
+    observationId: "obs.archive.t2.record-coherence-contested",
+    sourceIds: ["source.event.accident.conflicting-record"],
+    sharedLatentIds: ["latent.accident-event"],
+    dependencyUnitId: "dep.accident.major",
+    acquisitionActionId: "A.RESEARCH.ACCIDENT",
+    coverage: { object: "ARCHIVE.CANDIDATE.T2", region: "declared-record-group", method: "contested" },
+    facts: ["t2ArchiveRecordCoherenceContested"],
+  }),
+  documentedCurrentCorroboration: makeEvent({
+    observationId: "obs.archive.t2.current-corroboration",
+    sourceIds: [
+      "source.archive.t2.repair-diagram",
+      "source.physical.current-repair-map",
+    ],
+    sharedLatentIds: ["latent.archive-t2-event-relation"],
+    dependencyUnitId: "dep.archive.t2.current-corroboration",
+    acquisitionActionId: "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+    coverage: {
+      object: "RELATION.ARCHIVE_T2_EVENT_OBJECT_FIRST",
+      region: "declared-major-scope",
+      method: "record-current",
+    },
+    facts: ["appearanceRestore", "t2EventPhysicalCorrespondence"],
+    proofRoles: [PROOF_ROLES.T2_CURRENT_CORROBORATION],
+  }),
+  t2EventCorroborationContested: makeEvent({
+    observationId: "obs.archive.t2.event-corroboration-contested",
+    sourceIds: ["source.physical.t2.conflicting-current-zone"],
+    sharedLatentIds: ["latent.archive-t2-event-relation"],
+    dependencyUnitId: "dep.archive.t2.current-corroboration",
+    acquisitionActionId: "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+    coverage: {
+      object: "RELATION.ARCHIVE_T2_EVENT_OBJECT_FIRST",
+      region: "declared-major-scope",
+      method: "contested",
+    },
+    facts: ["t2EventPhysicalCorrespondenceContested"],
+  }),
+  appearance: makeEvent({
+    observationId: "obs.appearance.restore",
+    sourceIds: ["source.physical.current"],
+    sharedLatentIds: ["latent.repair-map"],
+    dependencyUnitId: "dep.fact.appearance-restore",
+    acquisitionActionId: "A.OBSERVE.REGION_DECOR",
+    coverage: { object: "OBJECT.FIRST", region: "declared-restored-zone", method: "visual" },
+    facts: ["appearanceRestore"],
+  }),
+  glueLine: makeEvent({
+    observationId: "obs.single-glue-line.answer-key",
+    sourceIds: ["source.physical.glue-line"],
+    sharedLatentIds: ["latent.repair-map-glue-line"],
+    dependencyUnitId: "dep.single-glue-line",
+    acquisitionActionId: "A.OBSERVE.REGION_DECOR",
+    coverage: { object: "OBJECT.FIRST", region: "single-glue-line", method: "visual" },
+    facts: ["glueLineObserved"],
+  }),
+  physicalMajor: makeEvent({
+    observationId: "obs.structure.major.physical",
+    sourceIds: ["source.instrument.structure"],
+    sharedLatentIds: ["latent.repair-map"],
+    dependencyUnitId: "dep.structure.major",
+    acquisitionActionId: "A.IMAGE.XRAY",
+    coverage: { object: "OBJECT.FIRST", region: "declared-major-scope-multi-view-readable", method: "xray" },
+    facts: ["currentStructureReadoutByRegion"],
+    proofRoles: [PROOF_ROLES.PHYSICAL_STRUCTURE_MAP],
+    factor: factorMajor,
+  }),
+  xrayEarly: makeEvent({
+    observationId: "obs.structure.xray.early",
+    sourceIds: ["source.instrument.xray"],
+    sharedLatentIds: ["latent.repair-map"],
+    dependencyUnitId: "dep.structure.major",
+    acquisitionActionId: "A.IMAGE.XRAY",
+    coverage: { object: "OBJECT.FIRST", region: "declared-major-scope-multi-view-readable", method: "xray" },
+    facts: ["xrayReadingsByRegionAcquired"],
+    requiresContextFacts: ["identityObjectContinuity"],
+    contextualFacts: ["currentStructureReadoutByRegion"],
+    proofRoles: [PROOF_ROLES.PHYSICAL_STRUCTURE_MAP],
+    factor: factorMajor,
+  }),
+  repairContinuity: makeEvent({
+    observationId: "obs.structure.major.cross-time",
+    sourceIds: [
+      "source.archive.major-region-pre",
+      "source.physical.major-region-current",
+    ],
+    sharedLatentIds: ["latent.repair-map"],
+    dependencyUnitId: "dep.structure.major",
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    coverage: { object: "OBJECT.FIRST", region: "declared-major-scope", method: "cross-time" },
+    facts: ["crossTimeMajorChange"],
+    proofRoles: [PROOF_ROLES.PHYSICAL_CROSS_TIME],
+    factor: factorMajor,
+  }),
+  documentedCrossTime: makeEvent({
+    observationId: "obs.structure.major.documented-cross-time",
+    sourceIds: [
+      "source.archive.major-region-pre",
+      "source.physical.major-region-current",
+    ],
+    sharedLatentIds: ["latent.documented-cross-time"],
+    dependencyUnitId: "dep.documented.cross-time",
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    coverage: { object: "RELATION.ARCHIVE_T2_EVENT_OBJECT_FIRST", region: "declared-major-scope", method: "cross-time" },
+    facts: ["appearanceRestore", "t2EventPhysicalCorrespondence"],
+    proofRoles: [PROOF_ROLES.T2_CROSS_TIME_CORROBORATION],
+  }),
+  t1: makeEvent({
+    observationId: "obs.phase.t1",
+    sourceIds: ["source.archive.pre-accident"],
+    sharedLatentIds: ["latent.pre-accident-reading"],
+    dependencyUnitId: "dep.phase.t1",
+    acquisitionActionId: "A.LOCATE.HISTORIC_IMAGE",
+    coverage: { object: "OBJECT.FIRST", region: "declared-time-anchor", method: "archive" },
+    facts: ["t1ReadingAcquired"],
+    requiresContextFacts: ["identityObjectContinuity"],
+    contextualFacts: ["t1Established"],
+    factor: factorThreePhaseWeak,
+  }),
+  t3: makeEvent({
+    observationId: "obs.phase.t3",
+    sourceIds: [
+      "source.archive.t3.condition-report",
+      "source.archive.t3.treatment-map",
+    ],
+    sharedLatentIds: ["latent.treatment-scope"],
+    dependencyUnitId: "dep.phase.t3",
+    acquisitionActionId: "A.RESEARCH.LATE_TREATMENT",
+    coverage: { object: "ARCHIVE.CANDIDATE.T3", region: "declared-treatment-records", method: "archive" },
+    facts: ["t3RecordGroupCoherent", "t3RecordClaimsLocalTreatment"],
+    proofRoles: [PROOF_ROLES.T3_RECORD_COHERENCE],
+    factor: factorThreePhaseWeak,
+  }),
+  t3RecordCoherenceContested: makeEvent({
+    observationId: "obs.archive.t3.record-coherence-contested",
+    sourceIds: ["source.archive.t3.conflicting-treatment-record"],
+    sharedLatentIds: ["latent.treatment-scope"],
+    dependencyUnitId: "dep.phase.t3",
+    acquisitionActionId: "A.RESEARCH.LATE_TREATMENT",
+    coverage: { object: "ARCHIVE.CANDIDATE.T3", region: "declared-treatment-records", method: "contested" },
+    facts: ["t3ArchiveRecordCoherenceContested"],
+  }),
+  t3Attribution: makeEvent({
+    observationId: "obs.archive.t3.object-attribution",
+    sourceIds: [
+      "source.archive.t3.object-register",
+      "source.physical.t3.stable-anchors",
+    ],
+    sharedLatentIds: ["latent.archive-t3-object-relation"],
+    dependencyUnitId: "dep.archive.t3.object-attribution",
+    acquisitionActionId: "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+    coverage: {
+      object: "RELATION.ARCHIVE_T3_OBJECT_FIRST",
+      region: "stable-noncomposition-anchors",
+      method: "object-attribution",
+    },
+    facts: ["t3ArchiveObjectAttribution", "t3ArchiveObjectLinkCandidate"],
+    proofRoles: [PROOF_ROLES.T3_OBJECT_ATTRIBUTION],
+  }),
+  t3AttributionContested: makeEvent({
+    observationId: "obs.archive.t3.object-attribution-contested",
+    sourceIds: ["source.archive.t3.conflicting-object-register"],
+    sharedLatentIds: ["latent.archive-t3-object-relation"],
+    dependencyUnitId: "dep.archive.t3.object-attribution",
+    acquisitionActionId: "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+    coverage: {
+      object: "RELATION.ARCHIVE_T3_OBJECT_FIRST",
+      region: "stable-noncomposition-anchors",
+      method: "contested",
+    },
+    facts: ["t3ArchiveObjectAttributionContested"],
+  }),
+  t3CurrentCorroboration: makeEvent({
+    observationId: "obs.archive.t3.current-corroboration",
+    sourceIds: [
+      "source.archive.t3.post-treatment-photo",
+      "source.physical.t3.current-zone",
+    ],
+    sharedLatentIds: ["latent.archive-t3-event-relation"],
+    dependencyUnitId: "dep.archive.t3.current-corroboration",
+    acquisitionActionId: "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+    coverage: {
+      object: "RELATION.ARCHIVE_T3_EVENT_OBJECT_FIRST",
+      region: "declared-treatment-scope",
+      method: "record-current",
+    },
+    facts: ["t3EventPhysicalCorrespondence"],
+    proofRoles: [PROOF_ROLES.T3_CURRENT_CORROBORATION],
+  }),
+  t3EventCorroborationContested: makeEvent({
+    observationId: "obs.archive.t3.event-corroboration-contested",
+    sourceIds: ["source.physical.t3.conflicting-current-zone"],
+    sharedLatentIds: ["latent.archive-t3-event-relation"],
+    dependencyUnitId: "dep.archive.t3.current-corroboration",
+    acquisitionActionId: "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+    coverage: {
+      object: "RELATION.ARCHIVE_T3_EVENT_OBJECT_FIRST",
+      region: "declared-treatment-scope",
+      method: "contested",
+    },
+    facts: ["t3EventPhysicalCorrespondenceContested"],
+  }),
+  threePhaseChronologyContested: makeEvent({
+    observationId: "obs.phase.chronology-contested",
+    sourceIds: ["source.archive.conflicting-phase-date"],
+    sharedLatentIds: ["latent.phase-chronology"],
+    dependencyUnitId: "dep.phase.chronology",
+    acquisitionActionId: "A.RELATE.PHASE.CHRONOLOGY",
+    coverage: { object: "RELATION.PHASE_SEQUENCE", region: "declared-three-phase-sequence", method: "contested" },
+    facts: ["threePhaseChronologyContested"],
+  }),
+  materialSubstrate: makeEvent({
+    observationId: "obs.key-material.substrate-readings",
+    sourceIds: ["source.analysis.substrate-points"],
+    sharedLatentIds: ["latent.region-map"],
+    dependencyUnitId: "dep.key-material.resolved",
+    acquisitionActionId: "A.ANALYZE.MATERIAL.SUBSTRATE",
+    coverage: { object: "OBJECT.FIRST", region: "declared-key-material-points", method: "point-analysis" },
+    facts: ["keyMaterialSubstrateReadings"],
+  }),
+  materialLayerSequence: makeEvent({
+    observationId: "obs.key-material.layer-sequence",
+    sourceIds: ["source.inspection.layer-interface-points"],
+    sharedLatentIds: ["latent.region-map"],
+    dependencyUnitId: "dep.key-material.resolved",
+    acquisitionActionId: "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+    coverage: { object: "OBJECT.FIRST", region: "declared-layer-interface-points", method: "micro-layering" },
+    facts: ["keyMaterialLayerSequenceReadings"],
+    factor: factorKeyPreserved,
+  }),
+  surfacePoint: makeEvent({
+    observationId: "obs.surface.point-layering",
+    sourceIds: ["source.inspection.layer.point-set"],
+    sharedLatentIds: ["latent.surface-map"],
+    dependencyUnitId: "dep.surface.resolved",
+    acquisitionActionId: "A.INSPECT.WINDOWS",
+    coverage: { object: "OBJECT.FIRST", region: "declared-surface-points", method: "layering" },
+    facts: ["surfacePointLayering"],
+  }),
+  surface: makeEvent({
+    observationId: "obs.surface.resolved",
+    sourceIds: ["source.inspection.layer.point-set", "source.surface.region-map"],
+    sharedLatentIds: ["latent.surface-map"],
+    dependencyUnitId: "dep.surface.resolved",
+    acquisitionActionId: "A.SYNTHESIZE.SURFACE_REGIONS",
+    coverage: { object: "OBJECT.FIRST", region: "declared-surface-regions", method: "regional-synthesis" },
+    facts: ["surfaceRegionalCoverage", "surfaceResolved"],
+    factor: factorSurfaceMixed,
+  }),
+  stability: makeEvent({
+    observationId: "obs.stability.resolved",
+    sourceIds: ["source.assessment.condition"],
+    sharedLatentIds: ["latent.condition-session"],
+    dependencyUnitId: "dep.stability.resolved",
+    acquisitionActionId: "A.ASSESS.TREATED_AND_UNTREATED",
+    coverage: { object: "OBJECT.FIRST", region: "declared-load-paths-supported-static-display", method: "condition" },
+    facts: ["displayConditionSpecified", "stabilityResolved"],
+    factor: factorStabilityLocalRisk,
+  }),
+  stabilityBadNews: makeEvent({
+    observationId: "obs.stability.bad-news",
+    sourceIds: ["source.assessment.bad-news"],
+    sharedLatentIds: ["latent.condition-bad-news"],
+    dependencyUnitId: "dep.stability.bad-news",
+    acquisitionActionId: "A.ASSESS.TREATED_AND_UNTREATED",
+    coverage: { object: "OBJECT.FIRST", region: "declared-load-paths", method: "condition" },
+    facts: ["stabilityBadNews"],
+    factor: factorStabilitySystemic,
+  }),
+  documentation: makeEvent({
+    observationId: "obs.documentation.resolved",
+    sourceIds: ["source.archive.chain"],
+    sharedLatentIds: ["latent.event-chain"],
+    dependencyUnitId: "dep.documentation.resolved",
+    acquisitionActionId: "A.TRACE.PROVENANCE_CHAIN",
+    coverage: { object: "OBJECT.FIRST", region: "declared-document-boundary", method: "archive" },
+    acquisitionRequires: ["identityObjectContinuity"],
+    facts: ["documentationBoundary", "documentationNoConflict"],
+    factor: factorDocumentationPartial,
+  }),
+  noSignalUnresolved: makeEvent({
+    observationId: "obs.surface.no-signal.unresolved",
+    sourceIds: ["source.instrument.screen"],
+    sharedLatentIds: ["latent.surface-map"],
+    dependencyUnitId: "dep.surface.no-signal",
+    acquisitionActionId: "A.SCREEN.UV",
+    coverage: { object: "OBJECT.FIRST", region: "declared-screen-zone", method: "uv-screen" },
+    facts: ["negativeSignalObserved"],
+    factor: factorSurfaceOriginal,
+    negativeResult: {
+      rawFactIds: ["negativeSignalObserved"],
+      capability: {
+        targetCorrect: true,
+        coverageSufficient: false,
+        sensitivitySufficient: true,
+        materialSupportsSignal: false,
+      },
+    },
+  }),
+  surfaceBadNews: makeEvent({
+    observationId: "obs.surface.bad-news",
+    sourceIds: ["source.inspection.surface"],
+    sharedLatentIds: ["latent.surface-map"],
+    dependencyUnitId: "dep.surface.bad-news",
+    acquisitionActionId: "A.INSPECT.WINDOWS",
+    coverage: { object: "OBJECT.FIRST", region: "declared-surface-scope", method: "layering" },
+    facts: ["surfaceBadNews"],
+    factor: factorSurfaceMixed,
+  }),
+  hardMajorCounter: makeEvent({
+    observationId: "obs.counter.major.abstract",
+    sourceIds: ["source.method.capable-structural"],
+    sharedLatentIds: ["latent.repair-map"],
+    dependencyUnitId: "dep.counter.major.abstract",
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    coverage: { object: "OBJECT.FIRST", region: "necessary-major-scope", method: "capable-structural" },
+    facts: ["negativeSignalObserved"],
+    capabilityFacts: ["scopedAbsenceSupported"],
+    factor: factorNoMajor,
+    negativeResult: {
+      rawFactIds: ["negativeSignalObserved"],
+      capability: {
+        targetCorrect: true,
+        coverageSufficient: true,
+        sensitivitySufficient: true,
+        materialSupportsSignal: true,
+      },
+    },
+    counterevidence: {
+      relation: "hard-counterevidence",
+      targetClaim: "CLAIM.REPAIR.MAJOR_REASSEMBLY",
+      scope: {
+        object: "OBJECT.FIRST",
+        region: "necessary-major-scope",
+        time: "T2",
+        materialLayer: "structural-substrate",
+        quantifier: "necessary-condition",
+      },
+    },
+  }),
+  outOfScopeMajorCounter: makeEvent({
+    observationId: "obs.counter.major.out-of-scope",
+    sourceIds: ["source.method.capable-local"],
+    sharedLatentIds: ["latent.local-continuity"],
+    dependencyUnitId: "dep.counter.major.out-of-scope",
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    coverage: { object: "OBJECT.FIRST", region: "nonnecessary-local-scope", method: "capable-structural" },
+    facts: ["negativeSignalObserved"],
+    capabilityFacts: ["scopedAbsenceSupported"],
+    negativeResult: {
+      rawFactIds: ["negativeSignalObserved"],
+      capability: {
+        targetCorrect: true,
+        coverageSufficient: true,
+        sensitivitySufficient: true,
+        materialSupportsSignal: true,
+      },
+    },
+    counterevidence: {
+      relation: "hard-counterevidence",
+      targetClaim: "CLAIM.REPAIR.MAJOR_REASSEMBLY",
+      scope: {
+        object: "OBJECT.FIRST",
+        region: "nonnecessary-local-scope",
+        time: "T2",
+        materialLayer: "structural-substrate",
+        quantifier: "necessary-condition",
+      },
+    },
+  }),
+  outOfScopeMajorCounterWithFactor: makeEvent({
+    observationId: "obs.counter.major.out-of-scope-with-factor",
+    sourceIds: ["source.method.capable-local-factor"],
+    sharedLatentIds: ["latent.local-continuity-factor"],
+    dependencyUnitId: "dep.counter.major.out-of-scope-with-factor",
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    coverage: { object: "OBJECT.FIRST", region: "nonnecessary-local-scope", method: "capable-structural" },
+    facts: ["negativeSignalObserved"],
+    capabilityFacts: ["scopedAbsenceSupported"],
+    factor: factorNoMajor,
+    negativeResult: {
+      rawFactIds: ["negativeSignalObserved"],
+      capability: {
+        targetCorrect: true,
+        coverageSufficient: true,
+        sensitivitySufficient: true,
+        materialSupportsSignal: true,
+      },
+    },
+    counterevidence: {
+      relation: "hard-counterevidence",
+      targetClaim: "CLAIM.REPAIR.MAJOR_REASSEMBLY",
+      scope: {
+        object: "OBJECT.FIRST",
+        region: "nonnecessary-local-scope",
+        time: "T2",
+        materialLayer: "structural-substrate",
+        quantifier: "necessary-condition",
+      },
+    },
+  }),
+  weakMajorCounter: makeEvent({
+    observationId: "obs.counter.major.weakens",
+    sourceIds: ["source.method.weak-major"],
+    sharedLatentIds: ["latent.repair-map-weak"],
+    dependencyUnitId: "dep.counter.major.weakens",
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    coverage: { object: "OBJECT.FIRST", region: "necessary-major-scope", method: "capable-structural" },
+    facts: ["negativeSignalObserved"],
+    capabilityFacts: ["scopedAbsenceSupported"],
+    factor: factorNoMajorWeak,
+    negativeResult: {
+      rawFactIds: ["negativeSignalObserved"],
+      capability: {
+        targetCorrect: true,
+        coverageSufficient: true,
+        sensitivitySufficient: true,
+        materialSupportsSignal: true,
+      },
+    },
+    counterevidence: {
+      relation: "weakens",
+      targetClaim: "CLAIM.REPAIR.MAJOR_REASSEMBLY",
+      scope: {
+        object: "OBJECT.FIRST",
+        region: "necessary-major-scope",
+        time: "T2",
+        materialLayer: "structural-substrate",
+        quantifier: "necessary-condition",
+      },
+    },
+  }),
+  boundedMajorObservation: makeEvent({
+    observationId: "obs.counter.major.bounds",
+    sourceIds: ["source.method.bounds-major"],
+    sharedLatentIds: ["latent.repair-map-bounds"],
+    dependencyUnitId: "dep.counter.major.bounds",
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    coverage: { object: "OBJECT.FIRST", region: "nonnecessary-local-scope", method: "capable-structural" },
+    facts: ["negativeSignalObserved"],
+    capabilityFacts: ["scopedAbsenceSupported"],
+    negativeResult: {
+      rawFactIds: ["negativeSignalObserved"],
+      capability: {
+        targetCorrect: true,
+        coverageSufficient: true,
+        sensitivitySufficient: true,
+        materialSupportsSignal: true,
+      },
+    },
+    counterevidence: {
+      relation: "bounds/refines",
+      targetClaim: "CLAIM.REPAIR.MAJOR_REASSEMBLY",
+      scope: {
+        object: "OBJECT.FIRST",
+        region: "nonnecessary-local-scope",
+        time: "T2",
+        materialLayer: "structural-substrate",
+        quantifier: "existential-local",
+      },
+    },
+  }),
+  logicalMajorCounter: makeEvent({
+    observationId: "obs.counter.major.logical-refutation",
+    sourceIds: ["source.method.logical-major"],
+    sharedLatentIds: ["latent.repair-map-logical"],
+    dependencyUnitId: "dep.counter.major.logical-refutation",
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    coverage: { object: "OBJECT.FIRST", region: "necessary-major-scope", method: "capable-structural" },
+    facts: ["negativeSignalObserved"],
+    capabilityFacts: ["scopedAbsenceSupported"],
+    factor: factorNoMajor,
+    negativeResult: {
+      rawFactIds: ["negativeSignalObserved"],
+      capability: {
+        targetCorrect: true,
+        coverageSufficient: true,
+        sensitivitySufficient: true,
+        materialSupportsSignal: true,
+      },
+    },
+    counterevidence: {
+      relation: "logical-refutation",
+      targetClaim: "CLAIM.REPAIR.MAJOR_REASSEMBLY",
+      scope: {
+        object: "OBJECT.FIRST",
+        region: "necessary-major-scope",
+        time: "T2",
+        materialLayer: "structural-substrate",
+        quantifier: "necessary-condition",
+      },
+    },
+  }),
+  hardIdentityCounter: makeEvent({
+    observationId: "obs.counter.identity.hard",
+    sourceIds: ["source.method.capable-identity"],
+    sharedLatentIds: ["latent.identity-counter"],
+    dependencyUnitId: "dep.counter.identity.hard",
+    acquisitionActionId: "A.COMPARE.CORPUS",
+    coverage: { object: "OBJECT.FIRST", region: "manufacture-identity-scope", method: "capable-identity" },
+    facts: ["negativeSignalObserved"],
+    capabilityFacts: ["scopedAbsenceSupported"],
+    factor: factorReproduction,
+    negativeResult: {
+      rawFactIds: ["negativeSignalObserved"],
+      capability: {
+        targetCorrect: true,
+        coverageSufficient: true,
+        sensitivitySufficient: true,
+        materialSupportsSignal: true,
+      },
+    },
+    counterevidence: {
+      relation: "hard-counterevidence",
+      targetClaim: "CLAIM.IDENTITY.LATE18_EXPORT",
+      scope: {
+        object: "OBJECT.FIRST",
+        region: "manufacture-identity-scope",
+        time: "manufacture",
+        materialLayer: "ceramic-body-glaze",
+        quantifier: "necessary-condition",
+      },
+    },
+  }),
+  insufficientMajorCounter: makeEvent({
+    observationId: "obs.counter.major.insufficient-capability",
+    sourceIds: ["source.method.insufficient-structural"],
+    sharedLatentIds: ["latent.repair-map-insufficient"],
+    dependencyUnitId: "dep.counter.major.insufficient-capability",
+    acquisitionActionId: "A.MAP.REGION_CONTINUITY",
+    coverage: { object: "OBJECT.FIRST", region: "necessary-major-scope", method: "limited-structural" },
+    facts: ["negativeSignalObserved"],
+    capabilityFacts: ["scopedAbsenceSupported"],
+    factor: factorNoMajor,
+    negativeResult: {
+      rawFactIds: ["negativeSignalObserved"],
+      capability: {
+        targetCorrect: true,
+        coverageSufficient: false,
+        sensitivitySufficient: true,
+        materialSupportsSignal: true,
+      },
+    },
+    counterevidence: {
+      relation: "hard-counterevidence",
+      targetClaim: "CLAIM.REPAIR.MAJOR_REASSEMBLY",
+      scope: {
+        object: "OBJECT.FIRST",
+        region: "necessary-major-scope",
+        time: "T2",
+        materialLayer: "structural-substrate",
+        quantifier: "necessary-condition",
+      },
+    },
+  }),
+  identityProofOnly: makeEvent({
+    observationId: "obs.fixture.identity-proof-only",
+    sourceIds: ["source.fixture.identity"],
+    dependencyUnitId: "dep.fixture.identity-proof",
+    acquisitionActionId: "A.COMPARE.CORPUS",
+    coverage: { object: "OBJECT.FIRST", region: "manufacture-comparison", method: "fixture" },
+    acquisitionRequires: ["currentBody", "baseManufacture"],
+    facts: ["directionCorpus", "identityComparisonExclusion"],
+  }),
+  majorProofOnly: makeEvent({
+    observationId: "obs.fixture.major-proof-only",
+    sourceIds: ["source.event.accident.photo", "source.event.accident.insurance"],
+    dependencyUnitId: "dep.fixture.major-proof",
+    acquisitionActionId: "A.RESEARCH.ACCIDENT",
+    coverage: { object: "ARCHIVE.CANDIDATE.T2", region: "declared-record-group", method: "archive" },
+    facts: [
+      "t2RecordGroupCoherent",
+      "t2RecordClaimsAppearanceRestore",
+      "t2RecordClaimsDamageExtent",
+      "t2RecordClaimsReassembly",
+    ],
+    proofRoles: [PROOF_ROLES.T2_RECORD_COHERENCE],
+  }),
+  singleXray: makeEvent({
+    observationId: "obs.single-xray.answer-key",
+    sourceIds: ["source.instrument.single-xray"],
+    sharedLatentIds: ["latent.repair-map"],
+    dependencyUnitId: "dep.single-xray",
+    acquisitionActionId: "A.IMAGE.XRAY",
+    coverage: { object: "OBJECT.FIRST", region: "single-read-zone", method: "xray" },
+    facts: ["xraySingleReadingAcquired"],
+    factor: factorMajor,
+  }),
+  singleDocument: makeEvent({
+    observationId: "obs.single-document.answer-key",
+    sourceIds: ["source.event.single-document"],
+    sharedLatentIds: ["latent.accident-event"],
+    dependencyUnitId: "dep.single-document",
+    acquisitionActionId: "A.RESEARCH.ACCIDENT",
+    coverage: { object: "ARCHIVE.CANDIDATE.T2", region: "single-document", method: "archive" },
+    facts: ["t2RecordClaimsAppearanceRestore", "t2RecordClaimsReassembly"],
+    factor: factorMajor,
+  }),
+});
+
+const g2Documented = [
+  events.whole,
+  events.base,
+  events.corpus,
+  events.accident,
+  events.t2Attribution,
+  events.documentedCurrentCorroboration,
+];
+const g2DocumentedCrossTime = [
+  events.wholeWithoutRepairMap,
+  events.base,
+  events.corpus,
+  events.accident,
+  events.t2Attribution,
+  events.documentedCrossTime,
+];
+const g2Alternate = [
+  events.whole,
+  events.base,
+  events.identityContinuity,
+  events.appearance,
+  events.physicalMajor,
+  events.repairContinuity,
+];
+
+function fixture(id, fixtureEvents, orders, expected, extra = {}) {
+  return Object.freeze({
+    id,
+    thresholds,
+    expectedProfile,
+    claimScopeRequirements,
+    actionContracts,
+    proofRoleContracts,
+    unknownRegistry,
+    playerChoice: "CONTINUE",
+    events: Object.freeze(fixtureEvents),
+    orders: Object.freeze(orders.map((order) => Object.freeze(order))),
+    expected: Object.freeze(expected),
+    ...extra,
+  });
+}
+
+const scenarios = Object.freeze([
+  fixture(
+    "g1-oriented",
+    [events.whole, events.base, events.corpus],
+    [
+      ["obs.current.whole", "obs.current.base", "obs.corpus.identity"],
+      ["obs.current.base", "obs.current.whole", "obs.corpus.identity"],
+    ],
+    { stage: "G1" },
+  ),
+  fixture(
+    "archive-candidate-early-local-value",
+    [events.whole, events.base, events.corpus, events.accident],
+    [[
+      "obs.accident.major",
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+    ]],
+    { stage: "G1" },
+  ),
+  fixture(
+    "archive-attribution-contested-not-promoted",
+    [events.whole, events.base, events.corpus, events.accident, events.t2AttributionContested],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution-contested",
+    ]],
+    { stage: "G1" },
+  ),
+  fixture(
+    "g2-documented-stop",
+    g2Documented,
+    [
+      [
+        "obs.current.whole",
+        "obs.current.base",
+        "obs.corpus.identity",
+        "obs.accident.major",
+        "obs.archive.t2.object-attribution",
+        "obs.archive.t2.current-corroboration",
+      ],
+      [
+        "obs.accident.major",
+        "obs.archive.t2.object-attribution",
+        "obs.archive.t2.current-corroboration",
+        "obs.current.base",
+        "obs.current.whole",
+        "obs.corpus.identity",
+      ],
+      [
+        "obs.current.whole",
+        "obs.accident.major",
+        "obs.archive.t2.current-corroboration",
+        "obs.current.base",
+        "obs.archive.t2.object-attribution",
+        "obs.corpus.identity",
+      ],
+    ],
+    { stage: "G2" },
+    { playerChoice: "STOP" },
+  ),
+  fixture(
+    "g2-documented-cross-time-or",
+    g2DocumentedCrossTime,
+    [
+      [
+        "obs.current.whole.without-repair-map",
+        "obs.current.base",
+        "obs.corpus.identity",
+        "obs.accident.major",
+        "obs.archive.t2.object-attribution",
+        "obs.structure.major.documented-cross-time",
+      ],
+      [
+        "obs.accident.major",
+        "obs.structure.major.documented-cross-time",
+        "obs.archive.t2.object-attribution",
+        "obs.current.whole.without-repair-map",
+        "obs.current.base",
+        "obs.corpus.identity",
+      ],
+    ],
+    { stage: "G2" },
+  ),
+  fixture(
+    "g2-continue-no-progress",
+    [...g2Documented, events.corpusDuplicate, events.noSignalUnresolved],
+    [
+      [
+        "obs.current.whole",
+        "obs.current.base",
+        "obs.corpus.identity",
+        "obs.accident.major",
+        "obs.archive.t2.object-attribution",
+        "obs.archive.t2.current-corroboration",
+        "obs.corpus.identity.repeat",
+        "obs.surface.no-signal.unresolved",
+      ],
+      [
+        "obs.surface.no-signal.unresolved",
+        "obs.accident.major",
+        "obs.archive.t2.current-corroboration",
+        "obs.current.base",
+        "obs.current.whole",
+        "obs.archive.t2.object-attribution",
+        "obs.corpus.identity",
+        "obs.corpus.identity.repeat",
+      ],
+      [
+        "obs.current.whole",
+        "obs.current.base",
+        "obs.corpus.identity.repeat",
+        "obs.accident.major",
+        "obs.archive.t2.object-attribution",
+        "obs.archive.t2.current-corroboration",
+        "obs.corpus.identity",
+        "obs.surface.no-signal.unresolved",
+      ],
+    ],
+    { stage: "G2" },
+  ),
+  fixture(
+    "g2-alternate-physical",
+    g2Alternate,
+    [
+      [
+        "obs.current.whole",
+        "obs.current.base",
+        "obs.object.continuity",
+        "obs.appearance.restore",
+        "obs.structure.major.physical",
+        "obs.structure.major.cross-time",
+      ],
+      [
+        "obs.structure.major.physical",
+        "obs.structure.major.cross-time",
+        "obs.current.whole",
+        "obs.current.base",
+        "obs.object.continuity",
+        "obs.appearance.restore",
+      ],
+    ],
+    { stage: "G2" },
+  ),
+  fixture(
+    "professional-evidence-early",
+    [
+      events.whole,
+      events.base,
+      events.identityContinuity,
+      events.appearance,
+      events.xrayEarly,
+      events.repairContinuity,
+    ],
+    [
+      [
+        "obs.structure.xray.early",
+        "obs.current.whole",
+        "obs.current.base",
+        "obs.object.continuity",
+        "obs.appearance.restore",
+        "obs.structure.major.cross-time",
+      ],
+      [
+        "obs.current.whole",
+        "obs.structure.xray.early",
+        "obs.current.base",
+        "obs.object.continuity",
+        "obs.appearance.restore",
+        "obs.structure.major.cross-time",
+      ],
+      [
+        "obs.current.whole",
+        "obs.current.base",
+        "obs.object.continuity",
+        "obs.structure.xray.early",
+        "obs.appearance.restore",
+        "obs.structure.major.cross-time",
+      ],
+    ],
+    { stage: "G2" },
+  ),
+  fixture(
+    "g3-with-allowed-unknowns",
+    [
+      ...g2Documented,
+      events.identityContinuity,
+      events.t1,
+      events.t3,
+      events.t3Attribution,
+      events.t3CurrentCorroboration,
+      events.materialSubstrate,
+      events.materialLayerSequence,
+      events.surfacePoint,
+      events.surface,
+      events.stability,
+      events.documentation,
+    ],
+    [
+      [
+        "obs.current.whole",
+        "obs.current.base",
+        "obs.object.continuity",
+        "obs.corpus.identity",
+        "obs.accident.major",
+        "obs.archive.t2.object-attribution",
+        "obs.archive.t2.current-corroboration",
+        "obs.phase.t1",
+        "obs.phase.t3",
+        "obs.archive.t3.object-attribution",
+        "obs.archive.t3.current-corroboration",
+        "obs.key-material.substrate-readings",
+        "obs.key-material.layer-sequence",
+        "obs.surface.point-layering",
+        "obs.surface.resolved",
+        "obs.stability.resolved",
+        "obs.documentation.resolved",
+      ],
+      [
+        "obs.phase.t1",
+        "obs.accident.major",
+        "obs.phase.t3",
+        "obs.archive.t2.current-corroboration",
+        "obs.archive.t3.current-corroboration",
+        "obs.key-material.layer-sequence",
+        "obs.current.base",
+        "obs.current.whole",
+        "obs.object.continuity",
+        "obs.archive.t2.object-attribution",
+        "obs.archive.t3.object-attribution",
+        "obs.corpus.identity",
+        "obs.documentation.resolved",
+        "obs.stability.resolved",
+        "obs.key-material.substrate-readings",
+        "obs.surface.point-layering",
+        "obs.surface.resolved",
+      ],
+      [
+        "obs.stability.resolved",
+        "obs.surface.resolved",
+        "obs.surface.point-layering",
+        "obs.accident.major",
+        "obs.archive.t2.object-attribution",
+        "obs.archive.t2.current-corroboration",
+        "obs.current.whole",
+        "obs.current.base",
+        "obs.object.continuity",
+        "obs.documentation.resolved",
+        "obs.corpus.identity",
+        "obs.key-material.substrate-readings",
+        "obs.key-material.layer-sequence",
+        "obs.phase.t3",
+        "obs.archive.t3.object-attribution",
+        "obs.archive.t3.current-corroboration",
+        "obs.phase.t1",
+      ],
+    ],
+    { stage: "G3" },
+    { unknowns: Object.freeze(["noncritical-region", "exact-treatment-formula"]) },
+  ),
+  fixture(
+    "g2-surface-bad-news-stable",
+    [...g2Documented, events.surfaceBadNews],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+      "obs.surface.bad-news",
+    ]],
+    { stage: "G2" },
+  ),
+  fixture(
+    "g2-stability-bad-news-stable",
+    [...g2Documented, events.stabilityBadNews],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+      "obs.stability.bad-news",
+    ]],
+    { stage: "G2" },
+  ),
+  fixture(
+    "g2-hard-counter-downgrade",
+    [...g2Documented, events.hardMajorCounter],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+      "obs.counter.major.abstract",
+    ]],
+    { stage: "G1" },
+  ),
+  fixture(
+    "g2-out-of-scope-counter-stable",
+    [...g2Documented, events.outOfScopeMajorCounter],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+      "obs.counter.major.out-of-scope",
+    ]],
+    { stage: "G2" },
+  ),
+  fixture(
+    "g2-out-of-scope-factor-stable",
+    [...g2Documented, events.outOfScopeMajorCounterWithFactor],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+      "obs.counter.major.out-of-scope-with-factor",
+    ]],
+    { stage: "G2" },
+  ),
+  fixture(
+    "g2-major-weakened-stable",
+    [...g2Documented, events.weakMajorCounter],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+      "obs.counter.major.weakens",
+    ]],
+    { stage: "G2" },
+  ),
+  fixture(
+    "g2-major-bounded-stable",
+    [...g2Documented, events.boundedMajorObservation],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+      "obs.counter.major.bounds",
+    ]],
+    { stage: "G2" },
+  ),
+  fixture(
+    "g2-logical-counter-downgrade",
+    [...g2Documented, events.logicalMajorCounter],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+      "obs.counter.major.logical-refutation",
+    ]],
+    { stage: "G1" },
+  ),
+  fixture(
+    "g2-identity-hard-counter-downgrade",
+    [...g2Documented, events.hardIdentityCounter],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+      "obs.counter.identity.hard",
+    ]],
+    { stage: "G1" },
+  ),
+  fixture(
+    "g2-insufficient-counter-unresolved",
+    [...g2Documented, events.insufficientMajorCounter],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.accident.major",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+      "obs.counter.major.insufficient-capability",
+    ]],
+    { stage: "G2" },
+  ),
+  fixture(
+    "marginal-splice-rejected",
+    [
+      events.whole,
+      events.base,
+      events.identityProofOnly,
+      events.majorProofOnly,
+      events.t2Attribution,
+      events.documentedCurrentCorroboration,
+    ],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.fixture.identity-proof-only",
+      "obs.fixture.major-proof-only",
+      "obs.archive.t2.object-attribution",
+      "obs.archive.t2.current-corroboration",
+    ]],
+    { stage: "G1" },
+    {
+      priorCells: Object.freeze([
+        Object.freeze({
+          when: Object.freeze({
+            Identity: "LATE18_EXPORT",
+            RepairHistory: Object.freeze([
+              "MAJOR_REASSEMBLY_NOT_THREE_PHASE",
+              "THREE_PHASE",
+            ]),
+          }),
+          mass: 0.52,
+        }),
+        Object.freeze({
+          when: Object.freeze({
+            Identity: "LATE18_EXPORT",
+            RepairHistory: "NO_MAJOR_REASSEMBLY",
+          }),
+          mass: 0.24,
+        }),
+        Object.freeze({
+          when: Object.freeze({
+            Identity: "REPRODUCTION",
+            RepairHistory: Object.freeze([
+              "MAJOR_REASSEMBLY_NOT_THREE_PHASE",
+              "THREE_PHASE",
+            ]),
+          }),
+          mass: 0.24,
+        }),
+        Object.freeze({
+          when: Object.freeze({
+            Identity: "REPRODUCTION",
+            RepairHistory: "NO_MAJOR_REASSEMBLY",
+          }),
+          mass: 0,
+        }),
+      ]),
+    },
+  ),
+  fixture(
+    "single-test-answer-key-rejected",
+    [events.singleXray],
+    [["obs.single-xray.answer-key"]],
+    { stage: "NONE" },
+  ),
+  fixture(
+    "near-complete-single-instrument-rejected",
+    [events.whole, events.base, events.corpus, events.appearance, events.singleXray],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.appearance.restore",
+      "obs.single-xray.answer-key",
+    ]],
+    { stage: "G1" },
+  ),
+  fixture(
+    "near-complete-single-glue-line-rejected",
+    [events.whole, events.base, events.corpus, events.glueLine],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.single-glue-line.answer-key",
+    ]],
+    { stage: "G1" },
+  ),
+  fixture(
+    "single-document-answer-key-rejected",
+    [events.whole, events.base, events.corpus, events.singleDocument],
+    [[
+      "obs.current.whole",
+      "obs.current.base",
+      "obs.corpus.identity",
+      "obs.single-document.answer-key",
+    ]],
+    { stage: "G1" },
+  ),
+]);
+
+const scenarioById = Object.freeze(
+  Object.fromEntries(scenarios.map((scenario) => [scenario.id, scenario])),
+);
+
+class FixtureContractError extends Error {
+  constructor(message, reason, details = {}) {
+    super(message);
+    this.name = "FixtureContractError";
+    this.code = "FIXTURE_CONTRACT_ERROR";
+    this.reason = reason;
+    this.details = Object.freeze({ ...details });
+  }
+}
+
+function eventsForOrder(scenario, order) {
+  const byId = new Map(scenario.events.map((event) => [event.observationId, event]));
+  const expectedIds = [...byId.keys()].sort();
+  const actualIds = [...order].sort();
+  if (
+    byId.size !== scenario.events.length ||
+    order.length !== scenario.events.length ||
+    new Set(order).size !== order.length ||
+    JSON.stringify(actualIds) !== JSON.stringify(expectedIds)
+  ) {
+    throw new FixtureContractError(
+      `Scenario ${scenario.id} order must be an exact event permutation`,
+      "FIXTURE_ORDER_INVALID",
+      { scenarioId: scenario.id },
+    );
+  }
+  return order.map((id) => {
+    const event = byId.get(id);
+    if (!event) {
+      throw new FixtureContractError(
+        `Scenario ${scenario.id} order references missing event ${id}`,
+        "FIXTURE_ORDER_MISSING_EVENT",
+        { observationId: id, scenarioId: scenario.id },
+      );
+    }
+    return event;
+  });
+}
+
+const conflictingDependencyEvents = Object.freeze([
+  events.corpus,
+  Object.freeze({
+    ...events.corpusDuplicate,
+    factor: axisFactor(
+      "fixture.factor.identity.conflicting",
+      "Identity",
+      "REPRODUCTION",
+    ),
+  }),
+]);
+
+return { thresholds, expectedProfile, claimScopeRequirements, unknownRegistry, PROOF_ROLES, proofRoleContracts, actionContracts, events, scenarios, scenarioById, FixtureContractError, eventsForOrder, conflictingDependencyEvents };
+})();
+
+/* ==== SOLVER ==== */
+const SOLVER = (() => {
+const AXES = Object.freeze({
+  Identity: Object.freeze(["REPRODUCTION", "LATE18_EXPORT"]),
+  RepairHistory: Object.freeze([
+    "NO_MAJOR_REASSEMBLY",
+    "MAJOR_REASSEMBLY_NOT_THREE_PHASE",
+    "THREE_PHASE",
+  ]),
+  KeyMaterial: Object.freeze(["KEY_RECONSTRUCTED", "KEY_MATERIAL_PRESERVED"]),
+  Surface: Object.freeze([
+    "ORIGINAL_SURFACE_PREDOMINANT",
+    "MIXED_CROSS_OVERPAINT",
+    "KEY_IDENTITY_IMAGE_RECONSTRUCTED",
+  ]),
+  Stability: Object.freeze([
+    "SYSTEMIC_RISK",
+    "DISPLAYABLE_LOCAL_RISK",
+    "DISPLAYABLE_STABLE",
+  ]),
+  Documentation: Object.freeze([
+    "CONFLICTED_OR_UNMATCHED",
+    "COHERENT_PARTIAL",
+    "COHERENT_SUFFICIENT",
+  ]),
+});
+
+const AXIS_NAMES = Object.freeze(Object.keys(AXES));
+
+const NUMERIC_TOLERANCE = 1e-12;
+const MAX_FACTOR_GROUPS_FOR_EXHAUSTIVE_ORDER_CHECK = 7;
+const COUNTER_RELATIONS = Object.freeze([
+  "weakens",
+  "bounds/refines",
+  "hard-counterevidence",
+  "logical-refutation",
+]);
+const FACTOR_SOLUTION_CACHE = new Map();
+
+class ModelConflict extends Error {
+  constructor(message, reason = "UNCLASSIFIED_MODEL_CONFLICT", details = {}) {
+    super(message);
+    this.name = "ModelConflict";
+    this.code = "MODEL_CONFLICT";
+    this.reason = reason;
+    this.details = stableValue(details);
+  }
+}
+
+function stableValue(value) {
+  if (Array.isArray(value)) return value.map(stableValue);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, stableValue(value[key])]),
+    );
+  }
+  return value;
+}
+
+function stableStringify(value) {
+  return JSON.stringify(stableValue(value));
+}
+
+function cartesian(axisIndex, current, output) {
+  if (axisIndex === AXIS_NAMES.length) {
+    const id = AXIS_NAMES.map((axis) => current[axis]).join("|");
+    output.push(Object.freeze({ id, ...current }));
+    return;
+  }
+  const axis = AXIS_NAMES[axisIndex];
+  for (const value of AXES[axis]) {
+    cartesian(axisIndex + 1, { ...current, [axis]: value }, output);
+  }
+}
+
+function buildStateSpace() {
+  const states = [];
+  cartesian(0, {}, states);
+  return Object.freeze(states);
+}
+
+const STATE_SPACE = buildStateSpace();
+const STATE_ID_SET = new Set(STATE_SPACE.map((state) => state.id));
+
+function selectorMatches(state, selector = {}) {
+  return Object.entries(selector).every(([axis, wanted]) => {
+    if (!AXES[axis]) {
+      throw new ModelConflict(
+        `Unknown selector axis: ${axis}`,
+        "INVALID_SELECTOR_AXIS",
+        { axis },
+      );
+    }
+    return Array.isArray(wanted) ? wanted.includes(state[axis]) : state[axis] === wanted;
+  });
+}
+
+function normalizeDistribution(entries) {
+  for (const entry of entries) {
+    if (!Number.isFinite(entry.probability) || entry.probability < 0) {
+      throw new ModelConflict(
+        `Distribution entry must be finite and non-negative; got ${entry.probability}`,
+        "DISTRIBUTION_ENTRY_INVALID",
+        { probability: entry.probability, stateId: entry.state?.id },
+      );
+    }
+  }
+  const sum = entries.reduce((total, entry) => total + entry.probability, 0);
+  if (!Number.isFinite(sum) || !(sum > 0)) {
+    throw new ModelConflict(
+      `Distribution must have finite positive mass; got ${sum}`,
+      Number.isFinite(sum) ? "DISTRIBUTION_ZERO_MASS" : "DISTRIBUTION_MASS_NONFINITE",
+      { mass: sum },
+    );
+  }
+  return entries.map((entry) => ({ ...entry, probability: entry.probability / sum }));
+}
+
+function buildPrior(priorCells) {
+  if (priorCells === undefined) {
+    const probability = 1 / STATE_SPACE.length;
+    return STATE_SPACE.map((state) => ({ state, probability }));
+  }
+  if (!Array.isArray(priorCells) || priorCells.length === 0) {
+    throw new ModelConflict(
+      "priorCells must be a non-empty array",
+      "PRIOR_CELLS_INVALID",
+    );
+  }
+
+  for (const cell of priorCells) {
+    if (!Number.isFinite(cell.mass) || cell.mass < 0) {
+      throw new ModelConflict(
+        `Prior cell mass must be finite and non-negative; got ${cell.mass}`,
+        "PRIOR_CELL_MASS_INVALID",
+        { mass: cell.mass },
+      );
+    }
+  }
+  const massSum = priorCells.reduce((sum, cell) => sum + cell.mass, 0);
+  if (!Number.isFinite(massSum) || Math.abs(massSum - 1) > 1e-12) {
+    throw new ModelConflict(
+      `Prior cell masses must sum to 1; got ${massSum}`,
+      "PRIOR_INVALID_MASS_SUM",
+      { massSum },
+    );
+  }
+
+  const assigned = new Map();
+  for (const cell of priorCells) {
+    const matches = STATE_SPACE.filter((state) => selectorMatches(state, cell.when));
+    if (matches.length === 0) {
+      throw new ModelConflict("Prior cell matches no state", "PRIOR_CELL_EMPTY");
+    }
+    for (const state of matches) {
+      if (assigned.has(state.id)) {
+        throw new ModelConflict(
+          `Overlapping prior cells at ${state.id}`,
+          "PRIOR_CELLS_OVERLAP",
+          { stateId: state.id },
+        );
+      }
+      assigned.set(state.id, cell.mass / matches.length);
+    }
+  }
+  if (assigned.size !== STATE_SPACE.length) {
+    throw new ModelConflict(
+      `Prior cells leave ${STATE_SPACE.length - assigned.size} states uncovered`,
+      "PRIOR_CELLS_INCOMPLETE",
+      { uncoveredCount: STATE_SPACE.length - assigned.size },
+    );
+  }
+  return normalizeDistribution(
+    STATE_SPACE.map((state) => ({ state, probability: assigned.get(state.id) })),
+  );
+}
+
+function isUniqueStringIdArray(value, { allowEmpty = true } = {}) {
+  return (
+    Array.isArray(value) &&
+    (allowEmpty || value.length > 0) &&
+    value.every((item) => typeof item === "string" && item.length > 0) &&
+    new Set(value).size === value.length
+  );
+}
+
+function invalidFixtureSchema(message, details = {}) {
+  throw new ModelConflict(message, "ACTION_CONTRACT_SCHEMA_INVALID", details);
+}
+
+function validateFixture(fixture) {
+  for (const key of ["identity", "major", "g2Joint", "g3Profile"]) {
+    const value = fixture.thresholds?.[key];
+    if (!Number.isFinite(value) || value < 0 || value > 1) {
+      throw new ModelConflict(
+        `Threshold ${key} must be finite and within [0,1]; got ${value}`,
+        "THRESHOLD_INVALID",
+        { threshold: key, value },
+      );
+    }
+  }
+  if (
+    !fixture.actionContracts ||
+    typeof fixture.actionContracts !== "object" ||
+    Array.isArray(fixture.actionContracts)
+  ) {
+    throw new ModelConflict("Fixture lacks actionContracts", "ACTION_CONTRACTS_MISSING");
+  }
+  for (const [actionId, actionContract] of Object.entries(fixture.actionContracts)) {
+    if (
+      !actionContract ||
+      typeof actionContract !== "object" ||
+      !actionContract.methods ||
+      typeof actionContract.methods !== "object" ||
+      Array.isArray(actionContract.methods)
+    ) {
+      invalidFixtureSchema(`Action contract ${actionId} has invalid methods`, { actionId });
+    }
+    for (const [method, methodContract] of Object.entries(actionContract.methods)) {
+      if (!methodContract || typeof methodContract !== "object") {
+        invalidFixtureSchema(`Action contract ${actionId}/${method} is invalid`, {
+          actionId,
+          method,
+        });
+      }
+      for (const field of [
+        "allowedDirectFacts",
+        "allowedContextualFacts",
+        "allowedCapabilityFacts",
+        "allowedNegativeRawFacts",
+        "allowedProofRoles",
+        "allowedAxes",
+        "requiredContextFacts",
+      ]) {
+        if (!isUniqueStringIdArray(methodContract[field])) {
+          invalidFixtureSchema(
+            `Action contract ${actionId}/${method} has invalid ${field}`,
+            { actionId, field, method },
+          );
+        }
+      }
+      if (methodContract.allowedAxes.some((axis) => !AXES[axis])) {
+        invalidFixtureSchema(`Action contract ${actionId}/${method} names an unknown axis`, {
+          actionId,
+          method,
+        });
+      }
+      if (typeof methodContract.fixtureOnly !== "boolean") {
+        invalidFixtureSchema(`Action contract ${actionId}/${method} lacks fixtureOnly boolean`, {
+          actionId,
+          method,
+        });
+      }
+    }
+  }
+  if (
+    !fixture.proofRoleContracts ||
+    typeof fixture.proofRoleContracts !== "object" ||
+    Array.isArray(fixture.proofRoleContracts)
+  ) {
+    throw new ModelConflict(
+      "Fixture lacks proofRoleContracts",
+      "PROOF_ROLE_CONTRACTS_MISSING",
+    );
+  }
+  for (const [roleId, roleContract] of Object.entries(fixture.proofRoleContracts)) {
+    const validCoverage =
+      roleContract?.coverage &&
+      typeof roleContract.coverage === "object" &&
+      ["object", "region"].every(
+        (key) =>
+          typeof roleContract.coverage[key] === "string" && roleContract.coverage[key],
+      );
+    if (
+      !roleContract ||
+      typeof roleContract.acquisitionActionId !== "string" ||
+      typeof roleContract.method !== "string" ||
+      !validCoverage ||
+      !isUniqueStringIdArray(roleContract.requiredFacts, { allowEmpty: false }) ||
+      !Number.isInteger(roleContract.minimumSourceCount) ||
+      roleContract.minimumSourceCount < 1 ||
+      (roleContract.requiredSourceIds !== undefined &&
+        !isUniqueStringIdArray(roleContract.requiredSourceIds, { allowEmpty: false })) ||
+      (roleContract.allowedSourceIds !== undefined &&
+        !isUniqueStringIdArray(roleContract.allowedSourceIds, { allowEmpty: false }))
+    ) {
+      throw new ModelConflict(
+        `Proof role contract ${roleId} is invalid`,
+        "PROOF_ROLE_CONTRACT_SCHEMA_INVALID",
+        { roleId },
+      );
+    }
+    const methodContract =
+      fixture.actionContracts[roleContract.acquisitionActionId]?.methods?.[roleContract.method];
+    if (!methodContract?.allowedProofRoles?.includes(roleId)) {
+      throw new ModelConflict(
+        `Proof role ${roleId} is not registered on its action/method`,
+        "PROOF_ROLE_CONTRACT_SCHEMA_INVALID",
+        { roleId },
+      );
+    }
+  }
+  for (const [actionId, actionContract] of Object.entries(fixture.actionContracts)) {
+    for (const [method, methodContract] of Object.entries(actionContract.methods)) {
+      for (const roleId of methodContract.allowedProofRoles) {
+        const roleContract = fixture.proofRoleContracts[roleId];
+        if (
+          roleContract?.acquisitionActionId === actionId &&
+          roleContract?.method === method
+        ) {
+          continue;
+        }
+        throw new ModelConflict(
+          `Action contract ${actionId}/${method} misroutes proof role ${roleId}`,
+          "PROOF_ROLE_CONTRACT_SCHEMA_INVALID",
+          { actionId, method, roleId },
+        );
+      }
+    }
+  }
+  if (
+    !fixture.unknownRegistry ||
+    typeof fixture.unknownRegistry !== "object" ||
+    Array.isArray(fixture.unknownRegistry)
+  ) {
+    throw new ModelConflict("Fixture lacks unknownRegistry", "UNKNOWN_REGISTRY_MISSING");
+  }
+  for (const [unknownId, policy] of Object.entries(fixture.unknownRegistry)) {
+    if (
+      !policy ||
+      typeof policy !== "object" ||
+      Array.isArray(policy) ||
+      typeof policy.g3Allowed !== "boolean"
+    ) {
+      throw new ModelConflict(
+        `Unknown policy ${unknownId} must declare boolean g3Allowed`,
+        "UNKNOWN_REGISTRY_SCHEMA_INVALID",
+        { unknownId },
+      );
+    }
+  }
+  if (!["STOP", "CONTINUE"].includes(fixture.playerChoice)) {
+    throw new ModelConflict(
+      `Fixture playerChoice must be STOP or CONTINUE; got ${fixture.playerChoice}`,
+      "PLAYER_CHOICE_INVALID",
+      { playerChoice: fixture.playerChoice },
+    );
+  }
+  for (const unknownId of fixture.unknowns ?? []) {
+    if (!fixture.unknownRegistry[unknownId]) {
+      throw new ModelConflict(
+        `Unknown coverage ID is not registered: ${unknownId}`,
+        "UNKNOWN_ID_UNREGISTERED",
+        { unknownId },
+      );
+    }
+  }
+}
+
+function validateStringIds(values, label, event) {
+  if (!Array.isArray(values) || values.some((value) => typeof value !== "string" || !value)) {
+    throw new ModelConflict(
+      `Event ${event.observationId} has invalid ${label}`,
+      "EVENT_ID_LIST_INVALID",
+      { label, observationId: event.observationId },
+    );
+  }
+  if (new Set(values).size !== values.length) {
+    throw new ModelConflict(
+      `Event ${event.observationId} has duplicate ${label}`,
+      "EVENT_ID_LIST_DUPLICATE",
+      { label, observationId: event.observationId },
+    );
+  }
+}
+
+function validateEvent(event, fixture) {
+  for (const key of [
+    "observationId",
+    "sourceIds",
+    "sharedLatentIds",
+    "dependencyUnitId",
+    "acquisitionActionId",
+    "coverage",
+  ]) {
+    if (event[key] === undefined) {
+      throw new ModelConflict(
+        `Event missing ${key}`,
+        "EVENT_FIELD_MISSING",
+        { field: key },
+      );
+    }
+  }
+  for (const key of ["observationId", "dependencyUnitId", "acquisitionActionId"]) {
+    if (typeof event[key] !== "string" || !event[key]) {
+      throw new ModelConflict(
+        `Event has invalid ${key}`,
+        "EVENT_FIELD_INVALID",
+        { field: key, observationId: event.observationId },
+      );
+    }
+  }
+  if (
+    !event.coverage ||
+    typeof event.coverage !== "object" ||
+    ["object", "region", "method"].some(
+      (key) => typeof event.coverage[key] !== "string" || !event.coverage[key],
+    )
+  ) {
+    throw new ModelConflict(
+      `Event ${event.observationId} has invalid coverage`,
+      "EVENT_COVERAGE_INVALID",
+      { observationId: event.observationId },
+    );
+  }
+  validateStringIds(event.sourceIds, "sourceIds", event);
+  if (event.sourceIds.length === 0) {
+    throw new ModelConflict(
+      `Event ${event.observationId} must declare at least one sourceId`,
+      "SOURCE_IDS_EMPTY",
+      { observationId: event.observationId },
+    );
+  }
+  validateStringIds(event.sharedLatentIds, "sharedLatentIds", event);
+  for (const key of ["facts", "capabilityFacts", "contextualFacts", "proofRoles"]) {
+    validateStringIds(event[key] ?? [], key, event);
+  }
+  const factLaneMembership = new Map();
+  for (const [lane, laneFacts] of [
+    ["direct", event.facts ?? []],
+    ["capability", event.capabilityFacts ?? []],
+    ["contextual", event.contextualFacts ?? []],
+  ]) {
+    for (const fact of laneFacts) {
+      const priorLane = factLaneMembership.get(fact);
+      if (priorLane) {
+        throw new ModelConflict(
+          `Event ${event.observationId} repeats fact ${fact} across ${priorLane}/${lane} lanes`,
+          "FACT_LANE_OVERLAP",
+          { fact, lanes: [priorLane, lane], observationId: event.observationId },
+        );
+      }
+      factLaneMembership.set(fact, lane);
+    }
+  }
+
+  const actionContract = fixture.actionContracts[event.acquisitionActionId];
+  if (!actionContract) {
+    throw new ModelConflict(
+      `Event ${event.observationId} uses unregistered action ${event.acquisitionActionId}`,
+      "ACTION_UNREGISTERED",
+      { actionId: event.acquisitionActionId, observationId: event.observationId },
+    );
+  }
+  const methodContract = actionContract.methods?.[event.coverage.method];
+  if (!methodContract) {
+    throw new ModelConflict(
+      `Action ${event.acquisitionActionId} cannot use method ${event.coverage.method}`,
+      "ACTION_METHOD_UNAUTHORIZED",
+      {
+        actionId: event.acquisitionActionId,
+        method: event.coverage.method,
+        observationId: event.observationId,
+      },
+    );
+  }
+  const declaredFacts = new Set([
+    ...(event.facts ?? []),
+    ...(event.capabilityFacts ?? []),
+    ...(event.contextualFacts ?? []),
+  ]);
+  for (const roleId of event.proofRoles ?? []) {
+    if (!methodContract.allowedProofRoles.includes(roleId)) {
+      throw new ModelConflict(
+        `Action ${event.acquisitionActionId}/${event.coverage.method} cannot emit proof role ${roleId}`,
+        "PROOF_ROLE_UNAUTHORIZED",
+        { observationId: event.observationId, roleId },
+      );
+    }
+    const roleContract = fixture.proofRoleContracts[roleId];
+    if (
+      roleContract.acquisitionActionId !== event.acquisitionActionId ||
+      roleContract.method !== event.coverage.method
+    ) {
+      throw new ModelConflict(
+        `Proof role ${roleId} is routed through the wrong action or method`,
+        "PROOF_ROLE_UNAUTHORIZED",
+        { observationId: event.observationId, roleId },
+      );
+    }
+    const coverageMatches = Object.entries(roleContract.coverage).every(
+      ([key, value]) => event.coverage[key] === value,
+    );
+    if (!coverageMatches) {
+      throw new ModelConflict(
+        `Proof role ${roleId} does not cover ${event.coverage.object}/${event.coverage.region}`,
+        "PROOF_ROLE_COVERAGE_MISMATCH",
+        { observationId: event.observationId, roleId },
+      );
+    }
+    if (event.sourceIds.length < roleContract.minimumSourceCount) {
+      throw new ModelConflict(
+        `Proof role ${roleId} lacks the required source cardinality`,
+        "PROOF_ROLE_SOURCE_MISMATCH",
+        { observationId: event.observationId, roleId },
+      );
+    }
+    if (
+      roleContract.requiredSourceIds?.some(
+        (sourceId) => !event.sourceIds.includes(sourceId),
+      ) ||
+      roleContract.allowedSourceIds &&
+        event.sourceIds.some((sourceId) => !roleContract.allowedSourceIds.includes(sourceId))
+    ) {
+      throw new ModelConflict(
+        `Proof role ${roleId} has an unauthorized source set`,
+        "PROOF_ROLE_SOURCE_MISMATCH",
+        { observationId: event.observationId, roleId },
+      );
+    }
+    if (roleContract.requiredFacts.some((fact) => !declaredFacts.has(fact))) {
+      throw new ModelConflict(
+        `Proof role ${roleId} lacks a required declared fact`,
+        "PROOF_ROLE_FACT_MISMATCH",
+        { observationId: event.observationId, roleId },
+      );
+    }
+  }
+  const factLanes = [
+    ["direct", event.facts ?? [], methodContract.allowedDirectFacts],
+    ["capability", event.capabilityFacts ?? [], methodContract.allowedCapabilityFacts],
+    ["contextual", event.contextualFacts ?? [], methodContract.allowedContextualFacts],
+  ];
+  for (const [lane, facts, allowedFacts] of factLanes) {
+    for (const fact of facts) {
+      if (allowedFacts.includes(fact)) continue;
+      throw new ModelConflict(
+        `Action ${event.acquisitionActionId}/${event.coverage.method} cannot emit ${lane} fact ${fact}`,
+        "ACTION_CONTRACT_OVERREACH",
+        {
+          actionId: event.acquisitionActionId,
+          fact,
+          lane,
+          method: event.coverage.method,
+          observationId: event.observationId,
+        },
+      );
+    }
+  }
+
+  const declaredContext = [...(event.requiresContextFacts ?? [])].sort();
+  const requiredContext = (event.contextualFacts ?? []).length
+    ? [...methodContract.requiredContextFacts].sort()
+    : [];
+  if (stableStringify(declaredContext) !== stableStringify(requiredContext)) {
+    throw new ModelConflict(
+      `Event ${event.observationId} must declare context [${requiredContext.join(",")}]`,
+      "CONTEXT_CONTRACT_MISMATCH",
+      { observationId: event.observationId, requiredContext },
+    );
+  }
+
+  if ((event.capabilityFacts ?? []).length && !event.negativeResult) {
+    throw new ModelConflict(
+      `Event ${event.observationId} has capabilityFacts without negativeResult`,
+      "NEGATIVE_CAPABILITY_CONTRACT_REQUIRED",
+      { observationId: event.observationId },
+    );
+  }
+
+  if (event.negativeResult) {
+    validateStringIds(event.negativeResult.rawFactIds, "negativeResult.rawFactIds", event);
+    if (
+      stableStringify([...event.negativeResult.rawFactIds].sort()) !==
+      stableStringify([...(event.facts ?? [])].sort())
+    ) {
+      throw new ModelConflict(
+        `Negative event ${event.observationId} rawFactIds must equal direct facts`,
+        "NEGATIVE_RAW_FACT_MISMATCH",
+        { observationId: event.observationId },
+      );
+    }
+    for (const rawFact of event.negativeResult.rawFactIds) {
+      if ((methodContract.allowedNegativeRawFacts ?? []).includes(rawFact)) continue;
+      throw new ModelConflict(
+        `Action ${event.acquisitionActionId}/${event.coverage.method} cannot emit negative raw fact ${rawFact}`,
+        "NEGATIVE_RAW_FACT_UNAUTHORIZED",
+        {
+          actionId: event.acquisitionActionId,
+          fact: rawFact,
+          method: event.coverage.method,
+          observationId: event.observationId,
+        },
+      );
+    }
+    const capability = event.negativeResult.capability;
+    const capabilityKeys = [
+      "coverageSufficient",
+      "materialSupportsSignal",
+      "sensitivitySufficient",
+      "targetCorrect",
+    ];
+    if (
+      !capability ||
+      stableStringify(Object.keys(capability).sort()) !== stableStringify(capabilityKeys) ||
+      capabilityKeys.some((key) => typeof capability[key] !== "boolean")
+    ) {
+      throw new ModelConflict(
+        `Negative event ${event.observationId} has invalid capability contract`,
+        "NEGATIVE_CAPABILITY_INVALID",
+        { observationId: event.observationId },
+      );
+    }
+  }
+
+  if (event.counterevidence) {
+    if (!event.negativeResult) {
+      throw new ModelConflict(
+        `Counterevidence ${event.observationId} lacks negativeResult`,
+        "COUNTER_NEGATIVE_REQUIRED",
+        { observationId: event.observationId },
+      );
+    }
+    const { relation, targetClaim } = event.counterevidence;
+    if (!COUNTER_RELATIONS.includes(relation)) {
+      throw new ModelConflict(
+        `Unknown counterevidence relation: ${relation}`,
+        "COUNTER_RELATION_INVALID",
+        { observationId: event.observationId, relation },
+      );
+    }
+    if (!fixture.claimScopeRequirements?.[targetClaim]) {
+      throw new ModelConflict(
+        `Unknown counterevidence target: ${targetClaim}`,
+        "COUNTER_TARGET_INVALID",
+        { observationId: event.observationId, targetClaim },
+      );
+    }
+    const scope = event.counterevidence.scope;
+    for (const key of ["object", "region", "time", "materialLayer", "quantifier"]) {
+      if (typeof scope?.[key] !== "string" || !scope[key]) {
+        throw new ModelConflict(
+          `Counterevidence ${event.observationId} lacks scope ${key}`,
+          "COUNTER_SCOPE_INVALID",
+          { field: key, observationId: event.observationId },
+        );
+      }
+    }
+    if (scope.object !== event.coverage.object || scope.region !== event.coverage.region) {
+      throw new ModelConflict(
+        `Counterevidence ${event.observationId} scope must match event coverage`,
+        "COUNTER_SCOPE_COVERAGE_MISMATCH",
+        { observationId: event.observationId },
+      );
+    }
+  }
+
+  if (event.factor) {
+    const axes = event.factor.affectsAxes;
+    if (!Array.isArray(axes) || axes.length === 0 || new Set(axes).size !== axes.length) {
+      throw new ModelConflict(
+        `Factor ${event.observationId} has no affected axes`,
+        "FACTOR_AXES_INVALID",
+        { observationId: event.observationId },
+      );
+    }
+    for (const axis of axes) {
+      if (!AXES[axis]) {
+        throw new ModelConflict(
+          `Factor uses unknown axis ${axis}`,
+          "FACTOR_AXIS_UNKNOWN",
+          { axis, observationId: event.observationId },
+        );
+      }
+      if (!methodContract.allowedAxes.includes(axis)) {
+        throw new ModelConflict(
+          `Action ${event.acquisitionActionId} cannot update axis ${axis}`,
+          "ACTION_CONTRACT_OVERREACH",
+          {
+            actionId: event.acquisitionActionId,
+            axis,
+            method: event.coverage.method,
+            observationId: event.observationId,
+          },
+        );
+      }
+    }
+    if (!Array.isArray(event.factor.weights) || event.factor.weights.length === 0) {
+      throw new ModelConflict(
+        `Factor ${event.observationId} has no weight rows`,
+        "FACTOR_WEIGHTS_INVALID",
+        { observationId: event.observationId },
+      );
+    }
+    for (const row of event.factor.weights) {
+      if (!row || typeof row.when !== "object" || row.when === null) {
+        throw new ModelConflict(
+          `Factor ${event.observationId} has an invalid weight row`,
+          "FACTOR_WEIGHTS_INVALID",
+          { observationId: event.observationId },
+        );
+      }
+      for (const axis of Object.keys(row.when)) {
+        if (!axes.includes(axis)) {
+          throw new ModelConflict(
+            `Factor ${event.observationId} changes undeclared axis ${axis}`,
+            "FACTOR_UNDECLARED_AXIS",
+            { axis, observationId: event.observationId },
+          );
+        }
+      }
+      if (!Number.isFinite(row.weight) || row.weight < 0) {
+        throw new ModelConflict(
+          "Factor weight must be finite and non-negative",
+          "FACTOR_WEIGHT_INVALID",
+          { observationId: event.observationId, weight: row.weight },
+        );
+      }
+    }
+  }
+}
+
+function canonicalLedger(orderedEvents, fixture) {
+  const byObservation = new Map();
+  for (const event of orderedEvents) {
+    validateEvent(event, fixture);
+    const prior = byObservation.get(event.observationId);
+    if (prior && stableStringify(prior) !== stableStringify(event)) {
+      throw new ModelConflict(
+        `Observation ID collision: ${event.observationId}`,
+        "OBSERVATION_ID_COLLISION",
+        { observationId: event.observationId },
+      );
+    }
+    if (!prior) byObservation.set(event.observationId, event);
+  }
+  return [...byObservation.values()].sort((a, b) =>
+    a.observationId.localeCompare(b.observationId),
+  );
+}
+
+function capabilitySufficient(event) {
+  if (!event.negativeResult) return true;
+  const capability = event.negativeResult.capability;
+  return [
+    "targetCorrect",
+    "coverageSufficient",
+    "sensitivitySufficient",
+    "materialSupportsSignal",
+  ].every((key) => capability?.[key] === true);
+}
+
+function deriveFacts(events) {
+  const facts = new Set();
+  for (const event of events) {
+    for (const fact of event.facts ?? []) facts.add(fact);
+    if (capabilitySufficient(event)) {
+      for (const fact of event.capabilityFacts ?? []) facts.add(fact);
+    }
+  }
+
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const event of events) {
+      const contextReady = (event.requiresContextFacts ?? []).every((fact) => facts.has(fact));
+      if (!contextReady || !capabilitySufficient(event)) continue;
+      for (const fact of event.contextualFacts ?? []) {
+        if (!facts.has(fact)) {
+          facts.add(fact);
+          changed = true;
+        }
+      }
+    }
+  }
+  return facts;
+}
+
+function contextReady(event, facts) {
+  return (event.requiresContextFacts ?? []).every((fact) => facts.has(fact));
+}
+
+function proofRoleProjection(events, facts) {
+  const witnesses = new Map();
+  for (const event of events) {
+    if (!capabilitySufficient(event) || !contextReady(event, facts)) continue;
+    for (const roleId of event.proofRoles ?? []) {
+      const prior = witnesses.get(roleId) ?? [];
+      prior.push({
+        coverage: stableValue(event.coverage),
+        dependencyUnitId: event.dependencyUnitId,
+        observationId: event.observationId,
+        sourceIds: [...event.sourceIds].sort(),
+      });
+      witnesses.set(roleId, prior);
+    }
+  }
+  return Object.fromEntries(
+    [...witnesses.entries()]
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([roleId, entries]) => [
+        roleId,
+        entries.sort((left, right) => left.observationId.localeCompare(right.observationId)),
+      ]),
+  );
+}
+
+function coverageProjection(events, facts) {
+  const lanes = {
+    direct: new Set(),
+    capability: new Set(),
+    contextual: new Set(),
+  };
+  const witnesses = new Map();
+
+  const record = (lane, fact, event) => {
+    lanes[lane].add(fact);
+    const prior = witnesses.get(fact) ?? [];
+    prior.push({
+      dependencyUnitId: event.dependencyUnitId,
+      observationId: event.observationId,
+      sourceIds: [...event.sourceIds].sort(),
+    });
+    witnesses.set(fact, prior);
+  };
+
+  for (const event of events) {
+    for (const fact of event.facts ?? []) record("direct", fact, event);
+    if (!capabilitySufficient(event)) continue;
+    for (const fact of event.capabilityFacts ?? []) record("capability", fact, event);
+    if (!contextReady(event, facts)) continue;
+    for (const fact of event.contextualFacts ?? []) record("contextual", fact, event);
+  }
+
+  const available = (...candidateFacts) =>
+    candidateFacts.filter((fact) => facts.has(fact)).sort();
+  const factWitnesses = Object.fromEntries(
+    [...witnesses.entries()]
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([fact, entries]) => [
+        fact,
+        entries.sort((left, right) => left.observationId.localeCompare(right.observationId)),
+      ]),
+  );
+  const contextActivationWitnesses = Object.fromEntries(
+    events
+      .filter(
+        (event) =>
+          (event.contextualFacts ?? []).length > 0 &&
+          capabilitySufficient(event) &&
+          contextReady(event, facts),
+      )
+      .sort((left, right) => left.observationId.localeCompare(right.observationId))
+      .map((event) => [
+        event.observationId,
+        {
+          requiredFacts: [...event.requiresContextFacts].sort(),
+          witnesses: Object.fromEntries(
+            [...event.requiresContextFacts]
+              .sort()
+              .map((fact) => [fact, factWitnesses[fact] ?? []]),
+          ),
+        },
+      ]),
+  );
+
+  return {
+    contextActivationWitnesses,
+    factLanes: Object.fromEntries(
+      Object.entries(lanes).map(([lane, values]) => [lane, [...values].sort()]),
+    ),
+    factWitnesses,
+    proofWitnesses: {
+      g1: {
+        currentBody: available("currentBody"),
+        currentDecorOrBaseManufacture: available("baseManufacture", "currentDecor"),
+        direction: available("directionCorpus", "directionHistoricCandidate"),
+        intervention: available("interventionObservation"),
+      },
+      identity: {
+        currentObject: available("baseManufacture", "currentBody"),
+        path: available("identityComparisonExclusion", "identityObjectContinuity"),
+      },
+      majorReassembly: {
+        currentRepairMap: available("currentRepairMap"),
+        documentedCrossTime: available("t2EventPhysicalCorrespondence"),
+        documentedSourceGroup: available(
+          "t2RecordClaimsDamageExtent",
+          "t2RecordClaimsReassembly",
+        ),
+        physicalCrossTime: available("crossTimeMajorChange"),
+        physicalStructureMap: available("currentStructureReadoutByRegion"),
+      },
+      appearanceRestore: available("appearanceRestore"),
+      threePhase: {
+        t1: available("t1Established"),
+        t2: available(
+          "t2ArchiveObjectAttribution",
+          "t2EventPhysicalCorrespondence",
+          "t2RecordGroupCoherent",
+        ),
+        t3: available(
+          "t3ArchiveObjectAttribution",
+          "t3EventPhysicalCorrespondence",
+          "t3RecordGroupCoherent",
+        ),
+      },
+      coherentDecisionProfile: {
+        documentation: available("documentationBoundary", "documentationNoConflict"),
+        keyMaterial: available(
+          "keyMaterialLayerSequenceReadings",
+          "keyMaterialSubstrateReadings",
+        ),
+        stability: available("displayConditionSpecified", "stabilityResolved"),
+        surface: available(
+          "surfacePointLayering",
+          "surfaceRegionalCoverage",
+          "surfaceResolved",
+        ),
+      },
+    },
+  };
+}
+
+function assertLegalAcquisitionOrder(orderedEvents) {
+  const acquired = [];
+  for (const event of orderedEvents) {
+    const facts = deriveFacts(acquired);
+    const missing = (event.acquisitionRequires ?? []).filter((fact) => !facts.has(fact));
+    if (missing.length) {
+      throw new ModelConflict(
+        `ILLEGAL_ACQUISITION_ORDER ${event.observationId}; missing ${missing.join(",")}`,
+        "ILLEGAL_ACQUISITION_ORDER",
+        { missing, observationId: event.observationId },
+      );
+    }
+    acquired.push(event);
+  }
+  return true;
+}
+
+function factorWeight(factor, state) {
+  if (factor.components) {
+    let product = 1;
+    for (const component of factor.components) {
+      product *= factorWeight(component, state);
+      if (!Number.isFinite(product)) {
+        throw new ModelConflict(
+          `Combined factor ${factor.id} overflows at ${state.id}`,
+          "DERIVED_FACTOR_WEIGHT_NONFINITE",
+          { factorId: factor.id, stateId: state.id },
+        );
+      }
+    }
+    return product;
+  }
+  const rows = factor.weights.filter((row) => selectorMatches(state, row.when));
+  if (rows.length !== 1) {
+    throw new ModelConflict(
+      `Factor ${factor.id} must match exactly one weight row for ${state.id}; got ${rows.length}`,
+      "FACTOR_ROW_COVERAGE_INVALID",
+      { factorId: factor.id, matchCount: rows.length, stateId: state.id },
+    );
+  }
+  return rows[0].weight;
+}
+
+function applyAxisPreservingFactor(distribution, factor) {
+  const unaffected = AXIS_NAMES.filter((axis) => !factor.affectsAxes.includes(axis));
+  const groups = new Map();
+  for (const entry of distribution) {
+    const key = unaffected.map((axis) => entry.state[axis]).join("|");
+    const group = groups.get(key) ?? [];
+    group.push(entry);
+    groups.set(key, group);
+  }
+
+  const updated = [];
+  for (const group of groups.values()) {
+    const groupMass = group.reduce((sum, entry) => sum + entry.probability, 0);
+    const weighted = group.map((entry) => {
+      const probability = entry.probability * factorWeight(factor, entry.state);
+      if (!Number.isFinite(probability)) {
+        throw new ModelConflict(
+          `Factor ${factor.id} produces non-finite mass at ${entry.state.id}`,
+          "DERIVED_FACTOR_MASS_NONFINITE",
+          { factorId: factor.id, stateId: entry.state.id },
+        );
+      }
+      return { ...entry, weighted: probability };
+    });
+    const denominator = weighted.reduce((sum, entry) => sum + entry.weighted, 0);
+    if (!Number.isFinite(denominator)) {
+      throw new ModelConflict(
+        `Factor ${factor.id} produces non-finite stratum mass`,
+        "DERIVED_FACTOR_MASS_NONFINITE",
+        { factorId: factor.id },
+      );
+    }
+    if (!(denominator > 0)) {
+      throw new ModelConflict(
+        `Factor ${factor.id} removes an entire preserved marginal stratum`,
+        "FACTOR_REMOVES_STRATUM",
+        { factorId: factor.id },
+      );
+    }
+    for (const entry of weighted) {
+      updated.push({
+        state: entry.state,
+        probability: groupMass * (entry.weighted / denominator),
+      });
+    }
+  }
+  return updated.sort((a, b) => a.state.id.localeCompare(b.state.id));
+}
+
+function foldedFactors(events, facts, fixture) {
+  const byUnit = new Map();
+  const inactiveObservationIds = [];
+  const unresolvedNegativeIds = [];
+  const contextualizedObservationIds = [];
+  const scopeLimitedObservationIds = [];
+
+  for (const event of events) {
+    const ready = contextReady(event, facts);
+    const capable = capabilitySufficient(event);
+    if ((event.requiresContextFacts ?? []).length && ready) {
+      contextualizedObservationIds.push(event.observationId);
+    }
+    if (event.negativeResult && !capable) unresolvedNegativeIds.push(event.observationId);
+    if (!event.factor) continue;
+    if (!ready || !capable) {
+      inactiveObservationIds.push(event.observationId);
+      continue;
+    }
+    if (event.counterevidence && !counterScopeProjection(event, fixture).scopeMatch) {
+      inactiveObservationIds.push(event.observationId);
+      scopeLimitedObservationIds.push(event.observationId);
+      continue;
+    }
+
+    const signature = stableStringify(event.factor);
+    const current = byUnit.get(event.dependencyUnitId);
+    if (current && current.signature !== signature) {
+      throw new ModelConflict(
+        `Dependency unit ${event.dependencyUnitId} contains conflicting factors`,
+        "DEPENDENCY_UNIT_FACTOR_CONFLICT",
+        { dependencyUnitId: event.dependencyUnitId },
+      );
+    }
+    if (!current) {
+      byUnit.set(event.dependencyUnitId, {
+        unitId: event.dependencyUnitId,
+        factor: event.factor,
+        signature,
+        observationIds: [event.observationId],
+        sourceIds: [...event.sourceIds],
+        sharedLatentIds: [...event.sharedLatentIds],
+      });
+    } else {
+      current.observationIds.push(event.observationId);
+      current.sourceIds.push(...event.sourceIds);
+      current.sharedLatentIds.push(...event.sharedLatentIds);
+    }
+  }
+
+  const factors = [...byUnit.values()]
+    .map((unit) => ({
+      ...unit,
+      sourceIds: [...new Set(unit.sourceIds)].sort(),
+      sharedLatentIds: [...new Set(unit.sharedLatentIds)].sort(),
+    }))
+    .sort((a, b) => a.unitId.localeCompare(b.unitId));
+
+  for (let leftIndex = 0; leftIndex < factors.length; leftIndex += 1) {
+    for (let rightIndex = leftIndex + 1; rightIndex < factors.length; rightIndex += 1) {
+      const left = factors[leftIndex];
+      const right = factors[rightIndex];
+      const sharedSources = left.sourceIds.filter((id) => right.sourceIds.includes(id));
+      const sharedLatents = left.sharedLatentIds.filter((id) =>
+        right.sharedLatentIds.includes(id),
+      );
+      if (sharedSources.length || sharedLatents.length) {
+        throw new ModelConflict(
+          `Dependency units ${left.unitId} and ${right.unitId} share undeclared dependencies; ` +
+          `sources=[${sharedSources.join(",")}], latents=[${sharedLatents.join(",")}]`,
+          "DEPENDENCY_PARTITION_CONFLICT",
+          {
+            leftUnitId: left.unitId,
+            rightUnitId: right.unitId,
+            sharedLatentIds: sharedLatents,
+            sharedSourceIds: sharedSources,
+          },
+        );
+      }
+    }
+  }
+
+  return {
+    factors,
+    inactiveObservationIds: inactiveObservationIds.sort(),
+    unresolvedNegativeIds: unresolvedNegativeIds.sort(),
+    contextualizedObservationIds: contextualizedObservationIds.sort(),
+    scopeLimitedObservationIds: scopeLimitedObservationIds.sort(),
+  };
+}
+
+function groupedFactors(units) {
+  const byAxes = new Map();
+  for (const unit of units) {
+    const affectsAxes = [...unit.factor.affectsAxes].sort((left, right) =>
+      AXIS_NAMES.indexOf(left) - AXIS_NAMES.indexOf(right),
+    );
+    const key = affectsAxes.join("|");
+    const current = byAxes.get(key) ?? { affectsAxes, components: [] };
+    current.components.push(unit.factor);
+    byAxes.set(key, current);
+  }
+  return [...byAxes.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([key, group]) => ({
+      id: `fixture.factor-group.${key}`,
+      affectsAxes: group.affectsAxes,
+      components: group.components,
+    }));
+}
+
+function permutations(items) {
+  if (items.length <= 1) return [items];
+  const output = [];
+  for (let index = 0; index < items.length; index += 1) {
+    const head = items[index];
+    const tail = [...items.slice(0, index), ...items.slice(index + 1)];
+    for (const suffix of permutations(tail)) output.push([head, ...suffix]);
+  }
+  return output;
+}
+
+function applyFactorOrder(prior, factorOrder) {
+  let distribution = prior;
+  for (const factor of factorOrder) {
+    distribution = applyAxisPreservingFactor(distribution, factor);
+  }
+  return normalizeDistribution(distribution);
+}
+
+function maximumProbabilityDelta(left, right) {
+  return left.reduce(
+    (maximum, entry, index) =>
+      Math.max(maximum, Math.abs(entry.probability - right[index].probability)),
+    0,
+  );
+}
+
+function solveOrderIndependentFactors(prior, units) {
+  const groups = groupedFactors(units);
+  if (groups.length > MAX_FACTOR_GROUPS_FOR_EXHAUSTIVE_ORDER_CHECK) {
+    throw new ModelConflict(
+      `Validation solver cannot exhaustively check ${groups.length} factor-axis groups`,
+      "VALIDATION_EXHAUSTION_LIMIT",
+      { groupCount: groups.length },
+    );
+  }
+  if (groups.length === 0) return prior;
+
+  const cacheKey = stableStringify({
+    factors: groups,
+    prior: prior.map((entry) => entry.probability),
+  });
+  const cached = FACTOR_SOLUTION_CACHE.get(cacheKey);
+  if (cached) return cached;
+
+  const orders = permutations(groups);
+  const baseline = applyFactorOrder(prior, orders[0]);
+  for (const order of orders.slice(1)) {
+    const candidate = applyFactorOrder(prior, order);
+    const delta = maximumProbabilityDelta(baseline, candidate);
+    if (delta > NUMERIC_TOLERANCE) {
+      throw new ModelConflict(
+        `Axis-preserving factor constraints are order-dependent; maxDelta=${delta}`,
+        "FACTOR_ORDER_DEPENDENT",
+        { maxDelta: delta },
+      );
+    }
+  }
+  FACTOR_SOLUTION_CACHE.set(cacheKey, baseline);
+  return baseline;
+}
+
+function scopeMatches(scope, requirement) {
+  return Object.entries(requirement).every(([key, wanted]) => {
+    const actual = scope[key];
+    return Array.isArray(wanted) ? wanted.includes(actual) : actual === wanted;
+  });
+}
+
+function counterScopeProjection(event, fixture) {
+  const scope = event.counterevidence.scope;
+  for (const key of ["object", "region", "time", "materialLayer", "quantifier"]) {
+    if (!scope?.[key]) {
+      throw new ModelConflict(
+        `Counterevidence ${event.observationId} lacks scope ${key}`,
+        "COUNTER_SCOPE_INVALID",
+        { field: key, observationId: event.observationId },
+      );
+    }
+  }
+  const declaredRelation = event.counterevidence.relation;
+  const targetClaim = event.counterevidence.targetClaim;
+  const requirement = fixture.claimScopeRequirements[targetClaim];
+  const scopeMatch = scopeMatches(scope, requirement);
+  const potentiallyBlocking = ["hard-counterevidence", "logical-refutation"].includes(
+    declaredRelation,
+  );
+  return {
+    blocking: potentiallyBlocking && scopeMatch,
+    declaredRelation,
+    relation: potentiallyBlocking && !scopeMatch ? "bounds/refines" : declaredRelation,
+    scopeMatch,
+    targetClaim,
+    scope: stableValue(scope),
+  };
+}
+
+function activeConflicts(events, facts, fixture) {
+  return events
+    .filter(
+      (event) =>
+        event.counterevidence && contextReady(event, facts) && capabilitySufficient(event),
+    )
+    .map((event) => ({
+        observationId: event.observationId,
+        ...counterScopeProjection(event, fixture),
+      }))
+    .sort((a, b) => a.observationId.localeCompare(b.observationId));
+}
+
+function support(distribution, selector) {
+  return distribution
+    .filter((entry) => selectorMatches(entry.state, selector))
+    .reduce((sum, entry) => sum + entry.probability, 0);
+}
+
+function supportPredicate(distribution, predicate) {
+  return distribution
+    .filter((entry) => predicate(entry.state))
+    .reduce((sum, entry) => sum + entry.probability, 0);
+}
+
+function rounded(value) {
+  return Number(value.toFixed(15));
+}
+
+function archiveRelationshipProjection(facts, proofRoleWitnesses) {
+  const hasRole = (roleId) => (proofRoleWitnesses[roleId] ?? []).length > 0;
+  const status = ({ contested = false, established = false, suggestive = false }) => {
+    if (contested) return "contested";
+    if (established) return "established";
+    if (suggestive) return "suggestive";
+    return "unresolved";
+  };
+  const t2 = {
+    eventCorroboration: status({
+      contested: facts.has("t2EventPhysicalCorrespondenceContested"),
+      established:
+        hasRole("PROOF.ARCHIVE.T2.EVENT_CURRENT_CORROBORATION") ||
+        hasRole("PROOF.ARCHIVE.T2.EVENT_CROSS_TIME_CORROBORATION"),
+      suggestive:
+        facts.has("currentRepairMap") ||
+        facts.has("currentStructureReadoutByRegion") ||
+        facts.has("t2EventPhysicalCorrespondence"),
+    }),
+    objectAttribution: status({
+      contested: facts.has("t2ArchiveObjectAttributionContested"),
+      established: hasRole("PROOF.ARCHIVE.T2.OBJECT_ATTRIBUTION"),
+      suggestive: facts.has("t2ArchiveObjectLinkCandidate"),
+    }),
+    recordCoherence: status({
+      contested: facts.has("t2ArchiveRecordCoherenceContested"),
+      established: hasRole("PROOF.ARCHIVE.T2.RECORD_COHERENCE"),
+      suggestive:
+        facts.has("t2RecordClaimsDamageExtent") ||
+        facts.has("t2RecordClaimsReassembly"),
+    }),
+  };
+  const t3 = {
+    eventCorroboration: status({
+      contested: facts.has("t3EventPhysicalCorrespondenceContested"),
+      established: hasRole("PROOF.ARCHIVE.T3.EVENT_CURRENT_CORROBORATION"),
+      suggestive: facts.has("t3EventPhysicalCorrespondence") || facts.has("stabilityResolved"),
+    }),
+    objectAttribution: status({
+      contested: facts.has("t3ArchiveObjectAttributionContested"),
+      established: hasRole("PROOF.ARCHIVE.T3.OBJECT_ATTRIBUTION"),
+      suggestive: facts.has("t3ArchiveObjectLinkCandidate"),
+    }),
+    recordCoherence: status({
+      contested: facts.has("t3ArchiveRecordCoherenceContested"),
+      established: hasRole("PROOF.ARCHIVE.T3.RECORD_COHERENCE"),
+      suggestive: facts.has("t3RecordClaimsLocalTreatment"),
+    }),
+  };
+  const allEstablished = (questions) =>
+    Object.values(questions).every((questionStatus) => questionStatus === "established");
+  return {
+    t2: { ...t2, systemAttributionEstablished: allEstablished(t2) },
+    t3: { ...t3, systemAttributionEstablished: allEstablished(t3) },
+  };
+}
+
+function axisMarginals(distribution) {
+  return Object.fromEntries(
+    AXIS_NAMES.map((axis) => [
+      axis,
+      Object.fromEntries(
+        AXES[axis].map((value) => [
+          value,
+          rounded(support(distribution, { [axis]: value })),
+        ]),
+      ),
+    ]),
+  );
+}
+
+function claimProjection(distribution, facts, conflicts, fixture, proofRoleWitnesses) {
+  const blockingConflicts = conflicts.filter((conflict) => conflict.blocking);
+  const blocked = new Set(blockingConflicts.map((conflict) => conflict.targetClaim));
+  const hardContested = new Set(
+    blockingConflicts
+      .filter((conflict) => conflict.relation === "hard-counterevidence")
+      .map((conflict) => conflict.targetClaim),
+  );
+  const logicallyRefuted = new Set(
+    blockingConflicts
+      .filter((conflict) => conflict.relation === "logical-refutation")
+      .map((conflict) => conflict.targetClaim),
+  );
+  const identitySupport = support(distribution, { Identity: "LATE18_EXPORT" });
+  const majorSupport = supportPredicate(
+    distribution,
+    (state) => state.RepairHistory !== "NO_MAJOR_REASSEMBLY",
+  );
+  const g2JointSupport = supportPredicate(
+    distribution,
+    (state) =>
+      state.Identity === "LATE18_EXPORT" &&
+      state.RepairHistory !== "NO_MAJOR_REASSEMBLY",
+  );
+  const profileSupport = fixture.expectedProfile
+    ? support(distribution, fixture.expectedProfile)
+    : 0;
+  const g3BlockingUnknowns = (fixture.unknowns ?? []).filter(
+    (unknownId) => !fixture.unknownRegistry[unknownId].g3Allowed,
+  );
+
+  const g1 =
+    facts.has("currentBody") &&
+    (facts.has("currentDecor") || facts.has("baseManufacture")) &&
+    facts.has("interventionObservation") &&
+    (facts.has("directionCorpus") || facts.has("directionHistoricCandidate")) &&
+    !blocked.has("STAGE_RESULT.G1.ORIENTED_CASE");
+
+  const identityProof =
+    facts.has("currentBody") &&
+    facts.has("baseManufacture") &&
+    (facts.has("identityObjectContinuity") || facts.has("identityComparisonExclusion"));
+  const identityEstablished =
+    identityProof &&
+    identitySupport >= fixture.thresholds.identity &&
+    !blocked.has("CLAIM.IDENTITY.LATE18_EXPORT");
+
+  const hasProofRole = (roleId) => (proofRoleWitnesses[roleId] ?? []).length > 0;
+  const archiveRelations = archiveRelationshipProjection(facts, proofRoleWitnesses);
+  const currentRepairMapProof =
+    facts.has("currentRepairMap") &&
+    hasProofRole("PROOF.CURRENT.NAMED_REPAIR_MAP");
+  const documentedCurrentProof =
+    facts.has("t2EventPhysicalCorrespondence") &&
+    hasProofRole("PROOF.ARCHIVE.T2.EVENT_CURRENT_CORROBORATION");
+  const documentedCrossTimeProof =
+    facts.has("t2EventPhysicalCorrespondence") &&
+    hasProofRole("PROOF.ARCHIVE.T2.EVENT_CROSS_TIME_CORROBORATION");
+  const documentedMajorProof =
+    facts.has("t2RecordClaimsDamageExtent") &&
+    facts.has("t2RecordClaimsReassembly") &&
+    archiveRelations.t2.systemAttributionEstablished &&
+    (documentedCurrentProof || documentedCrossTimeProof);
+  const physicalMajorProof =
+    currentRepairMapProof &&
+    facts.has("currentStructureReadoutByRegion") &&
+    facts.has("crossTimeMajorChange") &&
+    hasProofRole("PROOF.MAJOR.PHYSICAL.STRUCTURE_MAP") &&
+    hasProofRole("PROOF.MAJOR.PHYSICAL.CROSS_TIME");
+  const majorProof = documentedMajorProof || physicalMajorProof;
+  const majorEstablished =
+    majorProof &&
+    majorSupport >= fixture.thresholds.major &&
+    !blocked.has("CLAIM.REPAIR.MAJOR_REASSEMBLY");
+
+  const g2 =
+    g1 &&
+    identityEstablished &&
+    majorEstablished &&
+    facts.has("appearanceRestore") &&
+    g2JointSupport >= fixture.thresholds.g2Joint;
+
+  const threePhaseProof =
+    facts.has("t1Established") &&
+    archiveRelations.t2.systemAttributionEstablished &&
+    archiveRelations.t3.systemAttributionEstablished &&
+    !facts.has("threePhaseChronologyContested") &&
+    !blocked.has("CLAIM.REPAIR.THREE_PHASE");
+  const coreResolved =
+    facts.has("keyMaterialSubstrateReadings") &&
+    facts.has("keyMaterialLayerSequenceReadings") &&
+    facts.has("surfacePointLayering") &&
+    facts.has("surfaceRegionalCoverage") &&
+    facts.has("surfaceResolved") &&
+    facts.has("displayConditionSpecified") &&
+    facts.has("stabilityResolved") &&
+    facts.has("documentationBoundary") &&
+    facts.has("documentationNoConflict");
+  const g3 =
+    g2 &&
+    threePhaseProof &&
+    coreResolved &&
+    g3BlockingUnknowns.length === 0 &&
+    profileSupport >= fixture.thresholds.g3Profile &&
+    !blocked.has("STAGE_RESULT.G3.COHERENT_DECISION_PROFILE");
+
+  const stage = g3 ? "G3" : g2 ? "G2" : g1 ? "G1" : "NONE";
+  return {
+    claims: {
+      g1: { established: g1 },
+      identity: {
+        established: identityEstablished,
+        contested: hardContested.has("CLAIM.IDENTITY.LATE18_EXPORT"),
+        logicallyRefuted: logicallyRefuted.has("CLAIM.IDENTITY.LATE18_EXPORT"),
+      },
+      majorReassembly: {
+        established: majorEstablished,
+        contested: hardContested.has("CLAIM.REPAIR.MAJOR_REASSEMBLY"),
+        logicallyRefuted: logicallyRefuted.has("CLAIM.REPAIR.MAJOR_REASSEMBLY"),
+      },
+      threePhase: { established: threePhaseProof },
+      coherentDecisionProfile: { established: g3 },
+    },
+    stage,
+    supports: {
+      identity: rounded(identitySupport),
+      major: rounded(majorSupport),
+      g2Joint: rounded(g2JointSupport),
+      g3Profile: rounded(profileSupport),
+    },
+    g3BlockingUnknowns: [...g3BlockingUnknowns].sort(),
+    archiveRelations,
+    majorProofPaths: {
+      documented: documentedMajorProof,
+      physical: physicalMajorProof,
+    },
+  };
+}
+
+function assertSessionCanAcceptEvidence(snapshot) {
+  const stopping = snapshot?.stopping;
+  const validStages = ["NONE", "G1", "G2", "G3"];
+  const validChoice = ["STOP", "CONTINUE"].includes(stopping?.playerChoice);
+  const validAutoEnd = stopping?.systemAutoEnded === false;
+  const validSnapshotStage = validStages.includes(snapshot?.stage);
+  const validFrozenStage =
+    stopping?.playerChoice === "STOP"
+      ? validStages.includes(stopping.frozenStage) && stopping.frozenStage === snapshot.stage
+      : stopping?.frozenStage === null;
+  if (!validChoice || !validAutoEnd || !validSnapshotStage || !validFrozenStage) {
+    throw new ModelConflict(
+      "Snapshot has an invalid stopping contract",
+      "STOPPING_SNAPSHOT_INVALID",
+      { stopping },
+    );
+  }
+  if (stopping.playerChoice === "STOP") {
+    throw new ModelConflict(
+      `Run is frozen at ${stopping.frozenStage}`,
+      "RUN_FROZEN",
+      { frozenStage: stopping.frozenStage },
+    );
+  }
+  return true;
+}
+
+function solveFixture(fixture, orderedEvents) {
+  if (fixture.resumeFromSnapshot) assertSessionCanAcceptEvidence(fixture.resumeFromSnapshot);
+  validateFixture(fixture);
+  assertLegalAcquisitionOrder(orderedEvents);
+  const ledger = canonicalLedger(orderedEvents, fixture);
+  const facts = deriveFacts(ledger);
+  const folded = foldedFactors(ledger, facts, fixture);
+  const distribution = solveOrderIndependentFactors(
+    buildPrior(fixture.priorCells),
+    folded.factors,
+  );
+  const conflicts = activeConflicts(ledger, facts, fixture);
+  const proofRoleWitnesses = proofRoleProjection(ledger, facts);
+  const projection = claimProjection(
+    distribution,
+    facts,
+    conflicts,
+    fixture,
+    proofRoleWitnesses,
+  );
+  const projectedCoverage = coverageProjection(ledger, facts);
+
+  return stableValue({
+    posterior: distribution.map((entry) => ({
+      stateId: entry.state.id,
+      probability: rounded(entry.probability),
+    })),
+    marginals: axisMarginals(distribution),
+    claims: projection.claims,
+    conflicts,
+    coverage: {
+      facts: [...facts].sort(),
+      ...projectedCoverage,
+      g3BlockingUnknowns: projection.g3BlockingUnknowns,
+      archiveRelations: projection.archiveRelations,
+      majorProofPaths: projection.majorProofPaths,
+      unknowns: [...(fixture.unknowns ?? [])].sort(),
+      observations: ledger.map((event) => ({
+        observationId: event.observationId,
+        coverage: stableValue(event.coverage),
+      })),
+      proofRoleWitnesses,
+    },
+    stage: projection.stage,
+    supports: projection.supports,
+    stopping: {
+      frozenStage: fixture.playerChoice === "STOP" ? projection.stage : null,
+      playerChoice: fixture.playerChoice,
+      systemAutoEnded: false,
+    },
+    evidence: {
+      attemptCount: orderedEvents.length,
+      observationIds: ledger.map((event) => event.observationId),
+      activeDependencyUnits: folded.factors.map((unit) => ({
+        unitId: unit.unitId,
+        observationIds: unit.observationIds.sort(),
+        sharedLatentIds: unit.sharedLatentIds,
+        sourceIds: unit.sourceIds,
+      })),
+      inactiveObservationIds: folded.inactiveObservationIds,
+      unresolvedNegativeIds: folded.unresolvedNegativeIds,
+      contextualizedObservationIds: folded.contextualizedObservationIds,
+      scopeLimitedObservationIds: folded.scopeLimitedObservationIds,
+    },
+  });
+}
+
+function projectPosterior(snapshot, axes) {
+  if (
+    !Array.isArray(axes) ||
+    axes.length === 0 ||
+    new Set(axes).size !== axes.length ||
+    axes.some((axis) => !AXES[axis])
+  ) {
+    throw new ModelConflict(
+      "Projection axes must be a non-empty unique subset of registered axes",
+      "PROJECTION_AXES_INVALID",
+      { axes },
+    );
+  }
+  if (!Array.isArray(snapshot?.posterior) || snapshot.posterior.length !== STATE_SPACE.length) {
+    throw new ModelConflict(
+      `Projection requires a complete ${STATE_SPACE.length}-state posterior`,
+      "POSTERIOR_SNAPSHOT_INVALID",
+      { stateCount: snapshot?.posterior?.length },
+    );
+  }
+
+  const totals = new Map();
+  const seenStateIds = new Set();
+  let mass = 0;
+  for (const entry of snapshot.posterior) {
+    if (
+      !entry ||
+      typeof entry.stateId !== "string" ||
+      !STATE_ID_SET.has(entry.stateId) ||
+      seenStateIds.has(entry.stateId)
+    ) {
+      throw new ModelConflict(
+        `Projection received an invalid or duplicate state ID: ${entry?.stateId}`,
+        "POSTERIOR_STATE_INVALID",
+        { stateId: entry?.stateId },
+      );
+    }
+    if (!Number.isFinite(entry.probability) || entry.probability < 0) {
+      throw new ModelConflict(
+        `Projection probability must be finite and non-negative; got ${entry.probability}`,
+        "POSTERIOR_ENTRY_INVALID",
+        { probability: entry.probability, stateId: entry.stateId },
+      );
+    }
+    seenStateIds.add(entry.stateId);
+    mass += entry.probability;
+    const stateValues = entry.stateId.split("|");
+    const state = Object.fromEntries(AXIS_NAMES.map((axis, index) => [axis, stateValues[index]]));
+    const key = axes.map((axis) => state[axis]).join("|");
+    totals.set(key, (totals.get(key) ?? 0) + entry.probability);
+  }
+  if (!Number.isFinite(mass) || Math.abs(mass - 1) > NUMERIC_TOLERANCE) {
+    throw new ModelConflict(
+      `Projection posterior mass must equal 1; got ${mass}`,
+      "POSTERIOR_MASS_INVALID",
+      { mass },
+    );
+  }
+  return Object.fromEntries(
+    [...totals.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, value]) => [key, rounded(value)]),
+  );
+}
+
+return { AXES, AXIS_NAMES, ModelConflict, stableStringify, buildStateSpace, STATE_SPACE, assertLegalAcquisitionOrder, assertSessionCanAcceptEvidence, solveFixture, projectPosterior };
+})();
+
+/* ==== CASE ==== */
+const CASE = (() => {
+/* 第一器物的玩家侧投影层 —— 可丢弃切片专用。
+ *
+ * 边界(硬):
+ *  - 本文件只读已冻结的作者夹具与求解器,不改它们一个字节;
+ *  - 作者真相全部留在求解器里。本文件不得读 expectedProfile,不得读 h*,
+ *    不得把任何只有作者知道的东西投影给玩家(DEC-026 隔离清单);
+ *  - 不得把 supports/marginals 当成产品概率给玩家看 —— 夹具 manifest.json
+ *    声明它们是 fixture-only technical values;
+ *  - 不得按玩法质量调整任何估值或后验(DEC-030);
+ *  - 醒目度不进入价值计算、不缩小排序定义域(DEC-029 / DEC-031)。
+ */
+
+const { events } = FIXTURES;
+/* ---------- 结局表 ----------
+ * 一个动作在冻结目录里往往对应多个"结局"事件。本案该给哪一个,不是自拟的,
+ * 推导规则只有两条:
+ *   (1) 以那条完整 G3 路线(场景 g3-with-allowed-unknowns)用到的事件为本案正典;
+ *   (2) 正典没有覆盖的分歧,按其它冻结场景的可达性推,不得让任何已声明可达的
+ *       路线因本表而走不通。
+ *
+ * 两处需要解释的推导:
+ *
+ * A.IMAGE.XRAY 固定给 xrayEarly,不给 physicalMajor。
+ *   xrayEarly 带 requiresContextFacts=[identityObjectContinuity] 与
+ *   contextualFacts=[currentStructureReadoutByRegion],所以它同时覆盖两种时机:
+ *   没有对象连续性时读数挂起(inactive),之后补上就自动激活(contextualized)。
+ *   physicalMajor 直接给结构事实,反而抹掉"早拿后懂"。用前者更忠实。
+ *
+ * A.RELATE.ARCHIVE.T2_TO_OBJECT 固定给 t2Attribution(已建立),不给 contested。
+ *   本想设计成"没有独立锚点就先给争议",但冻结场景 g2-documented-stop 的六步路线
+ *   没有对象连续性核对却建立了归属并被声明为 G2。按上面第 (2) 条,不能让那条
+ *   路线走不通,所以本案归属直接建立。
+ *   代价:走查 player-session.html 里那个"争议 T2"的一局在本案正典下走不出来。
+ *   它演示的机制是真的(来自场景 archive-attribution-contested-not-promoted),
+ *   但不是这只碗的正典结局。此处明写,不静默留着。
+ */
+
+const T = { FREE: 0, LOW: 1, MID: 2, HIGH: 3 };
+const COST_LABEL = ["免费", "低", "中", "高"];
+
+/* place = 地图上的地点 id。多个动作可以落在同一个地点上。 */
+const ACTIONS = [
+  { id: "A.OBSERVE.WHOLE", place: "OBJ_W", cost: T.FREE,
+    name: "看整体形制与胎釉", ask: "这东西大体是什么、动过没动过?",
+    outcome: () => "whole" },
+
+  { id: "A.OBSERVE.BASE", place: "OBJ_F", cost: T.FREE,
+    name: "看底足与修足", ask: "制造工艺留下的痕迹是什么样的?",
+    outcome: () => "base" },
+
+  { id: "A.OBSERVE.REGION_DECOR", place: "OBJ_D", cost: T.FREE,
+    name: "逐区看纹饰与色差", ask: "外观有没有被重新整合过?",
+    outcome: () => "appearance" },
+
+  { id: "A.COMPARE.CORPUS", place: "CORPUS", cost: T.LOW,
+    name: "比同期真品语料", ask: "这种制造特征在同期真品里常见吗?",
+    outcome: () => "corpus" },
+
+  { id: "A.COMPARE.CORPUS.RECHECK", place: "RPT", cost: T.LOW,
+    name: "再调一批语料复核", ask: "换一批语料会不会得出别的结论?",
+    outcome: () => "corpusDuplicate" },
+
+  { id: "A.VERIFY.OBJECT_CONTINUITY", place: "OBJ_R", cost: T.MID,
+    name: "核对非构图稳定锚点", ask: "手里这只和记录里那只是同一只吗?",
+    outcome: () => "identityContinuity" },
+
+  { id: "A.IMAGE.XRAY", place: "XRAY", cost: T.HIGH,
+    name: "X 射线多角度逐区成像", ask: "釉面底下的结构是什么样的?",
+    outcome: () => "xrayEarly" },
+
+  { id: "A.SCREEN.UV", place: "UV", cost: T.MID,
+    name: "紫外筛查补绘", ask: "有没有后加的补绘层?",
+    outcome: () => "noSignalUnresolved" },
+
+  { id: "A.RESEARCH.ACCIDENT", place: "T2", cost: T.LOW,
+    name: "检索事故记录组", ask: "有人记录过一次重大损坏吗?",
+    outcome: () => "accident" },
+
+  { id: "A.RELATE.ARCHIVE.T2_TO_OBJECT", place: "T2", cost: T.LOW,
+    name: "核对事故记录的对象归属", ask: "那组记录说的是这只碗吗?",
+    outcome: () => "t2Attribution" },
+
+  { id: "A.CORROBORATE.ARCHIVE.T2_CURRENT", place: "T2", cost: T.LOW,
+    name: "拿事故记录对现器物证", ask: "记录描述的事,现器上找得到吗?",
+    outcome: () => "documentedCurrentCorroboration" },
+
+  { id: "A.LOCATE.HISTORIC_IMAGE", place: "T1", cost: T.LOW,
+    name: "找早期影像", ask: "这只碗以前长什么样?",
+    outcome: () => "t1" },
+
+  /* 唯一带额外前置的动作:跨时点对照需要有第二个时点可对。
+     两条入口对应 G2 的两条 OR 路线,与冻结场景一致。 */
+  { id: "A.MAP.REGION_CONTINUITY", place: "OBJ_W", cost: T.MID,
+    name: "逐区跨时点对照", ask: "结构从那时到现在变了什么?",
+    needs: (f) => f.has("currentStructureReadoutByRegion") || f.has("t2ArchiveObjectAttribution"),
+    needsWhy: "得先有第二个时点可以对 —— 要么拿到可读的逐区结构读数,要么先把事故记录归到本器",
+    outcome: (f) => f.has("currentStructureReadoutByRegion")
+      ? "repairContinuity" : "documentedCrossTime" },
+
+  { id: "A.RESEARCH.LATE_TREATMENT", place: "T3", cost: T.LOW,
+    name: "检索后期处理记录组", ask: "后来还有人动过它吗?",
+    outcome: () => "t3" },
+
+  { id: "A.RELATE.ARCHIVE.T3_TO_OBJECT", place: "T3", cost: T.LOW,
+    name: "核对后期记录的对象归属", ask: "那批后期记录也是这只碗的吗?",
+    outcome: () => "t3Attribution" },
+
+  { id: "A.CORROBORATE.ARCHIVE.T3_CURRENT", place: "T3", cost: T.LOW,
+    name: "拿后期记录对现器区域", ask: "后期处理在现器上对得上吗?",
+    outcome: () => "t3CurrentCorroboration" },
+
+  { id: "A.ANALYZE.MATERIAL.SUBSTRATE", place: "MAT", cost: T.HIGH,
+    name: "点位材料基底分析", ask: "关键区是原片还是重建的?",
+    outcome: () => "materialSubstrate" },
+
+  { id: "A.INSPECT.MATERIAL.LAYER_SEQUENCE", place: "MAT", cost: T.HIGH,
+    name: "微观层序检查", ask: "这些层是按什么顺序上去的?",
+    outcome: () => "materialLayerSequence" },
+
+  { id: "A.INSPECT.WINDOWS", place: "SURF", cost: T.MID,
+    name: "开表面试窗点位", ask: "补绘到底压在哪一层上?",
+    outcome: () => "surfacePoint" },
+
+  { id: "A.SYNTHESIZE.SURFACE_REGIONS", place: "SURF", cost: T.MID,
+    name: "表面区域综合", ask: "补绘范围有多大?",
+    outcome: () => "surface" },
+
+  { id: "A.ASSESS.TREATED_AND_UNTREATED", place: "STAB", cost: T.MID,
+    name: "评估承力与陈列条件", ask: "现在还能安全陈列吗?",
+    outcome: () => "stability" },
+
+  { id: "A.TRACE.PROVENANCE_CHAIN", place: "PROV", cost: T.LOW,
+    name: "追来源链", ask: "它的流转记录到哪一步为止?",
+    outcome: () => "documentation" },
+];
+
+const ACTION_BY_ID = new Map(ACTIONS.map((a) => [a.id, a]));
+
+/* ---------- 可用性 ----------
+ * 只有两种不可用,而且都必须给出人话理由 —— DEC-026 禁止无解释的行动门:
+ *   1. 冻结事件自带的 acquisitionRequires 还没满足;
+ *   2. 本表声明的 needs 还没满足(目前只有跨时点对照一条)。
+ * 已经做过的动作不消失,标成"做过了",再做一次仍然允许(重复要看得见,DEC-030)。
+ */
+function availability(facts, doneActionIds) {
+  return ACTIONS.map((a) => {
+    const ev = events[a.outcome(facts)];
+    const missing = ev.acquisitionRequires.filter((f) => !facts.has(f));
+    const gated = a.needs && !a.needs(facts);
+    return {
+      action: a,
+      done: doneActionIds.includes(a.id),
+      usable: missing.length === 0 && !gated,
+      why: missing.length
+        ? `还缺前置:${missing.join("、")}`
+        : gated ? a.needsWhy : null,
+    };
+  });
+}
+
+/* ---------- 玩家可见读数 ----------
+ * 全部只从求解器输出推。刻意不投影:posterior、marginals、supports、
+ * expectedProfile、以及任何"离答案还有多远"的量。
+ */
+function playerView(solved) {
+  const c = solved.claims;
+  const rel = solved.coverage.archiveRelations;
+  /* 四个状态来自冻结夹具:未决 / 有局部内容但归属未完成 / 已建立 / 直接冲突。
+     必须翻成人话 —— 把 suggestive 这种 token 直接摆给玩家等于让界面说黑话。 */
+  const relLabel = {
+    unresolved: "还没结论",
+    suggestive: "有指向性,但还没归到本器",
+    established: "已建立",
+    contested: "有冲突",
+  };
+  return {
+    stage: solved.stage,
+    /* "你现在能主张什么" —— 定性,不给数字 */
+    can: [
+      c.identity.established && "这是晚 18 世纪外销瓷这个方向可以主张",
+      c.identity.contested && "身份方向存在冲突,系统不替你选边",
+      c.identity.logicallyRefuted && "身份方向已被逻辑反驳",
+      c.majorReassembly.established && "曾发生重大重组可以主张",
+      c.majorReassembly.contested && "重大重组存在冲突,系统不替你选边",
+      c.majorReassembly.logicallyRefuted && "重大重组已被逻辑反驳",
+      c.threePhase.established && "三阶段修复史可以主张",
+      c.coherentDecisionProfile.established && "决策所需的整体画面已经自洽",
+    ].filter(Boolean),
+    /* 阻断 G3 的已登记未知 —— 这是"还差什么"的合法说法 */
+    blocking: solved.coverage.g3BlockingUnknowns,
+    /* G2 的两条 OR 路线,直接来自求解器 */
+    routes: {
+      documented: solved.coverage.majorProofPaths.documented,
+      physical: solved.coverage.majorProofPaths.physical,
+    },
+    /* 档案三关系:记录内部 / 记录—现器 / 事件—物证 */
+    archive: ["t2", "t3"].map((k) => ({
+      group: k.toUpperCase(),
+      recordCoherence: relLabel[rel[k].recordCoherence] ?? rel[k].recordCoherence,
+      objectAttribution: relLabel[rel[k].objectAttribution] ?? rel[k].objectAttribution,
+      eventCorroboration: relLabel[rel[k].eventCorroboration] ?? rel[k].eventCorroboration,
+      established: rel[k].systemAttributionEstablished,
+    })),
+    /* 挂起与阴性:"早拿后懂"与能力门在界面上的落点 */
+    pending: solved.evidence.inactiveObservationIds,
+    activated: solved.evidence.contextualizedObservationIds,
+    negativeUnresolved: solved.evidence.unresolvedNegativeIds,
+    scopeLimited: solved.evidence.scopeLimitedObservationIds,
+    conflicts: solved.conflicts,
+    facts: solved.coverage.facts,
+    units: solved.evidence.activeDependencyUnits,
+  };
+}
+
+return { COST_LABEL, ACTIONS, ACTION_BY_ID, availability, playerView };
+})();
+</script>
+<script>
+"use strict";
+const { events, thresholds, expectedProfile, claimScopeRequirements,
+        actionContracts, proofRoleContracts, unknownRegistry } = FIXTURES;
+const { solveFixture, assertLegalAcquisitionOrder } = SOLVER;
+const { ACTIONS, ACTION_BY_ID, COST_LABEL, availability, playerView } = CASE;
+
+const BUDGET = 12; /* PARAMS.md · slice.investigationBudget · experimental */
+
+document.getElementById("stampline").textContent =
+  `构建 ${STAMP.builtAt} · 规则核 sha256 ${STAMP.solver.slice(0,12)}…`;
+
+/* ---------- 地图坐标:放下就不再搬动(DEC-028:地图是玩家的记忆) ---------- */
+const PLACES = {
+  OBJ_W :{x:430,y:470,t:"器物 · 整体形制与胎釉",lx:0,ly:-26,a:"middle"},
+  OBJ_F :{x:346,y:566,t:"器物 · 底足与修足",lx:-20,ly:6,a:"end"},
+  OBJ_R :{x:520,y:562,t:"器物 · 稳定锚点",lx:16,ly:6,a:"start"},
+  OBJ_D :{x:396,y:652,t:"器物 · 纹饰与色差",lx:0,ly:32,a:"middle"},
+  XRAY  :{x:200,y:428,t:"X 射线 · 多角度逐区",lx:-18,ly:5,a:"end"},
+  UV    :{x:170,y:620,t:"紫外筛查",lx:-20,ly:5,a:"end"},
+  CORPUS:{x:252,y:232,t:"同期真品语料",lx:0,ly:-26,a:"middle"},
+  RPT   :{x:124,y:150,t:"另一批语料",lx:0,ly:-24,a:"middle"},
+  T1    :{x:742,y:150,t:"T1 早期影像",lx:0,ly:-26,a:"middle"},
+  T2    :{x:1078,y:400,t:"T2 事故记录组",lx:0,ly:-26,a:"middle"},
+  T3    :{x:986,y:648,t:"T3 后期报告组",lx:0,ly:32,a:"middle"},
+  PROV  :{x:1096,y:196,t:"来源链",lx:0,ly:-24,a:"middle"},
+  SURF  :{x:268,y:730,t:"表面试窗点位",lx:0,ly:32,a:"middle"},
+  MAT   :{x:456,y:744,t:"材料基底与层序",lx:0,ly:32,a:"middle"},
+  STAB  :{x:716,y:744,t:"稳定性与陈列",lx:0,ly:32,a:"middle"},
+};
+/* Finding:只画对推理真正有分量的那几条事实,不把 47 个事实全泼上去 */
+const FINDINGS = {
+  directionCorpus              :{x:338,y:338,t:"制造与装饰差异",lx:-13,ly:-13,a:"end"},
+  currentStructureReadoutByRegion:{x:292,y:398,t:"逐区结构读数",lx:-13,ly:-11,a:"end"},
+  interventionObservation      :{x:462,y:514,t:"确有历史干预",lx:15,ly:-6,a:"start"},
+  currentRepairMap             :{x:572,y:492,t:"现器具名修复图",lx:21,ly:33,a:"start"},
+  identityObjectContinuity     :{x:648,y:258,t:"对象连续对应",lx:13,ly:-8,a:"start"},
+  crossTimeMajorChange         :{x:700,y:352,t:"跨时点重大变化",lx:15,ly:6,a:"start"},
+  appearanceRestore            :{x:500,y:634,t:"外观再整合",lx:15,ly:6,a:"start"},
+  t2ArchiveObjectAttribution   :{x:866,y:432,t:"T2 归到本器",lx:0,ly:-24,a:"middle"},
+  t2EventPhysicalCorrespondence:{x:770,y:474,t:"记录—物证对上",lx:0,ly:30,a:"middle"},
+  surfaceResolved              :{x:330,y:672,t:"补绘范围已定",lx:-13,ly:4,a:"end"},
+  stabilityResolved            :{x:648,y:690,t:"陈列条件已定",lx:14,ly:4,a:"start"},
+  t3RecordGroupCoherent        :{x:900,y:582,t:"T3 记录组自洽",lx:0,ly:28,a:"middle"},
+};
+const LANDMARKS = {
+  G1:{x:476,y:336,s:"可信问题方向",from:["directionCorpus","interventionObservation"]},
+  G2:{x:628,y:418,s:"身份 ＋ 重大重组成立",
+      fromDoc:["t2ArchiveObjectAttribution","t2EventPhysicalCorrespondence","currentRepairMap"],
+      fromPhy:["currentStructureReadoutByRegion","crossTimeMajorChange","appearanceRestore"]},
+  G3:{x:820,y:560,s:"三阶段 ＋ 整体自洽",from:["t3RecordGroupCoherent","stabilityResolved","surfaceResolved"]},
+};
+/* 无名暗区:真正没有分化的迷雾。没有标签 —— 给标签就等于提前描出隐藏轮廓 */
+const DARK=[[100,300,26],[560,86,22],[1160,540,25],[120,724,22],[880,90,18],[1180,704,22]];
+
+const P = (id) => PLACES[id] || FINDINGS[id] || LANDMARKS[id];
+const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* ---------- 一局 ---------- */
+let S, junctionOn = true;
+function liveFixture(acquired, choice){
+  return { id:"live", thresholds, expectedProfile, claimScopeRequirements,
+    actionContracts, proofRoleContracts, unknownRegistry, playerChoice:choice,
+    events:acquired, orders:[acquired.map(e=>e.observationId)], expected:{} };
+}
+const solveNow = () => solveFixture(liveFixture(S.acquired, S.stopped?"STOP":"CONTINUE"), S.acquired);
+function reset(){ S = { acquired:[], log:[], spent:0, stopped:false, at:null,
+  prints:{progress:0,repeat:0,negative:0,deadend:0} }; render(); }
+
+function take(actionId){
+  if(S.stopped || S.log.length>=BUDGET) return;
+  const solved = solveNow(), facts = new Set(solved.coverage.facts);
+  const a = ACTION_BY_ID.get(actionId);
+  const av = availability(facts, S.log.map(l=>l.actionId)).find(x=>x.action.id===actionId);
+  if(!av.usable) return;
+  const key = a.outcome(facts), ev = events[key], next = [...S.acquired, ev];
+  try { assertLegalAcquisitionOrder(next); } catch(e){ return; }
+
+  S.acquired = next; S.spent += a.cost; S.at = a.place;
+  const after = solveNow();
+  const gained = after.coverage.facts.filter(f=>!solved.coverage.facts.includes(f));
+  const fresh = gained.filter(f=>f!=="repeatObservation");
+  const kind = gained.includes("repeatObservation") ? "repeat"
+    : after.evidence.unresolvedNegativeIds.includes(ev.observationId) ? "negative"
+    : fresh.length===0 ? "deadend" : "progress";
+  S.prints[kind]++;
+  S.log.push({actionId, place:a.place, name:a.name, cost:a.cost, kind,
+    from:solved.stage, to:after.stage, gained:fresh});
+  render();
+}
+
+/* ---------- 地图 ---------- */
+function marker(id, state){
+  const p = PLACES[id];
+  const st = { visited:{f:"#2b3037",s:"#a6a39c",w:1.6,d:""},
+               avail:{f:"#1a1d21",s:"#5f6570",w:1.5,d:"3 3"},
+               blocked:{f:"#141619",s:"#33383e",w:1.3,d:"2 3"},
+               dud:{f:"#191c20",s:"#6b6864",w:1.5,d:""} }[state];
+  let g = `<circle cx="${p.x}" cy="${p.y}" r="11" fill="${st.f}" stroke="${st.s}" stroke-width="${st.w}" stroke-dasharray="${st.d}"/>`;
+  if(state==="dud") g += `<line x1="${p.x-7}" y1="${p.y+7}" x2="${p.x+7}" y2="${p.y-7}" stroke="#6b6864" stroke-width="1.8"/>`;
+  g += `<text class="${state==="visited"||state==="dud"?"nl":"nl2"}" x="${p.x+p.lx}" y="${p.y+p.ly}" text-anchor="${p.a}">${esc(p.t)}</text>`;
+  return g;
+}
+function road(a,b,kind){
+  const A=P(a),B=P(b); if(!A||!B) return "";
+  const K={est:{c:"#c8a24a",w:2.5,d:""},lm:{c:"#c8a24a",w:3.4,d:""},
+           dud:{c:"#5a5651",w:2,d:""},neg:{c:"#6b6864",w:2,d:""}}[kind];
+  return `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="${K.c}" stroke-width="${K.w}" stroke-dasharray="${K.d}"/>`;
+}
+function outRoad(from,to,dim){
+  const A=P(from),B=P(to); if(!A||!B) return "";
+  const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy)||1,s=L*.12;
+  const cx=(A.x+B.x)/2-dy/L*s, cy=(A.y+B.y)/2+dx/L*s;
+  const c = dim?"#41474f":"#8d9aa6", w = dim?1.8:2.2, d = dim?"5 5":"7 4";
+  return `<path d="M${A.x},${A.y} Q${cx.toFixed(0)},${cy.toFixed(0)} ${B.x},${B.y}" fill="none" stroke="${c}" stroke-width="${w}" stroke-dasharray="${d}" stroke-linecap="round"/>`;
+}
+function stand(id){
+  const A=PLACES[id]; if(!A) return "";
+  let right = A.a==="end"; if(!right && A.x-30-92<12) right = true;
+  return `<circle cx="${A.x}" cy="${A.y}" r="23" fill="none" stroke="#8d9aa6" stroke-width="1.3" stroke-opacity=".75"/>`
+    + `<circle cx="${A.x}" cy="${A.y}" r="30" fill="none" stroke="#8d9aa6" stroke-width="1" stroke-opacity=".3" stroke-dasharray="2 5"/>`
+    + `<text class="sl" x="${A.x+(right?38:-38)}" y="${A.y+4}" text-anchor="${right?"start":"end"}">你刚查完这里</text>`;
+}
+
+function render(){
+  const solved = solveNow(), v = playerView(solved);
+  const facts = new Set(solved.coverage.facts);
+  const done = S.log.map(l=>l.actionId);
+  const av = availability(facts, done);
+  const over = S.stopped || S.log.length>=BUDGET;
+
+  /* ---- 地图 ---- */
+  let g = `<defs><radialGradient id="fog" cx="50%" cy="50%" r="62%">
+    <stop offset="55%" stop-color="#0b0d0f" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity=".62"/></radialGradient></defs>`;
+  for(const [x,y,r] of DARK)
+    g += `<circle cx="${x}" cy="${y}" r="${r}" fill="#15181c" opacity=".62"/>`;
+
+  /* 地点状态。哪个地点被哪次行动踩过,直接从 log 推。 */
+  const placeState = {};
+  for(const id in PLACES){
+    const acts = ACTIONS.filter(a=>a.place===id);
+    const hits = S.log.filter(l=>l.place===id);
+    if(hits.length){
+      placeState[id] = hits.every(h=>h.kind==="negative"||h.kind==="repeat"||h.kind==="deadend")
+        ? "dud" : "visited";
+    } else {
+      placeState[id] = acts.some(a=>av.find(x=>x.action.id===a.id)?.usable) ? "avail" : "blocked";
+    }
+  }
+
+  /* 道路:地点 → Finding,严格从"哪次行动产出了这条事实"推出来,不是手工声明的 */
+  const roads = [];
+  for(const l of S.log)
+    for(const f of l.gained)
+      if(FINDINGS[f]) roads.push([l.place, f, l.kind==="progress"?"est":"dud"]);
+  /* 阴性／重复／无新信息不画路 —— 因为确实没有路。画一条灰线过去等于伪造
+     一段本来不存在的结构。地点上那个叉已经把"来过、没换到东西"说清楚了。 */
+  for(const [a,b,k] of roads) g += road(a,b,k);
+
+  /* 地标:画在支撑它的几条道路的汇合口(DEC-028) */
+  const lms = [];
+  if(solved.claims.g1.established) lms.push(["G1", LANDMARKS.G1.from]);
+  if(solved.stage==="G2"||solved.stage==="G3")
+    lms.push(["G2", v.routes.physical?LANDMARKS.G2.fromPhy:LANDMARKS.G2.fromDoc]);
+  if(solved.stage==="G3") lms.push(["G3", LANDMARKS.G3.from]);
+  for(const [id,from] of lms)
+    for(const f of from) if(facts.has(f)) g += road(f,id,"lm");
+
+  /* Finding */
+  for(const f in FINDINGS){
+    if(!facts.has(f)) continue;
+    const d = FINDINGS[f];
+    g += `<polygon points="${d.x},${d.y-8} ${d.x+8},${d.y} ${d.x},${d.y+8} ${d.x-8},${d.y}" fill="#c8a24a"/>`;
+    g += `<text class="fl" x="${d.x+d.lx}" y="${d.y+d.ly}" text-anchor="${d.a}">${esc(d.t)}</text>`;
+  }
+  /* 从路口通出去的路。
+     只画就近的 OUT_MAX 条 —— 一个路口应该有几条路,不是九条。取舍标准是
+     地图上的距离,纯几何,**不是价值排序**:被略掉的动作在下面的行动区一条不少。
+     这样既满足 DEC-031「醒目度只作呈现、不进入任何计算」,也避免用一个没有
+     批准数值支撑的排序冒充"系统推荐"。真正的度数控制是拓扑设计的事,
+     DEC-031 已把它登记为杠杆并明确暂不调整。 */
+  const OUT_MAX = 4;
+  const here = S.at ?? "OBJ_W";
+  const seen = new Set();
+  const cand = av.filter(x=>x.usable && !x.done && x.action.place!==S.at)
+    .filter(x=>{ if(seen.has(x.action.place)) return false; seen.add(x.action.place); return true; })
+    .map(x=>({x, d:Math.hypot(PLACES[x.action.place].x-P(here).x,
+                              PLACES[x.action.place].y-P(here).y)}))
+    .sort((a,b)=>a.d-b.d);
+  const outs = cand.slice(0, OUT_MAX).map(c=>c.x);
+  const hiddenOuts = cand.length - outs.length;
+  for(const x of outs) g += outRoad(here, x.action.place, !junctionOn || !S.at);
+  for(const id in PLACES) g += marker(id, placeState[id]);
+  for(const [id] of lms){
+    const l = LANDMARKS[id];
+    g += `<polygon points="${l.x},${l.y-26} ${l.x+29},${l.y-9} ${l.x+29},${l.y+9} ${l.x},${l.y+26} ${l.x-29},${l.y+9} ${l.x-29},${l.y-9}" fill="#c8a24a"/>`;
+    g += `<text class="gl" x="${l.x}" y="${l.y+5}" text-anchor="middle">${id}</text>`;
+    g += `<text class="gs" x="${l.x}" y="${l.y+44}" text-anchor="middle">${esc(l.s)}</text>`;
+  }
+  if(junctionOn && S.at) g += stand(S.at);
+  g += `<rect x="0" y="0" width="1240" height="820" fill="url(#fog)" pointer-events="none"/>`;
+  document.getElementById("map").innerHTML = g;
+
+  /* ---- 面板 ---- */
+  const st = document.getElementById("stage");
+  st.textContent = solved.stage==="NONE" ? "还没有成形的判断" : solved.stage;
+  st.className = "stage" + (solved.stage==="NONE" ? " none" : "");
+  document.getElementById("budget").textContent =
+    `${S.log.length} / ${BUDGET}${S.stopped?" · 已收手":""}`;
+  document.getElementById("cost").textContent = `${S.spent} 档`;
+
+  document.getElementById("claims").innerHTML = v.can.length
+    ? v.can.map(c=>`<li>${esc(c)}</li>`).join("")
+    : `<li style="padding-left:0" class="empty">还什么都不能主张。证据不够,系统不替你猜。</li>`;
+
+  const ol = document.getElementById("outlist");
+  if(!S.at) ol.innerHTML = `<p class="empty">地图上还没有路口 —— 你还没有查过任何东西。</p>`;
+  else if(!outs.length) ol.innerHTML = `<p class="empty" style="color:var(--warn)">这个路口没有通出去的路。这一步没换到方向 —— 换个地方吧。</p>`;
+  else ol.innerHTML = outs.map(x=>
+    `<div class="rel"><b>${esc(x.action.ask)}</b><div>通向 ${esc(PLACES[x.action.place].t)} · 费用${COST_LABEL[x.action.cost]}</div></div>`).join("")
+    + (hiddenOuts>0 ? `<div class="rel" style="border-top:1px solid var(--line)"><div>路口只画就近的 ${OUT_MAX} 条。另有 <b>${hiddenOuts}</b> 个可去的地方不在这个路口的视野里 —— 完整清单在下面的行动区,一条都没少。</div></div>` : "");
+
+  document.getElementById("archive").innerHTML = v.archive.map(a=>{
+    const cls=(s)=>s==="已建立"?"ok":s==="有冲突"?"bad":"";
+    return `<div class="rel"><b>${a.group} 记录组</b>
+      <div>记录内部 <em class="${cls(a.recordCoherence)}">${esc(a.recordCoherence)}</em>
+       · 记录—现器 <em class="${cls(a.objectAttribution)}">${esc(a.objectAttribution)}</em>
+       · 事件—物证 <em class="${cls(a.eventCorroboration)}">${esc(a.eventCorroboration)}</em></div></div>`;
+  }).join("");
+
+  const pr = S.prints;
+  document.getElementById("prints").innerHTML =
+    `<div class="kv"><span>有效推进</span><span>${pr.progress}</span></div>
+     <div class="kv"><span>重复 · 无区分力</span><span>${pr.repeat}</span></div>
+     <div class="kv"><span>无新信息(死路)</span><span>${pr.deadend}</span></div>
+     <div class="kv"><span>阴性 · 能力不足</span><span>${pr.negative}</span></div>`;
+
+  const held = [];
+  if(v.pending.length) held.push(`<div class="rel"><b>挂起,意义还没定</b><div>${v.pending.length} 条观察已经付过钱、永久有效,但当前上下文还读不出意义。补上上下文会自动激活,而且<em>不重复计一次权</em>。</div></div>`);
+  if(v.activated.length) held.push(`<div class="rel"><b>后来被激活</b><div>${v.activated.length} 条早拿的观察已经因为后续证据而生效 —— 这就是「早拿后懂」。</div></div>`);
+  if(v.negativeUnresolved.length) held.push(`<div class="rel"><b>阴性,但没过能力门</b><div>${v.negativeUnresolved.length} 条阴性只证明「这次没看见」,<em class="bad">不能</em>推出「不存在」。</div></div>`);
+  if(v.blocking.length) held.push(`<div class="rel"><b>阻断 G3 的已登记未知</b><div>${v.blocking.map(esc).join(" · ")}</div></div>`);
+  document.getElementById("held").innerHTML = held.length ? held.join("")
+    : `<p class="empty">目前没有挂起项、没有未决阴性。</p>`;
+
+  document.getElementById("feed").innerHTML = S.log.length
+    ? [...S.log].reverse().map((l,i)=>{
+        const tag={progress:"推进",repeat:"重复",negative:"阴性",deadend:"无新信息"}[l.kind];
+        return `<div><b>${S.log.length-i}. ${esc(l.name)}</b> · 费用${COST_LABEL[l.cost]}
+          · <span class="t-${l.kind}">${tag}</span>${l.from!==l.to?` · <span class="t-progress">${l.from}→${l.to}</span>`:""}</div>`;
+      }).join("")
+    : `<div class="empty">还没有动作。</div>`;
+
+  /* ---- 行动 ---- */
+  document.getElementById("acts").innerHTML = av.map(x=>{
+    const a = x.action, n = S.log.filter(l=>l.actionId===a.id).length;
+    const dis = over || !x.usable;
+    return `<button class="act${x.usable?"":" blocked"}" data-id="${a.id}" ${dis?"disabled":""}>
+      <span class="n">${esc(a.name)}</span>
+      <span class="q">${esc(a.ask)}</span>
+      <span class="m"><span>费用 ${COST_LABEL[a.cost]}</span>${n?`<span class="did">做过 ${n} 次</span>`:""}</span>
+      ${x.why?`<span class="why">${esc(x.why)}</span>`:""}</button>`;
+  }).join("");
+  document.querySelectorAll(".act").forEach(b=>b.onclick=()=>take(b.dataset.id));
+
+  document.getElementById("stop").disabled = S.stopped || !S.log.length;
+
+  /* ---- 页脚 ---- */
+  let f = `<b>这一页能证明什么。</b>能证明已批准的作者规则可以被自由探索直接驱动:换序、跳跃、重复、阴性、争议、系统被无视,都不会让规则核崩掉,而且「早拿后懂」与「重复不计权」是规则核真的在算,不是界面演的。
+    <br><b>不能证明什么。</b>好不好玩、玩家看不看得懂、有没有能动性、成本档位是否合理、12 次机会是否合适 —— <b>一律未验证</b>。`;
+  if(S.stopped){
+    f = `<b>你选择在此收手,系统没有替你结束。</b>阶段冻结在 <b>${solved.stopping.frozenStage}</b>。
+      这一局的答案就是地图现在的样子:${pr.progress} 次推进、${pr.repeat} 次重复、${pr.deadend} 次无新信息、${pr.negative} 次阴性,还有 ${Object.keys(PLACES).filter(k=>placeState[k]==="avail").length} 个从没去过的可用地点。
+      <br><b>本切片到此为止。</b>报价、市场与双轨结算不在范围内 —— 那一段还没做。客观真相也不在这里揭示:切片只验调查→显影→停手。<br>` + f;
+  }
+  document.getElementById("foot").innerHTML = f;
+}
+
+document.getElementById("tj").onclick = (e)=>{
+  junctionOn = !junctionOn;
+  e.target.textContent = junctionOn ? "开" : "关";
+  e.target.className = junctionOn ? "on" : "";
+  render();
+};
+document.getElementById("stop").onclick = ()=>{ S.stopped = true; render(); };
+document.getElementById("reset").onclick = reset;
+reset();
+</script>
+</body>
+</html>

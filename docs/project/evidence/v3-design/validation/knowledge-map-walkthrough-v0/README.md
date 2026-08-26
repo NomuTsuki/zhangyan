@@ -50,6 +50,20 @@
 它会把玩家往连锁式顺序探索上推，削弱跳跃探索。
 本文件按 DEC-028 的先例处理——语义在纸上定案，读法推到可看的东西里做变体验证——**画出来供判断，采不采用单独定案**。
 
+## 2026-08-26 修正：一处与作者答案键冲突的表述
+
+第 12／14 拍原先写「T2 记录内容真实但**对象误归属**」，同时又写客观真相是 `THREE_PHASE`。
+这两句自相矛盾——`THREE_PHASE` 的含义就是 T2 与 T3 都是**本器**真实的修复阶段，所以 T2 不可能是误归属。
+冲突是在为切片读 `fixtures.mjs` 的 `expectedProfile`（作者答案键）时发现的：
+
+```
+Identity LATE18_EXPORT · RepairHistory THREE_PHASE · KeyMaterial KEY_MATERIAL_PRESERVED
+Surface MIXED_CROSS_OVERPAINT · Stability DISPLAYABLE_LOCAL_RISK · Documentation COHERENT_PARTIAL
+```
+
+已按答案键改正：那组记录**确实是这只碗的**，系统整局标「争议」是因为玩家**没有建立起对象链接**。
+改正后反而是更强的一课——**「系统建立不起来」和「事实为假」是两件事，系统只报前者**。
+
 ## 内容出处（无新编内容、无新数值）
 
 - 客观真相包与 `h*`：DEC-021、作者模型 v0.2 第 79–105 行

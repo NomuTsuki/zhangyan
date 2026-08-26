@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>玩家完整一局 v0 — 知识地图逐步显影</title>
+<style>
+  :root{
+    --bg:#15171a; --panel:#1d2024; --panel2:#232730; --line:#373d45;
+    --ink:#e7e4de; --ink2:#a6a39c; --ink3:#6d6b66;
+    --gold:#c8a24a; --cyan:#4e97a8; --warn:#c2603c; --dead:#5a5651; --good:#7f9a6a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter","Segoe UI","Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1460px;margin:0 auto;padding:38px 30px 90px}
+  h1{font-size:27px;font-weight:650;margin:0 0 6px}
+  h3{margin:0 0 9px;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);font-weight:650}
+  .sub{color:var(--ink2);font-size:14px;line-height:1.7;margin:0}
+  code{font-family:"Cascadia Mono",Consolas,monospace;font-size:.92em;color:#cbb87f}
+
+  .warnbar{margin:18px 0 22px;padding:13px 17px;border-left:3px solid var(--warn);
+    background:#221f1d;color:var(--ink2);font-size:13.5px;line-height:1.75;border-radius:0 4px 4px 0}
+  .warnbar b{color:var(--ink)}
+
+  .legend{display:flex;flex-wrap:wrap;gap:9px 22px;margin:0 0 14px;padding:13px 17px;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:12.5px;color:var(--ink2)}
+  .legend i{display:inline-block;vertical-align:middle;margin-right:7px}
+
+  .bar{display:flex;align-items:center;gap:12px;margin:0 0 12px;padding:12px 16px;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;flex-wrap:wrap}
+  button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:4px;
+    padding:7px 15px;font-size:13px;cursor:pointer;font-family:inherit}
+  button:hover{background:#2c313b;border-color:#4a515c}
+  button:disabled{opacity:.35;cursor:default}
+  .stepno{font-size:12.5px;color:var(--ink3);font-variant-numeric:tabular-nums;min-width:112px}
+  .ticks{display:flex;gap:4px;flex:1 1 auto;flex-wrap:wrap}
+  .tick{width:22px;height:22px;border-radius:3px;border:1px solid var(--line);background:#171a1e;
+    color:var(--ink3);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .tick.done{background:#2a2b22;color:#9b8c5c;border-color:#4a4529}
+  .tick.now{background:var(--gold);color:#15171a;border-color:var(--gold);font-weight:700}
+
+  .split{display:grid;grid-template-columns:1fr 372px;gap:14px;align-items:start}
+  .stage{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px}
+  .stage svg{display:block;width:100%;height:auto;background:#0e1013;border-radius:4px}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:15px 17px}
+  .card p{margin:0;font-size:13px;line-height:1.75;color:var(--ink2)}
+  .card p+p{margin-top:9px}
+  .card b{color:var(--ink);font-weight:600}
+  .act{font-size:14.5px;line-height:1.6;color:var(--ink);font-weight:600;margin:0 0 8px}
+  .can{border-left:3px solid var(--good);padding-left:11px;font-size:13px;line-height:1.7;color:var(--ink2)}
+  .cant{border-left:3px solid var(--warn);padding-left:11px;font-size:13px;line-height:1.7;color:var(--ink2);margin-top:10px}
+  .note{margin-top:11px;padding:11px 13px;background:#1b2225;border-left:3px solid var(--cyan);
+    border-radius:0 4px 4px 0;font-size:12.5px;line-height:1.75;color:var(--ink2)}
+  .note b{color:#8fc6d4}
+  .kv{font-size:12.5px;line-height:2;color:var(--ink2)}
+  .kv span{float:right;color:var(--ink);font-variant-numeric:tabular-nums}
+  .kv i{font-style:normal;color:var(--dead)}
+  .stagerow{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 0;border-bottom:1px solid #22262b}
+  .stagerow:last-child{border-bottom:0}
+  .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;background:#33383e}
+  .dot.on{background:var(--gold)}
+  .dot.hold{background:#4a4a3a}
+
+  footer{margin-top:26px;padding-top:24px;border-top:1px solid var(--line);color:var(--ink2);font-size:13.5px;line-height:1.85}
+  footer b{color:var(--ink)}
+
+  text{font-family:"Inter","Segoe UI","Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif}
+  .nl{font-size:12.5px;fill:#d6d3cd}
+  .nl2{font-size:10.5px;fill:#8b8882}
+  .fl{font-size:11.5px;fill:#c8a24a;font-weight:600}
+  .gl{font-size:13px;fill:#15171a;font-weight:700}
+  .gs{font-size:10.5px;fill:#c8a24a}
+  .rl{font-size:10.5px;fill:#6d6b66}
+  .nl,.nl2,.fl,.gs,.rl{paint-order:stroke;stroke:#0e1013;stroke-width:4px;stroke-linejoin:round}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>玩家完整一局 v0</h1>
+  <p class="sub">同一件器物,从玩家侧看 · 地图四面显影,没有左右时序 · 2026-08-25 · 离线单文件</p>
+
+  <div class="warnbar">
+    <b>这张地图和 <code>author-map.html</code> 是同一份内容,但玩家永远看不到那一份。</b>
+    这里出现的每样东西都只来自"本局已经取得的证据"。12 个候选包、真实边权、证明门、答案轮廓一次都没有出现过。
+    线框草图,不是视觉方向;不提供任何关于趣味或玩家理解的证据——那只能由无答案真人测试举证。
+  </div>
+
+  <div class="legend">
+    <span><i><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="#2b3037" stroke="#a6a39c" stroke-width="1.5"/></svg></i>已到访地点</span>
+    <span><i><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="#1a1d21" stroke="#5f6570" stroke-width="1.4" stroke-dasharray="3 3"/></svg></i>可用但未使用的行动</span>
+    <span><i><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="#22252a" stroke="#6b6864" stroke-width="1.5"/><line x1="4" y1="7" x2="10" y2="7" stroke="#6b6864" stroke-width="1.8"/></svg></i>去过但阴性</span>
+    <span><i><svg width="14" height="14"><rect x="2.5" y="2.5" width="9" height="9" transform="rotate(45 7 7)" fill="#c8a24a"/></svg></i>局部 Finding</span>
+    <span><i><svg width="16" height="14"><polygon points="8,1 15,5 15,10 8,14 1,10 1,5" fill="#c8a24a"/></svg></i>阶段地标(画在路口)</span>
+    <span><i><svg width="28" height="8"><line x1="0" y1="4" x2="28" y2="4" stroke="#c8a24a" stroke-width="2.5"/></svg></i>已建立的关系</span>
+    <span><i><svg width="28" height="8"><line x1="0" y1="4" x2="28" y2="4" stroke="#5f6570" stroke-width="2" stroke-dasharray="5 4"/></svg></i>探索前沿</span>
+    <span><i><svg width="28" height="8"><line x1="0" y1="4" x2="28" y2="4" stroke="#c2603c" stroke-width="2" stroke-dasharray="3 3"/></svg></i>争议中</span>
+    <span><i><svg width="28" height="8"><line x1="0" y1="4" x2="28" y2="4" stroke="#5a5651" stroke-width="2"/></svg></i>死路(留在足迹层)</span>
+  </div>
+
+  <div class="bar">
+    <button id="prev">← 上一步</button>
+    <button id="next">下一步 →</button>
+    <span class="stepno" id="stepno"></span>
+    <div class="ticks" id="ticks"></div>
+  </div>
+
+  <div class="split">
+    <div class="stage"><svg id="map" viewBox="0 0 1240 800"></svg></div>
+    <div class="side">
+      <div class="card">
+        <p class="act" id="act"></p>
+        <div class="can" id="can"></div>
+        <div class="cant" id="cant"></div>
+        <div class="note" id="note"></div>
+      </div>
+      <div class="card">
+        <h3>阶段</h3>
+        <div class="stagerow"><i class="dot" id="d1"></i><span>G1 &nbsp;可信问题方向</span></div>
+        <div class="stagerow"><i class="dot" id="d2"></i><span>G2 &nbsp;身份 ＋ 重大重组</span></div>
+        <div class="stagerow"><i class="dot" id="d3"></i><span>G3 &nbsp;一致决策剖面</span></div>
+      </div>
+      <div class="card">
+        <h3>足迹</h3>
+        <p class="kv">
+          有效推进 <span id="k1"></span><br>
+          重复 · 无新信息 <span id="k2"></span><br>
+          阴性 · 能力不足 <span id="k3"></span><br>
+          <i>调查次数合计</i> <span id="k4"></span>
+        </p>
+      </div>
+      <div class="card">
+        <h3>罗盘 · 只重排醒目度</h3>
+        <p id="compass"></p>
+      </div>
+    </div>
+  </div>
+
+  <footer id="foot"></footer>
+</div>
+<script>
+/* ---------- 固定坐标:位置一旦放下就永不搬动(DEC-028)。
+   地图是玩家的记忆,搬动会破坏记忆。所以每一帧的同一个地点都在同一个像素上。 ---------- */
+const NODES={
+  OBJ_W :{x:430,y:470,t:"器物 · 整体形制与胎釉",lx:0,ly:-26,a:"middle"},
+  OBJ_F :{x:346,y:566,t:"器物 · 底足与修足",lx:-20,ly:6,a:"end"},
+  OBJ_R :{x:520,y:562,t:"器物 · 口沿接缝与旧锔痕",lx:16,ly:6,a:"start"},
+  OBJ_D :{x:396,y:652,t:"器物 · 纹饰与色差",lx:0,ly:32,a:"middle"},
+  XRAY  :{x:200,y:428,t:"X 射线 · 多角度逐区",lx:-18,ly:5,a:"end"},
+  UV    :{x:170,y:620,t:"紫外筛查",lx:-20,ly:5,a:"end"},
+  CORPUS:{x:252,y:232,t:"同期真品／后仿语料",lx:0,ly:-26,a:"middle"},
+  T1    :{x:742,y:150,t:"T1 早期影像",lx:0,ly:-26,a:"middle"},
+  T2    :{x:1078,y:400,t:"T2 候选事故记录组",lx:0,ly:-26,a:"middle"},
+  T3    :{x:986,y:648,t:"T3 后期报告组",lx:0,ly:32,a:"middle"},
+  SURF  :{x:268,y:730,t:"表面试窗点位",lx:0,ly:32,a:"middle"},
+  MAT   :{x:456,y:744,t:"材料基底与层序",lx:0,ly:32,a:"middle"},
+  STAB  :{x:716,y:744,t:"稳定性与陈列条件",lx:0,ly:32,a:"middle"},
+  RPT   :{x:124,y:150,t:"另一批语料 · 同源无区分力",lx:0,ly:-24,a:"middle"}
+};
+const FIND={
+  F_ZONE:{x:292,y:398,t:"逐区结构读数",lx:-14,ly:-12,a:"end"},
+  F_INT :{x:462,y:514,t:"确有历史干预",lx:16,ly:-6,a:"start"},
+  F_MAKE:{x:338,y:338,t:"制造与装饰差异",lx:-14,ly:-14,a:"end"},
+  F_MAP :{x:572,y:492,t:"现器具名修复图",lx:22,ly:34,a:"start"},
+  F_CONT:{x:648,y:258,t:"对象连续对应",lx:14,ly:-8,a:"start"},
+  F_CRS :{x:700,y:352,t:"跨时点重大变化",lx:16,ly:6,a:"start"},
+  F_DEC :{x:500,y:634,t:"外观再整合观察",lx:16,ly:6,a:"start"}
+};
+const LM={
+  G1:{x:476,y:336,t:"G1",s:"可信问题方向",s2:"由 2 条道路在此汇合"},
+  G2:{x:628,y:418,t:"G2",s:"身份 ＋ 重大重组基本成立",s2:"由 3 条道路在此汇合"}
+};
+/* 无名暗区:不是作者节点,是真正没有分化的迷雾。它们没有标签,
+   因为给它们标签就等于提前描出作者隐藏节点的轮廓(DEC-026 禁止)。 */
+const DARK=[[118,292,26],[560,92,22],[1122,168,24],[126,724,22],[1152,566,25],[880,88,18]];
+const P=id=>NODES[id]||FIND[id]||LM[id];
+const KIND={est:{c:"#c8a24a",w:2.5,d:""},dead:{c:"#5a5651",w:2,d:""},
+  neg:{c:"#6b6864",w:2,d:""},cont:{c:"#c2603c",w:2,d:"3 3"},
+  fr:{c:"#5f6570",w:2,d:"5 4"}};
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function road(a,b,k){const A=P(a),B=P(b),K=KIND[k];
+  return `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="${K.c}" stroke-width="${K.w}"`+
+    (K.d?` stroke-dasharray="${K.d}"`:"")+` stroke-linecap="round"/>`}
+/* 前沿画成弧线,不画直线:长距离的开放问题若走直线会横穿整张地图,
+   把"这里还有个没闭合的问题"读成"这里已经有一条通路"。 */
+function arc(a,b,c){const A=P(a),B=P(b),K=KIND.fr;
+  const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy)||1,s=(c===undefined?1:c)*L*.15;
+  const cx=(A.x+B.x)/2-dy/L*s, cy=(A.y+B.y)/2+dx/L*s;
+  return `<path d="M${A.x},${A.y} Q${cx.toFixed(0)},${cy.toFixed(0)} ${B.x},${B.y}" fill="none" stroke="${K.c}" stroke-width="${K.w}" stroke-dasharray="${K.d}"/>`}
+
+function render(i){
+  const st={nodes:{},finds:[],lms:[],roads:[],conv:[],fr:[],gap:null,cut:[]};
+  for(let j=0;j<=i;j++){const s=STEPS[j];
+    Object.assign(st.nodes,s.nodes||{});
+    (s.finds||[]).forEach(x=>st.finds.includes(x)||st.finds.push(x));
+    (s.lms||[]).forEach(x=>st.lms.includes(x)||st.lms.push(x));
+    (s.roads||[]).forEach(r=>{const k=st.roads.findIndex(q=>q[0]===r[0]&&q[1]===r[1]);
+      k<0?st.roads.push(r.slice()):st.roads[k]=r.slice()});
+    (s.conv||[]).forEach(c=>st.conv.push(c));
+    (s.cut||[]).forEach(c=>st.cut.push(c));
+    st.fr=s.fr||st.fr; st.gap=s.gap!==undefined?s.gap:st.gap;
+  }
+  let g="";
+  /* 迷雾:从中心向四周变暗的整体渐晕。玩家在未知的中间,不是未知在右边。 */
+  g+=`<defs><radialGradient id="vig" cx=".5" cy=".5" r=".72">
+    <stop offset=".45" stop-color="#0e1013" stop-opacity="0"/>
+    <stop offset="1" stop-color="#272c33" stop-opacity=".92"/></radialGradient></defs>`;
+  g+=`<rect x="0" y="0" width="1240" height="800" fill="url(#vig)"/>`;
+  DARK.forEach(([x,y,r])=>{g+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#1c2026" opacity=".8"/>`});
+
+  st.conv.forEach(([f,l])=>{const A=P(f),B=P(l);
+    g+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#c8a24a" stroke-width="4.5" stroke-opacity=".5"/>`});
+  st.fr.forEach(([a,b,c])=>{g+=arc(a,b,c)});
+  st.roads.forEach(([a,b,k])=>{g+=road(a,b,k)});
+  st.cut.forEach(([a,b,lab])=>{const A=P(a),B=P(b);
+    const mx=A.x+(B.x-A.x)*.62,my=A.y+(B.y-A.y)*.62;
+    g+=`<line x1="${A.x}" y1="${A.y}" x2="${mx}" y2="${my}" stroke="#c2603c" stroke-width="2" stroke-dasharray="3 3"/>`;
+    g+=`<circle cx="${mx}" cy="${my}" r="7.5" fill="none" stroke="#c2603c" stroke-width="2"/>`;
+    g+=`<line x1="${mx-5}" y1="${my+5}" x2="${mx+5}" y2="${my-5}" stroke="#c2603c" stroke-width="2"/>`;
+    g+=`<text class="rl" x="${mx-14}" y="${my-14}" text-anchor="end" fill="#c2603c">${esc(lab)}</text>`});
+
+  if(st.gap){const A=P(st.gap.a),B=P(st.gap.b);
+    const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy)||1,s=-L*.15;
+    const cx=(A.x+B.x)/2-dy/L*s, cy=(A.y+B.y)/2+dx/L*s;
+    const qx=(A.x+2*cx+B.x)/4, qy=(A.y+2*cy+B.y)/4;
+    g+=`<path d="M${A.x},${A.y} Q${cx.toFixed(0)},${cy.toFixed(0)} ${B.x},${B.y}" fill="none" stroke="#8fc6d4" stroke-width="2" stroke-dasharray="4 4"/>`;
+    g+=`<circle cx="${qx.toFixed(0)}" cy="${qy.toFixed(0)}" r="12" fill="#0e1013" stroke="#8fc6d4" stroke-width="1.6"/>`;
+    g+=`<text x="${qx.toFixed(0)}" y="${(qy+5).toFixed(0)}" text-anchor="middle" style="font-size:13px;fill:#8fc6d4;font-weight:700">?</text>`;
+    g+=`<text class="rl" x="${(qx+20).toFixed(0)}" y="${(qy+4).toFixed(0)}" fill="#8fc6d4">${esc(st.gap.t)}</text>`}
+
+  for(const id in NODES){const n=NODES[id],s=st.nodes[id];
+    if(s==="visited"){g+=`<circle cx="${n.x}" cy="${n.y}" r="13" fill="#2b3037" stroke="#a6a39c" stroke-width="1.8"/>`}
+    else if(s==="neg"){g+=`<circle cx="${n.x}" cy="${n.y}" r="13" fill="#22252a" stroke="#6b6864" stroke-width="1.8"/>`+
+      `<line x1="${n.x-6}" y1="${n.y}" x2="${n.x+6}" y2="${n.y}" stroke="#6b6864" stroke-width="2"/>`}
+    else if(s==="avail"){g+=`<circle cx="${n.x}" cy="${n.y}" r="12" fill="#1a1d21" stroke="#5f6570" stroke-width="1.4" stroke-dasharray="3 3"/>`}
+    else continue;
+    const dim=(s==="visited")?"nl":"nl2";
+    g+=`<text class="${dim}" x="${n.x+n.lx}" y="${n.y+n.ly}" text-anchor="${n.a}">${esc(n.t)}</text>`}
+
+  st.finds.forEach(id=>{const f=FIND[id];
+    g+=`<rect x="${f.x-7.5}" y="${f.y-7.5}" width="15" height="15" transform="rotate(45 ${f.x} ${f.y})" fill="#c8a24a"/>`;
+    g+=`<text class="fl" x="${f.x+f.lx}" y="${f.y+f.ly}" text-anchor="${f.a}">${esc(f.t)}</text>`});
+
+  st.lms.forEach(id=>{const l=LM[id];
+    g+=`<polygon points="${l.x},${l.y-26} ${l.x+29},${l.y-9} ${l.x+29},${l.y+9} ${l.x},${l.y+26} ${l.x-29},${l.y+9} ${l.x-29},${l.y-9}" fill="#c8a24a"/>`;
+    g+=`<text class="gl" x="${l.x}" y="${l.y+5}" text-anchor="middle">${l.t}</text>`;
+    g+=`<text class="gs" x="${l.x}" y="${l.y+44}" text-anchor="middle">${esc(l.s)}</text>`;
+    g+=`<text class="rl" x="${l.x+36}" y="${l.y+2}">${esc(l.s2)}</text>`});
+
+  document.getElementById("map").innerHTML=g;
+
+  const s=STEPS[i];
+  document.getElementById("act").textContent=(i+".  ")+s.act;
+  document.getElementById("can").innerHTML="<b>系统现在能说:</b> "+s.can;
+  document.getElementById("cant").innerHTML="<b>系统还不能说:</b> "+s.cant;
+  const nb=document.getElementById("note");
+  nb.innerHTML=s.note||""; nb.style.display=s.note?"block":"none";
+  document.getElementById("compass").innerHTML=s.comp;
+  ["d1","d2","d3"].forEach((d,k)=>{document.getElementById(d).className="dot"+(s.g>k?" on":"")});
+  const f=s.fp;
+  document.getElementById("k1").textContent=f[0];
+  document.getElementById("k2").textContent=f[1];
+  document.getElementById("k3").textContent=f[2];
+  document.getElementById("k4").textContent=f[0]+f[1]+f[2];
+  document.getElementById("stepno").textContent=`第 ${i} / ${STEPS.length-1} 拍`;
+  document.getElementById("foot").innerHTML=s.foot||FOOT;
+  document.getElementById("prev").disabled=(i===0);
+  document.getElementById("next").disabled=(i===STEPS.length-1);
+  [...document.querySelectorAll(".tick")].forEach((t,k)=>{
+    t.className="tick"+(k===i?" now":(k<i?" done":""))});
+  cur=i;
+}
+let cur=0;
+const FOOT=`<b>这一份能证明什么。</b>能证明作者规则可以讲成一局玩家侧体验,而且换序、重复、阴性、争议、系统被无视都不会让地图崩掉。
+<br><b>不能证明什么。</b>玩家看不看得懂、觉不觉得自己在做主、好不好玩,<b>一律未验证</b>——只能由无答案真人测试举证。`;
+const STEPS=[
+{ act:`接手一只可旋转观察的外销瓷大碗。`,
+  nodes:{OBJ_W:"avail",OBJ_F:"avail",OBJ_R:"avail",OBJ_D:"avail",XRAY:"avail",UV:"avail",
+         SURF:"avail",MAT:"avail",CORPUS:"avail",STAB:"avail"},
+  fr:[], g:0, fp:[0,0,0],
+  can:`什么都还不能说。`,
+  cant:`连"这是不是老的"都还不是一个成形的问题。`,
+  note:`<b>地图此刻是全黑的。</b>亮着的十个虚圈不是"信息",是<b>你自己的能力</b>——器物在你手上,你知道有 X 射线、紫外、试窗、材料分析,你知道可以去比语料。
+  但"档案里有什么"完全不在图上,因为你没有理由知道有早期照片或事故记录。那属于无名暗区,系统<b>不许</b>先把它的轮廓描出来。`,
+  comp:`尚未形成倾向。罗盘此刻是空的。` },
+
+{ act:`第一步直接上 X 射线,跳过全部肉眼观察。`,
+  nodes:{XRAY:"visited"}, finds:["F_ZONE"], roads:[["XRAY","F_ZONE","est"]],
+  fr:[["F_ZONE","OBJ_W"]], g:0, fp:[1,0,0],
+  can:`若干具名区域下方有隐藏接合与填料候选;另有几个区域<b>不可读</b>,如实标为不可读。`,
+  cant:`不能断代,不能证明对象归属,不能判定补绘。`,
+  note:`<b>这就是"跳跃探索"。</b>玩家跳过一切,先花最贵的钱。地图照样点亮,证据照样永久有效——这是"早拿后懂"合同:上下文不足时保留为"已观察但意义未定",<b>以后重新解释,但不重复计一次权</b>。
+  它现在孤零零挂在左边,逻辑是离散的,但绝不是没价值。`,
+  comp:`首要疑点:这些结构读数对应器物的哪些部位。` },
+
+{ act:`肉眼观察整体形制、胎釉与底足修足。`,
+  nodes:{OBJ_W:"visited",OBJ_F:"visited"}, finds:["F_INT"],
+  roads:[["OBJ_W","F_INT","est"],["OBJ_F","F_INT","est"],["F_ZONE","OBJ_W","est"]],
+  fr:[["F_INT","OBJ_R"],["OBJ_W","CORPUS"]], g:0, fp:[2,0,0],
+  can:`确有历史干预:具名修复区与自然磨耗分别记录。第 1 拍的结构读数<b>现在</b>能对应到具体部位了。`,
+  cant:`老器方向与后仿方向仍然并存,哪一边都没有被排除。`,
+  comp:`当前倾向:两种解释并存。首要疑点:制造特征。` },
+
+{ act:`拿同期真品与后仿语料做比对。`,
+  nodes:{CORPUS:"visited"}, finds:["F_MAKE"],
+  roads:[["CORPUS","F_MAKE","est"],["OBJ_W","F_MAKE","est"]],
+  lms:["G1"], conv:[["F_MAKE","G1"],["F_INT","G1"]],
+  fr:[["G1","OBJ_R"],["F_INT","OBJ_D"]], g:1, fp:[3,0,0],
+  can:`<b>G1 成立:</b>晚 18 世纪外销瓷是一个可信方向,而且修复范围值得继续查。`,
+  cant:`不能说重大重组成立,也不能把年代精确到年。`,
+  note:`<b>看 G1 长在哪儿。</b>它长在"制造差异"和"确有历史干预"两条路的<b>交汇处</b>,不是地图边上的第一级台阶。
+  换一局、换顺序,G1 就长在别的位置。这是模型一的核心押注:<b>地标的位置由本局实际走出来的路线决定</b>。`,
+  comp:`当前倾向:晚 18 世纪外销瓷。首要疑点:修复范围。` },
+
+{ act:`不放心,又调了另一批语料再比一次。`,
+  nodes:{RPT:"neg"}, roads:[["CORPUS","RPT","dead"]], g:1, fp:[3,1,0],
+  can:`这批语料与已有语料<b>同源</b>,对区分当前替代解释没有区分力。`,
+  cant:`阶段不会因此推进。费用已经花掉,不退。`,
+  note:`<b>这一拍专门回答你的问题。</b>地图<b>照样</b>记下了它——覆盖只能增加,去过的地方永不变回纯黑。但<b>后验没动,阶段没推进</b>。
+  所以"每个动作都有价值"的准确含义是:它有<b>留痕</b>的价值(你以后不会再来第二次,这条路已经画成死路),不是"它一定推动进度"。
+  代价落在<b>费用和剩余机会</b>上,不落在系统扣你分。`,
+  comp:`当前倾向:晚 18 世纪外销瓷。首要疑点:修复范围(未变)。` },
+
+{ act:`用紫外筛查补绘。`,
+  nodes:{UV:"neg"}, roads:[["OBJ_W","UV","neg"]], g:1, fp:[3,1,1],
+  can:`在<b>本次紫外覆盖范围内</b>没有读出补绘荧光。`,
+  cant:`<b>不能</b>因此说"没有补绘"。这台设备对这层材料能力不足,阴性只证明这次没看见。`,
+  note:`这是"负向证据能力门":阴性结果必须先过能力检查,才允许当作反证。
+  地图上它是一个<b>去过但打横线</b>的地点——不是纯黑,也不是成果。`,
+  comp:`当前倾向:晚 18 世纪外销瓷。首要疑点:补绘范围(仍未知)。` },
+
+{ act:`按下最强一层帮助:"现在最该做什么?"`,
+  g:1, fp:[3,1,1],
+  can:`在你已取得的证据下,期望净决策价值最高的一步是<b>口沿接缝的多角度结构复核</b>。`,
+  cant:`不保证它会给出正向、新颖或可读的结果。它<b>没有</b>读作者真相——只用了你已取得的证据、当前可用行动、剩余机会与费用。`,
+  note:`<b>这是唯一一层允许点名"当前最优"的地方,而且必须由你按下。</b>按 DEC-029,罗盘<b>不缩小</b>它的排序范围,只在分数严格相等时破平;
+  如果点名的行动落在你自述关注方向<b>之外</b>,系统必须<b>显式标注</b>这一点,而不是悄悄不推荐。
+  然后——你可以完全不听。下一拍你就不听。`,
+  comp:`当前倾向:晚 18 世纪外销瓷。系统点名:口沿接缝多角度复核(在你关注方向内)。` },
+
+{ act:`无视推荐,转头去档案检索,拿到一组候选事故记录。`,
+  nodes:{T2:"visited"}, fr:[["T2","F_INT",-1],["G1","OBJ_R"]], g:1, fp:[4,1,1],
+  can:`存在一组彼此内部相容的记录,声称某个时期发生过重大损坏与重组(<code>recordCoherence</code> 已建立)。`,
+  cant:`<b>不能说这些记录属于这件器物</b>,也不能因此建立重大重组。系统只能说"记录声称"。`,
+  note:`<b>系统推荐 ≠ 玩家行动。</b>你去了完全相反的方向,系统没有阻止、没有惩罚、也没有把地图锁住。
+  看 T2 亮在右边,<b>和你已点亮的那一片暂时不连通</b>——这就是跳跃探索的视觉:离散,但暴露了具名区域、时间与处理词汇,长出了新前沿。`,
+  comp:`当前倾向:晚 18 世纪外销瓷。首要疑点:这组记录到底是不是这件器物的。` },
+
+{ act:`继续查档案,找到一张早期影像。`,
+  nodes:{T1:"visited"}, fr:[["T1","OBJ_F"],["T2","F_INT",-1]], g:1, fp:[5,1,1],
+  can:`早期照片上有相似器形、制造瑕疵与旧锔痕,是一个<b>可能相关的对象候选</b>。`,
+  cant:`通用构图相似<b>不算身份票</b>。`,
+  comp:`当前倾向:晚 18 世纪外销瓷。首要疑点:照片上那只碗是不是手上这一只。` },
+
+{ act:`核对稳定的非构图锚点:足部瑕疵、几何比例、口沿缺口、磨耗点。`,
+  nodes:{OBJ_R:"visited"}, finds:["F_CONT"],
+  roads:[["T1","F_CONT","est"],["OBJ_F","F_CONT","est"]],
+  fr:[["T2","F_INT",-1],["F_CONT","OBJ_R"]], g:1, fp:[6,1,1],
+  can:`四项联合对应,早期影像与现器的<b>对象连续</b>成立。`,
+  cant:`身份更稳了,但重大重组与价值仍未闭合。`,
+  comp:`当前倾向:晚 18 世纪外销瓷,且早期影像同器。首要疑点:那次干预有多大。` },
+
+{ act:`回到器物,把当前具名修复图和纹饰再整合痕迹画全。`,
+  nodes:{OBJ_D:"visited"}, finds:["F_MAP","F_DEC"],
+  roads:[["OBJ_R","F_MAP","est"],["OBJ_W","F_MAP","est"],["OBJ_D","F_DEC","est"],["F_DEC","F_MAP","est"]],
+  gap:{a:"F_CONT",b:"F_MAP",t:"中间缺口:跨时点重大变化对应"},
+  fr:[["T2","F_INT",-1]], g:1, fp:[7,1,1],
+  can:`当前具名修复图成形;装饰观察显示修复曾<b>恢复外观</b>。`,
+  cant:`还不能说"当前这些修复对应早期照片上那一次事故"。`,
+  note:`<b>这就是你说的"从两边向中间夹"。</b>右上那一侧(早期影像—对象连续)和中下这一侧(现器修复图)<b>分别</b>成立之后,两条链条自己指向了同一个还没填的位置。
+  系统<b>没有</b>叫你去填它——是地图的形状让它显眼了。仓库里这句原话在 DEC-022:「两端共同暴露中间缺口后再补证」。`,
+  comp:`当前倾向:老器且经历过干预。首要疑点:跨时点对应(两侧同时指向它)。` },
+
+{ act:`把当前结构与早期／损坏时点逐区对照。`,
+  finds:["F_CRS"], roads:[["T1","F_CRS","est"],["F_MAP","F_CRS","est"]],
+  lms:["G2"], conv:[["F_MAP","G2"],["F_ZONE","G2"],["F_CRS","G2"]],
+  gap:null, fr:[["T2","F_INT",-1],["G2","MAT"],["G2","SURF"],["G2","STAB"]], g:2, fp:[8,1,1],
+  can:`<b>G2 成立:</b>晚 18 世纪外销瓷 ＋ 重大重组／最低外观再整合基本成立。`,
+  cant:`三阶段、关键材料、补绘范围与承力稳定性仍然不清楚。`,
+  note:`<b>三条粗线在 G2 汇合:</b>现器修复图、逐区结构读数、跨时点重大变化。
+  注意最左那条来自<b>第 1 拍</b>那次"什么也证明不了"的 X 射线——它现在是 G2 的三分之一支撑。
+  这就是"证据只计一次、意义可以延迟"的回报:那一步当时看着像浪费,其实早就买下了。`,
+  comp:`当前倾向:老器 ＋ 重大重组成立。首要疑点:补绘范围与关键材料。` },
+
+{ act:`拿 T2 记录的对象编号与所有权链去核现器锚点。`,
+  cut:[["T2","G2","记录—现器归属 · 争议"]], fr:[["G2","MAT"],["G2","SURF"],["G2","STAB"]],
+  g:2, fp:[9,1,1],
+  can:`记录里的对象编号与所有权链和现器稳定锚点<b>直接冲突</b>。系统必须显式保留争议。`,
+  cant:`不能升格为"这段历史属于本器";也<b>不能</b>反过来把记录删掉——内容与已付成本都留着。`,
+  note:`<b>关键:G2 没有塌。</b>DEC-027 说首案 G2 一旦成立即为稳定里程碑;它由三个 Finding 构成,外围被推翻只让它<b>变轻</b>,核心不倒它就不倒。
+  这也是模型一的结构性好处:你能顺着粗线走回去,亲眼看它到底靠什么站着——而不是相信一个徽章。`,
+  comp:`当前倾向:老器 ＋ 重大重组成立。首要疑点:补绘范围。争议:档案归属。` },
+
+{ act:`系统说明软转折。玩家算了算剩下的钱,决定收手。`,
+  fr:[["G2","MAT"],["G2","SURF"],["G2","STAB"]], g:2, fp:[9,1,1],
+  can:`器物的重要性与不确定价值已足以支持定向深档案投入;同时这里列出不需要档案也能继续的物理方向。`,
+  cant:`这<b>不是解锁</b>。深档案从第 0 拍就一直可用。软转折只改变<b>推荐强度和投入理由</b>,不改变行动可用性。`,
+  note:`<b>玩家手动停手,没有自动结束。</b>地图现在的样子就是这一局的答案:一个平庸但完整的 G2、三块从没去过的可用区域、一条争议路线、一次浪费、一次阴性。
+  三条虚线前沿还指着 MAT／SURF／STAB——它们不是任务清单,也不是行动门,只是"这边还有没闭合的问题"。`,
+  comp:`当前倾向:老器 ＋ 重大重组成立。玩家选择在此冻结。` },
+
+{ act:`冻结证据,自填一口价挂牌。市场结束后揭示。`,
+  fr:[["G2","MAT"],["G2","SURF"],["G2","STAB"]], g:2, fp:[9,1,1],
+  can:`局末才揭示客观真相与完整拓扑,并把你实际走过的路径叠上去。`,
+  cant:`市场不读取系统估值,也不反写推理。卖得快不自动证明推理正确;没卖出也不自动证明当时的判断毫无道理。`,
+  note:`<b>揭示时才说:</b>那组争议的 T2 记录<b>内容真实但对象误归属</b>——你保留争议是对的。
+  客观真相是 <code>h* = OLD / THREE_PHASE / KEY_PRESERVED</code>;你停在 G2,所以"三阶段"和"关键材料保存"你<b>从来没有拿到</b>。
+  那三块你放弃的暗区里,有一块本来会给你 G3。`,
+  comp:`本局结束。罗盘不参与结算。`,
+  foot:`<b>双轨结算。</b>客观结果(卖了多少钱)和判断质量(在当时证据下这个判断合不合理)<b>分开算</b>。
+  停在 G2 是完全体面的结局;保留争议而不硬猜,在判断质量上是加分项。
+  <br><br><b>这一份能证明什么。</b>能证明作者规则可以讲成一局玩家侧体验,而且换序、重复、阴性、争议、系统被无视都不会让地图崩掉。
+  <br><b>不能证明什么。</b>玩家看不看得懂、觉不觉得自己在做主、好不好玩,<b>一律未验证</b>——只能由无答案真人测试举证。` }
+];
+document.getElementById("ticks").innerHTML=STEPS.map((_,k)=>`<div class="tick" data-k="${k}">${k}</div>`).join("");
+document.getElementById("ticks").addEventListener("click",e=>{
+  const t=e.target.closest(".tick"); if(t) render(+t.dataset.k)});
+document.getElementById("prev").onclick=()=>render(cur-1);
+document.getElementById("next").onclick=()=>render(cur+1);
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight"&&cur<STEPS.length-1)render(cur+1);
+  if(e.key==="ArrowLeft"&&cur>0)render(cur-1)});
+(function(){
+  const q=new URLSearchParams(location.search).get("beat");
+  const h=(location.hash.match(/\d+/)||[])[0];
+  const beat=Number(q||h||0);
+  render(Number.isFinite(beat)?Math.max(0,Math.min(STEPS.length-1,beat)):0);
+})();
+</script>
+</body>
+</html>

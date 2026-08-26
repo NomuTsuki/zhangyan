@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>作者侧地图全貌 v0 — 第一器物完整一局</title>
+<style>
+  :root{
+    --bg:#15171a; --panel:#1d2024; --panel2:#232730; --line:#373d45;
+    --ink:#e7e4de; --ink2:#a6a39c; --ink3:#6d6b66;
+    --gold:#c8a24a;      /* 玩家最终可能看到 */
+    --cyan:#4e97a8;      /* 作者独有，永不透出 */
+    --warn:#c2603c;      /* 争议 */
+    --dead:#5a5651;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter","Segoe UI","Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1420px;margin:0 auto;padding:40px 32px 90px}
+  h1{font-size:27px;font-weight:650;margin:0 0 6px}
+  h2{font-size:19px;font-weight:650;margin:0}
+  h3{margin:0 0 10px;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);font-weight:650}
+  .sub{color:var(--ink2);font-size:14px;line-height:1.7;margin:0}
+  code{font-family:"Cascadia Mono",Consolas,monospace;font-size:.92em;color:#cbb87f}
+
+  .warnbar{margin:20px 0 26px;padding:13px 17px;border-left:3px solid var(--warn);
+    background:#221f1d;color:var(--ink2);font-size:13.5px;line-height:1.75;border-radius:0 4px 4px 0}
+  .warnbar b{color:var(--ink)}
+  .keybar{margin:0 0 30px;padding:14px 18px;border-left:3px solid var(--cyan);
+    background:#1b2225;color:var(--ink2);font-size:13.5px;line-height:1.75;border-radius:0 4px 4px 0}
+  .keybar b{color:var(--ink)}
+
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:0 0 30px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 30px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px}
+  .card p{margin:0;font-size:13px;line-height:1.75;color:var(--ink2)}
+  .card b{color:var(--ink);font-weight:600}
+  .card ul{margin:0;padding-left:17px;font-size:13px;line-height:1.85;color:var(--ink2)}
+
+  .legend{display:flex;flex-wrap:wrap;gap:9px 24px;margin:0 0 14px;padding:14px 18px;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:12.5px;color:var(--ink2)}
+  .legend i{display:inline-block;vertical-align:middle;margin-right:7px}
+
+  section{margin:0 0 44px}
+  .bhead{display:flex;align-items:baseline;gap:14px;margin:0 0 6px}
+  .tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);
+    background:var(--gold);padding:3px 9px;border-radius:3px;font-weight:700;flex:0 0 auto}
+  .tagc{background:var(--cyan)}
+  .bet{color:var(--ink2);font-size:13.5px;margin:0 0 14px;line-height:1.75;max-width:118ch}
+  .bet b{color:var(--ink)}
+  .stage{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px}
+  .stage svg{display:block;width:100%;height:auto;background:#111316;border-radius:4px}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid #262a30;color:var(--ink2);vertical-align:top}
+  th{color:var(--ink3);font-size:11px;letter-spacing:.07em;text-transform:uppercase;font-weight:650}
+  td b{color:var(--ink)}
+  tr.truth td{background:#231f16}
+  tr.truth td b{color:var(--gold)}
+  .yes{color:#7f9a6a} .no{color:#6d6b66}
+
+  footer{margin-top:10px;padding-top:24px;border-top:1px solid var(--line);color:var(--ink2);font-size:13.5px;line-height:1.85}
+  footer b{color:var(--ink)}
+
+  text{font-family:"Inter","Segoe UI","Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif}
+  .nl{font-size:12.5px;fill:#d6d3cd}
+  .nl2{font-size:11px;fill:#8b8882}
+  .fl{font-size:12px;fill:#c8a24a;font-weight:600}
+  .cl{font-size:12px;fill:#6fb3c4;font-weight:600}
+  .gl{font-size:13.5px;fill:#15171a;font-weight:700}
+  .gs{font-size:11px;fill:#c8a24a}
+  .rl{font-size:10.5px;fill:#6d6b66}
+  .lane{font-size:10.5px;fill:#464c55;letter-spacing:.18em}
+  .nl,.nl2,.fl,.cl,.gs,.rl,.lane{paint-order:stroke;stroke:#111316;stroke-width:4px;stroke-linejoin:round}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>作者侧地图全貌 v0</h1>
+  <p class="sub">第一器物「珠江商馆与帆船图大碗」完整一局的作者视角 · 2026-08-25 · 电脑浏览器尺寸 · 离线单文件</p>
+
+  <div class="warnbar">
+    <b>这是线框草图,不是视觉方向,也不是界面。</b> 内容全部取自已批准的作者规格:
+    <code>DEC-021</code>(客观真相包)、<code>DEC-022</code>(开放证据网＋三档结论门)、
+    <code>作者模型 v0.2</code>(12 个候选包与蕴含矩阵)、<code>v0.3</code>(档案关系轴与四类能力收窄)、
+    <code>具体一局 v0.1</code>(一条非唯一路线)。没有新编内容,也没有新数值。
+  </div>
+
+  <div class="keybar">
+    <b>这张图的第一条规则:玩家永远看不到它。</b>
+    图中<b style="color:#6fb3c4">青色</b>的一切是作者独有——12 个候选包、真实边权、证明门、隐藏节点数量、答案轮廓。
+    <b style="color:#c8a24a">金色</b>的才是玩家可能在自己那张地图上逐步看到的东西。
+    这个色彩分账就是 <code>DEC-026</code> 第 33 行那条禁令的可视化:局中不显示 12 个作者候选世界、隐藏节点数量、真实边权、证明门或尚未被本局证据触及的作者答案轮廓。
+  </div>
+
+  <div class="legend">
+    <span><i><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="#2b3037" stroke="#a6a39c" stroke-width="1.5"/></svg></i>观察源 / 地点</span>
+    <span><i><svg width="14" height="14"><rect x="2.5" y="2.5" width="9" height="9" transform="rotate(45 7 7)" fill="#c8a24a"/></svg></i>只读 Finding</span>
+    <span><i><svg width="16" height="14"><polygon points="8,1 15,5 15,10 8,14 1,10 1,5" fill="#c8a24a"/></svg></i>结论门 G1/G2/G3</span>
+    <span><i><svg width="30" height="8"><line x1="0" y1="4" x2="30" y2="4" stroke="#c8a24a" stroke-width="2.5"/></svg></i>依赖(<b>不是</b>玩家顺序)</span>
+    <span><i><svg width="30" height="8"><line x1="0" y1="4" x2="30" y2="4" stroke="#4e97a8" stroke-width="2" stroke-dasharray="4 4"/></svg></i>作者独有的证明关系</span>
+    <span><i><svg width="18" height="14"><circle cx="9" cy="7" r="6.5" fill="none" stroke="#4e97a8" stroke-width="1.4"/><text x="9" y="11" text-anchor="middle" style="font-size:9px;fill:#6fb3c4">∧</text></svg></i>AND(全部必需)</span>
+    <span><i><svg width="18" height="14"><circle cx="9" cy="7" r="6.5" fill="none" stroke="#4e97a8" stroke-width="1.4"/><text x="9" y="11" text-anchor="middle" style="font-size:9px;fill:#6fb3c4">∨</text></svg></i>OR(任一即可)</span>
+  </div>
+
+  <!-- ================= BAND 1 ================= -->
+  <section>
+    <div class="bhead"><span class="tag">第一次汇合</span><h2>混沌 → G1:问题方向成形</h2></div>
+    <p class="bet">开局是<b>混沌:任意入口</b>。器物本身、公开背景和语料比较都直接可用,没有前置。
+    G1 不要求玩家按顺序做完这些,只要求当前证据已经足以让系统说"晚 18 世纪外销瓷是一个可信方向,而且确有历史干预值得继续查"。</p>
+    <div class="stage">
+      <svg viewBox="0 0 1340 360">
+        <text class="lane" x="70" y="24">入 口</text>
+        <text class="lane" x="286" y="24">观 察 源</text>
+        <text class="lane" x="596" y="24">只 读 F I N D I N G</text>
+        <text class="lane" x="1010" y="24">结 论 门</text>
+
+        <!-- dependency edges -->
+        <g fill="none" stroke="#c8a24a" stroke-width="2.2">
+          <path d="M108,180 Q170,74 286,72"/>
+          <path d="M108,180 Q170,120 286,130"/>
+          <line x1="108" y1="180" x2="286" y2="188"/>
+          <path d="M108,180 Q170,240 286,246"/>
+          <path d="M108,180 Q170,296 286,304"/>
+          <path d="M320,72 Q450,72 596,86"/>
+          <path d="M320,130 Q450,110 596,86"/>
+          <path d="M320,188 Q450,188 596,188"/>
+          <path d="M320,246 Q450,214 596,188"/>
+          <path d="M320,304 Q450,300 596,292"/>
+        </g>
+        <g fill="none" stroke="#c8a24a" stroke-width="3.6" stroke-opacity=".5">
+          <path d="M614,86 Q820,96 962,168"/>
+          <path d="M614,188 Q800,182 962,180"/>
+        </g>
+        <path d="M614,292 Q800,300 950,206" fill="none" stroke="#c8a24a" stroke-width="2" stroke-dasharray="6 5" stroke-opacity=".6"/>
+
+        <!-- AND gate -->
+        <circle cx="930" cy="180" r="12" fill="#111316" stroke="#4e97a8" stroke-width="1.5"/>
+        <text x="930" y="185" text-anchor="middle" style="font-size:13px;fill:#6fb3c4">∧</text>
+
+        <!-- sources -->
+        <g fill="#2b3037" stroke="#a6a39c" stroke-width="1.7">
+          <circle cx="303" cy="72" r="12"/><circle cx="303" cy="130" r="12"/>
+          <circle cx="303" cy="188" r="12"/><circle cx="303" cy="246" r="12"/>
+          <circle cx="303" cy="304" r="12"/>
+        </g>
+        <circle cx="90" cy="180" r="15" fill="#2b3037" stroke="#d6d3cd" stroke-width="2"/>
+        <text class="nl" x="90" y="216" text-anchor="middle">接手器物</text>
+        <text class="nl2" x="90" y="234" text-anchor="middle">可旋转观察</text>
+
+        <g class="nl">
+          <text x="326" y="76">器物 · 整体形制与胎釉</text>
+          <text x="326" y="134">器物 · 底足与修足</text>
+          <text x="326" y="192">器物 · 口沿接缝与旧锔痕</text>
+          <text x="326" y="250">器物 · 纹饰与色差</text>
+          <text x="326" y="308">同期真品／后仿语料</text>
+        </g>
+
+        <!-- findings -->
+        <g fill="#c8a24a">
+          <rect x="597" y="78" width="15" height="15" transform="rotate(45 604.5 85.5)"/>
+          <rect x="597" y="180" width="15" height="15" transform="rotate(45 604.5 187.5)"/>
+          <rect x="597" y="284" width="15" height="15" transform="rotate(45 604.5 291.5)"/>
+        </g>
+        <g class="fl">
+          <text x="626" y="82">制造与装饰组合差异</text>
+          <text x="626" y="184">确有历史干预</text>
+          <text x="626" y="288">来源环境先验</text>
+        </g>
+        <g class="nl2">
+          <text x="626" y="99">真品与后仿在同一组特征上分开</text>
+          <text x="626" y="201">具名修复区与自然磨耗分别记录</text>
+          <text x="626" y="305">只改变注意方向,不能单独证明</text>
+        </g>
+
+        <!-- G1 -->
+        <polygon points="1010,146 1042,164 1042,200 1010,218 978,200 978,164" fill="#c8a24a"/>
+        <text class="gl" x="1010" y="187" text-anchor="middle">G1</text>
+        <text class="gs" x="1064" y="172">可信问题方向</text>
+        <text class="nl2" x="1064" y="190">晚 18 世纪外销瓷值得当作方向</text>
+        <text class="nl2" x="1064" y="208">修复范围成为下一个开放问题</text>
+
+        <text class="rl" x="1064" y="238">这一档不锁任何行动:G1 之后玩家可以去查任何当前可用的位置。</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= BAND 2 ================= -->
+  <section>
+    <div class="bhead"><span class="tag">第二次汇合</span><h2>G1 → G2:两条互不隶属的重大重组路线(OR)</h2></div>
+    <p class="bet">这是整张作者图<b>最重要的结构</b>。G2 要求身份、重大重组、最低外观再整合与 <code>G2Core</code> 联合支持同时成立;
+    其中"重大重组"由<b>两条路线任一条</b>建立。上路是首案主体验(靠器物本身),下路是开放但更长的档案路线。
+    <b>玩家不必知道有两条路,也不会被告知自己在走哪一条。</b></p>
+    <div class="stage">
+      <svg viewBox="0 0 1340 470">
+        <text class="lane" x="46" y="24">承 接</text>
+        <text class="lane" x="250" y="24">观 察 与 检 测</text>
+        <text class="lane" x="640" y="24">只 读 F I N D I N G</text>
+        <text class="lane" x="1064" y="24">结 论 门</text>
+
+        <!-- ===== upper: MAJOR_PHYSICAL ===== -->
+        <text class="cl" x="250" y="52">路线 A · MAJOR_PHYSICAL(首案主体验)</text>
+        <g fill="none" stroke="#c8a24a" stroke-width="2.2">
+          <line x1="72" y1="150" x2="250" y2="86"/>
+          <line x1="72" y1="150" x2="250" y2="144"/>
+          <line x1="72" y1="150" x2="250" y2="202"/>
+          <path d="M284,86 Q450,80 640,92"/>
+          <path d="M284,144 Q450,140 640,152"/>
+          <path d="M284,202 Q450,206 640,212"/>
+        </g>
+        <g fill="#2b3037" stroke="#a6a39c" stroke-width="1.7">
+          <circle cx="267" cy="86" r="12"/><circle cx="267" cy="144" r="12"/><circle cx="267" cy="202" r="12"/>
+        </g>
+        <g class="nl">
+          <text x="290" y="90">现器具名修复图</text>
+          <text x="290" y="148">X 射线 · 多角度逐区</text>
+          <text x="290" y="206">T1 早期影像 ＋ 对象连续核对</text>
+        </g>
+        <g fill="#c8a24a">
+          <rect x="641" y="84" width="15" height="15" transform="rotate(45 648.5 91.5)"/>
+          <rect x="641" y="144" width="15" height="15" transform="rotate(45 648.5 151.5)"/>
+          <rect x="641" y="204" width="15" height="15" transform="rotate(45 648.5 211.5)"/>
+        </g>
+        <g class="fl">
+          <text x="670" y="88">具名修复区图谱</text>
+          <text x="670" y="148">逐区可读结构结果</text>
+          <text x="670" y="208">跨时点重大变化对应</text>
+        </g>
+        <g class="nl2">
+          <text x="670" y="105">预声明主要区域,多角度</text>
+          <text x="670" y="165">不可读区必须如实标为不可读</text>
+          <text x="670" y="225">当前结构与早期／损坏时点之差</text>
+        </g>
+        <g fill="none" stroke="#4e97a8" stroke-width="2" stroke-dasharray="4 4" stroke-opacity=".8">
+          <path d="M878,91 Q950,100 986,140"/>
+          <path d="M878,151 Q950,150 990,152"/>
+          <path d="M878,211 Q950,200 986,166"/>
+        </g>
+        <circle cx="1000" cy="153" r="12" fill="#111316" stroke="#4e97a8" stroke-width="1.5"/>
+        <text x="1000" y="158" text-anchor="middle" style="font-size:13px;fill:#6fb3c4">∧</text>
+        <text class="rl" x="1022" y="128" fill="#6fb3c4">来源与潜因正确折叠</text>
+        <text class="rl" x="1022" y="188" fill="#6fb3c4">无命中必要区域的阻断反证</text>
+
+        <!-- ===== lower: MAJOR_DOCUMENTED ===== -->
+        <text class="cl" x="250" y="288">路线 B · MAJOR_DOCUMENTED(开放但更长)</text>
+        <line x1="72" y1="150" x2="250" y2="330" stroke="#c8a24a" stroke-width="2.2"/>
+        <circle cx="267" cy="330" r="12" fill="#2b3037" stroke="#a6a39c" stroke-width="1.7"/>
+        <text class="nl" x="290" y="334">T2 候选记录组</text>
+        <text class="nl2" x="290" y="352">损坏照片 · 保险记录 · 票据 · 修复图纸</text>
+        <text class="nl2" x="290" y="370">系统只能说"记录声称",不能说"本器历史"</text>
+
+        <!-- three serial relation gates -->
+        <line x1="284" y1="330" x2="640" y2="330" stroke="#c8a24a" stroke-width="2.2"/>
+        <g>
+          <rect x="404" y="404" width="524" height="52" rx="4" fill="#1b2225" stroke="#31414a"/>
+          <text class="rl" x="416" y="424" fill="#6fb3c4">三个档案关系问题必须<tspan font-weight="700">分别</tspan>成立,且不得合并为一个"档案为真"</text>
+          <text class="rl" x="416" y="442">状态: unresolved / suggestive / established / contested &#160;&#160;·&#160;&#160; contested 时系统必须显式保留争议,不得升格</text>
+        </g>
+        <g fill="none" stroke="#4e97a8" stroke-width="2" stroke-dasharray="4 4">
+          <line x1="660" y1="330" x2="760" y2="330"/>
+          <line x1="806" y1="330" x2="878" y2="330"/>
+        </g>
+        <g fill="#c8a24a">
+          <rect x="641" y="322" width="15" height="15" transform="rotate(45 648.5 329.5)"/>
+        </g>
+        <text class="fl" x="640" y="312" text-anchor="middle">recordCoherence</text>
+        <circle cx="783" cy="330" r="14" fill="#111316" stroke="#4e97a8" stroke-width="1.6"/>
+        <text x="783" y="335" text-anchor="middle" style="font-size:11px;fill:#6fb3c4">2</text>
+        <text class="fl" x="783" y="308" text-anchor="middle">objectAttribution</text>
+        <circle cx="893" cy="330" r="14" fill="#111316" stroke="#4e97a8" stroke-width="1.6"/>
+        <text x="893" y="335" text-anchor="middle" style="font-size:11px;fill:#6fb3c4">3</text>
+        <text class="fl" x="900" y="308">eventCorroboration</text>
+        <path d="M908,330 Q960,320 990,180" fill="none" stroke="#4e97a8" stroke-width="2" stroke-dasharray="4 4" stroke-opacity=".8"/>
+
+        <!-- OR gate + G2 -->
+        <circle cx="1064" cy="230" r="13" fill="#111316" stroke="#4e97a8" stroke-width="1.6"/>
+        <text x="1064" y="235" text-anchor="middle" style="font-size:13px;fill:#6fb3c4">∨</text>
+        <line x1="1000" y1="165" x2="1058" y2="218" stroke="#4e97a8" stroke-width="2" stroke-dasharray="4 4"/>
+        <line x1="1064" y1="243" x2="1064" y2="262" stroke="#4e97a8" stroke-width="2" stroke-dasharray="4 4"/>
+
+        <polygon points="1064,262 1098,281 1098,319 1064,338 1030,319 1030,281" fill="#c8a24a"/>
+        <text class="gl" x="1064" y="306" text-anchor="middle">G2</text>
+        <text class="gs" x="1064" y="360" text-anchor="middle">身份 ＋ 重大重组 ＋ 最低外观再整合</text>
+        <text class="nl2" x="1064" y="378" text-anchor="middle">DEC-027:首案 G2 一旦成立即为稳定里程碑</text>
+
+        <text class="rl" x="948" y="418">单份票据、文件数量、通用构图相似、当前一处胶线、</text>
+        <text class="rl" x="948" y="436">单次 X 射线,或任意一个关系问题单独成立,</text>
+        <text class="rl" x="948" y="454">都<tspan font-weight="700" fill="#a6a39c">不能</tspan>建立路线 B。</text>
+      </svg>
+    </div>
+    <div class="grid2">
+      <div class="card"><h3>为什么必须是 OR 而不是 AND</h3>
+        <p>若两条路都必需,玩家就只有一条通关顺序,档案会变成硬前置。<code>v0.3</code> 第 22 条不变量明确写:
+        <b>纯物证 G2 路线不因档案关系轴新增而被收紧或删除。</b>OR 的存在正是"不预设玩家只有这一条路线"的结构保证。</p></div>
+      <div class="card"><h3>G2 为什么是"软转折"而不是解锁</h3>
+        <p>G2 之后系统才有理由<b>常驻推荐</b>更贵更定向的档案工作——但深档案<b>一直可用</b>,G2 前就能查。
+        <code>v0.3</code> 第 19 条:软转折改变推荐强度和投入理由,<b>不改变行动可用性</b>。</p></div>
+    </div>
+  </section>
+
+  <!-- ================= BAND 3 ================= -->
+  <section>
+    <div class="bhead"><span class="tag">第三次汇合</span><h2>G2 → G3:五个轴同时收束(AND),且允许留下未知</h2></div>
+    <p class="bet">G3 是<b>一致决策剖面</b>,不是满分。它要求 G2、T1/T2/T3 先后关系、关键材料、表面、稳定性与档案边界形成互不矛盾的整体;
+    但非关键区域、精确配方和市场权重<b>仍可未知</b>。G3 奖励的是关系重建,不是"找出唯一真档案"。</p>
+    <div class="stage">
+      <svg viewBox="0 0 1340 430">
+        <polygon points="72,178 104,196 104,232 72,250 40,232 40,196" fill="#c8a24a"/>
+        <text class="gl" x="72" y="220" text-anchor="middle">G2</text>
+
+        <g fill="none" stroke="#c8a24a" stroke-width="2.2">
+          <path d="M106,196 Q200,70 330,66"/>
+          <path d="M106,206 Q200,140 330,142"/>
+          <line x1="106" y1="214" x2="330" y2="216"/>
+          <path d="M106,228 Q200,286 330,290"/>
+          <path d="M106,238 Q200,356 330,364"/>
+        </g>
+        <g fill="#2b3037" stroke="#a6a39c" stroke-width="1.7">
+          <circle cx="347" cy="66" r="12"/><circle cx="347" cy="142" r="12"/>
+          <circle cx="347" cy="216" r="12"/><circle cx="347" cy="290" r="12"/><circle cx="347" cy="364" r="12"/>
+        </g>
+        <g class="nl">
+          <text x="370" y="70">T1 早期影像 · 对象连续</text>
+          <text x="370" y="146">T2 关系三问 · 事故与重组</text>
+          <text x="370" y="220">T3 候选报告组 · 后期局部处理</text>
+          <text x="370" y="294">材料:点位基底 ＋ 界面层序</text>
+          <text x="370" y="368">表面:点位层序 ＋ 区域综合</text>
+        </g>
+        <g class="nl2">
+          <text x="370" y="87">先完成现器对象连续关系</text>
+          <text x="370" y="163">分别成立;不得用一份"总档案"覆盖多阶段</text>
+          <text x="370" y="237">报告只证明当时记录了什么,不替代当前检查</text>
+          <text x="370" y="311">两个独立观察,不是一次"材料分析"</text>
+          <text x="370" y="385">点位不外推整区;正负成果共同重排价值情景</text>
+        </g>
+
+        <g fill="none" stroke="#4e97a8" stroke-width="2" stroke-dasharray="4 4" stroke-opacity=".85">
+          <path d="M800,66 Q920,80 986,196"/>
+          <path d="M800,142 Q920,150 990,204"/>
+          <path d="M800,216 Q920,214 998,214"/>
+          <path d="M800,290 Q920,282 990,224"/>
+          <path d="M800,364 Q920,344 986,232"/>
+        </g>
+        <circle cx="1012" cy="214" r="13" fill="#111316" stroke="#4e97a8" stroke-width="1.6"/>
+        <text x="1012" y="219" text-anchor="middle" style="font-size:13px;fill:#6fb3c4">∧</text>
+
+        <!-- stability as a conditional node -->
+        <rect x="600" y="398" width="580" height="24" rx="4" fill="#1b2225" stroke="#31414a"/>
+        <text class="rl" x="612" y="415" fill="#6fb3c4">稳定性只在声明条件内生效:固定放置姿态、底托／支撑、搬动限制、检查覆盖 — 条件变化即触发重新检查</text>
+
+        <polygon points="1092,178 1124,196 1124,232 1092,250 1060,232 1060,196" fill="#c8a24a"/>
+        <text class="gl" x="1092" y="220" text-anchor="middle">G3</text>
+        <text class="gs" x="1146" y="204">一致决策剖面</text>
+        <text class="nl2" x="1146" y="222">三阶段与价值关键解释可负责地说出</text>
+        <text class="nl2" x="1146" y="240">非关键区、精确配方、市场权重仍可未知</text>
+        <text class="rl" x="1146" y="266">没有自动结束:玩家仍手动决定继续或冻结</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= 12 bundles ================= -->
+  <section>
+    <div class="bhead"><span class="tagc tag">作者独有</span><h2>后验账本:12 个互斥候选包</h2></div>
+    <p class="bet"><code>2 × 3 × 2 = 12</code>,由三条必须共同推断的客观轴组合:身份 <code>Identity</code> × 重大重组史 <code>RepairHistory</code> × 关键材料 <code>KeyMaterial</code>。
+    它是后验账本里的核心假设单位,<b>不等于完整真相、玩家路线、关卡或玩家可见节点</b>。表面、稳定性与档案条件另在 <code>ValueScenario</code> 中表达,
+    所以形式上有 <code>12 × 27 = 324</code> 个联合格,但作者不手写 324 条故事——所有阶段主张与估值都从同一份联合状态 <code>P(h,s|E)</code> 只读投影。</p>
+    <div class="card">
+      <table>
+        <thead><tr><th>候选包</th><th>晚 18 世纪</th><th>重大重组</th><th>三阶段</th><th>关键材料保存</th><th>G2 core</th><th>G3 h-core</th></tr></thead>
+        <tbody>
+          <tr><td>REPRO / NO_MAJOR / KEY_RECONSTRUCTED</td><td class="no">否</td><td class="no">否</td><td class="no">否</td><td class="no">否</td><td class="no">否</td><td class="no">否</td></tr>
+          <tr><td>REPRO / NO_MAJOR / KEY_PRESERVED</td><td class="no">否</td><td class="no">否</td><td class="no">否</td><td class="yes">是</td><td class="no">否</td><td class="no">否</td></tr>
+          <tr><td>REPRO / MAJOR_OTHER / KEY_RECONSTRUCTED</td><td class="no">否</td><td class="yes">是</td><td class="no">否</td><td class="no">否</td><td class="no">否</td><td class="no">否</td></tr>
+          <tr><td>REPRO / MAJOR_OTHER / KEY_PRESERVED</td><td class="no">否</td><td class="yes">是</td><td class="no">否</td><td class="yes">是</td><td class="no">否</td><td class="no">否</td></tr>
+          <tr><td>REPRO / THREE_PHASE / KEY_RECONSTRUCTED</td><td class="no">否</td><td class="yes">是</td><td class="yes">是</td><td class="no">否</td><td class="no">否</td><td class="no">否</td></tr>
+          <tr><td>REPRO / THREE_PHASE / KEY_PRESERVED</td><td class="no">否</td><td class="yes">是</td><td class="yes">是</td><td class="yes">是</td><td class="no">否</td><td class="no">否</td></tr>
+          <tr><td>OLD / NO_MAJOR / KEY_RECONSTRUCTED</td><td class="yes">是</td><td class="no">否</td><td class="no">否</td><td class="no">否</td><td class="no">否</td><td class="no">否</td></tr>
+          <tr><td>OLD / NO_MAJOR / KEY_PRESERVED</td><td class="yes">是</td><td class="no">否</td><td class="no">否</td><td class="yes">是</td><td class="no">否</td><td class="no">否</td></tr>
+          <tr><td>OLD / MAJOR_OTHER / KEY_RECONSTRUCTED</td><td class="yes">是</td><td class="yes">是</td><td class="no">否</td><td class="no">否</td><td class="yes">是</td><td class="no">否</td></tr>
+          <tr><td>OLD / MAJOR_OTHER / KEY_PRESERVED</td><td class="yes">是</td><td class="yes">是</td><td class="no">否</td><td class="yes">是</td><td class="yes">是</td><td class="no">否</td></tr>
+          <tr><td>OLD / THREE_PHASE / KEY_RECONSTRUCTED</td><td class="yes">是</td><td class="yes">是</td><td class="yes">是</td><td class="no">否</td><td class="yes">是</td><td class="yes">是</td></tr>
+          <tr class="truth"><td><b>OLD / THREE_PHASE / KEY_PRESERVED &#160;← h*</b></td><td class="yes">是</td><td class="yes">是</td><td class="yes">是</td><td class="yes">是</td><td class="yes">是</td><td class="yes">是</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px">本器固定作者真相:<code>h* = H.OLD.THREE_PHASE.KEY_PRESERVED</code>,
+      <code>s* = MIXED_CROSS_OVERPAINT / DISPLAYABLE_LOCAL_RISK / COHERENT_PARTIAL</code>。
+      <b>开局不提供给玩家</b>;系统只能按本局已取得证据更新 <code>P(h,s|E)</code>。
+      注意 <code>THREE_PHASE ⇒ MAJOR_REASSEMBLY</code> 是模型不变量:<b>"三阶段还没查清"不是第四个客观状态</b>,而是后验仍分布在后两种重大重组解释之间。</p>
+    </div>
+  </section>
+
+  <!-- ================= dependency vs order ================= -->
+  <section>
+    <div class="bhead"><span class="tag">最容易读错的一点</span><h2>这张图有方向,玩家那张图没有方向</h2></div>
+    <p class="bet">上面三条带都是<b>从左到右</b>的,这是对的——它画的是<b>依赖</b>:哪句结论需要哪些证据才敢说。
+    Ron Gilbert 本人就特别区分"依赖图"和"流程图":<b>边表示某一步依赖什么,而不是玩家实际按什么顺序走</b>。
+    所以作者图的方向性<b>不能</b>被继承到玩家地图上。玩家那张图是空间的、四面显影的,没有左右。
+    下表是 <code>具体一局 v0.1</code> 记录的四条换序,它们全都成立:</p>
+    <div class="card">
+      <table>
+        <thead><tr><th>玩家换序</th><th>立即回报</th><th>系统此时不能说</th><th>后来怎样接上</th></tr></thead>
+        <tbody>
+          <tr><td><b>开局先拿候选事故记录</b></td><td>知道记录声称的损坏、处理与区域;发现记录之间是否相容</td><td>不能说属于本器,也不能建立 G2</td><td>后续对象归属与事件—物证关系使其进入系统主张,或暴露误归属</td></tr>
+          <tr><td><b>开局先做 X 射线</b></td><td>取得逐区结构读数与不可读区</td><td>不能断代、不能证明对象归属、不能判定补绘</td><td>当前修复图、历史时点与档案关系后来解释其时间意义</td></tr>
+          <tr><td><b>先查 T3 报告</b></td><td>知道某次局部处理被记录过</td><td>不能说报告属于本器,也不能证明当前仍稳定</td><td>对象锚、处理区对应与当前条件化检查分别补齐</td></tr>
+          <tr><td><b>先做表面点位</b></td><td>知道一个点的层间先后</td><td>不能外推整个区域或整器</td><td>多点、修复边界与区域综合把点位纳入表面剖面</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px">支撑这四条的是三条合同:<b>早拿后懂</b>(上下文不足时保留为"已观察但意义未定")、
+      <b>只计一次</b>(后来重释不重复计权)、<b>不得为拉开节拍新增等待或重复取证</b>。
+      只有物理上或信息上确实不能执行的检查才使用 <code>acquisition-requires</code>——信息价值、费用与聚焦程度可以形成<b>软顺序优势,但不冒充硬锁</b>。</p>
+    </div>
+  </section>
+
+  <!-- ================= never show ================= -->
+  <section>
+    <div class="bhead"><span class="tagc tag">隔离清单</span><h2>这张图里,哪些东西永远不许出现在玩家那张图上</h2></div>
+    <div class="grid3">
+      <div class="card"><h3>结构层</h3><ul>
+        <li>12 个候选包本身</li>
+        <li>隐藏节点的数量与准确轮廓</li>
+        <li>作者图里的真实 AND / OR 门</li>
+        <li>尚未发现但已用名称标出的证据槽</li>
+      </ul></div>
+      <div class="card"><h3>数值层</h3><ul>
+        <li>每条证据的真实 Bayes factor</li>
+        <li>隐藏似然与真实边权</li>
+        <li>系统认定的"最佳下一步"作为常驻箭头</li>
+        <li>每项行动的精确信息增益</li>
+      </ul></div>
+      <div class="card"><h3>答案层</h3><ul>
+        <li>尚未被本局证据触及的答案轮廓</li>
+        <li>直接变绿、自动认证正确的玩家连线</li>
+        <li>读取隐藏真相的"最优解"</li>
+        <li>结果保证</li>
+      </ul></div>
+    </div>
+    <div class="card">
+      <p><b>唯一的例外,而且是玩家主动按下的。</b>当玩家明确请求最强一层帮助时,系统可以点名<b>一个</b>当前最优调查行动。
+      但它只使用本局已取得的证据、当前可用行动、剩余调查机会与检测费用,<b>不读取作者隐藏真相</b>;
+      它不保证会得到正向、新颖或可读的结果。按 <code>DEC-029</code>,罗盘不缩小它的排序定义域,只在分数严格相等时破平;
+      若被点名的行动落在玩家自述关注方向之外,系统<b>必须显式标注</b>这一点。</p>
+    </div>
+  </section>
+
+  <footer>
+    <b>这份文件能证明什么。</b>能证明作者规则可以讲成完整一局,三次分叉—汇合的结构自洽,并且玩家换序不会让证据链断掉。
+    <br>
+    <b>不能证明什么。</b>不能证明玩家会理解、路线成本不支配、也不能证明好玩。这些只能由无答案真人测试举证。
+    图中每一条"代价"都是结构性推论,不是观测到的玩家行为。
+    <br><br>
+    <b>配套文件:</b><code>player-session.html</code> — 同一份内容从玩家侧看,一步一步显影。
+  </footer>
+
+</div>
+</body>
+</html>

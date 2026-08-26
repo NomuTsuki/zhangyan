@@ -2,3 +2,7 @@
 .worktrees/
 .DS_Store
 Thumbs.db
+
+# 一次性交付物：导师侧策划案与其生成脚本。本仓库只负责开发，
+# 交付产物不进版本控制（2026-08-26 用户决定）。
+docs/deliverables/

@@ -34,7 +34,8 @@
 | DEC-028 | V3 G 地标画在证据道路的汇合口，并压缩验证顺序 | Active | 2026-08-24 | [DEC-028](DEC-028-v3-landmarks-at-evidence-junctions-and-compressed-validation-order.md) |
 | DEC-029 | V3 罗盘不限定“当前最优调查”的排序范围，只破平并标注越界 | Active | 2026-08-24 | [DEC-029](DEC-029-v3-compass-does-not-restrict-best-investigation-ranking.md) |
 | DEC-030 | V3 无效调查消耗成本与机会，不下调系统对器物的评价 | Active | 2026-08-25 | [DEC-030](DEC-030-v3-wasted-investigation-costs-opportunity-not-posterior.md) |
+| DEC-031 | V3 探索节奏由玩家自选，死路频率与节点度数是指定杠杆但暂不调 | Active | 2026-08-26 | [DEC-031](DEC-031-v3-exploration-rhythm-is-player-chosen-dead-ends-and-degree-are-the-lever.md) |
 
 状态使用：`Active`、`Experimental`、`Superseded`、`Archived`。
 
-DEC-005、DEC-007 与 DEC-013 仍描述 V2 的有效实现／设计历史。DEC-014 已按 V2 终态归档；其中未实现方向只有被 V3 新 Decision 明确采用后才成为 V3 当前规格。版本交接见 DEC-015，设计启动边界见 DEC-016，当前第一切片语义见 DEC-017；DEC-018 仍是 Experimental，不能被称为已验证规则；第一器物与 NPC 范围见 DEC-019；第一器物结构、核心争议与手工首案边界见 DEC-020；具体作者真相包与游戏性优先作者边界见 DEC-021；第一陶瓷切片三档作者结果与开放路线边界见 DEC-022；正式产品代码前的验证顺序与玩家投影方向见 DEC-023；作者规格批准与玩家微循环阶段入口见 DEC-024；玩家快照、焦点与最终判断责任见 DEC-025；渐进显影地图、探索前沿与当前最优按需提示见 DEC-026；首案稳定 G2、后段未升级收手与通用降级能力分界见 DEC-027；地标汇合与重排语义见 DEC-028；罗盘与最强按需层排序范围的关系见 DEC-029；无效调查的代价归属与“系统不评判玩法质量”的边界见 DEC-030。
+DEC-005、DEC-007 与 DEC-013 仍描述 V2 的有效实现／设计历史。DEC-014 已按 V2 终态归档；其中未实现方向只有被 V3 新 Decision 明确采用后才成为 V3 当前规格。版本交接见 DEC-015，设计启动边界见 DEC-016，当前第一切片语义见 DEC-017；DEC-018 仍是 Experimental，不能被称为已验证规则；第一器物与 NPC 范围见 DEC-019；第一器物结构、核心争议与手工首案边界见 DEC-020；具体作者真相包与游戏性优先作者边界见 DEC-021；第一陶瓷切片三档作者结果与开放路线边界见 DEC-022；正式产品代码前的验证顺序与玩家投影方向见 DEC-023；作者规格批准与玩家微循环阶段入口见 DEC-024；玩家快照、焦点与最终判断责任见 DEC-025；渐进显影地图、探索前沿与当前最优按需提示见 DEC-026；首案稳定 G2、后段未升级收手与通用降级能力分界见 DEC-027；地标汇合与重排语义见 DEC-028；罗盘与最强按需层排序范围的关系见 DEC-029；无效调查的代价归属与“系统不评判玩法质量”的边界见 DEC-030；探索节奏归玩家自选、死路与度数作为节奏杠杆及其暂不调整的理由见 DEC-031。

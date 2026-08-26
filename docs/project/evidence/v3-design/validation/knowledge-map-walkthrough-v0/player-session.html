@@ -59,6 +59,14 @@
   .kv i{font-style:normal;color:var(--dead)}
   .stagerow{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 0;border-bottom:1px solid #22262b}
   .stagerow:last-child{border-bottom:0}
+  .orow{display:flex;gap:9px;font-size:12.5px;line-height:1.6;padding:7px 0;border-bottom:1px solid #22262b;color:var(--ink2)}
+  .orow:last-of-type{border-bottom:0}
+  .orow em{font-style:normal;flex:0 0 auto;color:#8d9aa6;font-size:11px;padding-top:1px}
+  .orow b{color:var(--ink);font-weight:600}
+  .none{font-size:12.5px;line-height:1.7;color:var(--warn)}
+  .hide{margin:11px 0 0!important;padding-top:10px;border-top:1px solid #22262b;
+    font-size:12px;line-height:1.7;color:var(--ink3)}
+  .hide b{color:var(--ink2)}
   .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;background:#33383e}
   .dot.on{background:var(--gold)}
   .dot.hold{background:#4a4a3a}
@@ -73,7 +81,9 @@
   .gl{font-size:13px;fill:#15171a;font-weight:700}
   .gs{font-size:10.5px;fill:#c8a24a}
   .rl{font-size:10.5px;fill:#6d6b66}
-  .nl,.nl2,.fl,.gs,.rl{paint-order:stroke;stroke:#0e1013;stroke-width:4px;stroke-linejoin:round}
+  .ql{font-size:11px;fill:#9daab6}
+  .sl{font-size:10.5px;fill:#8d9aa6;letter-spacing:.06em}
+  .nl,.nl2,.fl,.gs,.rl,.ql,.sl{paint-order:stroke;stroke:#0e1013;stroke-width:4px;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -86,6 +96,9 @@
     <b>这张地图和 <code>author-map.html</code> 是同一份内容,但玩家永远看不到那一份。</b>
     这里出现的每样东西都只来自"本局已经取得的证据"。12 个候选包、真实边权、证明门、答案轮廓一次都没有出现过。
     线框草图,不是视觉方向;不提供任何关于趣味或玩家理解的证据——那只能由无答案真人测试举证。
+    <br><b>"路口"这一层是待批准的读法变体,不是已定案语义。</b>DEC-026 定的是前沿与罗盘,罗盘按 DEC-029 只在严格并列时破平;
+    "把刚查完的地点画成路口、让它脚下的路更亮"是<b>按新近度</b>重排醒目度,DEC-026／029 都没有授权这一条。
+    本文件把它画出来供判断,采不采用要单独定案。
   </div>
 
   <div class="legend">
@@ -95,7 +108,10 @@
     <span><i><svg width="14" height="14"><rect x="2.5" y="2.5" width="9" height="9" transform="rotate(45 7 7)" fill="#c8a24a"/></svg></i>局部 Finding</span>
     <span><i><svg width="16" height="14"><polygon points="8,1 15,5 15,10 8,14 1,10 1,5" fill="#c8a24a"/></svg></i>阶段地标(画在路口)</span>
     <span><i><svg width="28" height="8"><line x1="0" y1="4" x2="28" y2="4" stroke="#c8a24a" stroke-width="2.5"/></svg></i>已建立的关系</span>
-    <span><i><svg width="28" height="8"><line x1="0" y1="4" x2="28" y2="4" stroke="#5f6570" stroke-width="2" stroke-dasharray="5 4"/></svg></i>探索前沿</span>
+    <span><i><svg width="16" height="16"><circle cx="8" cy="8" r="7" fill="none" stroke="#8d9aa6" stroke-width="1.3"/></svg></i>站位(你刚查完的路口)</span>
+    <span><i><svg width="28" height="8"><line x1="0" y1="4" x2="28" y2="4" stroke="#8d9aa6" stroke-width="2.2" stroke-dasharray="7 4"/></svg></i>从这个路口通出去的路</span>
+    <span><i><svg width="26" height="14"><line x1="0" y1="7" x2="12" y2="7" stroke="#8d9aa6" stroke-width="2.2" stroke-dasharray="7 4"/><circle cx="19" cy="7" r="6" fill="none" stroke="#6d7681" stroke-width="1.3" stroke-dasharray="3 3"/></svg></i>通向未知(那边有什么不知道)</span>
+    <span><i><svg width="28" height="8"><line x1="0" y1="4" x2="28" y2="4" stroke="#41474f" stroke-width="1.8" stroke-dasharray="5 5"/></svg></i>别处仍开着的前沿(变暗不消失)</span>
     <span><i><svg width="28" height="8"><line x1="0" y1="4" x2="28" y2="4" stroke="#c2603c" stroke-width="2" stroke-dasharray="3 3"/></svg></i>争议中</span>
     <span><i><svg width="28" height="8"><line x1="0" y1="4" x2="28" y2="4" stroke="#5a5651" stroke-width="2"/></svg></i>死路(留在足迹层)</span>
   </div>
@@ -115,6 +131,11 @@
         <div class="can" id="can"></div>
         <div class="cant" id="cant"></div>
         <div class="note" id="note"></div>
+      </div>
+      <div class="card" id="junction">
+        <h3>从这个路口通出去的路</h3>
+        <div id="outlist"></div>
+        <p class="hide">不显示:费用、难度、成功率、那边有没有 Finding。<b>这些只有走过去才知道。</b></p>
       </div>
       <div class="card">
         <h3>阶段</h3>
@@ -178,7 +199,10 @@ const DARK=[[118,292,26],[560,92,22],[1122,168,24],[126,724,22],[1152,566,25],[8
 const P=id=>NODES[id]||FIND[id]||LM[id];
 const KIND={est:{c:"#c8a24a",w:2.5,d:""},dead:{c:"#5a5651",w:2,d:""},
   neg:{c:"#6b6864",w:2,d:""},cont:{c:"#c2603c",w:2,d:"3 3"},
-  fr:{c:"#5f6570",w:2,d:"5 4"}};
+  /* fr = 别处仍然开着的前沿,画暗;out = 从当前路口通出去的路,画亮。
+     亮暗只表示"你现在站在哪",不表示哪条路更值得走。 */
+  fr:{c:"#41474f",w:1.8,d:"5 5"},
+  out:{c:"#8d9aa6",w:2.2,d:"7 4"}};
 
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
 function road(a,b,k){const A=P(a),B=P(b),K=KIND[k];
@@ -186,13 +210,48 @@ function road(a,b,k){const A=P(a),B=P(b),K=KIND[k];
     (K.d?` stroke-dasharray="${K.d}"`:"")+` stroke-linecap="round"/>`}
 /* 前沿画成弧线,不画直线:长距离的开放问题若走直线会横穿整张地图,
    把"这里还有个没闭合的问题"读成"这里已经有一条通路"。 */
-function arc(a,b,c){const A=P(a),B=P(b),K=KIND.fr;
+function arc(a,b,c,k){const A=P(a),B=P(b),K=KIND[k||"fr"];
   const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy)||1,s=(c===undefined?1:c)*L*.15;
   const cx=(A.x+B.x)/2-dy/L*s, cy=(A.y+B.y)/2+dx/L*s;
   return `<path d="M${A.x},${A.y} Q${cx.toFixed(0)},${cy.toFixed(0)} ${B.x},${B.y}" fill="none" stroke="${K.c}" stroke-width="${K.w}" stroke-dasharray="${K.d}"/>`}
 
+/* 从当前路口通出去的一条路。
+   目标是节点 id  → 路通到一个你已经知道存在的地方(比如"实验室在那儿")。
+   目标是 [dx,dy] → 路只是往那个方向伸进黑里,终点画成 ?,因为你不知道那边有什么。
+   路上只写"它可能回答什么问题"。费用、难度、会不会有 Finding 一律不写。 */
+function outRoad(from,to,label){const A=P(from);let B,stub=false;
+  if(Array.isArray(to)){B={x:A.x+to[0],y:A.y+to[1]};stub=true}else{B=P(to)}
+  const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy)||1,s=L*.12;
+  const cx=(A.x+B.x)/2-dy/L*s, cy=(A.y+B.y)/2+dx/L*s;
+  const ex=stub?B.x-dx/L*11:B.x, ey=stub?B.y-dy/L*11:B.y;
+  let g=`<path d="M${A.x},${A.y} Q${cx.toFixed(0)},${cy.toFixed(0)} ${ex.toFixed(0)},${ey.toFixed(0)}" fill="none" stroke="${KIND.out.c}" stroke-width="${KIND.out.w}" stroke-dasharray="${KIND.out.d}" stroke-linecap="round"/>`;
+  if(!stub)return g;
+  /* 只有通向黑处的路带文字。通向已知地方的路不写字——那个地方自己有名字,
+     再挂一句问句只会压住别的标签。完整问题清单在右侧面板里。 */
+  g+=`<circle cx="${B.x}" cy="${B.y}" r="10" fill="#0e1013" stroke="#6d7681" stroke-width="1.4" stroke-dasharray="3 3"/>`;
+  g+=`<text x="${B.x}" y="${B.y+4}" text-anchor="middle" style="font-size:11px;fill:#8d9aa6;font-weight:700">?</text>`;
+  /* 文字默认顺着路的朝向往外写,快要撞画布边就翻到另一侧,免得被裁掉。 */
+  const w=label.length*11.6; let right=B.x>=A.x;
+  if(right&&B.x+15+w>1232)right=false;
+  if(!right&&B.x-15-w<8)right=true;
+  g+=`<text class="ql" x="${(B.x+(right?15:-15)).toFixed(0)}" y="${(B.y+4).toFixed(0)}" text-anchor="${right?"start":"end"}">${esc(label)}</text>`;
+  return g}
+
+/* 站位:你刚才查完的那个地方。它是这一拍的"路口"。 */
+function stand(id){const A=P(id), isLM=!!LM[id], N=NODES[id];
+  const r1=isLM?37:23, r2=isLM?45:30;
+  let g=`<circle cx="${A.x}" cy="${A.y}" r="${r1}" fill="none" stroke="#8d9aa6" stroke-width="1.3" stroke-opacity=".75"/>`+
+    `<circle cx="${A.x}" cy="${A.y}" r="${r2}" fill="none" stroke="#8d9aa6" stroke-width="1" stroke-opacity=".3" stroke-dasharray="2 5"/>`;
+  /* 标签让开这个地点本来的名字:地点名几乎都在正上／正下,所以站位标签走侧边;
+     地点名本来就在左侧的(a==="end")就改走右侧;地标名上下都占,走正上方。 */
+  if(isLM)return g+`<text class="sl" x="${A.x}" y="${A.y-r2-11}" text-anchor="middle">你刚查完这里</text>`;
+  let right=!!(N&&N.a==="end");
+  if(!right&&A.x-r2-92<12)right=true;
+  return g+`<text class="sl" x="${A.x+(right?r2+8:-(r2+8))}" y="${A.y+4}" text-anchor="${right?"start":"end"}">你刚查完这里</text>`}
+
 function render(i){
-  const st={nodes:{},finds:[],lms:[],roads:[],conv:[],fr:[],gap:null,cut:[]};
+  const st={nodes:{},finds:[],lms:[],roads:[],conv:[],fr:[],gap:null,cut:[],
+            here:null,out:[],named:null};
   for(let j=0;j<=i;j++){const s=STEPS[j];
     Object.assign(st.nodes,s.nodes||{});
     (s.finds||[]).forEach(x=>st.finds.includes(x)||st.finds.push(x));
@@ -202,6 +261,10 @@ function render(i){
     (s.conv||[]).forEach(c=>st.conv.push(c));
     (s.cut||[]).forEach(c=>st.cut.push(c));
     st.fr=s.fr||st.fr; st.gap=s.gap!==undefined?s.gap:st.gap;
+    /* 站位与通出去的路每拍重置:它们描述"你现在站在哪",不是累积的知识。 */
+    if(s.here!==undefined)st.here=s.here;
+    if(s.out!==undefined)st.out=s.out;
+    st.named=s.named!==undefined?s.named:null;
   }
   let g="";
   /* 迷雾:从中心向四周变暗的整体渐晕。玩家在未知的中间,不是未知在右边。 */
@@ -215,6 +278,7 @@ function render(i){
     g+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#c8a24a" stroke-width="4.5" stroke-opacity=".5"/>`});
   st.fr.forEach(([a,b,c])=>{g+=arc(a,b,c)});
   st.roads.forEach(([a,b,k])=>{g+=road(a,b,k)});
+  if(st.here)st.out.forEach(([to,lab])=>{g+=outRoad(st.here,to,lab)});
   st.cut.forEach(([a,b,lab])=>{const A=P(a),B=P(b);
     const mx=A.x+(B.x-A.x)*.62,my=A.y+(B.y-A.y)*.62;
     g+=`<line x1="${A.x}" y1="${A.y}" x2="${mx}" y2="${my}" stroke="#c2603c" stroke-width="2" stroke-dasharray="3 3"/>`;
@@ -250,6 +314,10 @@ function render(i){
     g+=`<text class="gs" x="${l.x}" y="${l.y+44}" text-anchor="middle">${esc(l.s)}</text>`;
     g+=`<text class="rl" x="${l.x+36}" y="${l.y+2}">${esc(l.s2)}</text>`});
 
+  if(st.named){const N=P(st.named);
+    g+=`<circle cx="${N.x}" cy="${N.y}" r="20" fill="none" stroke="#c8a24a" stroke-width="1.6" stroke-dasharray="4 3"/>`;
+    g+=`<text class="ql" x="${N.x}" y="${N.y+38}" text-anchor="middle" fill="#c8a24a">系统点名 · 你按下才出现</text>`}
+  if(st.here)g+=stand(st.here);
   document.getElementById("map").innerHTML=g;
 
   const s=STEPS[i];
@@ -259,6 +327,12 @@ function render(i){
   const nb=document.getElementById("note");
   nb.innerHTML=s.note||""; nb.style.display=s.note?"block":"none";
   document.getElementById("compass").innerHTML=s.comp;
+  const ol=document.getElementById("outlist");
+  if(!st.here){ol.innerHTML=`<p class="none">地图上还没有路口——你还没有查过任何东西。</p>`}
+  else if(!st.out.length){ol.innerHTML=`<p class="none">这个路口没有通出去的路。</p>`}
+  else{ol.innerHTML=st.out.map(([to,lab])=>
+    `<div class="orow"><em>${Array.isArray(to)?"通向未知":"通向已知的地方"}</em><b>${lab}</b></div>`).join("")}
+  document.getElementById("junction").style.display="block";
   ["d1","d2","d3"].forEach((d,k)=>{document.getElementById(d).className="dot"+(s.g>k?" on":"")});
   const f=s.fp;
   document.getElementById("k1").textContent=f[0];
@@ -275,12 +349,13 @@ function render(i){
 }
 let cur=0;
 const FOOT=`<b>这一份能证明什么。</b>能证明作者规则可以讲成一局玩家侧体验,而且换序、重复、阴性、争议、系统被无视都不会让地图崩掉。
-<br><b>不能证明什么。</b>玩家看不看得懂、觉不觉得自己在做主、好不好玩,<b>一律未验证</b>——只能由无答案真人测试举证。`;
+<br><b>不能证明什么。</b>玩家看不看得懂、觉不觉得自己在做主、好不好玩,<b>一律未验证</b>——只能由无答案真人测试举证。
+<br><b>"路口"层待定案。</b>按新近度重排醒目度不在 DEC-026／029 的授权范围内,本文件只把它画出来供判断。`;
 const STEPS=[
 { act:`接手一只可旋转观察的外销瓷大碗。`,
   nodes:{OBJ_W:"avail",OBJ_F:"avail",OBJ_R:"avail",OBJ_D:"avail",XRAY:"avail",UV:"avail",
          SURF:"avail",MAT:"avail",CORPUS:"avail",STAB:"avail"},
-  fr:[], g:0, fp:[0,0,0],
+  fr:[], here:null, out:[], g:0, fp:[0,0,0],
   can:`什么都还不能说。`,
   cant:`连"这是不是老的"都还不是一个成形的问题。`,
   note:`<b>地图此刻是全黑的。</b>亮着的十个虚圈不是"信息",是<b>你自己的能力</b>——器物在你手上,你知道有 X 射线、紫外、试窗、材料分析,你知道可以去比语料。
@@ -289,17 +364,24 @@ const STEPS=[
 
 { act:`第一步直接上 X 射线,跳过全部肉眼观察。`,
   nodes:{XRAY:"visited"}, finds:["F_ZONE"], roads:[["XRAY","F_ZONE","est"]],
-  fr:[["F_ZONE","OBJ_W"]], g:0, fp:[1,0,0],
+  fr:[], here:"XRAY", g:0, fp:[1,0,0],
+  out:[["OBJ_W","这些读数对应器物的哪些部位?"],
+       [[-90,64],"这些结构是什么时候形成的?"]],
   can:`若干具名区域下方有隐藏接合与填料候选;另有几个区域<b>不可读</b>,如实标为不可读。`,
   cant:`不能断代,不能证明对象归属,不能判定补绘。`,
   note:`<b>这就是"跳跃探索"。</b>玩家跳过一切,先花最贵的钱。地图照样点亮,证据照样永久有效——这是"早拿后懂"合同:上下文不足时保留为"已观察但意义未定",<b>以后重新解释,但不重复计一次权</b>。
-  它现在孤零零挂在左边,逻辑是离散的,但绝不是没价值。`,
+  它现在孤零零挂在左边,逻辑是离散的,但绝不是没价值。
+  <b>同时你脚下出现了第一个路口。</b>细圈标出你刚查完的地方,两条路从它伸出去:一条通到你已经知道存在的"整体形制与胎釉",一条<b>伸进黑里</b>,末端只有一个问号。
+  路上写的是"它可能回答什么问题",不是"你会得到什么"。这条路好走不好走、要花多少、那边到底有没有 Finding,<b>只有走过去才知道</b>。`,
   comp:`首要疑点:这些结构读数对应器物的哪些部位。` },
 
 { act:`肉眼观察整体形制、胎釉与底足修足。`,
   nodes:{OBJ_W:"visited",OBJ_F:"visited"}, finds:["F_INT"],
   roads:[["OBJ_W","F_INT","est"],["OBJ_F","F_INT","est"],["F_ZONE","OBJ_W","est"]],
-  fr:[["F_INT","OBJ_R"],["OBJ_W","CORPUS"]], g:0, fp:[2,0,0],
+  fr:[], here:"OBJ_W", g:0, fp:[2,0,0],
+  out:[["CORPUS","这种制造特征在同期真品里常见吗?"],
+       ["OBJ_R","口沿那道缝是修的还是烧出来的?"],
+       [[176,-124],"有人记录过这次干预吗?"]],
   can:`确有历史干预:具名修复区与自然磨耗分别记录。第 1 拍的结构读数<b>现在</b>能对应到具体部位了。`,
   cant:`老器方向与后仿方向仍然并存,哪一边都没有被排除。`,
   comp:`当前倾向:两种解释并存。首要疑点:制造特征。` },
@@ -308,7 +390,9 @@ const STEPS=[
   nodes:{CORPUS:"visited"}, finds:["F_MAKE"],
   roads:[["CORPUS","F_MAKE","est"],["OBJ_W","F_MAKE","est"]],
   lms:["G1"], conv:[["F_MAKE","G1"],["F_INT","G1"]],
-  fr:[["G1","OBJ_R"],["F_INT","OBJ_D"]], g:1, fp:[3,0,0],
+  fr:[["F_INT","OBJ_D"]], here:"CORPUS", g:1, fp:[3,0,0],
+  out:[["OBJ_R","修复范围到底有多大?"],
+       [[232,-72],"这只碗以前长什么样?"]],
   can:`<b>G1 成立:</b>晚 18 世纪外销瓷是一个可信方向,而且修复范围值得继续查。`,
   cant:`不能说重大重组成立,也不能把年代精确到年。`,
   note:`<b>看 G1 长在哪儿。</b>它长在"制造差异"和"确有历史干预"两条路的<b>交汇处</b>,不是地图边上的第一级台阶。
@@ -316,16 +400,19 @@ const STEPS=[
   comp:`当前倾向:晚 18 世纪外销瓷。首要疑点:修复范围。` },
 
 { act:`不放心,又调了另一批语料再比一次。`,
-  nodes:{RPT:"neg"}, roads:[["CORPUS","RPT","dead"]], g:1, fp:[3,1,0],
+  nodes:{RPT:"neg"}, roads:[["CORPUS","RPT","dead"]], here:"RPT", out:[], g:1, fp:[3,1,0],
   can:`这批语料与已有语料<b>同源</b>,对区分当前替代解释没有区分力。`,
   cant:`阶段不会因此推进。费用已经花掉,不退。`,
   note:`<b>这一拍专门回答你的问题。</b>地图<b>照样</b>记下了它——覆盖只能增加,去过的地方永不变回纯黑。但<b>后验没动,阶段没推进</b>。
   所以"每个动作都有价值"的准确含义是:它有<b>留痕</b>的价值(你以后不会再来第二次,这条路已经画成死路),不是"它一定推动进度"。
-  代价落在<b>费用和剩余机会</b>上,不落在系统扣你分。`,
+  代价落在<b>费用和剩余机会</b>上,不落在系统扣你分。
+  <b>而且这个路口没有路通出去。</b>这是浪费一步在视觉上最直白的样子:你确实站到了一个地方,但这里不通向任何新问题——地图不骂你,它只是不给你路。`,
   comp:`当前倾向:晚 18 世纪外销瓷。首要疑点:修复范围(未变)。` },
 
 { act:`用紫外筛查补绘。`,
-  nodes:{UV:"neg"}, roads:[["OBJ_W","UV","neg"]], g:1, fp:[3,1,1],
+  nodes:{UV:"neg"}, roads:[["OBJ_W","UV","neg"]], here:"UV", g:1, fp:[3,1,1],
+  out:[["OBJ_D","肉眼在纹饰上能看出再整合痕迹吗?"],
+       [[-58,52],"换一种能穿透这层的手段能看见吗?"]],
   can:`在<b>本次紫外覆盖范围内</b>没有读出补绘荧光。`,
   cant:`<b>不能</b>因此说"没有补绘"。这台设备对这层材料能力不足,阴性只证明这次没看见。`,
   note:`这是"负向证据能力门":阴性结果必须先过能力检查,才允许当作反证。
@@ -333,16 +420,20 @@ const STEPS=[
   comp:`当前倾向:晚 18 世纪外销瓷。首要疑点:补绘范围(仍未知)。` },
 
 { act:`按下最强一层帮助:"现在最该做什么?"`,
-  g:1, fp:[3,1,1],
+  named:"OBJ_R", g:1, fp:[3,1,1],
   can:`在你已取得的证据下,期望净决策价值最高的一步是<b>口沿接缝的多角度结构复核</b>。`,
   cant:`不保证它会给出正向、新颖或可读的结果。它<b>没有</b>读作者真相——只用了你已取得的证据、当前可用行动、剩余机会与费用。`,
   note:`<b>这是唯一一层允许点名"当前最优"的地方,而且必须由你按下。</b>按 DEC-029,罗盘<b>不缩小</b>它的排序范围,只在分数严格相等时破平;
   如果点名的行动落在你自述关注方向<b>之外</b>,系统必须<b>显式标注</b>这一点,而不是悄悄不推荐。
+  <b>注意点名和路口是两件事。</b>路口的路是"从你脚下能通向哪些问题",一直画着,不打分;点名是一个金色虚圈,<b>只有你按下这一拍才出现</b>,下一拍就消失。
+  地图上永远没有一根常驻的箭头告诉你走哪条(DEC-026 明确否决常驻唯一行动箭头)。
   然后——你可以完全不听。下一拍你就不听。`,
   comp:`当前倾向:晚 18 世纪外销瓷。系统点名:口沿接缝多角度复核(在你关注方向内)。` },
 
 { act:`无视推荐,转头去档案检索,拿到一组候选事故记录。`,
-  nodes:{T2:"visited"}, fr:[["T2","F_INT",-1],["G1","OBJ_R"]], g:1, fp:[4,1,1],
+  nodes:{T2:"visited"}, fr:[], here:"T2", g:1, fp:[4,1,1],
+  out:[["F_INT","这些记录说的是这只碗吗?"],
+       [[62,-138],"同一批里还有别的记录吗?"]],
   can:`存在一组彼此内部相容的记录,声称某个时期发生过重大损坏与重组(<code>recordCoherence</code> 已建立)。`,
   cant:`<b>不能说这些记录属于这件器物</b>,也不能因此建立重大重组。系统只能说"记录声称"。`,
   note:`<b>系统推荐 ≠ 玩家行动。</b>你去了完全相反的方向,系统没有阻止、没有惩罚、也没有把地图锁住。
@@ -350,7 +441,8 @@ const STEPS=[
   comp:`当前倾向:晚 18 世纪外销瓷。首要疑点:这组记录到底是不是这件器物的。` },
 
 { act:`继续查档案,找到一张早期影像。`,
-  nodes:{T1:"visited"}, fr:[["T1","OBJ_F"],["T2","F_INT",-1]], g:1, fp:[5,1,1],
+  nodes:{T1:"visited"}, fr:[["T2","F_INT",-1]], here:"T1", g:1, fp:[5,1,1],
+  out:[["OBJ_F","照片上那只碗和手里这只是同一只吗?"]],
   can:`早期照片上有相似器形、制造瑕疵与旧锔痕,是一个<b>可能相关的对象候选</b>。`,
   cant:`通用构图相似<b>不算身份票</b>。`,
   comp:`当前倾向:晚 18 世纪外销瓷。首要疑点:照片上那只碗是不是手上这一只。` },
@@ -358,7 +450,9 @@ const STEPS=[
 { act:`核对稳定的非构图锚点:足部瑕疵、几何比例、口沿缺口、磨耗点。`,
   nodes:{OBJ_R:"visited"}, finds:["F_CONT"],
   roads:[["T1","F_CONT","est"],["OBJ_F","F_CONT","est"]],
-  fr:[["T2","F_INT",-1],["F_CONT","OBJ_R"]], g:1, fp:[6,1,1],
+  fr:[["T2","F_INT",-1]], here:"OBJ_R", g:1, fp:[6,1,1],
+  out:[["OBJ_D","当前的修复范围有多大?"],
+       [[188,-140],"那次干预有多严重?"]],
   can:`四项联合对应,早期影像与现器的<b>对象连续</b>成立。`,
   cant:`身份更稳了,但重大重组与价值仍未闭合。`,
   comp:`当前倾向:晚 18 世纪外销瓷,且早期影像同器。首要疑点:那次干预有多大。` },
@@ -367,7 +461,8 @@ const STEPS=[
   nodes:{OBJ_D:"visited"}, finds:["F_MAP","F_DEC"],
   roads:[["OBJ_R","F_MAP","est"],["OBJ_W","F_MAP","est"],["OBJ_D","F_DEC","est"],["F_DEC","F_MAP","est"]],
   gap:{a:"F_CONT",b:"F_MAP",t:"中间缺口:跨时点重大变化对应"},
-  fr:[["T2","F_INT",-1]], g:1, fp:[7,1,1],
+  fr:[["T2","F_INT",-1]], here:"OBJ_D", g:1, fp:[7,1,1],
+  out:[[[150,88],"补绘到底有多大范围?"]],
   can:`当前具名修复图成形;装饰观察显示修复曾<b>恢复外观</b>。`,
   cant:`还不能说"当前这些修复对应早期照片上那一次事故"。`,
   note:`<b>这就是你说的"从两边向中间夹"。</b>右上那一侧(早期影像—对象连续)和中下这一侧(现器修复图)<b>分别</b>成立之后,两条链条自己指向了同一个还没填的位置。
@@ -377,17 +472,23 @@ const STEPS=[
 { act:`把当前结构与早期／损坏时点逐区对照。`,
   finds:["F_CRS"], roads:[["T1","F_CRS","est"],["F_MAP","F_CRS","est"]],
   lms:["G2"], conv:[["F_MAP","G2"],["F_ZONE","G2"],["F_CRS","G2"]],
-  gap:null, fr:[["T2","F_INT",-1],["G2","MAT"],["G2","SURF"],["G2","STAB"]], g:2, fp:[8,1,1],
+  gap:null, fr:[["T2","F_INT",-1]], here:"G2", g:2, fp:[8,1,1],
+  out:[["MAT","关键区是原片,还是重建的?"],
+       ["SURF","补绘范围有多大?"],
+       ["STAB","现在还能安全陈列吗?"],
+       [[174,92],"这几次修复的先后关系是什么?"]],
   can:`<b>G2 成立:</b>晚 18 世纪外销瓷 ＋ 重大重组／最低外观再整合基本成立。`,
   cant:`三阶段、关键材料、补绘范围与承力稳定性仍然不清楚。`,
   note:`<b>三条粗线在 G2 汇合:</b>现器修复图、逐区结构读数、跨时点重大变化。
   注意最左那条来自<b>第 1 拍</b>那次"什么也证明不了"的 X 射线——它现在是 G2 的三分之一支撑。
-  这就是"证据只计一次、意义可以延迟"的回报:那一步当时看着像浪费,其实早就买下了。`,
+  这就是"证据只计一次、意义可以延迟"的回报:那一步当时看着像浪费,其实早就买下了。
+  <b>而地标本身就是一个路口。</b>DEC-028 把 G 画在道路汇合口,所以你站上 G2 时脚下天然有四条路:三条通往你已知的可用手段,一条伸进黑里问"这几次修复的先后关系"。
+  四条路<b>没有排序、没有标价</b>——G2 只告诉你"从这里能通向哪些问题",不告诉你哪条划算。`,
   comp:`当前倾向:老器 ＋ 重大重组成立。首要疑点:补绘范围与关键材料。` },
 
 { act:`拿 T2 记录的对象编号与所有权链去核现器锚点。`,
   cut:[["T2","G2","记录—现器归属 · 争议"]], fr:[["G2","MAT"],["G2","SURF"],["G2","STAB"]],
-  g:2, fp:[9,1,1],
+  here:"T2", out:[[[64,-136],"有没有另一组记录指向这只碗?"]], g:2, fp:[9,1,1],
   can:`记录里的对象编号与所有权链和现器稳定锚点<b>直接冲突</b>。系统必须显式保留争议。`,
   cant:`不能升格为"这段历史属于本器";也<b>不能</b>反过来把记录删掉——内容与已付成本都留着。`,
   note:`<b>关键:G2 没有塌。</b>DEC-027 说首案 G2 一旦成立即为稳定里程碑;它由三个 Finding 构成,外围被推翻只让它<b>变轻</b>,核心不倒它就不倒。
@@ -395,7 +496,11 @@ const STEPS=[
   comp:`当前倾向:老器 ＋ 重大重组成立。首要疑点:补绘范围。争议:档案归属。` },
 
 { act:`系统说明软转折。玩家算了算剩下的钱,决定收手。`,
-  fr:[["G2","MAT"],["G2","SURF"],["G2","STAB"]], g:2, fp:[9,1,1],
+  fr:[["T2","F_INT",-1]], here:"G2", g:2, fp:[9,1,1],
+  out:[["MAT","关键区是原片,还是重建的?"],
+       ["SURF","补绘范围有多大?"],
+       ["STAB","现在还能安全陈列吗?"],
+       [[174,92],"这几次修复的先后关系是什么?"]],
   can:`器物的重要性与不确定价值已足以支持定向深档案投入;同时这里列出不需要档案也能继续的物理方向。`,
   cant:`这<b>不是解锁</b>。深档案从第 0 拍就一直可用。软转折只改变<b>推荐强度和投入理由</b>,不改变行动可用性。`,
   note:`<b>玩家手动停手,没有自动结束。</b>地图现在的样子就是这一局的答案:一个平庸但完整的 G2、三块从没去过的可用区域、一条争议路线、一次浪费、一次阴性。
@@ -403,7 +508,7 @@ const STEPS=[
   comp:`当前倾向:老器 ＋ 重大重组成立。玩家选择在此冻结。` },
 
 { act:`冻结证据,自填一口价挂牌。市场结束后揭示。`,
-  fr:[["G2","MAT"],["G2","SURF"],["G2","STAB"]], g:2, fp:[9,1,1],
+  fr:[["G2","MAT"],["G2","SURF"],["G2","STAB"]], here:null, out:[], g:2, fp:[9,1,1],
   can:`局末才揭示客观真相与完整拓扑,并把你实际走过的路径叠上去。`,
   cant:`市场不读取系统估值,也不反写推理。卖得快不自动证明推理正确;没卖出也不自动证明当时的判断毫无道理。`,
   note:`<b>揭示时才说:</b>那组争议的 T2 记录<b>内容真实但对象误归属</b>——你保留争议是对的。
@@ -413,7 +518,8 @@ const STEPS=[
   foot:`<b>双轨结算。</b>客观结果(卖了多少钱)和判断质量(在当时证据下这个判断合不合理)<b>分开算</b>。
   停在 G2 是完全体面的结局;保留争议而不硬猜,在判断质量上是加分项。
   <br><br><b>这一份能证明什么。</b>能证明作者规则可以讲成一局玩家侧体验,而且换序、重复、阴性、争议、系统被无视都不会让地图崩掉。
-  <br><b>不能证明什么。</b>玩家看不看得懂、觉不觉得自己在做主、好不好玩,<b>一律未验证</b>——只能由无答案真人测试举证。` }
+  <br><b>不能证明什么。</b>玩家看不看得懂、觉不觉得自己在做主、好不好玩,<b>一律未验证</b>——只能由无答案真人测试举证。
+  <br><b>"路口"层待定案。</b>按新近度重排醒目度不在 DEC-026／029 的授权范围内,本文件只把它画出来供判断。` }
 ];
 document.getElementById("ticks").innerHTML=STEPS.map((_,k)=>`<div class="tick" data-k="${k}">${k}</div>`).join("");
 document.getElementById("ticks").addEventListener("click",e=>{

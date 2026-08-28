@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>[前提已失效] 两种视图草图 v0 — 心智地图 vs 推理视图</title>
+<style>
+  :root{--bg:#0e1013;--panel:#15181c;--line:#22262b;--ink:#e8e4dc;--ink2:#a6a39c;
+    --ink3:#6d6b66;--gold:#c8a24a;--warn:#c2603c;--road:#8d9aa6;--cyan:#4a9ec8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1340px;margin:0 auto;padding:22px 26px 70px}
+  h1{margin:0 0 4px;font-size:21px;font-weight:600}
+  .sub{margin:0 0 16px;font-size:12.5px;color:var(--ink3)}
+  .warnbar{margin:0 0 18px;padding:12px 16px;border-left:3px solid var(--warn);
+    background:#221f1d;color:var(--ink2);font-size:12.5px;line-height:1.75;border-radius:0 4px 4px 0}
+  .warnbar b{color:var(--ink)}
+  .tabs{display:flex;gap:8px;margin:0 0 14px}
+  .tabs button{background:var(--panel);color:var(--ink2);border:1px solid var(--line);
+    border-radius:4px;padding:8px 16px;font:inherit;font-size:13px;cursor:pointer}
+  .tabs button:hover{border-color:#3a4046}
+  .tabs button.on{border-color:var(--gold);color:var(--gold);background:#1b1a16}
+  .box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px}
+  svg{display:block;width:100%;height:auto;background:#08090b;border-radius:4px}
+  .caption{margin:14px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+  .cc{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+  .cc h4{margin:0 0 6px;font-size:11px;font-weight:600;letter-spacing:.1em;
+    color:var(--ink3);text-transform:uppercase}
+  .cc p{margin:0;font-size:12.5px;line-height:1.7;color:var(--ink2)}
+  .cc p b{color:var(--ink)}
+  .ask{margin:16px 0 0;padding:14px 16px;background:#16191d;border:1px solid var(--gold);
+    border-radius:6px;font-size:13px;line-height:1.8;color:var(--ink2)}
+  .ask b{color:var(--gold)}
+  .view{display:none}
+  .view.on{display:block}
+  text{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  .t{font-size:12.5px;fill:var(--ink)}
+  .t2{font-size:12px;fill:#7d7a74}
+  .tf{font-size:12px;fill:var(--gold);font-weight:600}
+  .th{font-size:11px;fill:var(--ink3);letter-spacing:.12em}
+  .tn{font-size:11.5px;fill:var(--ink2)}
+  .tg{font-size:14px;fill:#241d0e;font-weight:700}
+  .tq{font-size:11.5px;fill:var(--road)}
+  .t,.t2,.tf,.tn,.tq{paint-order:stroke;stroke:#08090b;stroke-width:4px;stroke-linejoin:round}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>两种视图草图 v0（前提已失效）</h1>
+  <p class="sub">静态草图 · 手画固定局面 · <b>不接求解器、没有功能、不构成任何决策</b> · 2026-08-26 作 · 前提已被 DEC-032 推翻</p>
+
+  <div class="warnbar" style="border-left-color:#c2603c;background:#241d1a">
+    <b style="color:#e08a63">这组图问错了问题。</b>
+    它问的是「心智地图和推理视图像不像两张重复的图」,而 2026-08-28 的 <b>DEC-032</b> 给出的结构是
+    <b>一张图 ＋ 一个决策面</b>,不是两张图。心智地图本身就带着逻辑关系(系统自动连的逻辑边),
+    不需要另开一张推理视图;真正需要跟它分开的是<b>决策面</b> ——
+    只装当前需要判断的四类东西(意义未定观察／差一件即可合拢／打架的／孤立小簇),
+    并且<b>定案的子结构坍缩成公理后从决策面离场</b>。
+    <br>所以两者的关系不是「两个视图」,而是「一张只增不减的成果图」和「一个大小有界的判断面」。
+    <b>下面的原始说明保留备查。</b>
+  </div>
+
+  <div class="warnbar">
+    <b>【已作废的原始说明】</b>
+    <b>这三张图只为回答一个问题:推理视图和心智地图,看上去像不像两张重复的图?</b>
+    内容是手写死的一个中局:你已经查过整体形制、底足、语料比对(G1 成立)、纹饰色差、事故记录组;
+    「曾发生重大重组」还没成立,两条路各开了个头。
+    <br>三张图用的是<b>同一个局面</b>,所以差别全部来自呈现方式,不是来自数据。
+    美术、字号、配色一律是占位。
+  </div>
+
+  <div class="tabs">
+    <button class="on" data-v="a">A · 心智地图(抽象·无方向)</button>
+    <button data-v="b">B · 推理视图(线性·有方向)</button>
+    <button data-v="c">C · 两者同屏</button>
+  </div>
+
+  <div class="view on" id="va"></div>
+  <div class="view" id="vb"></div>
+  <div class="view" id="vc"></div>
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* ============ 公共 defs ============ */
+const DEFS = `<defs>
+  <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#3d4650" stop-opacity=".55"/>
+    <stop offset="60%" stop-color="#252b31" stop-opacity=".28"/>
+    <stop offset="100%" stop-color="#0c0e11" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="vig" cx="50%" cy="50%" r="65%">
+    <stop offset="50%" stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity=".7"/>
+  </radialGradient>
+  <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+    orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 z" fill="#7b6a3f"/>
+  </marker>
+  <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+    orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 z" fill="#454b52"/>
+  </marker>
+</defs>`;
+
+/* ============ A · 心智地图 ============
+   刻意做到:没有阅读顺序、没有箭头、没有列、轮廓只是背景里的影子。
+   点亮的区域**不对应碗的部位** —— 它对应"你知道的东西",这是抽象的。 */
+function sketchA(){
+  let g = DEFS;
+
+  /* 背景:器物轮廓,极暗,只是个影子。管中窥豹的那只豹。 */
+  g += `<g opacity=".13" fill="none" stroke="#8d9aa6" stroke-width="2">
+    <path d="M212,206 C226,372 344,462 500,462 C656,462 774,372 788,206"/>
+    <line x1="206" y1="206" x2="794" y2="206"/>
+    <path d="M456,462 L449,494 L551,494 L544,462"/>
+  </g>`;
+  g += `<text class="t2" x="800" y="196" text-anchor="start" opacity=".5">轮廓只是背景</text>`;
+
+  /* 点亮的几片。位置是有机的,不成行不成列。 */
+  const lit = [[352,296,118],[548,392,96],[664,252,84],[300,238,74]];
+  for(const [x,y,r] of lit)
+    g += `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#glow)"/>`;
+
+  /* 已知的东西。曲线连接,双向无箭头 —— 线的含义是"合起来",不是"先后"。 */
+  const link = (a,b) => {
+    const [x1,y1]=a,[x2,y2]=b, dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy)||1, s=L*.18;
+    const cx=(x1+x2)/2-dy/L*s, cy=(y1+y2)/2+dx/L*s;
+    return `<path d="M${x1},${y1} Q${cx.toFixed(0)},${cy.toFixed(0)} ${x2},${y2}"
+      fill="none" stroke="#c8a24a" stroke-width="2.2" opacity=".85"/>`;
+  };
+  const N = {
+    whole:[336,288], base:[398,352], corpus:[292,232],
+    decor:[556,398], t2:[668,248], g1:[452,300],
+  };
+  g += link(N.whole,N.base) + link(N.whole,N.corpus) + link(N.base,N.corpus);
+  g += link(N.corpus,N.g1) + link(N.whole,N.g1);
+
+  /* 半明半暗:光边上刚露头的东西,没有名字 */
+  for(const [x,y] of [[244,342],[612,330],[706,186],[478,420],[598,196]])
+    g += `<circle cx="${x}" cy="${y}" r="6.5" fill="#171a1e" stroke="#41474f"
+      stroke-width="1.4" stroke-dasharray="2 3"/>`;
+
+  /* 全黑区:什么都没有,连点都没有。这是"还没摸过"。 */
+  for(const [x,y,r] of [[840,420,30],[150,180,26],[760,530,26],[210,520,24],[900,300,22],[420,560,28]])
+    g += `<circle cx="${x}" cy="${y}" r="${r}" fill="#101317" opacity=".55"/>`;
+
+  const dot = (p,label,anchor,dx,dy,kind) => {
+    const [x,y]=p;
+    let s = kind==="find"
+      ? `<polygon points="${x},${y-8} ${x+8},${y} ${x},${y+8} ${x-8},${y}" fill="#c8a24a"/>`
+      : `<circle cx="${x}" cy="${y}" r="10" fill="#2b3037" stroke="#c6c2b9" stroke-width="1.6"/>`;
+    s += `<text class="${kind==="find"?"tf":"t"}" x="${x+dx}" y="${y+dy}" text-anchor="${anchor}">${esc(label)}</text>`;
+    return s;
+  };
+  g += dot(N.whole,"整体形制与胎釉","middle",0,-18,"place");
+  g += dot(N.base,"底足与修足","end",-15,5,"place");
+  g += dot(N.corpus,"制造与装饰系统差异","middle",6,-16,"find");
+  g += dot(N.decor,"外观曾被再整合","start",15,5,"find");
+  g += dot(N.t2,"事故记录组自洽","middle",0,-18,"find");
+
+  /* G1 地标:画在几条道路的汇合口 */
+  const [gx,gy]=N.g1;
+  g += `<polygon points="${gx},${gy-25} ${gx+28},${gy-9} ${gx+28},${gy+9} ${gx},${gy+25} ${gx-28},${gy+9} ${gx-28},${gy-9}" fill="#c8a24a"/>`;
+  g += `<text class="tg" x="${gx}" y="${gy+5}" text-anchor="middle">G1</text>`;
+  g += `<text class="tf" x="${gx+30}" y="${gy+44}" text-anchor="middle">可信的问题方向</text>`;
+
+  g += `<rect x="0" y="0" width="1000" height="620" fill="url(#vig)" pointer-events="none"/>`;
+
+  /* 读数:这张图唯一想让你回答的事 */
+  g += `<g transform="translate(38,540)">
+    <text class="th" x="0" y="0">你摸到了多少</text>
+    <text class="t" x="0" y="24">点亮 5 处 · 刚露头 5 处 · 大片没碰过</text>
+    <text class="tq" x="0" y="46">这只碗你还看不全。够不够让你现在开口?</text>
+  </g>`;
+  return `<svg viewBox="0 0 1000 620">${g}</svg>`;
+}
+
+/* ============ B · 推理视图 ============
+   刻意做到:四列、从左到右、带箭头。方向是逻辑本身的方向,不是时间。 */
+function sketchB(){
+  let g = DEFS;
+  const COL = [56,286,516,742];
+  const W = [186,186,186,224];
+  const head = ["你做过的观察","因此成立的事实","合起来支持的主张","要让它成立,还差什么"];
+  for(let i=0;i<4;i++){
+    g += `<text class="th" x="${COL[i]}" y="34">${esc(head[i])}</text>`;
+    if(i<3) g += `<line x1="${COL[i]+W[i]+22}" y1="16" x2="${COL[i]+W[i]+22}" y2="596"
+      stroke="#1b1f24" stroke-width="1"/>`;
+  }
+
+  /* box(col, y, h, label, state) */
+  function box(c,y,h,label,state,sub){
+    const x=COL[c], w=W[c];
+    const S={done:{f:"#1d1d18",s:"#c8a24a",t:"#e8e4dc",d:""},
+             have:{f:"#1b1a16",s:"#8d7c48",t:"#d8d2c4",d:""},
+             miss:{f:"#131619",s:"#454b52",t:"#8a8781",d:"4 3"},
+             open:{f:"#131619",s:"#5f6570",t:"#a6a39c",d:"4 3"}}[state];
+    let s=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="${S.f}"
+      stroke="${S.s}" stroke-width="1.5" stroke-dasharray="${S.d}"/>`;
+    s+=`<text x="${x+13}" y="${y+(sub?21:h/2+4.5)}" style="font-size:12.5px;fill:${S.t}">${esc(label)}</text>`;
+    if(sub) s+=`<text x="${x+13}" y="${y+38}" style="font-size:11px;fill:#6d6b66">${esc(sub)}</text>`;
+    return s;
+  }
+  const R=(c)=>COL[c]+W[c], L=(c)=>COL[c];
+  /* 从 col a 的 box(y,h) 右边流到 col b 的 box 左边 */
+  function flow(a,ya,ha,b,yb,hb,dim){
+    const x1=R(a), y1=ya+ha/2, x2=L(b), y2=yb+hb/2, mx=(x1+x2)/2;
+    return `<path d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2-7},${y2}" fill="none"
+      stroke="${dim?"#454b52":"#7b6a3f"}" stroke-width="1.6"
+      marker-end="url(#${dim?"ah2":"ah"})" stroke-dasharray="${dim?"4 3":""}"/>`;
+  }
+
+  /* --- col 0 观察 --- */
+  const O = {w:[56,34],b:[110,34],c:[164,34],d:[262,34],t:[330,34]};
+  /* --- col 1 事实 --- */
+  const F = {body:[56,34],base:[110,34],diff:[164,34],app:[262,34],t2c:[330,34]};
+  /* --- col 2 主张 --- */
+  const C = {g1:[104,60],mr:[300,60]};
+  /* --- col 3 路线 --- */
+  const RT = {docA:[206,44],docB:[258,44],docC:[310,44],
+              phyA:[426,44],phyB:[478,44],phyC:[530,44]};
+
+  /* 流线先画,压在盒子下面 */
+  g += flow(0,O.w[0],O.w[1],1,F.body[0],F.body[1]);
+  g += flow(0,O.b[0],O.b[1],1,F.base[0],F.base[1]);
+  g += flow(0,O.c[0],O.c[1],1,F.diff[0],F.diff[1]);
+  g += flow(0,O.d[0],O.d[1],1,F.app[0],F.app[1]);
+  g += flow(0,O.t[0],O.t[1],1,F.t2c[0],F.t2c[1]);
+
+  g += flow(1,F.body[0],F.body[1],2,C.g1[0],C.g1[1]);
+  g += flow(1,F.base[0],F.base[1],2,C.g1[0],C.g1[1]);
+  g += flow(1,F.diff[0],F.diff[1],2,C.g1[0],C.g1[1]);
+  g += flow(1,F.app[0],F.app[1],2,C.mr[0],C.mr[1],true);
+  g += flow(1,F.t2c[0],F.t2c[1],2,C.mr[0],C.mr[1],true);
+
+  g += flow(2,C.mr[0],C.mr[1],3,RT.docB[0],RT.docB[1],true);
+  g += flow(2,C.mr[0],C.mr[1],3,RT.phyB[0],RT.phyB[1],true);
+
+  g += box(0,...O.w,"看整体形制与胎釉","have");
+  g += box(0,...O.b,"看底足与修足","have");
+  g += box(0,...O.c,"比同期真品语料","have");
+  g += box(0,...O.d,"逐区看纹饰与色差","have");
+  g += box(0,...O.t,"检索事故记录组","have");
+
+  g += box(1,...F.body,"当前器体特征","have");
+  g += box(1,...F.base,"底足制造痕迹","have");
+  g += box(1,...F.diff,"制造与装饰系统差异","have");
+  g += box(1,...F.app,"外观曾被再整合","have");
+  g += box(1,...F.t2c,"T2 记录组自洽","have");
+
+  g += box(2,...C.g1,"G1 · 可信的问题方向","done","已成立");
+  g += box(2,...C.mr,"「曾发生重大重组」","open","还没成立");
+
+  /* 两条 OR 路线,各自内部 AND */
+  function track(y,h,title,note){
+    const x=COL[3]-8, w=W[3]+16;
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="none"
+      stroke="#2c3238" stroke-width="1"/>
+      <text class="th" x="${x+12}" y="${y+20}">${esc(title)}</text>
+      <text style="font-size:11px;fill:#6d6b66" x="${x+12}" y="${y+h-11}">${esc(note)}</text>`;
+  }
+  g += track(178,190,"路线一 · 档案路","三项必须都有(AND)。你有 1 项。");
+  g += track(398,190,"路线二 · 物证路","三项必须都有(AND)。你有 1 项。");
+  g += `<text style="font-size:12px;fill:#c8a24a;letter-spacing:.3em"
+    x="${COL[3]+W[3]/2}" y="${384}" text-anchor="middle">或</text>`;
+
+  g += box(3,...RT.docA,"① 记录组自洽","have");
+  g += box(3,...RT.docB,"② 记录归到本器","miss");
+  g += box(3,...RT.docC,"③ 记录与现器对上","miss");
+  g += box(3,...RT.phyA,"① 逐区结构读数","miss");
+  g += box(3,...RT.phyB,"② 跨时点重大变化","miss");
+  g += box(3,...RT.phyC,"③ 外观曾被再整合","have");
+
+  /* AND 括号 */
+  for(const [y1,y2] of [[206,354],[426,574]]){
+    const x=COL[3]-18;
+    g += `<path d="M${x+6},${y1} L${x},${y1} L${x},${y2} L${x+6},${y2}" fill="none"
+      stroke="#8d7c48" stroke-width="1.4"/>`;
+    g += `<text style="font-size:10.5px;fill:#8d7c48" x="${x-6}" y="${(y1+y2)/2+3}"
+      text-anchor="end">AND</text>`;
+  }
+
+  g += `<g transform="translate(56,566)">
+    <text class="th" x="0" y="0">这张图想让你回答的事</text>
+    <text class="tq" x="0" y="22">两条路都缺两项。你去补哪一条?系统没有替你选。</text>
+  </g>`;
+  return `<svg viewBox="0 0 1000 620">${g}</svg>`;
+}
+
+/* ============ C · 同屏 ============ */
+function sketchC(){
+  const inner = (svg) => svg.replace(/^<svg[^>]*>/,"").replace(/<\/svg>$/,"");
+  return `<svg viewBox="0 0 1300 488">
+    <rect x="8" y="8" width="640" height="464" rx="6" fill="#0b0d0f" stroke="#22262b"/>
+    <text class="th" x="28" y="38">心智地图 · 我摸够了吗</text>
+    <g transform="translate(20,58) scale(0.606)">${inner(sketchA())}</g>
+    <rect x="660" y="8" width="632" height="464" rx="6" fill="#0b0d0f" stroke="#22262b"/>
+    <text class="th" x="680" y="38">推理视图 · 手上这些说明了什么</text>
+    <g transform="translate(668,58) scale(0.616)">${inner(sketchB())}</g>
+  </svg>`;
+}
+
+/* ============ 说明 ============ */
+function caption(items){
+  return `<div class="caption">` + items.map(([h,p])=>
+    `<div class="cc"><h4>${h}</h4><p>${p}</p></div>`).join("") + `</div>`;
+}
+
+document.getElementById("va").innerHTML =
+  `<div class="box">${sketchA()}</div>` + caption([
+  ["它回答的问题","<b>我摸到了多少?还剩多少没摸?</b>轮廓只是背景里的一个影子,让你隐约感到「这后面有个整体」,但它不告诉你结构 —— 结构要你自己猜。"],
+  ["组织原则","<b>覆盖,没有方向。</b>没有列、没有行、没有箭头。位置是有机的,所以不会凭空造出一个「先做这个再做那个」的顺序。"],
+  ["线的含义","<b>「这几条合起来」</b>,不是「你按这个顺序走的」。所以线是曲的、双向的、不带箭头。"],
+  ["刻意没有的","没有推导方向、没有「还差什么」、没有推荐。这张图不负责告诉你下一步。"],
+  ["一个要点","<b>点亮的区域不对应碗的部位。</b>它对应「你知道的东西」。这是抽象的 —— 盲人摸象摸到的不是象的解剖图,是几块互不相连的印象。"],
+  ["你该在什么时候看它","<b>决定要不要收手的时候。</b>「这只碗我还看不全,够不够让我现在开口?」"],
+]);
+
+document.getElementById("vb").innerHTML =
+  `<div class="box">${sketchB()}</div>` + caption([
+  ["它回答的问题","<b>手上这些东西合起来说明了什么?还缺哪一块?</b>从左到右四列:你做过的观察 → 因此成立的事实 → 合起来支持的主张 → 要让它成立还差什么。"],
+  ["为什么这里可以从左到右","<b>因为推导本身有方向。</b>前提在前、结论在后,这不是我加的顺序,是逻辑自己的顺序。线性布局在内容本来无序时会撒谎(所以地图不能线性),在内容本来有序时说的是真话。"],
+  ["它怎么不变成「系统指路」","<b>它给的是举证标准,不是推荐。</b>两条路并列摆着,各缺两项,谁都没被标成更优。你要补哪一条是你的事。"],
+  ["它顺手解决的问题","<b>行动的意义。</b>「逐区结构读数」作为缺口摆在那里,那么「X 射线」这个动作的用处立刻有了着落 —— 不需要给 23 个按钮各写一句专家说明。"],
+  ["刻意没有的","没有概率、没有分数、没有排序、没有「最优下一步」箭头。也没有覆盖率 —— 它不回答「我摸够了吗」。"],
+  ["你该在什么时候看它","<b>正在查的时候。</b>「我还缺什么,什么手段能补上?」"],
+]);
+
+document.getElementById("vc").innerHTML =
+  `<div class="box">${sketchC()}</div>` +
+  `<div class="ask"><b>请你只判断一件事:这两张放在一起,像不像同一张图的两个副本?</b><br>
+   我认为不像,理由是它们的形状本身就不一样:左边是有机的、糊的、没有方向的;
+   右边是方的、排好队的、带箭头的。而且它们回答的问题不同 ——
+   左边回答<b>"够了吗"</b>(收手时看),右边回答<b>"还缺什么"</b>(干活时看)。
+   <br><br>但这是我的判断,不是证据。<b>如果你看着仍然觉得重复,那就是重复</b> ——
+   你是这件事的权威,不是我。<br><br>
+   如果重复,备选方案有两个:①只留推理视图,覆盖率缩成一行文字("大片没碰过");
+   ②只留地图,把"还差什么"画成地图上的空槽。两个我都能画给你看。</div>` +
+  caption([
+  ["为什么把它们摆一起给你看","你上一轮的混乱点就是「这是不是又多出来一张图」。这件事只能靠看,说服不了。"],
+  ["注意这三张图用的是同一个局面","所以任何差别都来自呈现方式,不来自数据。它们是同一堆事实的两种投影。"],
+  ["草图不能证明什么","<b>好不好看、看不看得懂、玩起来是否有用,这三张一概不能证明。</b>它只能回答「形状上是否重复」这一个问题。"],
+]);
+
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".tabs button").forEach(x=>x.className="");
+  b.className="on";
+  document.querySelectorAll(".view").forEach(v=>v.className="view");
+  document.getElementById("v"+b.dataset.v).className="view on";
+});
+</script>
+</body>
+</html>

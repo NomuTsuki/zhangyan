@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>[前提已失效] 地图布局三选 — 同一份冻结数据的三种摆法</title>
+<style>
+  :root{--bg:#0e1013;--panel:#15181c;--line:#22262b;--ink:#e8e4dc;--ink2:#a6a39c;
+    --ink3:#6d6b66;--gold:#c8a24a;--warn:#c2603c;--dark:#2a3036;--white:#dfe6ec}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1460px;margin:0 auto;padding:20px 26px 70px}
+  h1{margin:0 0 4px;font-size:20px;font-weight:600}
+  .sub{margin:0 0 14px;font-size:12.5px;color:var(--ink3)}
+  .warnbar{margin:0 0 16px;padding:11px 15px;border-left:3px solid var(--warn);
+    background:#221f1d;color:var(--ink2);font-size:12.5px;line-height:1.75;border-radius:0 4px 4px 0}
+  .warnbar b{color:var(--ink)}
+  .tabs{display:flex;gap:7px;margin:0 0 12px;flex-wrap:wrap}
+  .tabs button{background:#1b1f24;color:var(--ink2);border:1px solid var(--line);
+    border-radius:4px;padding:7px 15px;font:inherit;font-size:13px;cursor:pointer}
+  .tabs button.on{background:#242a30;color:var(--ink);border-color:#3d444b}
+  .legend{display:flex;flex-wrap:wrap;gap:7px 20px;margin:0 0 12px;padding:11px 15px;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    font-size:12px;color:var(--ink2)}
+  .legend i{display:inline-block;vertical-align:middle;margin-right:5px}
+  .view{display:none} .view.on{display:block}
+  .row{display:grid;grid-template-columns:1fr 350px;gap:15px;align-items:start}
+  .mapbox{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px}
+  svg{display:block;width:100%;height:auto;background:#07090b;border-radius:4px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    padding:13px 15px;margin:0 0 12px}
+  .card h3{margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.1em;
+    color:var(--ink3);text-transform:uppercase}
+  .card p{margin:0 0 9px;font-size:13px;line-height:1.75;color:var(--ink2)}
+  .card p:last-child{margin:0}
+  .card p b{color:var(--ink)} .card p em{font-style:normal;color:var(--gold)}
+  .bad{border-left:3px solid var(--warn);padding-left:11px;color:#c9a291!important}
+  text{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  .t{font-size:11px;fill:var(--ink)}
+  .lg{font-size:10px;fill:#6d6b66;letter-spacing:.14em}
+  .t,.lg{paint-order:stroke;stroke:#07090b;stroke-width:3px;stroke-linejoin:round}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>地图布局三选 — 同一份冻结数据的三种摆法（前提已失效）</h1>
+  <p class="sub">地点／边／地标全部<b>取自冻结的 fixtures.mjs</b>,不是我编的 · 摆放位置是我手定的,那部分才是这三张图要你选的东西 · 2026-08-27 作 · 次日前提被推翻</p>
+
+  <div class="warnbar" style="border-left-color:#c2603c;background:#241d1a">
+    <b style="color:#e08a63">这三张图的前提已经失效,不要拿它们当布局参照。</b>
+    2026-08-28 的 <b>DEC-032</b> 判定:这三张图都把<b>行动面和认知面合并</b>成了一张图 ——
+    把「可以去探查的事」和「已经拿到的情报」画在同一个平面上。
+    正确结构是<b>左右分离</b>:器物与调查手段在左(行动),心智地图与决策面在右(情报),
+    情报永远不长在器物上。<b>「局部 Finding 位置没有意义」这条抱怨的真正病根就在这里</b>,
+    不在摆放方式,所以换布局解决不了。
+    <br>另外两条也已作废:「未探索地点隐去名字」的前提不对 ——
+    右侧没有的东西<b>压根不存在</b>,无须隐藏,而左侧工作台全开、部位当然有名字;
+    「打通两端得局部 Finding」已被用户纠正为<b>点亮节点得证据、系统自动连接证据的逻辑而得 Finding</b>。
+    <br>仍站得住的只有两条查证事实:关系在冻结夹具里是一等对象(<code>object</code> 轴 8 个值中 5 个 <code>RELATION.*</code>);
+    10 个证明角色中 8 个要求两个独立来源。<b>下面的原始说明保留备查。</b>
+  </div>
+
+  <div class="warnbar">
+    <b>【已作废的原始说明】</b>
+    <b>三张图的节点、边、地标完全一样,只有「摆哪儿」不同。</b>
+    全部处于<b>同一个中局局面</b>:碗上亮了 4 处,T2 记录组亮了,碗上冒出一个地标,
+    而 <b>T2 到碗那条路两头都亮了但还没打通</b> —— 这正是你要的那件事。
+    <br>没有起点,没有从上到下的流向,路可以从任意一头开始打通。美术、字号、配色一律占位,不构成视觉方向。
+  </div>
+
+  <div class="legend">
+    <span><i><svg width="16" height="16"><circle cx="8" cy="8" r="5.5" fill="#e8e4dc"/></svg></i>已点亮的地点</span>
+    <span><i><svg width="16" height="16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="#2a3036" stroke-width="1.6"/></svg></i>全黑 · 还没去过</span>
+    <span><i><svg width="30" height="12"><line x1="2" y1="6" x2="28" y2="6" stroke="#dfe6ec" stroke-width="2.2"/></svg></i>已打通的路(白线 = 关系已成立)</span>
+    <span><i><svg width="30" height="12"><line x1="2" y1="6" x2="28" y2="6" stroke="#8a9aa8" stroke-width="1.8" stroke-dasharray="5 4"/></svg></i><b style="color:#aebbc7">两头都亮了,路还没打通</b></span>
+    <span><i><svg width="30" height="12"><line x1="2" y1="6" x2="20" y2="6" stroke="#3a4249" stroke-width="1.6" stroke-dasharray="3 4"/></svg></i>只亮一头 · 前沿</span>
+    <span><i><svg width="18" height="16"><polygon points="9,1 16,5.5 16,10.5 9,15 2,10.5 2,5.5" fill="#c8a24a"/></svg></i>地标 · 局部 Finding</span>
+  </div>
+
+  <div class="tabs">
+    <button class="on" data-v="a">A · 两层(轮廓只放真实部位)</button>
+    <button data-v="b">B · 全部上轮廓</button>
+    <button data-v="c">C · 命座式星图</button>
+    <span style="flex:1"></span>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2);
+      padding:7px 13px;background:#1b1f24;border:1px solid var(--line);border-radius:4px;cursor:pointer">
+      <input type="checkbox" id="dark"> 显出全黑地点的名字(作者视角 · 玩家看不到)
+    </label>
+  </div>
+
+  <div class="view on" id="va"></div>
+  <div class="view" id="vb"></div>
+  <div class="view" id="vc"></div>
+</div>
+
+<script>
+"use strict";
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* ============================================================
+   数据:全部来自 fixtures.mjs。phys=碗上可定位的真实部位,
+   logic=跨部位的逻辑范围(没有物理坐标)。
+   ============================================================ */
+const BOWL_PHYS = [
+  ["whole-visible","整体可见面"],
+  ["base-and-inner","底足与内壁"],
+  ["single-glue-line","单条粘接缝"],
+  ["stable-anchors","稳定锚点"],
+  ["declared-restored-zone","声明的修复区"],
+  ["declared-screen-zone","紫外试窗区"],
+  ["single-read-zone","单一读取区"],
+  ["declared-surface-points","表面取点"],
+  ["declared-surface-regions","表面区域"],
+  ["declared-key-material-points","关键材料取点"],
+  ["declared-layer-interface-points","层界面取点"],
+];
+const BOWL_LOGIC = [
+  ["declared-major-scope","声明的重大范围"],
+  ["declared-major-scope-multi-view-readable","重大范围·多视角可读"],
+  ["necessary-major-scope","必要重大范围"],
+  ["nonnecessary-local-scope","非必要局部范围"],
+  ["manufacture-comparison","制造特征比对面"],
+  ["manufacture-identity-scope","制造身份范围"],
+  ["declared-surface-scope","声明的表面范围"],
+  ["declared-load-paths","承力路径"],
+  ["declared-load-paths-supported-static-display","承力路径·静态支撑"],
+  ["declared-time-anchor","时间锚点"],
+  ["declared-document-boundary","文档边界"],
+];
+const ARCHIVES = [
+  ["T2:declared-record-group","T2 记录组","T2"],
+  ["T2:single-document","T2 单份文件","T2"],
+  ["T3:declared-treatment-records","T3 处理记录","T3"],
+];
+/* 5 条边(RELATION.* 对象)。ends = 两头分别在哪 */
+const EDGES = [
+  {id:"REL.T2_OBJ", n:"T2 档案 ↔ 这只碗", r:"归属锚点核对",
+   ends:["T2:declared-record-group","stable-anchors"], ways:["object-attribution"]},
+  {id:"REL.T2_EVT", n:"T2 记的那件事 ↔ 这只碗", r:"重大事件对应",
+   ends:["T2:declared-record-group","declared-major-scope"],
+   ways:["record-current","cross-time"]},
+  {id:"REL.T3_OBJ", n:"T3 档案 ↔ 这只碗", r:"归属锚点核对",
+   ends:["T3:declared-treatment-records","stable-anchors"], ways:["object-attribution"]},
+  {id:"REL.T3_EVT", n:"T3 记的那件事 ↔ 这只碗", r:"处理范围对应",
+   ends:["T3:declared-treatment-records","declared-restored-zone"], ways:["record-current"]},
+  {id:"REL.PHASE", n:"三个阶段的先后", r:"阶段序列",
+   ends:["declared-major-scope","declared-restored-zone"], ways:["cross-time"]},
+];
+/* 器物内部的路:两个已点亮的地点之间成立的关系。
+   打通后是白线,几条白线合拢处冒出地标。 */
+const BOWL_EDGES = [
+  {id:"IN.WHOLE_MFG", ends:["whole-visible","manufacture-comparison"], r:"形制对得上同期"},
+  {id:"IN.BASE_MFG",  ends:["base-and-inner","manufacture-comparison"], r:"底足工艺对不上"},
+  {id:"IN.SURF_RESTORE", ends:["declared-surface-regions","declared-restored-zone"],
+   r:"色差落在修复区里"},
+];
+
+/* 中局局面 */
+const LIT = new Set(["whole-visible","base-and-inner","manufacture-comparison",
+  "declared-surface-regions","stable-anchors","T2:declared-record-group"]);
+const OPEN_EDGES = new Set(["IN.WHOLE_MFG","IN.BASE_MFG"]);  /* 已打通 */
+const READY_EDGES = new Set(["REL.T2_OBJ"]);                 /* 两头都亮,还没打通 */
+const LANDMARK = {t:"局部 Finding", s:"制造与装饰系统差异",
+  from:["whole-visible","base-and-inner","manufacture-comparison"]};
+
+const NAME = new Map([...BOWL_PHYS, ...BOWL_LOGIC,
+  ...ARCHIVES.map(([k,v])=>[k,v])]);
+
+/* ============================================================ 画元件 */
+/* 全黑的地点没有名字 —— 你没去过,就不该知道它叫什么。
+   DEC-026:前沿不能先描出作者隐藏节点的轮廓。作者视角可以用开关看回来。 */
+let SHOW_DARK_NAMES = false;
+function place(x,y,id,opt){
+  const lit = LIT.has(id), nm = NAME.get(id) || id;
+  const o = opt||{};
+  const r = o.r || 6;
+  let s = "";
+  if(lit){
+    s += `<circle cx="${x}" cy="${y}" r="${r+7}" fill="#e8e4dc" opacity=".07"/>`;
+    s += `<circle cx="${x}" cy="${y}" r="${r}" fill="#e8e4dc"/>`;
+  } else {
+    s += `<circle cx="${x}" cy="${y}" r="${r}" fill="#0b0e11" stroke="#2a3036" stroke-width="1.6"/>`;
+  }
+  if(!lit && !SHOW_DARK_NAMES) return s;
+  const dx = o.dx ?? 0, dy = o.dy ?? -(r+9);
+  const anc = o.anchor || "middle";
+  s += `<text class="t" x="${x+dx}" y="${y+dy}" text-anchor="${anc}"
+    fill="${lit?"#e8e4dc":"#4e565d"}">${esc(nm)}</text>`;
+  return s;
+}
+function edgeLine(p1,p2,state,label){
+  const S = {open:{c:"#dfe6ec",w:2.2,d:""},
+             ready:{c:"#8a9aa8",w:1.8,d:"5 4"},
+             front:{c:"#3a4249",w:1.6,d:"3 4"}}[state];
+  const mx=(p1[0]+p2[0])/2, my=(p1[1]+p2[1])/2;
+  const bow = state==="front" ? 0 : 26;
+  const nx = -(p2[1]-p1[1]), ny = (p2[0]-p1[0]);
+  const L = Math.hypot(nx,ny)||1;
+  const cx = mx + nx/L*bow, cy = my + ny/L*bow;
+  let s = `<path d="M${p1[0]},${p1[1]} Q${cx},${cy} ${p2[0]},${p2[1]}" fill="none"
+    stroke="${S.c}" stroke-width="${S.w}" stroke-dasharray="${S.d}" opacity="${state==="front"?".9":"1"}"/>`;
+  if(label && state!=="front"){
+    s += `<text class="t" x="${cx}" y="${cy-6}" text-anchor="middle"
+      fill="${state==="open"?"#dfe6ec":"#aebbc7"}" font-size="10.5">${esc(label)}</text>`;
+  }
+  return s;
+}
+function landmark(x,y){
+  const r=15;
+  let s = `<circle cx="${x}" cy="${y}" r="${r+11}" fill="#c8a24a" opacity=".1"/>`;
+  s += `<polygon points="${x},${y-r} ${x+r*0.87},${y-r/2} ${x+r*0.87},${y+r/2} ${x},${y+r} ${x-r*0.87},${y+r/2} ${x-r*0.87},${y-r/2}"
+    fill="#c8a24a" stroke="#e0bc63" stroke-width="1.4"/>`;
+  s += `<text class="t" x="${x}" y="${y+r+16}" text-anchor="middle" fill="#c8a24a"
+    font-size="10.5">${esc(LANDMARK.s)}</text>`;
+  return s;
+}
+
+/* 地标画在几条白线真正合拢的地方(DEC-028),不是手摆的。
+   合拢点若压到别的地点上,只做最小位移让开,不改变它属于哪个合拢。 */
+function landmarkPos(P, allIds){
+  const pts = LANDMARK.from.map(id=>P(id)).filter(Boolean);
+  if(!pts.length) return null;
+  let x = pts.reduce((s,p)=>s+p[0],0)/pts.length;
+  let y = pts.reduce((s,p)=>s+p[1],0)/pts.length;
+  const others = (allIds||[]).filter(id=>!LANDMARK.from.includes(id))
+    .map(id=>P(id)).filter(Boolean);
+  for(let pass=0; pass<40; pass++){
+    let moved = false;
+    for(const o of others){
+      const dx = x-o[0], dy = y-o[1], d = Math.hypot(dx,dy);
+      if(d < 40){
+        const k = (40-d)/Math.max(d, 0.01);
+        x += dx*k*0.6; y += dy*k*0.6; moved = true;
+      }
+    }
+    if(!moved) break;
+  }
+  return [x,y];
+}
+
+/* 三张图共用:器物内部的路 + 跨对象的关系边 + 只亮一头的前沿 */
+function drawAllEdges(P, stubLen){
+  let g = "";
+  for(const e of [...BOWL_EDGES, ...EDGES]){
+    const [a,b] = e.ends, pa = P(a), pb = P(b);
+    if(!pa || !pb) continue;
+    const st = OPEN_EDGES.has(e.id) ? "open"
+      : READY_EDGES.has(e.id) ? "ready"
+      : (LIT.has(a) !== LIT.has(b)) ? "front" : null;
+    if(!st) continue;
+    if(st === "front"){
+      const from = LIT.has(a) ? pa : pb, to = LIT.has(a) ? pb : pa;
+      const ux = to[0]-from[0], uy = to[1]-from[1], L = Math.hypot(ux,uy)||1;
+      const k = stubLen || 54;
+      g += edgeLine(from, [from[0]+ux/L*k, from[1]+uy/L*k], "front");
+      g += `<circle cx="${from[0]+ux/L*(k+8)}" cy="${from[1]+uy/L*(k+8)}" r="5"
+        fill="#0b0e11" stroke="#3a4249" stroke-width="1.4"/>`;
+    } else {
+      g += edgeLine(pa, pb, st, st==="ready" ? "这条路还没打通" : e.r);
+    }
+  }
+  return g;
+}
+const BOWL = `<path d="M150,196 C152,306 200,398 258,416 L422,416 C480,398 528,306 530,196"
+    fill="none" stroke="#1c2126" stroke-width="2"/>
+  <ellipse cx="340" cy="196" rx="190" ry="30" fill="none" stroke="#1c2126" stroke-width="2"/>
+  <path d="M264,416 L264,442 L416,442 L416,416" fill="none" stroke="#1c2126" stroke-width="2"/>`;
+
+/* ============================================================ 布局 A */
+const POS_A_PHYS = {
+  "whole-visible":[340,252],"base-and-inner":[340,398],"single-glue-line":[246,332],
+  "stable-anchors":[452,392],"declared-restored-zone":[424,258],
+  "declared-screen-zone":[204,262],"single-read-zone":[292,296],
+  "declared-surface-points":[392,212],"declared-surface-regions":[268,218],
+  "declared-key-material-points":[214,356],"declared-layer-interface-points":[350,324],
+};
+function layoutA(){
+  let g = BOWL;
+  g += `<text class="lg" x="340" y="176" text-anchor="middle">这只碗 · 真实部位</text>`;
+  /* 逻辑范围:右侧独立带区,明确不放在碗上 */
+  g += `<rect x="590" y="150" width="256" height="470" rx="7" fill="#0d1013"
+    stroke="#1c2126" stroke-width="1" stroke-dasharray="6 4"/>`;
+  g += `<text class="lg" x="718" y="176" text-anchor="middle">逻辑范围 · 跨部位 · 没有坐标</text>`;
+  const POS_A_LOGIC = {};
+  BOWL_LOGIC.forEach(([id],k)=>{ POS_A_LOGIC[id] = [636, 208 + k*37]; });
+  for(const [id] of BOWL_LOGIC){
+    const [x,y]=POS_A_LOGIC[id], lit=LIT.has(id);
+    g += `<rect x="${x-18}" y="${y-11}" width="188" height="22" rx="11"
+      fill="${lit?"#1d2126":"#0b0e11"}" stroke="${lit?"#8a9aa8":"#252b31"}"
+      stroke-width="1.3" stroke-dasharray="4 3"/>`;
+    if(lit || SHOW_DARK_NAMES)
+      g += `<text class="t" x="${x-8}" y="${y+4}" fill="${lit?"#e8e4dc":"#4e565d"}"
+        font-size="10.5">${esc(NAME.get(id))}</text>`;
+  }
+  /* 档案:更右 */
+  const POS_A_ARC = {"T2:declared-record-group":[970,250],"T2:single-document":[970,330],
+    "T3:declared-treatment-records":[970,470]};
+  g += `<text class="lg" x="1010" y="176" text-anchor="middle">档案 · 不在器物上</text>`;
+  g += `<rect x="892" y="150" width="236" height="470" rx="7" fill="#0d1013"
+    stroke="#1c2126" stroke-width="1" stroke-dasharray="6 4"/>`;
+  const P = id => POS_A_PHYS[id] || POS_A_LOGIC[id] || POS_A_ARC[id];
+  g += drawAllEdges(P, 50);
+  for(const [id] of BOWL_PHYS) g += place(...POS_A_PHYS[id], id);
+  for(const [id] of ARCHIVES){
+    const [x,y]=POS_A_ARC[id];
+    g += place(x,y,id,{dx:14,dy:4,anchor:"start"});
+  }
+  const lp = landmarkPos(P, [...BOWL_PHYS, ...BOWL_LOGIC].map(([id])=>id));
+  if(lp) g += landmark(lp[0], lp[1]);
+  return `<svg viewBox="0 0 1160 650">${g}</svg>`;
+}
+
+/* ============================================================ 布局 B */
+/* 按碗的收口逐环排布,环内标签上下交错 —— 让 22 个地点在轮廓里排得开,
+   这样这张图的问题只剩「语义上撒谎」,不掺杂我摆不开的问题。 */
+const RINGS_B = [
+  {y:224, ids:["declared-surface-points","declared-surface-regions","whole-visible",
+    "declared-surface-scope","declared-restored-zone"]},
+  {y:274, ids:["declared-screen-zone","manufacture-comparison",
+    "declared-major-scope-multi-view-readable","manufacture-identity-scope",
+    "declared-major-scope"]},
+  {y:322, ids:["single-read-zone","nonnecessary-local-scope","necessary-major-scope",
+    "declared-layer-interface-points","declared-load-paths"]},
+  {y:370, ids:["declared-key-material-points","single-glue-line","declared-time-anchor",
+    "declared-load-paths-supported-static-display"]},
+  {y:412, ids:["base-and-inner","stable-anchors","declared-document-boundary"]},
+];
+function layoutB(){
+  let g = BOWL;
+  g += `<text class="lg" x="340" y="176" text-anchor="middle">这只碗 · 全部 22 个地点都在轮廓上</text>`;
+  const POS = {}, SIDE = {};
+  for(const [ri,ring] of RINGS_B.entries()){
+    const hw = 190 - (ring.y-196)/220*114 - 14;
+    const n = ring.ids.length;
+    ring.ids.forEach((id,k)=>{
+      POS[id] = [340 - hw + (n===1 ? hw : (2*hw)*k/(n-1)), ring.y];
+      SIDE[id] = (ri + k) % 2 === 0 ? -1 : 1;
+    });
+  }
+  const POS_ARC = {"T2:declared-record-group":[812,248],"T2:single-document":[812,330],
+    "T3:declared-treatment-records":[812,452]};
+  g += `<rect x="722" y="184" width="240" height="376" rx="7" fill="#0d1013"
+    stroke="#1c2126" stroke-width="1" stroke-dasharray="6 4"/>`;
+  g += `<text class="lg" x="842" y="208" text-anchor="middle">档案 · 不在器物上</text>`;
+  const P = id => POS[id] || POS_ARC[id];
+  g += drawAllEdges(P, 44);
+  for(const [id] of [...BOWL_PHYS, ...BOWL_LOGIC]){
+    const p = POS[id]; if(!p) continue;
+    g += place(p[0],p[1],id,{r:5, dy: SIDE[id]<0 ? -13 : 19});
+  }
+  for(const [id] of ARCHIVES){
+    const [x,y]=POS_ARC[id];
+    g += place(x,y,id,{dx:13,dy:4,anchor:"start"});
+  }
+  const lp = landmarkPos(P, [...BOWL_PHYS, ...BOWL_LOGIC].map(([id])=>id));
+  if(lp) g += landmark(lp[0], lp[1]);
+  return `<svg viewBox="0 0 1010 650">${g}</svg>`;
+}
+
+/* ============================================================ 布局 C */
+function layoutC(){
+  /* 10 个证明角色作为命座枢纽,地点绕着自己喂的枢纽。
+     只有 4 个证明角色坐在碗的 region 上 —— 其余 18 个地点没有枢纽可归,
+     只能落在外环。这正是这个方案的硬伤。 */
+  const HUBS = [
+    {id:"H1", t:"当前修复图谱", x:300,y:210, feed:["whole-visible"]},
+    {id:"H2", t:"结构图谱(X射线)", x:214,y:392,
+      feed:["declared-major-scope-multi-view-readable"]},
+    {id:"H3", t:"跨时点重大变化", x:398,y:392, feed:["declared-major-scope"]},
+    {id:"H4", t:"T2 记录自洽", x:730,y:196, feed:["T2:declared-record-group","T2:single-document"]},
+    {id:"H5", t:"T2 归属", x:872,y:288, feed:["stable-anchors"]},
+    {id:"H6", t:"T2 事件印证", x:872,y:408, feed:[]},
+    {id:"H7", t:"T3 记录自洽", x:730,y:512, feed:["T3:declared-treatment-records"]},
+    {id:"H8", t:"T3 归属", x:600,y:392, feed:[]},
+    {id:"H9", t:"T3 事件印证", x:600,y:288, feed:["declared-restored-zone"]},
+  ];
+  let g = "";
+  g += `<text class="lg" x="300" y="140" text-anchor="middle">碗侧枢纽</text>`;
+  g += `<text class="lg" x="770" y="140" text-anchor="middle">档案侧枢纽</text>`;
+  const POS = {};
+  for(const h of HUBS){
+    h.feed.forEach((id,k)=>{
+      const ang = -Math.PI/2 + (k - (h.feed.length-1)/2) * 0.9;
+      POS[id] = [h.x + Math.cos(ang)*70, h.y + Math.sin(ang)*70];
+    });
+  }
+  /* 外环:没有枢纽可归的地点 */
+  const orphan = [...BOWL_PHYS,...BOWL_LOGIC,...ARCHIVES.map(a=>[a[0]])]
+    .map(([id])=>id).filter(id=>!POS[id]);
+  orphan.forEach((id,k)=>{
+    const a = -Math.PI*0.86 + (k/(orphan.length-1)) * Math.PI*1.72;
+    POS[id] = [540 + Math.cos(a)*456, 366 + Math.sin(a)*262];
+  });
+  g += `<ellipse cx="540" cy="366" rx="456" ry="262" fill="none" stroke="#15191d"
+    stroke-width="1" stroke-dasharray="5 6"/>`;
+  g += `<text class="lg" x="540" y="656" text-anchor="middle">外环 · 18 个地点没有枢纽可归</text>`;
+  /* 枢纽连线 */
+  for(const h of HUBS){
+    for(const id of h.feed){
+      const p = POS[id]; if(!p) continue;
+      g += `<line x1="${h.x}" y1="${h.y}" x2="${p[0]}" y2="${p[1]}"
+        stroke="${LIT.has(id)?"#dfe6ec":"#1f2429"}" stroke-width="${LIT.has(id)?2:1.3}"
+        opacity="${LIT.has(id)?".85":"1"}"/>`;
+    }
+  }
+  g += drawAllEdges(id => POS[id], 44);
+  for(const h of HUBS){
+    const on = h.feed.some(id=>LIT.has(id));
+    g += `<polygon points="${h.x},${h.y-17} ${h.x+15},${h.y-8} ${h.x+15},${h.y+8} ${h.x},${h.y+17} ${h.x-15},${h.y+8} ${h.x-15},${h.y-8}"
+      fill="${on?"#c8a24a":"#0d1013"}" stroke="${on?"#e0bc63":"#2a3036"}" stroke-width="1.5"/>`;
+    g += `<text class="t" x="${h.x}" y="${h.y+32}" text-anchor="middle"
+      fill="${on?"#c8a24a":"#4e565d"}" font-size="10.5">${esc(h.t)}</text>`;
+  }
+  for(const id of Object.keys(POS)){
+    const p = POS[id];
+    const right = p[0] > 540;
+    g += place(p[0],p[1],id, orphan.includes(id)
+      ? {r:5, dx: right?12:-12, dy:4, anchor: right?"start":"end"}
+      : {r:5});
+  }
+  const lp = landmarkPos(id => POS[id], Object.keys(POS));
+  if(lp) g += landmark(lp[0], lp[1]);
+  return `<svg viewBox="0 0 1080 690">${g}</svg>`;
+}
+
+/* ============================================================ 说明 */
+const NOTE = {
+  a:{good:`碗的轮廓上<b>只放真的能定位的 11 处</b>:底足与内壁、粘接缝、紫外试窗区、稳定锚点……
+      看图就知道自己摸了碗的哪儿。<br>另外 11 个<b>逻辑范围</b>画成右侧的胶囊带,
+      形状和位置都在说「我不是一个部位」——不撒谎。<br>档案单独一栏,
+      <em>它本来就不在器物上</em>。`,
+    bad:`代价:图分成了三栏,<b>「一张地图」的整体感被切开了</b>。
+      而且逻辑范围那一栏本质是个列表,不是地图,你之前明确说不要列表。<br>
+      更实际的毛病:「制造特征比对面」是逻辑范围,所以它在右栏,
+      <b>于是白线从碗里横穿出去,地标被算到碗和右栏之间的空档上</b>——
+      合拢点落在一个什么都没有的地方。`},
+  b:{good:`<b>一张图,一个碗,全部 22 个地点都在轮廓里。</b>整体感最强,
+      看全貌就是看懂这只碗——最接近你说的原神命座那个感觉。<br>
+      节点密度也够,不空。`,
+    bad:`代价:<b>它在撒谎。</b>「承力路径」「必要重大范围」「文档边界」
+      被摆在碗上某个点,但它们根本不是部位。<br>更糟的是<b>玩家会当真</b>——
+      以为自己查的是碗上那一小块,其实查的是一个跨部位的判断范围。这会误导判断,不只是不好看。`},
+  c:{good:`按<b>「它们共同喂哪个地标」</b>聚拢,所以位置一定有语义,
+      而且完全不用碰碗的物理部位,不存在撒谎问题。<br>
+      枢纽亮起来的样子确实像命座。`,
+    bad:`硬伤一:<b>10 个证明角色里只有 4 个坐在碗的 region 上。</b>
+      剩下 18 个地点没有枢纽可归,只能扔到外环——图上超过一半的东西没有位置理由,
+      比布局 B 的撒谎问题更严重。<br>
+      硬伤二(画出来才看见的):<b>按「共同喂哪个地标」聚拢,并不会把「互相连白线」的地点放到一起。</b>
+      所以白线横穿整张图 —— 而白线恰恰是玩家最该看清的东西。<b>它把最重要的关系画成了最难看的线。</b><br>
+      硬伤三:<b>碗完全消失了</b>,你在鉴定一件器物这件事看不见了。<br>
+      硬伤四:枢纽本身就是 10 个证明角色,<b>把它们全画出来等于提前告诉玩家「一共有哪些地标」</b>——
+      这一条已经贴着 DEC-016 的红线了。`},
+};
+const HOW = `<p><b>白线就是你要的那件事。</b>你查了整体形制,又查了底足,
+  再查了制造特征比对面 —— 这三个地点之间<b>自动长出白线</b>(关系已成立),
+  白线合拢的地方<b>冒出一个地标</b>:制造与装饰系统差异。
+  <em>地标的位置是三个端点的合拢处算出来的,不是我摆的。</em></p>
+  <p><b>灰白虚线是「还没打通」。</b>T2 记录组亮了,碗上的稳定锚点也亮了 ——
+  两头都亮,所以系统告诉你<b>「这里有一条路」</b>。但打通它要<em>单独花一次动作</em>(核对归属)。
+  打通后它也变成白线,并在路上长出地标。</p>
+  <p><b>最暗的短线是前沿:只亮了一头。</b>系统只说「这边还能往下」,不说通向哪里。</p>
+  <p><b>为什么必须两头都亮:</b>冻结规格里 10 个地标有 8 个写着
+  <code>minimumSourceCount: 2</code>。<em>一头是建立不了一条边的。</em>
+  这不是我设计的规则,是查出来的。</p>
+  <p><b>为什么可以双向:</b>边自己是对象(<code>RELATION.*</code>),
+  规格没规定哪头先亮。<em>从档案往碗探,和从碗往档案探,是同一条边的两种打通顺序。</em></p>`;
+
+function panel(k){
+  return `<div class="row">
+    <div class="mapbox">${{a:layoutA,b:layoutB,c:layoutC}[k]()}</div>
+    <div>
+      <div class="card"><h3>它好在哪</h3><p>${NOTE[k].good}</p></div>
+      <div class="card"><h3>它的代价</h3><p class="bad">${NOTE[k].bad}</p></div>
+      <div class="card"><h3>三张图共同的机制</h3>${HOW}</div>
+    </div></div>`;
+}
+function paintAll(){
+  document.getElementById("va").innerHTML = panel("a");
+  document.getElementById("vb").innerHTML = panel("b");
+  document.getElementById("vc").innerHTML = panel("c");
+}
+paintAll();
+document.getElementById("dark").onchange = (e) => {
+  SHOW_DARK_NAMES = e.target.checked;
+  paintAll();
+};
+document.querySelectorAll(".tabs button").forEach(b=>{
+  b.onclick = () => {
+    document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));
+    document.querySelectorAll(".view").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    document.getElementById("v"+b.dataset.v).classList.add("on");
+  };
+});
+</script>
+</body>
+</html>

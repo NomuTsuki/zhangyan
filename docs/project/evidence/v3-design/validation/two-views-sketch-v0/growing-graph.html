@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+  <title>[已否决] 推理视图 v1 草图 — 自上而下生长的依赖图</title>
+<style>
+  :root{--bg:#0e1013;--panel:#15181c;--line:#22262b;--ink:#e8e4dc;--ink2:#a6a39c;
+    --ink3:#6d6b66;--gold:#c8a24a;--warn:#c2603c;--ghost:#4b5259}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1420px;margin:0 auto;padding:20px 26px 60px}
+  h1{margin:0 0 4px;font-size:20px;font-weight:600}
+  .sub{margin:0 0 14px;font-size:12.5px;color:var(--ink3)}
+  .warnbar{margin:0 0 16px;padding:11px 15px;border-left:3px solid var(--warn);
+    background:#221f1d;color:var(--ink2);font-size:12.5px;line-height:1.75;border-radius:0 4px 4px 0}
+  .warnbar b{color:var(--ink)}
+  .bar{display:flex;align-items:center;gap:9px;margin:0 0 12px;padding:10px 13px;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;flex-wrap:wrap}
+  button{background:#1b1f24;color:var(--ink);border:1px solid var(--line);border-radius:4px;
+    padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer}
+  button:hover:not(:disabled){border-color:#3a4046}
+  button:disabled{opacity:.32;cursor:default}
+  .beat{font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums}
+  .grid{display:grid;grid-template-columns:1fr 372px;gap:15px;align-items:start}
+  .mapbox{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px}
+  svg{display:block;width:100%;height:auto;background:#0a0c0e;border-radius:4px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    padding:13px 15px;margin:0 0 12px}
+  .card h3{margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.1em;
+    color:var(--ink3);text-transform:uppercase}
+  .card p{margin:0;font-size:13px;line-height:1.75;color:var(--ink2)}
+  .card p b{color:var(--ink)}
+  .card p em{font-style:normal;color:var(--gold)}
+  .legend{display:flex;flex-wrap:wrap;gap:7px 18px;margin:0 0 12px;padding:11px 15px;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    font-size:12px;color:var(--ink2)}
+  .legend i{display:inline-block;vertical-align:middle;margin-right:5px}
+  .nt{font-size:12px;fill:var(--ink)}
+  .ng{font-size:10.5px;fill:#8a8781}
+  .lbl{font-size:10.5px;fill:var(--ink3);letter-spacing:.1em}
+  .dg{font-size:10.5px;fill:#a08a52}
+  .gh{font-size:10.5px;fill:var(--ghost)}
+  .nt,.ng,.lbl,.dg,.gh{paint-order:stroke;stroke:#0a0c0e;stroke-width:3.5px;stroke-linejoin:round}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>推理视图 v1 草图 — 自上而下生长的依赖图（方向已被否决）</h1>
+  <p class="sub">静态草图 · 手画固定一局 · <b>不接求解器、没有功能、不构成决策</b> · 2026-08-27 作 · 同日方向被否</p>
+
+  <div class="warnbar" style="border-left-color:#c2603c;background:#241d1a">
+    <b style="color:#e08a63">这张图的方向已经被否决,不要拿它当参照。</b>
+    2026-08-27 用户判定它<b>又做成了时序的</b>:顶上有一个「接手这只碗」的根节点让所有东西往下长,
+    流向被固定成单向 —— 而地图应当<b>没有起点</b>、玩家可落在任意地标、<b>路是双向的</b>
+    (从下往上探同样成立)。取而代之的结构见
+    <b>DEC-032</b>(2026-08-28,工作台／心智地图左右分离)。
+    <br><b>唯一还有效的部分是「悬空 → 被接住」这个画法</b>:节点先挂着、带一个 <b>?</b>、
+    写着「还不知道有什么用」,等下面长出汇合点时被金线接住(看第 6 拍和第 11 拍)。
+    它对应词汇表既有的<b>「意义未定观察」</b>,也是 DEC-032 决策面四类中的第一类;
+    <b>呈现形式待定</b>,但这个语义本身是站得住的。
+    <br>下面的原始说明保留备查,其中「自上而下」「下降感」「依赖深度作纵轴」<b>均已作废</b>。
+  </div>
+  <div class="warnbar">
+    <b>【已作废的原始说明】</b>这一版把「心智地图」和「推理视图」合成了一张。
+    它自己就是地图:从上往下<b>长出来</b>,越往下越确定。探索感来自「长」,逻辑感来自「依赖 ＋ 下降」。
+    <br><b>没有给你看完整作者依赖图</b>(DEC-016 禁止)——图上只有你自己长出来的部分,加上几个不知道通向哪里的断头。
+    完整拓扑只在<b>局末</b>翻开(第 10 拍),这是项目已经批准的。
+    <br>美术、字号、配色一律占位。
+  </div>
+
+  <div class="legend">
+    <span><i><svg width="26" height="14"><rect x="1" y="2" width="24" height="11" rx="3" fill="#1f2429" stroke="#a6a39c" stroke-width="1.4"/></svg></i>已经查到的东西</span>
+    <span><i><svg width="26" height="14"><rect x="1" y="2" width="24" height="11" rx="3" fill="#1f2429" stroke="#a08a52" stroke-width="1.4" stroke-dasharray="4 3"/></svg></i><b style="color:#c8a24a">悬空</b>:拿到了,还不知道有什么用</span>
+    <span><i><svg width="26" height="14"><polygon points="13,1 25,7 13,13 1,7" fill="#c8a24a"/></svg></i>汇合点:把上面几条接住</span>
+    <span><i><svg width="26" height="12"><line x1="1" y1="6" x2="25" y2="6" stroke="#8d9aa6" stroke-width="1.8"/></svg></i>依赖(上面那条撑着下面这条)</span>
+    <span><i><svg width="26" height="12"><line x1="1" y1="6" x2="25" y2="6" stroke="#c8a24a" stroke-width="2.4"/></svg></i>被接住的那一刻</span>
+    <span><i><svg width="26" height="12"><line x1="1" y1="6" x2="18" y2="6" stroke="#4b5259" stroke-width="1.6" stroke-dasharray="4 3"/><circle cx="22" cy="6" r="3.5" fill="none" stroke="#4b5259" stroke-width="1.3"/></svg></i>断头:这里还能往下,通向哪里未知</span>
+  </div>
+
+  <div class="bar">
+    <button id="prev">← 上一步</button>
+    <button id="next">下一步 →</button>
+    <span class="beat" id="beat"></span>
+    <span style="flex:1"></span>
+    <button id="reset">回到开局</button>
+  </div>
+
+  <div class="grid">
+    <div class="mapbox"><svg id="g" viewBox="0 0 1040 780" preserveAspectRatio="xMidYMid meet"></svg></div>
+    <div>
+      <div class="card"><h3>这一拍发生了什么</h3><p id="note"></p></div>
+      <div class="card"><h3>你现在能主张什么</h3><p id="claim"></p></div>
+      <div class="card"><h3>这一拍在演示的设计点</h3><p id="pt"></p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* 深度 = 依赖深度,不是时间。同一深度上并排的东西是可以并行做的。
+   越往下越确定 —— 这就是「下降」。 */
+const W = 158, H = 50;
+const N = {
+  START:{x:520,y:44,t:"接手这只碗",g:"你什么都还不知道",w:150},
+  XRAY :{x:118,y:170,t:"X 射线逐区成像",g:"釉下结构读数"},
+  WHOLE:{x:322,y:170,t:"看整体形制与胎釉",g:"当前器体特征"},
+  BASE :{x:500,y:170,t:"看底足与修足",g:"底足制造痕迹"},
+  DECOR:{x:686,y:170,t:"逐区看纹饰与色差",g:"外观曾被再整合"},
+  T2   :{x:882,y:170,t:"检索事故记录组",g:"T2 记录组自洽"},
+  CROSS:{x:118,y:306,t:"逐区跨时点对照",g:"跨时点重大变化"},
+  CORPUS:{x:410,y:306,t:"比同期真品语料",g:"制造与装饰系统差异"},
+  T2ATTR:{x:882,y:306,t:"核对记录的对象归属",g:"这组记录说的是这只碗"},
+  G1   :{x:410,y:436,t:"G1",g:"可信的问题方向",lm:true},
+  T2CORR:{x:882,y:436,t:"拿记录对现器物证",g:"记录描述的事在现器上找得到"},
+  G2   :{x:640,y:568,t:"G2",g:"身份 ＋ 曾发生重大重组",lm:true},
+  G3   :{x:640,y:700,t:"G3",g:"三阶段 ＋ 整体自洽",lm:true},
+};
+/* 依赖边:[上, 下] */
+const E_DEP = [["START","XRAY"],["START","WHOLE"],["START","BASE"],["START","DECOR"],["START","T2"],
+  ["WHOLE","CORPUS"],["BASE","CORPUS"],["XRAY","CROSS"],["T2","T2ATTR"],["T2ATTR","T2CORR"]];
+/* 汇合边:[上, 汇合点] —— 被接住的那一刻画金色 */
+const E_CONV = {
+  G1:[["WHOLE","G1"],["BASE","G1"],["CORPUS","G1"]],
+  G2:[["G1","G2"],["T2ATTR","G2"],["T2CORR","G2"]],
+  G2P:[["DECOR","G2"],["CROSS","G2"]],
+  G3:[["G2","G3"]],
+};
+
+const B = [
+{ /* 0 */ show:["START"], dangle:[], conv:[], stub:["XRAY","WHOLE","BASE","DECOR","T2"],
+  note:"你刚接手这只碗。图上只有一个点,下面挂着 <b>5 个断头</b> —— 有五个地方可以往下探,但<b>通向哪里、值不值得,都未知</b>。",
+  claim:"什么都不能主张。",
+  pt:"<b>不给全貌。</b>断头只说明「这里还能往下」,不说明下面有什么。这是「温和导向」——给方向,不给答案。" },
+
+{ /* 1 */ show:["START","WHOLE"], dangle:["WHOLE"], conv:[], stub:["XRAY","BASE","DECOR","T2"],
+  note:"你看了整体形制与胎釉,拿到「当前器体特征」。<b>它现在悬着</b> —— 单独一条,撑不起任何结论。",
+  claim:"还是什么都不能主张。",
+  pt:"<b>悬空。</b>拿到一条信息不等于知道它有什么用。它先挂在图上,等着以后被接住。" },
+
+{ /* 2 */ show:["START","WHOLE","BASE"], dangle:["WHOLE","BASE"], conv:[], stub:["XRAY","DECOR","T2"],
+  note:"你又看了底足与修足。<b>两条并排悬着</b> —— 注意它们在<b>同一层</b>,因为谁都不依赖谁,先看哪个都行。",
+  claim:"还是什么都不能主张。两条各自为政。",
+  pt:"<b>同层 = 自由。</b>并排意味着顺序随你。图上没有任何东西在催你按顺序走。" },
+
+{ /* 3 */ show:["START","WHOLE","BASE","CORPUS"], dangle:["CORPUS"], conv:[], stub:["XRAY","DECOR","T2"],
+  note:"你去比了同期真品语料 —— <b>这一步刚才做不了</b>,它需要上面那两条先到位。现在它长在它们下面,<b>把两条悬空的接住了</b>。",
+  claim:"还不能主张,但方向有了。",
+  pt:"<b>依赖是真的约束,不是关卡门。</b>它长在下面,是因为它<b>确实</b>需要上面那两条,不是因为系统要你按顺序玩。" },
+
+{ /* 4 */ show:["START","WHOLE","BASE","CORPUS"], dangle:[], conv:["G1"], stub:["XRAY","DECOR","T2"],
+  note:"三条合起来<b>收成一个汇合点:G1</b>。这是第一次「一堆碎信息变成一句能说出口的话」。",
+  claim:"<em>这是一个值得往下查的问题方向</em> —— 制造与装饰特征与同期真品有系统差异。",
+  pt:"<b>汇合点画在几条道路真正合拢的地方</b>(DEC-028)。它不是进度条上的一格,是<b>几条线的交点</b>。" },
+
+{ /* 5 */ show:["START","WHOLE","BASE","CORPUS","DECOR"], dangle:["DECOR"], conv:["G1"], stub:["XRAY","T2"],
+  note:"你逐区看了纹饰与色差,拿到「外观曾被再整合」。<b>它悬着,而且你现在不知道它有什么用。</b>",
+  claim:"和上一拍一样。这一步没有推进阶段。",
+  pt:"<b>这就是你截图里的 go pick tomato。</b>付了钱、拿到了东西,但意义还没被接住。<b>记住它的位置</b> —— 第 10 拍会回来说它。" },
+
+{ /* 6 */ show:["START","WHOLE","BASE","CORPUS","DECOR","T2"], dangle:["DECOR","T2"], conv:["G1"], stub:["XRAY"],
+  note:"你检索了事故记录组,拿到「T2 记录组自洽」——<b>这组记录自己前后一致</b>。但它说的是不是这只碗,还不知道。",
+  claim:"和上一拍一样。",
+  pt:"<b>「记录自洽」≠「记录说的是这一件」。</b>系统<b>拒绝</b>把前者当成后者。证据≠结论,在这里就是一条悬空的线。" },
+
+{ /* 7 */ show:["START","WHOLE","BASE","CORPUS","DECOR","T2","T2ATTR"], dangle:["DECOR","T2ATTR"],
+  conv:["G1"], stub:["XRAY"],
+  note:"你核对了对象归属 —— <b>这组记录确实说的是这只碗</b>。它长在记录组下面,把记录组接住了。",
+  claim:"仍然只有 G1。归属成立不等于「重大重组」成立。",
+  pt:"<b>往下长一层 = 确定性上升一档。</b>但阶段没动 —— <b>确定性和阶段不是同一件事</b>。" },
+
+{ /* 8 */ show:["START","WHOLE","BASE","CORPUS","DECOR","T2","T2ATTR","T2CORR"], dangle:["DECOR"],
+  conv:["G1","G2"], stub:["XRAY"],
+  note:"你拿记录去对现器物证,对上了。<b>G1 ＋ 归属 ＋ 物证印证三条一起收进 G2。</b>这一拍是本局最大的一次汇合。",
+  claim:"<em>这是晚 18 世纪外销瓷这个方向可以主张</em>;<em>曾发生重大重组可以主张</em>。",
+  pt:"<b>汇合点越往下,吃进来的线越多。</b>这就是「下降」的手感:每往下一层,身后合拢的东西更多,而<b>能走的路更少</b>。" },
+
+{ /* 9 */ show:["START","WHOLE","BASE","CORPUS","DECOR","T2","T2ATTR","T2CORR"], dangle:["DECOR"],
+  conv:["G1","G2"], stub:["XRAY"], stop:true,
+  note:"你决定<b>收手</b>。系统没有替你结束。阶段冻结在 G2,图就停在现在这个样子。",
+  claim:"冻结在 G2。「三阶段修复史」你没有去证,也没有假装证到了。",
+  pt:"<b>停手是玩家的动作。</b>图上那个 X 射线断头、那个悬空的纹饰节点,都是你<b>主动放弃</b>的东西,不是系统没给你。" },
+
+{ /* 10 */ show:["START","WHOLE","BASE","CORPUS","DECOR","T2","T2ATTR","T2CORR"], dangle:[],
+  conv:["G1","G2"], stub:[], reveal:true, stop:true,
+  note:"<b>局末揭示。</b>灰色的那一整片是<b>你没走的那条路</b>:X 射线 → 逐区跨时点对照。<br><br>看那条从<b>纹饰节点</b>连下来的灰线 —— 它一直悬到局末,<b>因为你走的是档案路,而档案路不需要它</b>。走另一条路,它会在那边<b>被接住</b>。",
+  claim:"客观真相在这里揭示(本草图不画)。你的判断质量单独结算。",
+  pt:"<b>这是你要的那句话:我走了哪条路,哪条路断在哪。</b>完整拓扑只在此刻翻开 —— 玩的时候给了会变成攻略(DEC-016)。" },
+];
+
+let i = 0;
+const P = id => N[id];
+const box = (id) => {
+  const n = P(id), w = n.w || W, x = n.x - w/2, y = n.y - H/2;
+  return {x, y, w, h:H, cx:n.x, cy:n.y, top:y, bot:y+H};
+};
+
+function node(id, state){
+  const n = P(id), b = box(id);
+  if(n.lm){
+    const r = 34, rr = 20;
+    const S = state==="ghost"
+      ? {f:"none", s:"#4b5259", d:"4 3", t:"#4b5259", g:"#3f464c"}
+      : {f:"#c8a24a", s:"#c8a24a", d:"", t:"#241d0e", g:"#c8a24a"};
+    let s = `<polygon points="${n.x},${n.y-rr-8} ${n.x+r},${n.y-rr+6} ${n.x+r},${n.y+rr-6} ${n.x},${n.y+rr+8} ${n.x-r},${n.y+rr-6} ${n.x-r},${n.y-rr+6}"
+      fill="${S.f}" stroke="${S.s}" stroke-width="1.6" stroke-dasharray="${S.d}"/>`;
+    s += `<text x="${n.x}" y="${n.y+5}" text-anchor="middle"
+      style="font-size:14px;font-weight:700;fill:${S.t}">${esc(n.t)}</text>`;
+    s += `<text class="${state==="ghost"?"gh":"dg"}" x="${n.x}" y="${n.y+rr+24}" text-anchor="middle">${esc(n.g)}</text>`;
+    return s;
+  }
+  const S = {
+    solid:{f:"#1f2429", s:"#a6a39c", d:"", t:"#e8e4dc", g:"#8a8781"},
+    dangle:{f:"#1e1d19", s:"#a08a52", d:"4 3", t:"#e8e4dc", g:"#a08a52"},
+    ghost:{f:"#121518", s:"#4b5259", d:"4 3", t:"#5d646b", g:"#4b5259"},
+  }[state];
+  let s = `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="5"
+    fill="${S.f}" stroke="${S.s}" stroke-width="1.5" stroke-dasharray="${S.d}"/>`;
+  s += `<text x="${n.x}" y="${n.y-4}" text-anchor="middle" style="font-size:12px;fill:${S.t}">${esc(n.t)}</text>`;
+  s += `<text x="${n.x}" y="${n.y+14}" text-anchor="middle" style="font-size:10.5px;fill:${S.g}">${esc(n.g)}</text>`;
+  if(state==="dangle"){
+    s += `<circle cx="${b.x+b.w-1}" cy="${b.y+1}" r="8.5" fill="#1e1d19" stroke="#a08a52" stroke-width="1.3"/>`;
+    s += `<text x="${b.x+b.w-1}" y="${b.y+5}" text-anchor="middle"
+      style="font-size:11px;fill:#c8a24a;font-weight:700">?</text>`;
+    s += `<text class="dg" x="${n.x}" y="${b.bot+15}" text-anchor="middle">还不知道有什么用</text>`;
+  }
+  return s;
+}
+
+/* 边:从上一个节点的底,连到下一个节点的顶 */
+function edge(a,b,kind){
+  const A = box(a), Bb = box(b);
+  const x1 = A.cx, y1 = A.bot, x2 = Bb.cx, y2 = Bb.top;
+  const my = (y1+y2)/2;
+  const S = {dep:{c:"#8d9aa6",w:1.8,d:"",o:".8"},
+             conv:{c:"#c8a24a",w:2.4,d:"",o:"1"},
+             ghost:{c:"#4b5259",w:1.6,d:"4 3",o:".85"}}[kind];
+  return `<path d="M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2-2}" fill="none"
+    stroke="${S.c}" stroke-width="${S.w}" stroke-dasharray="${S.d}" opacity="${S.o}"/>`;
+}
+function stub(id){
+  const b = box(id), y = b.bot;
+  return `<path d="M${b.cx},${y} L${b.cx},${y+26}" stroke="#4b5259" stroke-width="1.6"
+      stroke-dasharray="4 3"/>
+    <circle cx="${b.cx}" cy="${y+34}" r="6" fill="#0f1215" stroke="#4b5259" stroke-width="1.4"/>`;
+}
+
+function render(){
+  const b = B[i];
+  const vis = new Set(b.show);
+  const dangle = new Set(b.dangle);
+  const conv = new Set(b.conv);
+  let g = "";
+
+  /* 深度刻度:说明纵轴是什么。不写「第几步」,因为它不是时间。 */
+  g += `<text class="lbl" x="18" y="46">起点</text>`;
+  g += `<text class="lbl" x="18" y="640">越往下 · 越确定</text>`;
+  g += `<path d="M30,60 L30,620" stroke="#191d21" stroke-width="1"/>`;
+  g += `<path d="M30,620 l-4,-9 l8,0 z" fill="#191d21"/>`;
+
+  /* 局末揭示的那一片 */
+  if(b.reveal){
+    g += `<rect x="46" y="128" width="188" height="480" rx="8" fill="#101316"
+      stroke="#2b3238" stroke-width="1" stroke-dasharray="6 4"/>`;
+    g += `<text class="gh" x="140" y="150" text-anchor="middle">你没有走的那条路</text>`;
+    for(const [a,c] of [["START","XRAY"],["XRAY","CROSS"]]) g += edge(a,c,"ghost");
+    for(const [a,c] of E_CONV.G2P) g += edge(a,c,"ghost");
+    g += edge("G2","G3","ghost");
+  }
+
+  /* 依赖边 */
+  for(const [a,c] of E_DEP)
+    if(vis.has(a) && vis.has(c)) g += edge(a,c,"dep");
+  /* 汇合边 */
+  for(const k of conv)
+    for(const [a,c] of E_CONV[k])
+      if(vis.has(a) || N[a].lm) g += edge(a,c,"conv");
+
+  /* 断头 */
+  for(const s of (b.stub||[])){
+    if(vis.has(s)) continue;
+    const par = E_DEP.find(([,c]) => c===s);
+    if(par && vis.has(par[0])){
+      const A = box(par[0]), Bb = box(s);
+      g += `<path d="M${A.cx},${A.bot} C${A.cx},${(A.bot+Bb.top)/2} ${Bb.cx},${(A.bot+Bb.top)/2} ${Bb.cx},${Bb.top-16}"
+        fill="none" stroke="#4b5259" stroke-width="1.6" stroke-dasharray="4 3"/>`;
+      g += `<circle cx="${Bb.cx}" cy="${Bb.top-8}" r="6" fill="#0f1215" stroke="#4b5259" stroke-width="1.4"/>`;
+    }
+  }
+
+  /* 节点 */
+  if(b.reveal) for(const id of ["XRAY","CROSS","G3"]) g += node(id,"ghost");
+  for(const id of b.show) g += node(id, dangle.has(id) ? "dangle" : "solid");
+  for(const k of conv) if(N[k]) g += node(k,"solid");
+
+  /* 悬空到局末仍没被接住的那条:灰线已由 G2P 画出,这里只标注它 */
+  if(b.reveal){
+    const A = box("DECOR");
+    g += `<text class="gh" x="${A.cx}" y="${A.bot+34}" text-anchor="middle">这一条一直没被接住</text>`;
+    g += `<text class="gh" x="${A.cx}" y="${A.bot+50}" text-anchor="middle">走左边那条路它会被接住</text>`;
+  }
+  if(b.stop){
+    g += `<text class="dg" x="${box("G2").cx}" y="${box("G2").cy+62}" text-anchor="middle">你在这里收手 · 阶段冻结</text>`;
+  }
+
+  document.getElementById("g").innerHTML = g;
+  document.getElementById("note").innerHTML = b.note;
+  document.getElementById("claim").innerHTML = b.claim;
+  document.getElementById("pt").innerHTML = b.pt;
+  document.getElementById("beat").textContent = `第 ${i+1} / ${B.length} 拍`;
+  document.getElementById("prev").disabled = i===0;
+  document.getElementById("next").disabled = i===B.length-1;
+}
+document.getElementById("prev").onclick = () => { if(i>0){i--;render()} };
+document.getElementById("next").onclick = () => { if(i<B.length-1){i++;render()} };
+document.getElementById("reset").onclick = () => { i=0; render() };
+document.addEventListener("keydown", e => {
+  if(e.key==="ArrowRight" && i<B.length-1){i++;render()}
+  if(e.key==="ArrowLeft" && i>0){i--;render()}
+});
+render();
+</script>
+</body>
+</html>

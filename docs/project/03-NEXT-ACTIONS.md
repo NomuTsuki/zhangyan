@@ -45,6 +45,11 @@ V2 冻结、DEC-017—029、客观真相、开放证据网和三档结果继续�
     - **视口范围已由 DEC-033 关闭：** 正式切片只做电脑浏览器尺寸，手机端移出本阶段范围，**不做响应式断点、不做上下折叠变体、不做窄屏降级**，因此 DEC-032 的左右分区可以放心建。代价已记账：若产品定性仍为“微信端 H5 小游戏”，欠一次完整竖屏信息架构，其中“决策面四类能否在竖屏同屏可比”可能与 DEC-032 的反派工保证直接冲突——这一条不是适配问题。本阶段为期两周的线上实习，目标是把正式切片做出来；作品集申请截止在 2026-10-20 之前，拼版不占用这两周，但采集按里程碑照旧。
     - **过程草图三份，前提均已失效，只作过程资产保留（文件内已就地标注）：** [三种布局对照](evidence/v3-design/validation/map-layout-sketch-v0/layouts.html)（把行动面与认知面合并了）；[自上而下生长图](evidence/v3-design/validation/two-views-sketch-v0/growing-graph.html)（有根节点、单向流，与开放世界无起点冲突；其中「意义未定观察被后来的汇合接住」的画法仍可用）；[两视图对照](evidence/v3-design/validation/two-views-sketch-v0/two-views.html)（拆成两张图，而用户要的是一张）。
     - **重做时必须复用而不是重写：** `knowledge-map-slice-v0/` 的 `case.mjs`（动作到事件的投影、可用性理由、玩家可见读数）、`harness.mjs`（15 项无界面自检）、`build.mjs`（只读内联冻结源并记录 SHA-256）三者与地图层无关，重做地图不应触碰它们的求解器接线部分。
+    - **2026-08-31 左右分区呈现变体已做出并在浏览器实跑：** [工作台／心智地图 呈现变体 v0](evidence/v3-design/validation/workbench-map-v0/README.md)，`prototype.html` 可双击离线玩。四种既有关系全部画出来了（未另起一套边语义）；局部 Finding 由同一潜变量聚起 ≥2 条观察时自动成形，公理由已成立且无争议的主张坍缩并钉住；G 不进地图只作顶栏一行读数；两拍动画与历史回放（同时回放地图与决策面）均已实现。`node harness.mjs` **40 项全过**，含 `SLOT_FACTS` 防漂移、空局右侧确实无位置、决策面 ≤3 条且清空必带理由、逻辑边 ≤21 条、玩家可见文本 119 段无泄题；浏览器实跑 10 步到 G2，12 个标签零压叠（`getBoundingClientRect` 两两求交）。
+      - **两处执行中的判断需要裁决（`review required`）：** ①决策面多加了一档 `gap`「已经动起来了，还缺 N 块」——DEC-032 第八节原文只写「差一件就能合拢」，按字面实现会让玩家在 G1／G2 面对空白决策面，这是对已批准决定的语义扩写；②决策面允许清空但必带一句明说理由，刻意**没有**把玩家还没动过的主张列出来充数（那就是 todolist）。
+      - **三件查明的事实：** `minimumSourceCount` 数的是来源并集而非 witness 个数（按后者判断会在 G3 状态凭空造出 9 条假缺口）；`g3BlockingUnknowns` 在实况会话里恒为空，因为它推自 `fixture.unknowns` 这个声明字段而实况夹具不声明它——**所以 08-28 那条「抓到泄题」应更正为潜在缺陷而非正在显示**；器物侧也存在事实门槛（跨时点对照要求第二个时点），那是逻辑不可能不是剧情解锁，但 DEC-032 第三节的措辞盖不住这种情况。
+      - **未做：** 公理坍缩的蛛网式衰减仍未实现（当前是二值的公理钉死／其余全动，DEC-032 未决问题第 2 条）；投影层无测试覆盖，这是「先加投影层试」那个岔口的既定代价。
+      - **下一步是真人试玩**，清单在 `workbench-map-v0/PLAYTEST.md`，硬标准是玩完能不能自己说出一句完整的「我认为这是 X，因为……；D 我没查，所以 E 我不敢说」。
 17b. **旧描述保留备查：** 上一版第 17 条的立项理由是「以 DEC-026／028／029／030 语义制作可丢弃的可玩地图切片，桌面浏览器尺寸，内容取自已冻结的作者规格夹具，与正式产品代码隔离，允许整体丢弃」。这一条已完成，参照资产如下。
     - **已有的静态参照：** [知识地图走查 v0](evidence/v3-design/validation/knowledge-map-walkthrough-v0/README.md) 的两份离线 HTML 已把作者侧依赖全貌与玩家侧 15 拍显影画成可看的对象，切片布局与语义可直接以它为起点，不必从空白开始；
     - **DEC-030 对切片的约束：** 足迹层必须能显示重复／阴性／死路，费用与剩余机会必须可见，但切片**不得**实现任何按玩法质量调整估值或后验的逻辑；
@@ -144,6 +149,9 @@ flowchart LR
 - [罗盘不限定“当前最优调查”的排序范围](decisions/DEC-029-v3-compass-does-not-restrict-best-investigation-ranking.md)
 - [地标模型草图 v0（三模型静态线框与渲染比较）](evidence/v3-design/validation/knowledge-map-sketches-v0/README.md)
 - [情报语义文本 v0（玩家可读层，188 条，check 15/15）](evidence/v3-design/validation/evidence-semantics-v0/README.md)
+- [工作台／心智地图 呈现变体 v0（可双击离线玩，harness 40/40）](evidence/v3-design/validation/workbench-map-v0/README.md)
+- [分离工作台与心智地图，证据经济三层](decisions/DEC-032-v3-workbench-map-separation-and-guidance-division.md)
+- [正式切片只做电脑尺寸，移动端移出本阶段范围](decisions/DEC-033-v3-desktop-only-for-the-formal-slice-mobile-out-of-stage-scope.md)
 - [G2 稳定性与场景范围重分类](evidence/v3-design/2026-08-23-first-ceramic-g2-stability-and-scenario-scope-reclassification-v0.md)
 - [玩家知识工作台微循环三分支 v0](evidence/v3-design/2026-08-21-player-knowledge-workbench-microcycle-branches-v0.md)
 - [UI／UX Skill 候选核验](evidence/v3-design/2026-08-21-ui-ux-skill-candidate-research.md)

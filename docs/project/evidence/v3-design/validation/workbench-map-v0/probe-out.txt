@@ -1,0 +1,1069 @@
+########## 中局:物证六步 ##########
+
+=== top-level keys ===
+claims
+conflicts
+coverage
+evidence
+marginals
+posterior
+stage
+stopping
+supports
+
+=== evidence ===
+{
+ "activeDependencyUnits": [
+  {
+   "observationIds": [
+    "obs.object.continuity"
+   ],
+   "sharedLatentIds": [
+    "latent.object-match"
+   ],
+   "sourceIds": [
+    "source.archive.image",
+    "source.physical.current"
+   ],
+   "unitId": "dep.object.continuity"
+  },
+  {
+   "observationIds": [
+    "obs.structure.major.cross-time",
+    "obs.structure.xray.early"
+   ],
+   "sharedLatentIds": [
+    "latent.repair-map"
+   ],
+   "sourceIds": [
+    "source.archive.major-region-pre",
+    "source.instrument.xray",
+    "source.physical.major-region-current"
+   ],
+   "unitId": "dep.structure.major"
+  }
+ ],
+ "attemptCount": 6,
+ "contextualizedObservationIds": [
+  "obs.structure.xray.early"
+ ],
+ "inactiveObservationIds": [],
+ "observationIds": [
+  "obs.appearance.restore",
+  "obs.current.base",
+  "obs.current.whole",
+  "obs.object.continuity",
+  "obs.structure.major.cross-time",
+  "obs.structure.xray.early"
+ ],
+ "scopeLimitedObservationIds": [],
+ "unresolvedNegativeIds": []
+}
+
+=== coverage keys ===
+archiveRelations
+contextActivationWitnesses
+factLanes
+factWitnesses
+facts
+g3BlockingUnknowns
+majorProofPaths
+observations
+proofRoleWitnesses
+proofWitnesses
+unknowns
+
+=== coverage.proofRoleWitnesses ===
+{
+ "PROOF.CURRENT.NAMED_REPAIR_MAP": [
+  {
+   "coverage": {
+    "method": "visual",
+    "object": "OBJECT.FIRST",
+    "region": "whole-visible"
+   },
+   "dependencyUnitId": "dep.fact.current-whole",
+   "observationId": "obs.current.whole",
+   "sourceIds": [
+    "source.physical.current"
+   ]
+  }
+ ],
+ "PROOF.MAJOR.PHYSICAL.CROSS_TIME": [
+  {
+   "coverage": {
+    "method": "cross-time",
+    "object": "OBJECT.FIRST",
+    "region": "declared-major-scope"
+   },
+   "dependencyUnitId": "dep.structure.major",
+   "observationId": "obs.structure.major.cross-time",
+   "sourceIds": [
+    "source.archive.major-region-pre",
+    "source.physical.major-region-current"
+   ]
+  }
+ ],
+ "PROOF.MAJOR.PHYSICAL.STRUCTURE_MAP": [
+  {
+   "coverage": {
+    "method": "xray",
+    "object": "OBJECT.FIRST",
+    "region": "declared-major-scope-multi-view-readable"
+   },
+   "dependencyUnitId": "dep.structure.major",
+   "observationId": "obs.structure.xray.early",
+   "sourceIds": [
+    "source.instrument.xray"
+   ]
+  }
+ ]
+}
+
+=== coverage.observations ===
+[
+ {
+  "coverage": {
+   "method": "visual",
+   "object": "OBJECT.FIRST",
+   "region": "declared-restored-zone"
+  },
+  "observationId": "obs.appearance.restore"
+ },
+ {
+  "coverage": {
+   "method": "visual",
+   "object": "OBJECT.FIRST",
+   "region": "base-and-inner"
+  },
+  "observationId": "obs.current.base"
+ },
+ {
+  "coverage": {
+   "method": "visual",
+   "object": "OBJECT.FIRST",
+   "region": "whole-visible"
+  },
+  "observationId": "obs.current.whole"
+ },
+ {
+  "coverage": {
+   "method": "cross-time",
+   "object": "OBJECT.FIRST",
+   "region": "stable-anchors"
+  },
+  "observationId": "obs.object.continuity"
+ },
+ {
+  "coverage": {
+   "method": "cross-time",
+   "object": "OBJECT.FIRST",
+   "region": "declared-major-scope"
+  },
+  "observationId": "obs.structure.major.cross-time"
+ },
+ {
+  "coverage": {
+   "method": "xray",
+   "object": "OBJECT.FIRST",
+   "region": "declared-major-scope-multi-view-readable"
+  },
+  "observationId": "obs.structure.xray.early"
+ }
+]
+
+=== coverage.archiveRelations ===
+{
+ "t2": {
+  "eventCorroboration": "suggestive",
+  "objectAttribution": "unresolved",
+  "recordCoherence": "unresolved",
+  "systemAttributionEstablished": false
+ },
+ "t3": {
+  "eventCorroboration": "unresolved",
+  "objectAttribution": "unresolved",
+  "recordCoherence": "unresolved",
+  "systemAttributionEstablished": false
+ }
+}
+
+=== claims ===
+{
+ "coherentDecisionProfile": {
+  "established": false
+ },
+ "g1": {
+  "established": true
+ },
+ "identity": {
+  "contested": false,
+  "established": true,
+  "logicallyRefuted": false
+ },
+ "majorReassembly": {
+  "contested": false,
+  "established": true,
+  "logicallyRefuted": false
+ },
+ "threePhase": {
+  "established": false
+ }
+}
+
+=== conflicts ===
+[]
+
+stage=G2
+majorProofPaths={"documented":false,"physical":true}
+g3BlockingUnknowns=[]
+unknowns=[]
+
+=== stopping ===
+{
+ "frozenStage": null,
+ "playerChoice": "CONTINUE",
+ "systemAutoEnded": false
+}
+
+########## 早拿后懂:射线先行三步 ##########
+
+=== evidence ===
+{
+ "activeDependencyUnits": [],
+ "attemptCount": 3,
+ "contextualizedObservationIds": [],
+ "inactiveObservationIds": [
+  "obs.structure.xray.early"
+ ],
+ "observationIds": [
+  "obs.current.base",
+  "obs.current.whole",
+  "obs.structure.xray.early"
+ ],
+ "scopeLimitedObservationIds": [],
+ "unresolvedNegativeIds": []
+}
+
+=== coverage.proofRoleWitnesses ===
+{
+ "PROOF.CURRENT.NAMED_REPAIR_MAP": [
+  {
+   "coverage": {
+    "method": "visual",
+    "object": "OBJECT.FIRST",
+    "region": "whole-visible"
+   },
+   "dependencyUnitId": "dep.fact.current-whole",
+   "observationId": "obs.current.whole",
+   "sourceIds": [
+    "source.physical.current"
+   ]
+  }
+ ]
+}
+
+stage=NONE
+
+########## 静态合同 ##########
+
+=== proofRoleContracts ===
+{
+ "PROOF.CURRENT.NAMED_REPAIR_MAP": {
+  "acquisitionActionId": "A.OBSERVE.WHOLE",
+  "method": "visual",
+  "coverage": {
+   "object": "OBJECT.FIRST",
+   "region": "whole-visible"
+  },
+  "requiredFacts": [
+   "currentRepairMap"
+  ],
+  "requiredSourceIds": [
+   "source.physical.current"
+  ],
+  "minimumSourceCount": 1
+ },
+ "PROOF.ARCHIVE.T2.RECORD_COHERENCE": {
+  "acquisitionActionId": "A.RESEARCH.ACCIDENT",
+  "method": "archive",
+  "coverage": {
+   "object": "ARCHIVE.CANDIDATE.T2",
+   "region": "declared-record-group"
+  },
+  "requiredFacts": [
+   "t2RecordGroupCoherent",
+   "t2RecordClaimsDamageExtent",
+   "t2RecordClaimsReassembly"
+  ],
+  "requiredSourceIds": [
+   "source.event.accident.insurance",
+   "source.event.accident.photo"
+  ],
+  "minimumSourceCount": 2
+ },
+ "PROOF.ARCHIVE.T2.OBJECT_ATTRIBUTION": {
+  "acquisitionActionId": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+  "method": "object-attribution",
+  "coverage": {
+   "object": "RELATION.ARCHIVE_T2_OBJECT_FIRST",
+   "region": "stable-noncomposition-anchors"
+  },
+  "requiredFacts": [
+   "t2ArchiveObjectAttribution"
+  ],
+  "requiredSourceIds": [
+   "source.archive.t2.object-register",
+   "source.physical.t2.stable-anchors"
+  ],
+  "allowedSourceIds": [
+   "source.archive.t2.object-register",
+   "source.physical.t2.stable-anchors"
+  ],
+  "minimumSourceCount": 2
+ },
+ "PROOF.ARCHIVE.T2.EVENT_CURRENT_CORROBORATION": {
+  "acquisitionActionId": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+  "method": "record-current",
+  "coverage": {
+   "object": "RELATION.ARCHIVE_T2_EVENT_OBJECT_FIRST",
+   "region": "declared-major-scope"
+  },
+  "requiredFacts": [
+   "t2EventPhysicalCorrespondence",
+   "appearanceRestore"
+  ],
+  "requiredSourceIds": [
+   "source.archive.t2.repair-diagram",
+   "source.physical.current-repair-map"
+  ],
+  "allowedSourceIds": [
+   "source.archive.t2.repair-diagram",
+   "source.physical.current-repair-map"
+  ],
+  "minimumSourceCount": 2
+ },
+ "PROOF.ARCHIVE.T2.EVENT_CROSS_TIME_CORROBORATION": {
+  "acquisitionActionId": "A.MAP.REGION_CONTINUITY",
+  "method": "cross-time",
+  "coverage": {
+   "object": "RELATION.ARCHIVE_T2_EVENT_OBJECT_FIRST",
+   "region": "declared-major-scope"
+  },
+  "requiredFacts": [
+   "t2EventPhysicalCorrespondence",
+   "appearanceRestore"
+  ],
+  "requiredSourceIds": [
+   "source.archive.major-region-pre",
+   "source.physical.major-region-current"
+  ],
+  "allowedSourceIds": [
+   "source.archive.major-region-pre",
+   "source.physical.major-region-current"
+  ],
+  "minimumSourceCount": 2
+ },
+ "PROOF.ARCHIVE.T3.RECORD_COHERENCE": {
+  "acquisitionActionId": "A.RESEARCH.LATE_TREATMENT",
+  "method": "archive",
+  "coverage": {
+   "object": "ARCHIVE.CANDIDATE.T3",
+   "region": "declared-treatment-records"
+  },
+  "requiredFacts": [
+   "t3RecordGroupCoherent",
+   "t3RecordClaimsLocalTreatment"
+  ],
+  "requiredSourceIds": [
+   "source.archive.t3.condition-report",
+   "source.archive.t3.treatment-map"
+  ],
+  "allowedSourceIds": [
+   "source.archive.t3.condition-report",
+   "source.archive.t3.treatment-map"
+  ],
+  "minimumSourceCount": 2
+ },
+ "PROOF.ARCHIVE.T3.OBJECT_ATTRIBUTION": {
+  "acquisitionActionId": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+  "method": "object-attribution",
+  "coverage": {
+   "object": "RELATION.ARCHIVE_T3_OBJECT_FIRST",
+   "region": "stable-noncomposition-anchors"
+  },
+  "requiredFacts": [
+   "t3ArchiveObjectAttribution"
+  ],
+  "requiredSourceIds": [
+   "source.archive.t3.object-register",
+   "source.physical.t3.stable-anchors"
+  ],
+  "allowedSourceIds": [
+   "source.archive.t3.object-register",
+   "source.physical.t3.stable-anchors"
+  ],
+  "minimumSourceCount": 2
+ },
+ "PROOF.ARCHIVE.T3.EVENT_CURRENT_CORROBORATION": {
+  "acquisitionActionId": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+  "method": "record-current",
+  "coverage": {
+   "object": "RELATION.ARCHIVE_T3_EVENT_OBJECT_FIRST",
+   "region": "declared-treatment-scope"
+  },
+  "requiredFacts": [
+   "t3EventPhysicalCorrespondence"
+  ],
+  "requiredSourceIds": [
+   "source.archive.t3.post-treatment-photo",
+   "source.physical.t3.current-zone"
+  ],
+  "allowedSourceIds": [
+   "source.archive.t3.post-treatment-photo",
+   "source.physical.t3.current-zone"
+  ],
+  "minimumSourceCount": 2
+ },
+ "PROOF.MAJOR.PHYSICAL.STRUCTURE_MAP": {
+  "acquisitionActionId": "A.IMAGE.XRAY",
+  "method": "xray",
+  "coverage": {
+   "object": "OBJECT.FIRST",
+   "region": "declared-major-scope-multi-view-readable"
+  },
+  "requiredFacts": [
+   "currentStructureReadoutByRegion"
+  ],
+  "allowedSourceIds": [
+   "source.instrument.structure",
+   "source.instrument.xray"
+  ],
+  "minimumSourceCount": 1
+ },
+ "PROOF.MAJOR.PHYSICAL.CROSS_TIME": {
+  "acquisitionActionId": "A.MAP.REGION_CONTINUITY",
+  "method": "cross-time",
+  "coverage": {
+   "object": "OBJECT.FIRST",
+   "region": "declared-major-scope"
+  },
+  "requiredFacts": [
+   "crossTimeMajorChange"
+  ],
+  "requiredSourceIds": [
+   "source.archive.major-region-pre",
+   "source.physical.major-region-current"
+  ],
+  "minimumSourceCount": 2
+ }
+}
+
+=== actionContracts ===
+{
+ "A.OBSERVE.WHOLE": {
+  "methods": {
+   "visual": {
+    "allowedDirectFacts": [
+     "currentBody",
+     "currentDecor",
+     "currentRepairMap",
+     "interventionObservation"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [
+     "PROOF.CURRENT.NAMED_REPAIR_MAP"
+    ],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.OBSERVE.BASE": {
+  "methods": {
+   "visual": {
+    "allowedDirectFacts": [
+     "baseManufacture"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.COMPARE.CORPUS": {
+  "methods": {
+   "corpus": {
+    "allowedDirectFacts": [
+     "directionCorpus",
+     "identityComparisonExclusion"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "Identity"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   },
+   "fixture": {
+    "allowedDirectFacts": [
+     "directionCorpus",
+     "identityComparisonExclusion"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": true
+   },
+   "capable-identity": {
+    "allowedDirectFacts": [
+     "negativeSignalObserved"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [
+     "scopedAbsenceSupported"
+    ],
+    "allowedNegativeRawFacts": [
+     "negativeSignalObserved"
+    ],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "Identity"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.COMPARE.CORPUS.RECHECK": {
+  "methods": {
+   "corpus": {
+    "allowedDirectFacts": [
+     "directionCorpus",
+     "identityComparisonExclusion",
+     "repeatObservation"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "Identity"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.VERIFY.OBJECT_CONTINUITY": {
+  "methods": {
+   "cross-time": {
+    "allowedDirectFacts": [
+     "directionHistoricCandidate",
+     "identityObjectContinuity"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "Identity"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.RESEARCH.ACCIDENT": {
+  "methods": {
+   "archive": {
+    "allowedDirectFacts": [
+     "t2RecordGroupCoherent",
+     "t2RecordClaimsAppearanceRestore",
+     "t2RecordClaimsDamageExtent",
+     "t2RecordClaimsReassembly"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [
+     "PROOF.ARCHIVE.T2.RECORD_COHERENCE"
+    ],
+    "allowedAxes": [
+     "RepairHistory"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   },
+   "fixture": {
+    "allowedDirectFacts": [
+     "t2RecordClaimsAppearanceRestore",
+     "t2RecordClaimsDamageExtent",
+     "t2RecordClaimsReassembly"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": true
+   },
+   "contested": {
+    "allowedDirectFacts": [
+     "t2ArchiveRecordCoherenceContested"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.RELATE.ARCHIVE.T2_TO_OBJECT": {
+  "methods": {
+   "object-attribution": {
+    "allowedDirectFacts": [
+     "t2ArchiveObjectAttribution",
+     "t2ArchiveObjectLinkCandidate"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [
+     "PROOF.ARCHIVE.T2.OBJECT_ATTRIBUTION"
+    ],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   },
+   "contested": {
+    "allowedDirectFacts": [
+     "t2ArchiveObjectAttributionContested"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.CORROBORATE.ARCHIVE.T2_CURRENT": {
+  "methods": {
+   "record-current": {
+    "allowedDirectFacts": [
+     "appearanceRestore",
+     "t2EventPhysicalCorrespondence"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [
+     "PROOF.ARCHIVE.T2.EVENT_CURRENT_CORROBORATION"
+    ],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   },
+   "contested": {
+    "allowedDirectFacts": [
+     "t2EventPhysicalCorrespondenceContested"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.OBSERVE.REGION_DECOR": {
+  "methods": {
+   "visual": {
+    "allowedDirectFacts": [
+     "appearanceRestore",
+     "glueLineObserved"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.IMAGE.XRAY": {
+  "methods": {
+   "xray": {
+    "allowedDirectFacts": [
+     "currentStructureReadoutByRegion",
+     "xrayReadingsByRegionAcquired",
+     "xraySingleReadingAcquired"
+    ],
+    "allowedContextualFacts": [
+     "currentStructureReadoutByRegion"
+    ],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [
+     "PROOF.MAJOR.PHYSICAL.STRUCTURE_MAP"
+    ],
+    "allowedAxes": [
+     "RepairHistory"
+    ],
+    "requiredContextFacts": [
+     "identityObjectContinuity"
+    ],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.LOCATE.HISTORIC_IMAGE": {
+  "methods": {
+   "archive": {
+    "allowedDirectFacts": [
+     "t1ReadingAcquired"
+    ],
+    "allowedContextualFacts": [
+     "t1Established"
+    ],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "RepairHistory"
+    ],
+    "requiredContextFacts": [
+     "identityObjectContinuity"
+    ],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.RESEARCH.LATE_TREATMENT": {
+  "methods": {
+   "archive": {
+    "allowedDirectFacts": [
+     "t3RecordGroupCoherent",
+     "t3RecordClaimsLocalTreatment"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [
+     "PROOF.ARCHIVE.T3.RECORD_COHERENCE"
+    ],
+    "allowedAxes": [
+     "RepairHistory"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   },
+   "contested": {
+    "allowedDirectFacts": [
+     "t3ArchiveRecordCoherenceContested"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.RELATE.ARCHIVE.T3_TO_OBJECT": {
+  "methods": {
+   "object-attribution": {
+    "allowedDirectFacts": [
+     "t3ArchiveObjectAttribution",
+     "t3ArchiveObjectLinkCandidate"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [
+     "PROOF.ARCHIVE.T3.OBJECT_ATTRIBUTION"
+    ],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   },
+   "contested": {
+    "allowedDirectFacts": [
+     "t3ArchiveObjectAttributionContested"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.CORROBORATE.ARCHIVE.T3_CURRENT": {
+  "methods": {
+   "record-current": {
+    "allowedDirectFacts": [
+     "t3EventPhysicalCorrespondence"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [
+     "PROOF.ARCHIVE.T3.EVENT_CURRENT_CORROBORATION"
+    ],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   },
+   "contested": {
+    "allowedDirectFacts": [
+     "t3EventPhysicalCorrespondenceContested"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.RELATE.PHASE.CHRONOLOGY": {
+  "methods": {
+   "contested": {
+    "allowedDirectFacts": [
+     "threePhaseChronologyContested"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.MAP.REGION_CONTINUITY": {
+  "methods": {
+   "cross-time": {
+    "allowedDirectFacts": [
+     "appearanceRestore",
+     "crossTimeMajorChange",
+     "keyMaterialResolved",
+     "t2EventPhysicalCorrespondence"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [
+     "PROOF.ARCHIVE.T2.EVENT_CROSS_TIME_CORROBORATION",
+     "PROOF.MAJOR.PHYSICAL.CROSS_TIME"
+    ],
+    "allowedAxes": [
+     "KeyMaterial",
+     "RepairHistory"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   },
+   "capable-structural": {
+    "allowedDirectFacts": [
+     "negativeSignalObserved"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [
+     "scopedAbsenceSupported"
+    ],
+    "allowedNegativeRawFacts": [
+     "negativeSignalObserved"
+    ],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "RepairHistory"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   },
+   "limited-structural": {
+    "allowedDirectFacts": [
+     "negativeSignalObserved"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [
+     "scopedAbsenceSupported"
+    ],
+    "allowedNegativeRawFacts": [
+     "negativeSignalObserved"
+    ],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "RepairHistory"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.INSPECT.WINDOWS": {
+  "methods": {
+   "layering": {
+    "allowedDirectFacts": [
+     "surfaceBadNews",
+     "surfacePointLayering"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "Surface"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.SYNTHESIZE.SURFACE_REGIONS": {
+  "methods": {
+   "regional-synthesis": {
+    "allowedDirectFacts": [
+     "surfaceRegionalCoverage",
+     "surfaceResolved"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "Surface"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.ANALYZE.MATERIAL.SUBSTRATE": {
+  "methods": {
+   "point-analysis": {
+    "allowedDirectFacts": [
+     "keyMaterialSubstrateReadings"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.INSPECT.MATERIAL.LAYER_SEQUENCE": {
+  "methods": {
+   "micro-layering": {
+    "allowedDirectFacts": [
+     "keyMaterialLayerSequenceReadings"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "KeyMaterial"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.ASSESS.TREATED_AND_UNTREATED": {
+  "methods": {
+   "condition": {
+    "allowedDirectFacts": [
+     "displayConditionSpecified",
+     "stabilityBadNews",
+     "stabilityResolved"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "Stability"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.TRACE.PROVENANCE_CHAIN": {
+  "methods": {
+   "archive": {
+    "allowedDirectFacts": [
+     "documentationBoundary",
+     "documentationNoConflict"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "Documentation"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ },
+ "A.SCREEN.UV": {
+  "methods": {
+   "uv-screen": {
+    "allowedDirectFacts": [
+     "negativeSignalObserved"
+    ],
+    "allowedContextualFacts": [],
+    "allowedCapabilityFacts": [],
+    "allowedNegativeRawFacts": [
+     "negativeSignalObserved"
+    ],
+    "allowedProofRoles": [],
+    "allowedAxes": [
+     "Surface"
+    ],
+    "requiredContextFacts": [],
+    "fixtureOnly": false
+   }
+  }
+ }
+}
+

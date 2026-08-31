@@ -1,0 +1,324 @@
+/* 无界面自检:先把投影层验掉,再写任何界面。跑法:node harness.mjs */
+import { proofRoleContracts } from "../first-ceramic-author-scenarios-v0/fixtures.mjs";
+import { ACTIONS, ACTION_BY_ID, COST_LABEL } from "../knowledge-map-slice-v0/case.mjs";
+import { newSession, take, solve, workbench, BUDGET } from "./session.mjs";
+import { mentalMap, decisionSurface, readout, OBS_LABEL, SLOT_LABEL, SLOT_FACTS,
+         CLAIM_LABEL, CLAIM_NOT_ON_MAP } from "./projection.mjs";
+
+const line = (s) => console.log(s);
+let fails = 0;
+function check(label, cond, detail = "") {
+  if (!cond) { fails++; line(`  FAIL  ${label} ${detail}`); }
+  else line(`  ok    ${label} ${detail}`);
+}
+
+function play(label, actionIds, { stop = false, quiet = false } = {}) {
+  if (!quiet) line(`\n=== ${label} ===`);
+  const s = newSession();
+  for (const id of actionIds) {
+    const r = take(s, id);
+    const a = ACTION_BY_ID.get(id);
+    if (!r.ok) { if (!quiet) line(`  x ${a?.name ?? id} — ${r.why}`); continue; }
+    if (!quiet) {
+      const mark = { progress: "推进", repeat: "重复", negative: "阴性",
+                     suspended: "暂挂", deadend: "无新信息" }[r.kind];
+      line(`  ${String(s.log.length).padStart(2)}. ${a.name.padEnd(14)} ` +
+        `费用${COST_LABEL[a.cost]}  [${mark}]${r.stageMoved ? `  ${r.from}→${r.to}` : ""}`);
+    }
+  }
+  if (stop) s.stopped = true;
+  const solved = solve(s);
+  const map = mentalMap(solved);
+  const ds = decisionSurface(solved, workbench(s));
+  const ro = readout(solved, s);
+  if (!quiet) {
+    line(`  ---- 地图 ----`);
+    line(`  观察 ${map.nodes.length} · 局部Finding ${map.findings.length} · 公理 ${map.axioms.length}` +
+      ` · 逻辑边 ${map.edges.length} · 连通分量 ${map.components.length}` +
+      ` (最大 ${map.components[0]?.length ?? 0})`);
+    const byKind = {};
+    for (const e of map.edges) byKind[e.kind] = (byKind[e.kind] ?? 0) + 1;
+    line(`  边的种类:${Object.entries(byKind).map(([k, v]) => k + "=" + v).join(" ") || "(无)"}`);
+    if (map.findings.length) {
+      line(`  局部Finding:`);
+      for (const f of map.findings) line(`    · ${f.short}  (${f.members.length} 条观察)`);
+    }
+    if (map.axioms.length) { line(`  公理(已离场决策面):`); for (const a of map.axioms) line(`    · ${a.line}`); }
+    line(`  ---- 决策面 ${ds.items.length} 条 ----`);
+    if (ds.clear) line(`  (清空)${ds.clearLine}`);
+    for (const it of ds.items) {
+      line(`  [${it.kind}] ${it.title}`);
+      if (it.means.length) {
+        line(`      手段(不排序):` + it.means
+          .map((m) => `${m.name}(${m.costLabel}${m.usable === false ? "·暂不可用" : ""})`).join(" / "));
+      } else line(`      手段:(暂无现成手段)`);
+    }
+    line(`  ---- 读数(不在地图上) ----`);
+    line(`  ${ro.name} — ${ro.line}`);
+    line(`  路线:档案=${ro.routes[0].open ? "通" : "未通"} 物证=${ro.routes[1].open ? "通" : "未通"}` +
+      ` · 用掉机会 ${ro.used}/${BUDGET}`);
+  }
+  return { s, solved, map, ds, ro };
+}
+
+/* ---------------- A. 标签覆盖:任何漏配都要报错 ---------------- */
+line("### A. 标签覆盖");
+{
+  /* 把 22 个动作全做一遍(忽略预算),拿最全的节点与槽位集合 */
+  const s = newSession();
+  const seenObs = new Set();
+  for (const a of ACTIONS) {
+    const r = take(s, a.id);
+    if (r.ok) seenObs.add(r.observationId);
+    else if (s.log.length >= BUDGET) { s.log.length = 0; s.spent = 0; /* 解开预算继续铺 */ }
+  }
+  const solved = solve(s);
+  for (const id of solved.evidence.observationIds) seenObs.add(id);
+  const missing = [...seenObs].filter((id) => !OBS_LABEL[id]);
+  check(`${seenObs.size} 条可达观察全部有情报标签`, missing.length === 0, "缺:" + missing.join(", "));
+
+  const slotMiss = [];
+  for (const [claim, pw] of Object.entries(solved.coverage.proofWitnesses ?? {})) {
+    if (CLAIM_NOT_ON_MAP.has(claim) || Array.isArray(pw)) continue;
+    if (!CLAIM_LABEL[claim]) slotMiss.push("claim:" + claim);
+    for (const slot of Object.keys(pw)) {
+      if (!SLOT_LABEL[claim]?.[slot]) slotMiss.push(claim + "." + slot);
+    }
+  }
+  check("每个主张与槽位都有人话标签", slotMiss.length === 0, "缺:" + slotMiss.join(", "));
+  check("g1 与 appearanceRestore 不进地图", CLAIM_NOT_ON_MAP.has("g1"));
+}
+
+/* ---------------- B. 空局 ---------------- */
+line("\n### B. 空局:右侧必须是空的");
+{
+  const s = newSession();
+  const solved = solve(s);
+  const map = mentalMap(solved);
+  const ds = decisionSurface(solved, workbench(s));
+  check("空局地图没有任何节点(玩家没有的东西不存在位置)",
+    map.nodes.length === 0 && map.findings.length === 0 && map.axioms.length === 0);
+  check("空局没有边", map.edges.length === 0);
+  check("空局决策面为空", ds.items.length === 0, `实际 ${ds.items.length}`);
+  const wb = workbench(s);
+  check("左侧工作台空局就有可用动作(器物侧不受解锁约束)", wb.some((r) => r.usable));
+  /* DEC-032 第三节:器物侧行动不受剧情解锁约束。这里查的是免费肉眼观察 ——
+     同在器物上的「逐区跨时点对照」被前置事实挡住,那是逻辑不可能(没有第二个时点
+     就无从对照),不是剧情解锁。这条张力记在 README。 */
+  const freeObj = wb.filter((r) => r.action.cost === 0);
+  check("器物侧免费观察空局全部可用(不受解锁约束)", freeObj.every((r) => r.usable),
+    freeObj.filter((r) => !r.usable).map((r) => r.action.name).join(","));
+  check("免费观察正好三条", freeObj.length === 3, `实际 ${freeObj.length}`);
+}
+
+/* ---------------- A2. 防漂移:SLOT_FACTS 必须与满局求解器输出一致 ---------------- */
+line("\n### A2. SLOT_FACTS 防漂移");
+{
+  const s = newSession();
+  for (const a of ACTIONS) { if (s.log.length >= BUDGET) s.log.length = 0; take(s, a.id); }
+  const solved = solve(s);
+  const drift = [];
+  for (const [claim, pw] of Object.entries(solved.coverage.proofWitnesses ?? {})) {
+    if (CLAIM_NOT_ON_MAP.has(claim) || Array.isArray(pw)) continue;
+    for (const [slot, facts] of Object.entries(pw)) {
+      const authored = (SLOT_FACTS[claim]?.[slot] ?? []).slice().sort().join(",");
+      const actual = (facts ?? []).slice().sort().join(",");
+      if (authored !== actual) drift.push(`${claim}.${slot}: 表=[${authored}] 实=[${actual}]`);
+    }
+  }
+  check("满局每个槽位的事实与手写表一致", drift.length === 0, drift.join(" | "));
+}
+
+/* ---------------- C. 局部 Finding 只在 ≥2 条观察时成形 ---------------- */
+const c1 = play("C. 两条免费观察 → 第一个局部 Finding", ["A.OBSERVE.WHOLE", "A.OBSERVE.BASE"]);
+check("两条观察共享潜变量后长出局部 Finding", c1.map.findings.length >= 1,
+  `实际 ${c1.map.findings.length}`);
+check("局部 Finding 的成员至少两条", c1.map.findings.every((f) => f.members.length >= 2));
+check("有 latent 类逻辑边", c1.map.edges.some((e) => e.kind === "latent"));
+{
+  const one = play("(内部)只做一条观察", ["A.OBSERVE.WHOLE"], { quiet: true });
+  check("只有一条观察时不产生局部 Finding(不预告玩家没有的结构)",
+    one.map.findings.length === 0, `实际 ${one.map.findings.length}`);
+  check("只有一条观察时没有边", one.map.edges.length === 0);
+}
+
+/* ---------------- D. 意义未定观察:悬空 → 被接住 ---------------- */
+const d1 = play("D. 射线先行:悬空", ["A.IMAGE.XRAY", "A.OBSERVE.WHOLE"]);
+check("射线读数处于暂挂状态", d1.map.nodes.some((n) => n.id === "obs.structure.xray.early" && n.state === "suspended"));
+check("决策面出现意义未定观察一类", d1.ds.items.some((i) => i.kind === "suspended"));
+{
+  const sus = d1.ds.items.find((i) => i.kind === "suspended");
+  check("悬空条目给得出补它的手段(领域知识无偿给)", (sus?.means.length ?? 0) > 0,
+    `手段数 ${sus?.means.length ?? 0}`);
+}
+const d2 = play("D2. 补上同一器物 → 被接住", ["A.IMAGE.XRAY", "A.OBSERVE.WHOLE", "A.OBSERVE.BASE", "A.VERIFY.OBJECT_CONTINUITY"]);
+check("射线读数被接住", d2.map.nodes.some((n) => n.id === "obs.structure.xray.early" && n.state === "caught"));
+check("出现 caught 类逻辑边", d2.map.edges.some((e) => e.kind === "caught"));
+check("被接住后不再挂在决策面第一类",
+  !d2.ds.items.some((i) => i.id === "S:obs.structure.xray.early"));
+
+/* ---------------- E. 前置依赖边 ---------------- */
+const e1 = play("E. 语料比对的前置", ["A.OBSERVE.WHOLE", "A.OBSERVE.BASE", "A.COMPARE.CORPUS"]);
+check("出现 prereq 类逻辑边", e1.map.edges.some((e) => e.kind === "prereq"));
+check("prereq 边指向语料比对那条情报",
+  e1.map.edges.some((e) => e.kind === "prereq" && e.to === "obs.corpus.identity"));
+
+/* ---------------- F. 公理坍缩 ---------------- */
+const f1 = play("F. 物证路线到 G2:主张成立 → 坍缩成公理", [
+  "A.OBSERVE.WHOLE", "A.OBSERVE.BASE", "A.VERIFY.OBJECT_CONTINUITY",
+  "A.OBSERVE.REGION_DECOR", "A.IMAGE.XRAY", "A.MAP.REGION_CONTINUITY",
+]);
+check("到达 G2", f1.solved.stage === "G2", `实际 ${f1.solved.stage}`);
+check("成立且无争议的主张坍缩成公理", f1.map.axioms.length >= 1, `实际 ${f1.map.axioms.length}`);
+check("公理只占一行", f1.map.axioms.every((a) => a.line.length < 40));
+check("已成立的主张不再出现在决策面的差一件里",
+  !f1.ds.items.some((i) => i.kind === "onemore" && i.id.startsWith("C:majorReassembly")));
+check("G 不在地图节点里", ![...f1.map.nodes, ...f1.map.findings, ...f1.map.axioms]
+  .some((n) => /G1|G2|G3/.test(n.id)));
+
+/* ---------------- G. 差一件即可合拢 ---------------- */
+const g1 = play("G. 档案路线走一半:应当出现差一件", [
+  "A.OBSERVE.WHOLE", "A.OBSERVE.BASE", "A.RESEARCH.ACCIDENT", "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+]);
+check("出现差一件即可合拢一类", g1.ds.items.some((i) => i.kind === "onemore"),
+  g1.ds.items.map((i) => i.kind).join(","));
+{
+  const om = g1.ds.items.filter((i) => i.kind === "onemore" || i.kind === "gap");
+  check("每条缺口都给得出手段", om.every((i) => i.means.length > 0),
+    om.filter((i) => !i.means.length).map((i) => i.title).join(" | "));
+}
+/* 独立来源不够时必须按来源并集判断,不能按 witness 个数 */
+check("满局不会因为 witness 只有一个就误报差来源", (() => {
+  const s = newSession();
+  for (const a of ACTIONS) { if (s.log.length >= BUDGET) s.log.length = 0; take(s, a.id); }
+  const solved = solve(s);
+  const ds = decisionSurface(solved, workbench(s));
+  const bogus = ds.items.filter((i) => i.id.startsWith("R:"));
+  return bogus.length === 0;
+})(), "如失败说明把 minimumSourceCount 当成了 witness 个数");
+
+/* ---------------- H. 阴性与孤岛 ---------------- */
+const h1 = play("H. 紫外阴性 + 一条离散情报", [
+  "A.OBSERVE.WHOLE", "A.OBSERVE.BASE", "A.SCREEN.UV", "A.TRACE.PROVENANCE_CHAIN",
+]);
+check("阴性未过能力门被单列", h1.ds.items.some((i) => i.id.startsWith("N:")));
+check("孤立的情报被认成孤岛或至少不假装连上了",
+  h1.map.components.length >= 2, `分量数 ${h1.map.components.length}`);
+
+/* ---------------- I. 决策面有界 ---------------- */
+line("\n### I. 决策面大小有界(DEC-032 第八节)");
+{
+  const rows = [];
+  const s = newSession();
+  const order = ["A.OBSERVE.WHOLE", "A.OBSERVE.BASE", "A.OBSERVE.REGION_DECOR",
+    "A.COMPARE.CORPUS", "A.VERIFY.OBJECT_CONTINUITY", "A.IMAGE.XRAY",
+    "A.MAP.REGION_CONTINUITY", "A.RESEARCH.ACCIDENT", "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+    "A.CORROBORATE.ARCHIVE.T2_CURRENT", "A.LOCATE.HISTORIC_IMAGE", "A.RESEARCH.LATE_TREATMENT"];
+  for (const id of order) {
+    take(s, id);
+    const solved = solve(s);
+    const map = mentalMap(solved);
+    const ds = decisionSurface(solved, workbench(s));
+    rows.push({ n: s.log.length, nodes: map.nodes.length, findings: map.findings.length,
+      axioms: map.axioms.length, edges: map.edges.length, items: ds.items.length,
+      clearLine: ds.clearLine, stage: solved.stage });
+  }
+  for (const r of rows) {
+    line(`  第${String(r.n).padStart(2)}步  观察${String(r.nodes).padStart(2)}` +
+      ` Finding${String(r.findings).padStart(2)} 公理${r.axioms} 边${String(r.edges).padStart(2)}` +
+      ` · 决策面${String(r.items).padStart(2)} 条 · ${r.stage}`);
+  }
+  const maxItems = Math.max(...rows.map((r) => r.items));
+  check("决策面全程不超过 8 条(探索让新东西进场,定案让旧东西离场)",
+    maxItems <= 8, `实际最大 ${maxItems}`);
+  /* 决策面清空是允许的(到了 G2 本来就该给收手留位置),但不许渲染成空白:
+     必须给出一句明说的理由。 */
+  const blank = rows.filter((r) => r.items === 0 && !r.clearLine).map((r) => r.n);
+  check("决策面为空时必须有明说的理由,不许空白",
+    blank.length === 0, "空白于第 " + blank.join("、") + " 步");
+  const cleared = rows.filter((r) => r.items === 0).map((r) => r.n);
+  line(`  (决策面清空发生在第 ${cleared.join("、") || "—"} 步,均带明说理由)`);
+  const maxEdges = Math.max(...rows.map((r) => r.edges));
+  check("逻辑边不是毛球(全程 ≤ 40 条)", maxEdges <= 40, `实际最大 ${maxEdges}`);
+  check("地图确实在长(末步观察数 > 首步)", rows.at(-1).nodes > rows[0].nodes);
+  check("末步有边(不是一盘散点)", rows.at(-1).edges > 0, `实际 ${rows.at(-1).edges}`);
+}
+
+/* ---------------- J. 不泄题 ---------------- */
+line("\n### J. 玩家可见文本不含内部标识符与作者答案");
+{
+  const s = newSession();
+  const order = ["A.OBSERVE.WHOLE", "A.OBSERVE.BASE", "A.IMAGE.XRAY", "A.SCREEN.UV",
+    "A.RESEARCH.ACCIDENT", "A.RELATE.ARCHIVE.T2_TO_OBJECT", "A.VERIFY.OBJECT_CONTINUITY",
+    "A.MAP.REGION_CONTINUITY", "A.COMPARE.CORPUS", "A.TRACE.PROVENANCE_CHAIN"];
+  for (const id of order) take(s, id);
+  const solved = solve(s);
+  const map = mentalMap(solved);
+  const ds = decisionSurface(solved, workbench(s));
+  const ro = readout(solved, s);
+
+  const texts = [];
+  for (const n of map.nodes) texts.push(n.short, n.gist);
+  for (const f of map.findings) texts.push(f.short, f.gist);
+  for (const a of map.axioms) texts.push(a.short, a.line);
+  for (const e of map.edges) texts.push(e.note ?? "");
+  for (const i of ds.items) {
+    texts.push(i.title, i.body);
+    for (const m of i.means) texts.push(m.name, m.ask, m.whyShort, m.costLabel);
+  }
+  texts.push(ro.name, ro.line, ...ro.routes.flatMap((r) => [r.name, r.meaning]));
+  texts.push(ds.clearLine ?? "");
+  /* 把清空文案也扫一遍:另起一个到 G2 的干净局面 */
+  {
+    const s2 = newSession();
+    for (const id of ["A.OBSERVE.WHOLE", "A.OBSERVE.BASE", "A.VERIFY.OBJECT_CONTINUITY",
+      "A.OBSERVE.REGION_DECOR", "A.IMAGE.XRAY", "A.MAP.REGION_CONTINUITY"]) take(s2, id);
+    const d2 = decisionSurface(solve(s2), workbench(s2));
+    texts.push(d2.clearLine ?? "");
+  }
+  const blob = texts.filter(Boolean).join("\n");
+
+  const answerTokens = ["LATE18", "REPRODUCTION", "THREE_PHASE", "NO_MAJOR_REASSEMBLY",
+    "MAJOR_REASSEMBLY_NOT_THREE_PHASE", "expectedProfile", "posterior", "marginals"];
+  const hitAnswers = answerTokens.filter((t) => blob.includes(t));
+  check("不含作者答案键", hitAnswers.length === 0, "命中:" + hitAnswers.join(","));
+
+  const idPatterns = [/obs\./, /latent\./, /\bdep\./, /PROOF\./, /source\./, /OBJECT\.FIRST/,
+    /ARCHIVE\.CANDIDATE/, /RELATION\./, /STAGE_RESULT/, /A\.[A-Z_]+\./];
+  const hitIds = idPatterns.filter((p) => p.test(blob)).map(String);
+  check("不含内部标识符", hitIds.length === 0, "命中:" + hitIds.join(" "));
+
+  const techTokens = ["supports", "minimumSourceCount", "dependencyUnitId", "sharedLatentIds",
+    "acquisitionRequires", "requiresContextFacts", "g3Profile", "threshold"];
+  const hitTech = techTokens.filter((t) => blob.includes(t));
+  check("不含内部技术量", hitTech.length === 0, "命中:" + hitTech.join(","));
+
+  const camel = blob.match(/\b[a-z]+[A-Z][a-zA-Z]+\b/g) ?? [];
+  check("不含 camelCase 事实名", camel.length === 0, "命中:" + [...new Set(camel)].join(","));
+  line(`  (扫过 ${texts.filter(Boolean).length} 段玩家可见文本,共 ${blob.length} 字)`);
+}
+
+/* ---------------- K. 手段一律标价且不排序 ---------------- */
+line("\n### K. 手段标价与不排序(DEC-032 第七节判定标准)");
+{
+  const s = newSession();
+  for (const id of ["A.OBSERVE.WHOLE", "A.OBSERVE.BASE", "A.RESEARCH.ACCIDENT",
+                    "A.RELATE.ARCHIVE.T2_TO_OBJECT", "A.IMAGE.XRAY"]) take(s, id);
+  const solved = solve(s);
+  const ds = decisionSurface(solved, workbench(s));
+  const allMeans = ds.items.flatMap((i) => i.means);
+  check("每个手段都带价", allMeans.every((m) => typeof m.costLabel === "string" && m.costLabel));
+  check("每个手段都说得出它问什么", allMeans.every((m) => m.ask && m.ask.length > 3));
+  const multi = ds.items.filter((i) => i.means.length > 1);
+  line(`  决策面 ${ds.items.length} 条,其中 ${multi.length} 条给出多于一种手段`);
+  check("决策面同时摆着多个缺口(不是只剩一条路)", ds.items.length >= 2,
+    `实际 ${ds.items.length}`);
+  /* 不排序:投影层不得输出任何优先级/权重字段 */
+  const forbidden = ["rank", "priority", "score", "weight", "recommended", "best"];
+  const json = JSON.stringify(ds.items);
+  const hit = forbidden.filter((k) => json.includes(`"${k}"`));
+  check("输出里没有排序/权重字段", hit.length === 0, "命中:" + hit.join(","));
+}
+
+line(`\n${fails === 0 ? "全部通过" : `${fails} 项失败`}`);
+process.exit(fails === 0 ? 0 : 1);

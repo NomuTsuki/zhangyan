@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>掌眼 V3 · 工作台与心智地图 呈现变体 v0</title>
+<style>
+  :root{
+    --bg:#0d0d0f; --panel:#15151a; --panel2:#1b1b21; --line:#2a2a32;
+    --ink:#e8e6e1; --dim:#8f8c86; --dim2:#615f5b;
+    --gold:#d9b166; --gold2:#8a6f3c;
+    --obs:#6f9fbf; --find:#c98f5a; --axiom:#7fa86a;
+    --warn:#c2624f; --caught:#a97fc2;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--ink); overflow:hidden;
+    font:13px/1.65 "PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  }
+  /* 只做电脑浏览器尺寸 —— DEC-033,移动端不在本阶段范围,不留退路 */
+  #app{display:flex;flex-direction:column;height:100vh;min-width:1280px}
+
+  /* ---------- 顶栏 ---------- */
+  header{
+    flex:0 0 auto;border-bottom:1px solid var(--line);background:var(--panel);
+    display:flex;align-items:stretch
+  }
+  .brand{padding:10px 16px;border-right:1px solid var(--line);min-width:210px}
+  .brand b{font-weight:600;letter-spacing:.06em}
+  .brand span{display:block;color:var(--dim2);font-size:11px;letter-spacing:.1em}
+  .readout{flex:1;padding:9px 16px;border-right:1px solid var(--line)}
+  .readout .st{color:var(--gold);font-weight:600}
+  .readout .ln{color:var(--dim);font-size:12px}
+  .meters{padding:9px 16px;min-width:250px;border-right:1px solid var(--line)}
+  .meters div{font-size:12px;color:var(--dim)}
+  .meters b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .tools{padding:10px 14px;display:flex;gap:8px;align-items:flex-start}
+  button.t{
+    background:var(--panel2);color:var(--ink);border:1px solid var(--line);
+    border-radius:3px;padding:5px 11px;font-size:12px;cursor:pointer;font-family:inherit
+  }
+  button.t:hover{border-color:var(--gold2)}
+  .warnbar{
+    flex:0 0 auto;background:#1a1512;border-bottom:1px solid #2e241b;
+    color:#a89272;padding:6px 16px;font-size:11.5px;letter-spacing:.02em
+  }
+
+  /* ---------- 三区 ---------- */
+  main{flex:1;display:flex;min-height:0}
+  .col{display:flex;flex-direction:column;min-height:0}
+  #bench{flex:0 0 306px;border-right:1px solid var(--line);background:var(--panel)}
+  #mapcol{flex:1;min-width:0}
+  #deck{flex:0 0 356px;border-left:1px solid var(--line);background:var(--panel)}
+  .zone{border-bottom:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+  .zt{
+    padding:7px 14px 6px;color:var(--dim2);font-size:10.5px;letter-spacing:.18em;
+    text-transform:uppercase;flex:0 0 auto
+  }
+  .zt em{font-style:normal;color:var(--dim);letter-spacing:0;text-transform:none;font-size:11px}
+
+  /* ---------- 左上:器物世界 ---------- */
+  #objwrap{flex:0 0 auto;position:relative}
+  #obj{display:block;width:100%;height:268px}
+  .hot{cursor:pointer}
+  .hot circle.hit{fill:transparent}
+  .hot .dot{fill:var(--panel2);stroke:var(--gold2);stroke-width:1.2}
+  .hot:hover .dot,.hot.open .dot{fill:var(--gold);stroke:var(--gold)}
+  .hot text{fill:var(--dim);font-size:10.5px}
+  .hot:hover text,.hot.open text{fill:var(--ink)}
+  .hot.spent .dot{fill:var(--dim2);stroke:var(--dim2)}
+  .bowl{fill:none;stroke:#33313a;stroke-width:1.2}
+  .bowlfill{fill:#131318}
+
+  /* ---------- 左下:器物之外 ---------- */
+  #outside{flex:1;overflow:auto;padding:2px 10px 12px}
+  .grp{margin:8px 0 2px;color:var(--dim2);font-size:10.5px;letter-spacing:.14em}
+  .mrow{
+    display:flex;align-items:baseline;gap:8px;padding:5px 8px;border-radius:3px;
+    cursor:pointer;border:1px solid transparent
+  }
+  .mrow:hover{background:var(--panel2);border-color:var(--line)}
+  .mrow.open{background:var(--panel2);border-color:var(--gold2)}
+  .mrow .nm{flex:1;font-size:12.5px}
+  .mrow .cs{color:var(--gold2);font-size:11px;white-space:nowrap}
+  .mrow.spent .nm{color:var(--dim2);text-decoration:line-through}
+  .mrow.blocked .nm{color:var(--dim2)}
+
+  /* ---------- 动作浮层 ---------- */
+  #pop{
+    position:absolute;z-index:40;width:318px;background:#191920;
+    border:1px solid var(--gold2);border-radius:4px;padding:12px 13px;display:none;
+    box-shadow:0 14px 40px rgba(0,0,0,.62)
+  }
+  #pop h4{margin:0 0 2px;font-size:13px;font-weight:600}
+  #pop .ask{color:var(--gold);font-size:12px;margin-bottom:7px}
+  #pop .why{color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:7px}
+  #pop .long{color:var(--dim);font-size:11.5px;margin-top:6px;display:none;
+    border-top:1px dashed var(--line);padding-top:6px}
+  #pop .foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
+  #pop .cost{color:var(--gold2);font-size:11.5px}
+  #pop .no{color:var(--warn);font-size:11.5px;margin-top:7px}
+  #pop .acts{display:flex;gap:6px}
+  button.go{
+    background:var(--gold);color:#171310;border:0;border-radius:3px;padding:5px 12px;
+    font-size:12px;cursor:pointer;font-weight:600;font-family:inherit
+  }
+  button.go[disabled]{background:var(--panel2);color:var(--dim2);cursor:not-allowed}
+  button.lk{background:none;border:0;color:var(--dim);font-size:11.5px;cursor:pointer;
+    text-decoration:underline;font-family:inherit;padding:0}
+  .sep{height:1px;background:var(--line);margin:9px 0}
+
+  /* ---------- 中:心智地图 ---------- */
+  #mapcol .zt{border-bottom:1px solid var(--line)}
+  #mapwrap{flex:1;position:relative;min-height:0}
+  #map{display:block;width:100%;height:100%}
+  .edge{stroke-linecap:round;fill:none}
+  .e-latent{stroke:#5d5a52;stroke-width:1.1}
+  .e-prereq{stroke:#4a5560;stroke-width:1;stroke-dasharray:1 3}
+  .e-caught{stroke:var(--caught);stroke-width:1.3}
+  .e-supports{stroke:#3d4a38;stroke-width:1}
+  .edge.lit{stroke:var(--gold);stroke-width:2}
+  .nd text{font-size:10.5px;fill:var(--dim)}
+  .nd.on text{fill:var(--ink)}
+  .n-obs{fill:#1a222a;stroke:var(--obs);stroke-width:1.3}
+  .n-obs.susp{stroke:var(--dim2);stroke-dasharray:2 2;fill:#17171b}
+  .n-obs.neg{stroke:var(--warn);stroke-dasharray:2 2}
+  .n-obs.caught{stroke:var(--caught)}
+  .n-find{fill:#241c14;stroke:var(--find);stroke-width:1.4}
+  .n-ax{fill:#1a2118;stroke:var(--axiom);stroke-width:1.4}
+  .nd{cursor:pointer}
+  .nd.flash circle,.nd.flash polygon,.nd.flash rect{stroke:var(--gold);stroke-width:2.4}
+  .fly{stroke:var(--gold);stroke-width:1.6;fill:none;stroke-dasharray:5 4}
+  #mapempty{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--dim2);font-size:12.5px;text-align:center;padding:0 60px;line-height:2
+  }
+  #tip{
+    position:absolute;z-index:30;max-width:250px;background:#191920;border:1px solid var(--line);
+    border-radius:4px;padding:8px 10px;font-size:11.5px;color:var(--dim);display:none;
+    box-shadow:0 10px 28px rgba(0,0,0,.6)
+  }
+  #tip b{color:var(--ink);display:block;margin-bottom:3px;font-size:12.5px}
+  .lgd{
+    position:absolute;left:12px;bottom:10px;color:var(--dim2);font-size:10.5px;
+    display:flex;gap:14px;flex-wrap:wrap;max-width:70%
+  }
+  .lgd i{font-style:normal;display:inline-flex;align-items:center;gap:5px}
+  .sw{width:16px;height:0;border-top-width:2px;border-top-style:solid;display:inline-block}
+
+  /* ---------- 右:决策面 ---------- */
+  #deckbody{flex:1;overflow:auto;padding:2px 12px 14px}
+  .ax{
+    color:var(--axiom);font-size:11.5px;padding:4px 8px;border-left:2px solid var(--axiom);
+    background:#151a14;margin:4px 0;border-radius:0 3px 3px 0
+  }
+  .card{
+    border:1px solid var(--line);border-radius:4px;padding:9px 10px;margin:9px 0;
+    background:var(--panel2)
+  }
+  .card .kd{font-size:10px;letter-spacing:.14em;color:var(--dim2);margin-bottom:3px}
+  .card.k-suspended{border-left:2px solid var(--dim2)}
+  .card.k-negative{border-left:2px solid var(--warn)}
+  .card.k-onemore{border-left:2px solid var(--gold)}
+  .card.k-gap{border-left:2px solid var(--gold2)}
+  .card.k-conflict{border-left:2px solid var(--warn)}
+  .card.k-island{border-left:2px solid var(--obs)}
+  .card h5{margin:0 0 4px;font-size:12.5px;font-weight:600}
+  .card p{margin:0;color:var(--dim);font-size:11.5px}
+  .means{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px}
+  .means .hd{color:var(--dim2);font-size:10.5px;letter-spacing:.1em;margin-bottom:4px}
+  .mean{
+    display:flex;align-items:baseline;gap:7px;padding:3px 6px;border-radius:3px;cursor:pointer;
+    border:1px solid transparent
+  }
+  .mean:hover{background:#20202a;border-color:var(--line)}
+  .mean .nm{flex:1;font-size:12px}
+  .mean .cs{color:var(--gold2);font-size:11px;white-space:nowrap}
+  .mean.blocked .nm{color:var(--dim2)}
+  .clear{color:var(--dim);font-size:12px;padding:12px 4px;line-height:1.9}
+
+  /* ---------- 历史回放浮层 ---------- */
+  #hist{
+    position:fixed;inset:0;z-index:60;background:rgba(8,8,10,.94);display:none;
+    flex-direction:column;padding:18px 24px
+  }
+  #hist .hh{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+  #hist h3{margin:0;font-size:14px;font-weight:600}
+  #hist .hb{flex:1;display:flex;gap:18px;min-height:0}
+  #hist .hp{flex:1;border:1px solid var(--line);border-radius:4px;background:var(--panel);
+    display:flex;flex-direction:column;min-width:0}
+  #hsvgwrap{flex:1;min-height:0;position:relative}
+  #hsvg{display:block;width:100%;height:100%}
+  #hdeck{flex:0 0 380px;overflow:auto;padding:4px 12px 12px}
+  input[type=range]{flex:1;accent-color:var(--gold)}
+  #hcap{color:var(--dim);font-size:12px;padding:6px 12px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand"><b>掌眼 V3</b><span>工作台 ／ 心智地图 呈现变体 v0</span></div>
+    <div class="readout" id="ro"></div>
+    <div class="meters" id="mt"></div>
+    <div class="tools">
+      <button class="t" id="bhist">历史回放</button>
+      <button class="t" id="bstop">收手</button>
+      <button class="t" id="breset">重开</button>
+    </div>
+  </header>
+  <div class="warnbar" id="wb"></div>
+  <main>
+    <div class="col" id="bench">
+      <div class="zone" id="objwrap">
+        <div class="zt">器物世界 <em>—— 摆在面前的这只碗,随便翻看</em></div>
+        <svg id="obj" viewBox="0 0 306 268" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="zone" style="flex:1">
+        <div class="zt">器物之外 <em>—— 长不到器物上的手段</em></div>
+        <div id="outside"></div>
+      </div>
+    </div>
+    <div class="col" id="mapcol">
+      <div class="zt">心智地图 <em>—— 你已经知道的东西,以及它们之间的逻辑</em></div>
+      <div id="mapwrap">
+        <svg id="map"></svg>
+        <div id="mapempty"></div>
+        <div class="lgd" id="lgd"></div>
+        <div id="tip"></div>
+      </div>
+    </div>
+    <div class="col" id="deck">
+      <div class="zt">决策面 <em>—— 当前需要你判断的东西</em></div>
+      <div id="deckbody"></div>
+    </div>
+  </main>
+</div>
+
+<div id="pop"></div>
+
+<div id="hist">
+  <div class="hh">
+    <h3>历史回放</h3>
+    <input type="range" id="hr" min="0" max="0" value="0">
+    <button class="t" id="hclose">关闭</button>
+  </div>
+  <div class="hb">
+    <div class="hp"><div id="hsvgwrap"><svg id="hsvg"></svg></div><div id="hcap"></div></div>
+    <div class="hp" style="flex:0 0 380px"><div id="hdeck"></div></div>
+  </div>
+</div>
+
+<script>
+/*__STAMP__*/
+/*__INLINE__*/
+
+/* ==================== 以下是呈现层。规则一律来自上面内联的冻结求解器。 ==================== */
+const { ACTIONS, ACTION_BY_ID, COST_LABEL } = CASE;
+const { newSession, take, solve, workbench, BUDGET } = SESSION;
+const { mentalMap, decisionSurface, readout, EDGE_KINDS } = PROJECTION;
+const { ACTION_SEMANTICS } = SEMANTICS;
+
+const $ = (s) => document.querySelector(s);
+const el = (t, a = {}, kids = []) => {
+  const n = document.createElementNS("http://www.w3.org/2000/svg", t);
+  for (const k in a) n.setAttribute(k, a[k]);
+  for (const c of [].concat(kids)) n.appendChild(c);
+  return n;
+};
+const txt = (s) => document.createTextNode(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ---------- 地点:器物侧长在碗上,器物之外另置一区 ---------- */
+/* 坐标是手放的。这一版只求语义站得住:器物侧行动落在它对应的部位上。 */
+const ON_OBJECT = {
+  OBJ_D: { x: 96,  y: 92,  label: "纹饰与色差", anchor: "end" },
+  OBJ_R: { x: 214, y: 84,  label: "稳定锚点",   anchor: "start" },
+  OBJ_W: { x: 153, y: 138, label: "整器",       anchor: "middle" },
+  SURF:  { x: 196, y: 132, label: "表面",       anchor: "start" },
+  OBJ_F: { x: 153, y: 204, label: "底足与修足", anchor: "middle" },
+};
+const OUTSIDE = [
+  { grp: "仪器", places: [
+    { id: "XRAY", label: "X 射线成像" },
+    { id: "UV",   label: "紫外筛查" },
+    { id: "MAT",  label: "材料分析" }]},
+  { grp: "档案", places: [
+    { id: "T1",   label: "早期影像" },
+    { id: "T2",   label: "事故记录组" },
+    { id: "T3",   label: "后期处理记录组" },
+    { id: "PROV", label: "来源链" }]},
+  { grp: "语料", places: [
+    { id: "CORPUS", label: "同期真品语料" },
+    { id: "RPT",    label: "另一批语料" }]},
+  { grp: "状况评估", places: [
+    { id: "STAB", label: "承力与陈列条件" }]},
+];
+
+/* 每个 place 上有哪些动作 */
+const BY_PLACE = new Map();
+for (const a of ACTIONS) {
+  if (!BY_PLACE.has(a.place)) BY_PLACE.set(a.place, []);
+  BY_PLACE.get(a.place).push(a);
+}
+/* 自检:所有 place 都必须被摆在左侧某处,不许有孤儿动作 */
+{
+  const placed = new Set([...Object.keys(ON_OBJECT), ...OUTSIDE.flatMap((g) => g.places.map((p) => p.id))]);
+  const orphan = [...BY_PLACE.keys()].filter((p) => !placed.has(p));
+  if (orphan.length) console.error("有动作没有落点:", orphan);
+}
+
+/* ---------- 状态 ---------- */
+let S, wbRows, view, history, positions, pinned, anim;
+function reset() {
+  S = newSession();
+  history = [];
+  positions = new Map();
+  pinned = new Set();
+  anim = null;
+  recompute();
+  snapshot(null);
+  renderAll();
+}
+function recompute() {
+  const solved = solve(S);
+  wbRows = workbench(S);
+  view = {
+    solved,
+    map: mentalMap(solved),
+    ds: decisionSurface(solved, wbRows),
+    ro: readout(solved, S),
+  };
+}
+function snapshot(actLabel) {
+  history.push({
+    step: S.log.length, actLabel,
+    map: view.map, ds: view.ds, ro: view.ro,
+    pos: new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }])),
+  });
+}
+
+/* ==================== 力导向布局 ==================== */
+/* 公理钉住不动(DEC-032 第十二节);需要自由重排的只剩活跃区。 */
+function mapBox() {
+  const w = $("#mapwrap").clientWidth, h = $("#mapwrap").clientHeight;
+  return { w, h };
+}
+function layout(graph, { iters = 260 } = {}) {
+  const { w, h } = mapBox();
+  const nodes = [...graph.nodes, ...graph.findings, ...graph.axioms];
+  const ids = new Set(nodes.map((n) => n.id));
+  for (const id of [...positions.keys()]) if (!ids.has(id)) positions.delete(id);
+
+  /* 新节点先落在中心附近(带确定性抖动,便于复现) */
+  let seed = nodes.length * 7919;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  for (const n of nodes) {
+    if (!positions.has(n.id)) {
+      positions.set(n.id, { x: w / 2 + (rnd() - .5) * 140, y: h / 2 + (rnd() - .5) * 140 });
+    }
+  }
+  const adj = graph.edges.filter((e) => positions.has(e.from) && positions.has(e.to));
+  /* 目标边长按画布面积与节点数取,否则节点少时整团缩在中心、画布大半空着 */
+  const K = Math.max(96, Math.min(190, Math.sqrt((w - 150) * (h - 110) / Math.max(3, nodes.length)) * 0.82));
+  const R = K * K * 2.6;             /* 斥力随边长同步放大 */
+  for (let it = 0; it < iters; it++) {
+    const t = 1 - it / iters;
+    const fx = new Map(nodes.map((n) => [n.id, 0]));
+    const fy = new Map(nodes.map((n) => [n.id, 0]));
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = positions.get(nodes[i].id), b = positions.get(nodes[j].id);
+        let dx = a.x - b.x, dy = a.y - b.y;
+        let d2 = dx * dx + dy * dy;
+        if (d2 < 1) { dx = (rnd() - .5); dy = (rnd() - .5); d2 = 1; }
+        const f = R / d2;
+        const d = Math.sqrt(d2);
+        fx.set(nodes[i].id, fx.get(nodes[i].id) + (dx / d) * f);
+        fy.set(nodes[i].id, fy.get(nodes[i].id) + (dy / d) * f);
+        fx.set(nodes[j].id, fx.get(nodes[j].id) - (dx / d) * f);
+        fy.set(nodes[j].id, fy.get(nodes[j].id) - (dy / d) * f);
+      }
+    }
+    for (const e of adj) {
+      const a = positions.get(e.from), b = positions.get(e.to);
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const d = Math.hypot(dx, dy) || 1;
+      const f = (d - K) * 0.055;
+      fx.set(e.from, fx.get(e.from) + (dx / d) * f);
+      fy.set(e.from, fy.get(e.from) + (dy / d) * f);
+      fx.set(e.to, fx.get(e.to) - (dx / d) * f);
+      fy.set(e.to, fy.get(e.to) - (dy / d) * f);
+    }
+    for (const n of nodes) {
+      const p = positions.get(n.id);
+      /* 公理钉住:一旦定案,位置不再参与重排 */
+      if (pinned.has(n.id)) continue;
+      p.x += Math.max(-20, Math.min(20, fx.get(n.id))) * t;
+      p.y += Math.max(-20, Math.min(20, fy.get(n.id))) * t;
+      /* 极轻的向心,只防飘走,不把图拉成一团 */
+      p.x += (w / 2 - p.x) * 0.0022;
+      p.y += (h / 2 - p.y) * 0.0022;
+      p.x = Math.max(84, Math.min(w - 84, p.x));
+      p.y = Math.max(44, Math.min(h - 52, p.y));
+    }
+  }
+  /* 新定案的公理落位后钉住 */
+  for (const a of graph.axioms) pinned.add(a.id);
+}
+
+/* ==================== 渲染 ==================== */
+function renderAll() {
+  renderHeader();
+  renderObject();
+  renderOutside();
+  layout(view.map);
+  renderMap();
+  renderDeck();
+}
+
+function renderHeader() {
+  const ro = view.ro;
+  $("#ro").innerHTML =
+    `<div class="st">${esc(ro.name)}${ro.frozenStage ? "(已收手,冻结)" : ""}</div>` +
+    `<div class="ln">${esc(ro.line)}</div>`;
+  const r = ro.routes;
+  $("#mt").innerHTML =
+    `<div>调查机会 <b>${BUDGET - S.log.length}</b> / ${BUDGET}　·　费用档合计 <b>${S.spent}</b></div>` +
+    `<div>${r.map((x) => esc(x.name) + " " + (x.open ? "已通" : "未通")).join("　·　")}</div>`;
+  $("#wb").textContent =
+    "呈现变体,不是产品,也不是美术方向。规则全部来自冻结求解器(" +
+    Object.keys(STAMP.sha).length + " 个模块已内联,构建于 " + STAMP.builtAt + ")。" +
+    "费用只给定性档位,没有货币数字;系统不给动作排序,也不预测全部后果。只做电脑浏览器尺寸。";
+}
+
+/* ---------- 左上:器物 ---------- */
+function renderObject() {
+  const svg = $("#obj");
+  svg.textContent = "";
+  /* 碗的侧影。只是行动面的底图,不承载任何情报。 */
+  svg.appendChild(el("path", { class: "bowlfill",
+    d: "M74 74 C74 176 106 214 153 214 C200 214 232 176 232 74 Z" }));
+  svg.appendChild(el("path", { class: "bowl",
+    d: "M74 74 C74 176 106 214 153 214 C200 214 232 176 232 74" }));
+  svg.appendChild(el("path", { class: "bowl", d: "M74 74 L232 74" }));
+  svg.appendChild(el("path", { class: "bowl", d: "M129 214 L129 222 L177 222 L177 214",
+    "stroke-dasharray": "0" }));
+
+  for (const [pid, p] of Object.entries(ON_OBJECT)) {
+    const acts = BY_PLACE.get(pid) ?? [];
+    if (!acts.length) continue;
+    const allDone = acts.every((a) => wbRows.find((r) => r.action.id === a.id)?.done);
+    const g = el("g", { class: "hot" + (allDone ? " spent" : ""), "data-place": pid });
+    g.appendChild(el("circle", { class: "hit", cx: p.x, cy: p.y, r: 20 }));
+    g.appendChild(el("circle", { class: "dot", cx: p.x, cy: p.y, r: 5 }));
+    const tx = p.anchor === "end" ? p.x - 11 : p.anchor === "start" ? p.x + 11 : p.x;
+    const ty = p.anchor === "middle" ? p.y + 19 : p.y + 4;
+    const t = el("text", { x: tx, y: ty, "text-anchor": p.anchor });
+    t.appendChild(txt(p.label));
+    g.appendChild(t);
+    g.addEventListener("click", (ev) => openPop(pid, ev.currentTarget));
+    svg.appendChild(g);
+  }
+}
+
+/* ---------- 左下:器物之外 ---------- */
+function renderOutside() {
+  const box = $("#outside");
+  box.textContent = "";
+  for (const grp of OUTSIDE) {
+    const h = document.createElement("div");
+    h.className = "grp"; h.textContent = grp.grp;
+    box.appendChild(h);
+    for (const p of grp.places) {
+      const acts = BY_PLACE.get(p.id) ?? [];
+      if (!acts.length) continue;
+      const rows = acts.map((a) => wbRows.find((r) => r.action.id === a.id));
+      const done = rows.every((r) => r?.done);
+      const blocked = rows.every((r) => !r?.usable);
+      const cheapest = Math.min(...acts.map((a) => a.cost));
+      const d = document.createElement("div");
+      d.className = "mrow" + (done ? " spent" : "") + (blocked && !done ? " blocked" : "");
+      d.dataset.place = p.id;
+      d.innerHTML = `<span class="nm">${esc(p.label)}</span>` +
+        `<span class="cs">${acts.length > 1 ? acts.length + " 项 · " : ""}${esc(COST_LABEL[cheapest])}</span>`;
+      d.addEventListener("click", () => openPop(p.id, d));
+      box.appendChild(d);
+    }
+  }
+}
+
+/* ---------- 动作浮层 ---------- */
+let openPlace = null;
+function closePop() {
+  $("#pop").style.display = "none";
+  openPlace = null;
+  document.querySelectorAll(".hot.open,.mrow.open").forEach((n) => n.classList.remove("open"));
+}
+function openPop(pid, anchorEl) {
+  if (openPlace === pid) return closePop();
+  closePop();
+  openPlace = pid;
+  anchorEl.classList.add("open");
+  const acts = BY_PLACE.get(pid) ?? [];
+  const pop = $("#pop");
+  pop.textContent = "";
+  acts.forEach((a, i) => {
+    const row = wbRows.find((r) => r.action.id === a.id);
+    const sem = ACTION_SEMANTICS[a.id] ?? {};
+    const wrap = document.createElement("div");
+    wrap.innerHTML =
+      `<h4>${esc(a.name)}</h4>` +
+      `<div class="ask">${esc(a.ask)}</div>` +
+      `<div class="why">${esc(sem.whyShort ?? "")}</div>` +
+      `<div class="long" data-long>${esc(sem.whyLong ?? "")}</div>` +
+      (row?.usable ? "" : `<div class="no">${esc(row?.why ?? (S.stopped ? "本局已经收手" : "现在不能做"))}</div>`) +
+      `<div class="foot"><span class="cost">费用 ${esc(COST_LABEL[a.cost])}` +
+        `${row?.done ? " · 已经做过" : ""}</span>` +
+        `<span class="acts"><button class="lk" data-more>为什么要紧</button>` +
+        `<button class="go" ${row?.usable && row?.affordable ? "" : "disabled"} data-run>做这一步</button>` +
+        `</span></div>`;
+    wrap.querySelector("[data-more]").addEventListener("click", () => {
+      const L = wrap.querySelector("[data-long]");
+      L.style.display = L.style.display === "block" ? "none" : "block";
+    });
+    const go = wrap.querySelector("[data-run]");
+    if (!go.disabled) go.addEventListener("click", () => doAction(a.id, pid));
+    pop.appendChild(wrap);
+    if (i < acts.length - 1) {
+      const s = document.createElement("div"); s.className = "sep"; pop.appendChild(s);
+    }
+  });
+  /* 定位:贴着左栏右边缘 */
+  const r = anchorEl.getBoundingClientRect();
+  pop.style.display = "block";
+  const top = Math.min(Math.max(8, r.top - 10), window.innerHeight - pop.offsetHeight - 12);
+  pop.style.left = "312px";
+  pop.style.top = top + "px";
+}
+document.addEventListener("click", (e) => {
+  if (openPlace && !$("#pop").contains(e.target) &&
+      !e.target.closest(".hot") && !e.target.closest(".mrow") && !e.target.closest(".mean")) closePop();
+});
+
+/* ---------- 中:心智地图 ---------- */
+function nodeShape(n) {
+  if (n.type === "obs") {
+    const cls = "n-obs" + (n.state === "suspended" ? " susp"
+      : n.state === "negative" ? " neg" : n.state === "caught" ? " caught" : "");
+    return el("circle", { class: cls, r: 7, cx: 0, cy: 0 });
+  }
+  if (n.type === "finding") {
+    return el("polygon", { class: "n-find", points: "0,-10 9,-5 9,5 0,10 -9,5 -9,-5" });
+  }
+  return el("rect", { class: "n-ax", x: -9, y: -7, width: 18, height: 14, rx: 2 });
+}
+function renderMap(target) {
+  const svg = target ? $("#hsvg") : $("#map");
+  const g = target ? target : view.map;
+  const pos = target ? target.pos : positions;
+  const { w, h } = target ? { w: $("#hsvgwrap").clientWidth, h: $("#hsvgwrap").clientHeight } : mapBox();
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svg.textContent = "";
+  const graph = target ? target.map : g;
+
+  const empty = graph.nodes.length === 0;
+  if (!target) {
+    $("#mapempty").style.display = empty ? "flex" : "none";
+    $("#mapempty").textContent = empty
+      ? "右边现在是空的。这不是隐藏 —— 你还没有任何情报,所以这里没有任何位置。左边那只碗随便看,免费的几眼不要钱。"
+      : "";
+    $("#lgd").innerHTML = empty ? "" : legendHTML();
+  }
+  if (empty) return;
+
+  const layer = el("g");
+  for (const e of graph.edges) {
+    const a = pos.get(e.from), b = pos.get(e.to);
+    if (!a || !b) continue;
+    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const cx = mx - dy * 0.09, cy = my + dx * 0.09;
+    layer.appendChild(el("path", {
+      class: "edge e-" + e.kind, d: `M${a.x},${a.y} Q${cx},${cy} ${b.x},${b.y}`,
+      "data-edge": e.kind + "|" + e.from + "|" + e.to,
+    }));
+  }
+  svg.appendChild(layer);
+
+  const all = [...graph.nodes, ...graph.findings, ...graph.axioms];
+  for (const n of all) {
+    const p = pos.get(n.id);
+    if (!p) continue;
+    const gg = el("g", { class: "nd" + (n.type !== "obs" ? " on" : ""), transform: `translate(${p.x},${p.y})`,
+      "data-node": n.id });
+    gg.appendChild(nodeShape(n));
+    /* 标签按 id 的稳定哈希分到上下两侧。用哈希而不是用坐标,是为了动画过程中不跳动。 */
+    const r0 = n.type === "finding" ? 15 : 12;
+    const below = hash(n.id) % 2 === 1;
+    const t = el("text", { x: 0, y: below ? r0 + 9 : -r0, "text-anchor": "middle" });
+    t.appendChild(txt(n.short));
+    gg.appendChild(t);
+    if (!target) {
+      gg.addEventListener("mouseenter", (ev) => showTip(n, ev));
+      gg.addEventListener("mouseleave", () => { $("#tip").style.display = "none"; });
+    }
+    svg.appendChild(gg);
+  }
+}
+function legendHTML() {
+  const sw = (c, d) => `<span class="sw" style="border-top-color:${c};border-top-style:${d}"></span>`;
+  return [
+    `<i>${sw("#5d5a52", "solid")}${esc(EDGE_KINDS.latent)}</i>`,
+    `<i>${sw("#4a5560", "dashed")}${esc(EDGE_KINDS.prereq)}</i>`,
+    `<i>${sw("#a97fc2", "solid")}${esc(EDGE_KINDS.caught)}</i>`,
+    `<i>${sw("#3d4a38", "solid")}支持一条已定的公理</i>`,
+    `<i><span style="color:var(--obs)">●</span> 情报</i>`,
+    `<i><span style="color:var(--find)">⬣</span> 局部 Finding(系统免费连出来的)</i>`,
+    `<i><span style="color:var(--axiom)">▬</span> 公理</i>`,
+  ].join("");
+}
+function showTip(n, ev) {
+  const t = $("#tip");
+  const extra = n.type === "finding"
+    ? `<div style="color:var(--find);margin-top:4px">这一条是系统自动连出来的,没花你的钱</div>` : "";
+  t.innerHTML = `<b>${esc(n.short)}</b>${esc(n.gist ?? "")}${extra}`;
+  const box = $("#mapwrap").getBoundingClientRect();
+  t.style.display = "block";
+  t.style.left = Math.min(ev.clientX - box.left + 14, box.width - 262) + "px";
+  t.style.top = Math.min(ev.clientY - box.top + 12, box.height - 90) + "px";
+}
+
+/* ---------- 右:决策面 ---------- */
+const KIND_LABEL = {
+  suspended: "意义未定的情报", negative: "不够格的阴性结果",
+  onemore: "差一件就合拢", gap: "已经动起来,还缺几块",
+  conflict: "打架的", island: "还没连上主结构",
+};
+function renderDeck() {
+  const box = $("#deckbody");
+  box.textContent = "";
+  for (const a of view.map.axioms) {
+    const d = document.createElement("div");
+    d.className = "ax"; d.textContent = a.line;
+    box.appendChild(d);
+  }
+  if (view.ds.clear) {
+    const d = document.createElement("div");
+    d.className = "clear"; d.textContent = view.ds.clearLine;
+    box.appendChild(d);
+    return;
+  }
+  for (const it of view.ds.items) {
+    const c = document.createElement("div");
+    c.className = "card k-" + it.kind;
+    let html = `<div class="kd">${esc(KIND_LABEL[it.kind] ?? it.kind)}</div>` +
+      `<h5>${esc(it.title)}</h5><p>${esc(it.body)}</p>`;
+    if (it.means.length) {
+      html += `<div class="means"><div class="hd">行里通常靠这些手段(不分先后)</div>` +
+        it.means.map((m) => `<div class="mean${m.usable === false ? " blocked" : ""}" data-act="${esc(m.actionId)}">` +
+          `<span class="nm">${esc(m.name)}</span><span class="cs">${esc(m.costLabel)}` +
+          `${m.usable === false ? " · 暂不可用" : ""}${m.done ? " · 做过" : ""}</span></div>`).join("") +
+        `</div>`;
+    }
+    c.innerHTML = html;
+    c.querySelectorAll("[data-act]").forEach((n) => {
+      n.addEventListener("click", () => {
+        const a = ACTION_BY_ID.get(n.dataset.act);
+        if (a) openPop(a.place, n);
+      });
+    });
+    box.appendChild(c);
+  }
+}
+
+/* ==================== 两拍动画 ==================== */
+/* 第一拍:归因 —— 从左侧那个刚做的行动飞一条线到右侧新入场的情报,周围先不动。
+   停顿。
+   第二拍:后果 —— 整图重组,被串起来的先亮一下再归位。 */
+function doAction(actionId, pid) {
+  closePop();
+  if (anim) return;
+  const before = view.map;
+  const beforePos = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
+  const r = take(S, actionId);
+  if (!r.ok) { alert(r.why); return; }
+  recompute();
+
+  const newId = r.observationId;
+  const beforeIds = new Set([...before.nodes, ...before.findings, ...before.axioms].map((n) => n.id));
+  const fresh = [...view.map.nodes, ...view.map.findings, ...view.map.axioms]
+    .filter((n) => !beforeIds.has(n.id)).map((n) => n.id);
+
+  renderHeader(); renderObject(); renderOutside();
+
+  /* 先按旧位置画一遍,让新节点从左侧飞入 */
+  const { w, h } = mapBox();
+  positions = beforePos;
+  const anchorScreen = placeScreenPoint(pid);
+  positions.set(newId, { x: Math.max(90, anchorScreen.x), y: Math.min(Math.max(50, anchorScreen.y), h - 60) });
+  /* 其他新生的(局部 Finding、公理)先藏在新情报附近 */
+  for (const id of fresh) if (id !== newId) {
+    const p = positions.get(newId);
+    positions.set(id, { x: p.x + 18, y: p.y + 18 });
+  }
+  renderMap();
+  flyLine(anchorScreen, positions.get(newId));
+  markFlash([newId]);
+
+  anim = true;
+  setTimeout(() => {                       /* 停顿 */
+    const from = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
+    layout(view.map);
+    const to = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
+    tween(from, to, 620, () => {
+      anim = null;
+      renderDeck();
+      snapshot(ACTION_BY_ID.get(actionId)?.name ?? actionId);
+      /* 被这条串起来的那些先亮一下 */
+      const touched = view.map.edges.filter((e) => e.from === newId || e.to === newId)
+        .flatMap((e) => [e.from, e.to]);
+      markFlash([...new Set([newId, ...touched, ...fresh])], 700);
+    });
+  }, 520);
+}
+function placeScreenPoint(pid) {
+  const box = $("#mapwrap").getBoundingClientRect();
+  let r;
+  const hot = document.querySelector(`[data-place="${pid}"]`);
+  if (hot) r = hot.getBoundingClientRect();
+  if (!r) return { x: 90, y: 90 };
+  return { x: -40, y: r.top + r.height / 2 - box.top, sx: r.left + r.width / 2 - box.left,
+           sy: r.top + r.height / 2 - box.top };
+}
+function flyLine(from, to) {
+  const svg = $("#map");
+  const p = el("path", { class: "fly",
+    d: `M${from.sx ?? 0},${from.sy ?? to.y} Q${(from.sx + to.x) / 2},${to.y - 40} ${to.x},${to.y}` });
+  svg.appendChild(p);
+  const len = 400;
+  p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
+  p.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 460, fill: "forwards" });
+  setTimeout(() => p.remove(), 1100);
+}
+function markFlash(ids, ms = 520) {
+  for (const id of ids) {
+    const n = document.querySelector(`[data-node="${cssEsc(id)}"]`);
+    if (!n) continue;
+    n.classList.add("flash");
+    setTimeout(() => n.classList.remove("flash"), ms);
+  }
+}
+const cssEsc = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/[.:|]/g, "\\$&");
+function hash(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; }
+function tween(from, to, ms, done) {
+  const t0 = performance.now();
+  const ease = (t) => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  function frame(now) {
+    const k = Math.min(1, (now - t0) / ms), e = ease(k);
+    for (const [id, b] of to) {
+      const a = from.get(id) ?? b;
+      positions.set(id, { x: a.x + (b.x - a.x) * e, y: a.y + (b.y - a.y) * e });
+    }
+    renderMap();
+    if (k < 1) requestAnimationFrame(frame); else done && done();
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ==================== 历史回放:独立浮层,不占主界面 ==================== */
+$("#bhist").addEventListener("click", () => {
+  const h = $("#hist");
+  h.style.display = "flex";
+  const r = $("#hr");
+  r.max = String(history.length - 1);
+  r.value = String(history.length - 1);
+  drawHistory(history.length - 1);
+});
+$("#hclose").addEventListener("click", () => { $("#hist").style.display = "none"; });
+$("#hr").addEventListener("input", (e) => drawHistory(+e.target.value));
+function drawHistory(i) {
+  const h = history[i];
+  if (!h) return;
+  renderMap(h);
+  $("#hcap").textContent = h.step === 0
+    ? "开局:右侧还什么都没有"
+    : `第 ${h.step} 步 · ${h.actLabel} —— ${h.ro.name}`;
+  const box = $("#hdeck");
+  box.textContent = "";
+  for (const a of h.map.axioms) {
+    const d = document.createElement("div"); d.className = "ax"; d.textContent = a.line;
+    box.appendChild(d);
+  }
+  if (h.ds.clear) {
+    const d = document.createElement("div"); d.className = "clear"; d.textContent = h.ds.clearLine;
+    box.appendChild(d);
+  }
+  for (const it of h.ds.items) {
+    const c = document.createElement("div");
+    c.className = "card k-" + it.kind;
+    c.innerHTML = `<div class="kd">${esc(KIND_LABEL[it.kind] ?? it.kind)}</div>` +
+      `<h5>${esc(it.title)}</h5><p>${esc(it.body)}</p>`;
+    box.appendChild(c);
+  }
+}
+
+/* ==================== 其他 ==================== */
+$("#bstop").addEventListener("click", () => {
+  if (S.stopped) return;
+  S.stopped = true;
+  recompute(); renderAll(); snapshot("收手");
+});
+$("#breset").addEventListener("click", reset);
+window.addEventListener("resize", () => { if (!anim) { layout(view.map, { iters: 90 }); renderMap(); } });
+
+reset();
+</script>
+</body>
+</html>

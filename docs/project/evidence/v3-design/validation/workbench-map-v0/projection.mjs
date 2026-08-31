@@ -32,85 +32,99 @@ for (const ev of Object.values(events)) {
 
 /* ---------- 情报标签。节点是情报,不是行动,所以不能拿动作名当标签。 ---------- */
 export const OBS_LABEL = {
-  "obs.current.whole": { short: "整器读数", gist: "器型与胎釉的整体面貌,加上肉眼可见的干预痕迹分布在哪几区。" },
+  "obs.current.whole": { short: "整只碗的样貌", gist: "器型与胎釉的整体面貌,加上肉眼看得见的动过手的地方分布在哪几块。" },
   "obs.current.base": { short: "底足痕迹", gist: "圈足与修足留下的成型痕迹 —— 制造工艺的指纹。" },
-  "obs.appearance.restore": { short: "外观重整痕迹", gist: "纹饰与色差显示外观被重新整合过的那些区。" },
-  "obs.corpus.identity": { short: "语料比对结果", gist: "这套制造特征在同期真品语料里是常见还是罕见。" },
-  "obs.corpus.identity.repeat": { short: "语料复核(同一结论)", gist: "换一批语料复核,结论与上次一致 —— 是本局经历,但不额外计权。" },
-  "obs.object.continuity": { short: "同一器物", gist: "不参与重组的稳定锚点对得上:手里这只与记录里那只是同一件。" },
-  "obs.structure.xray.early": { short: "釉下结构影像", gist: "多角度射线下逐区的结构读数。" },
-  "obs.surface.no-signal.unresolved": { short: "紫外无信号(未定)", gist: "没筛出补绘信号,但这次筛查的能力不足以支撑「没有补绘」这个结论。" },
-  "obs.accident.major": { short: "事故记录组", gist: "一组彼此自洽的记录,描述了一次重大损坏与随后的重组。" },
-  "obs.archive.t2.object-attribution": { short: "事故记录归属本器", gist: "那组事故记录说的就是这只碗。" },
-  "obs.archive.t2.current-corroboration": { short: "事故记录对上现器", gist: "记录描述的那次重组,在现器上找得到对应痕迹。" },
-  "obs.phase.t1": { short: "事故前影像", gist: "一个更早时点的样貌,可作比较基线。" },
-  "obs.structure.major.cross-time": { short: "跨时点结构变化", gist: "把两个时点的逐区结构摆一起,变了什么看得见。" },
-  "obs.structure.major.documented-cross-time": { short: "跨时点变化(依档案)", gist: "以档案给的时点作基线得出的跨时点变化 —— 结论依赖档案说的是这只碗。" },
-  "obs.phase.t3": { short: "后期处理记录", gist: "更晚的一批处理记录,说明后来还有人动过它。" },
-  "obs.archive.t3.object-attribution": { short: "后期记录归属本器", gist: "那批后期记录也是这只碗的。" },
-  "obs.archive.t3.current-corroboration": { short: "后期记录对上现器", gist: "后期处理在现器对应区域找得到。" },
-  "obs.key-material.substrate-readings": { short: "关键点基底读数", gist: "关键区的材料基底:是原片还是重建的。" },
-  "obs.key-material.layer-sequence": { short: "微观层序", gist: "各层上去的先后顺序 —— 谁压在谁上面。" },
-  "obs.surface.point-layering": { short: "表面试窗点位", gist: "开窗点上补绘压在哪一层之上,以此定后加层与原层的关系。" },
-  "obs.surface.resolved": { short: "表面范围已定", gist: "把点位综合成区域,补绘范围有多大说得出来了。" },
-  "obs.stability.resolved": { short: "稳定性已定", gist: "承力路径与陈列条件评估完成。" },
-  "obs.documentation.resolved": { short: "来源链边界", gist: "流转记录到哪一步为止,且这段里没有互相打架的文件。" },
+  "obs.appearance.restore": { short: "外观被重整过的痕迹", gist: "纹饰与色差显示外观被重新整合过的那些地方。" },
+  "obs.corpus.identity": { short: "与同期真品的比对结果", gist: "这套制造特征放到同时代的真品里看,是常见还是罕见。" },
+  "obs.corpus.identity.repeat": { short: "换一批真品复核(结论没变)", gist: "换一批同期真品再比一次,结论与上次一致 —— 是本局经历,但不额外加分。" },
+  "obs.object.continuity": { short: "手里这只就是记录里那只", gist: "那些没被改动过的稳定特征对得上,所以手里这只与记录里那只是同一件。" },
+  "obs.structure.xray.early": { short: "釉下结构影像", gist: "多角度射线下一块一块拍出来的内部结构。" },
+  "obs.surface.no-signal.unresolved": { short: "紫外没照出补绘(还不能当证据)", gist: "没照出补绘的迹象,但这一次照的灵敏度不够,所以还不能据此说「没有补绘」。" },
+  "obs.accident.major": { short: "那一组事故记录", gist: "几份彼此不矛盾的记录,描述了一次严重损坏和随后的修补。" },
+  "obs.archive.t2.object-attribution": { short: "事故记录说的是这只碗", gist: "那组事故记录讲的就是手里这一只,不是同类的另一只。" },
+  "obs.archive.t2.current-corroboration": { short: "事故记录在这只碗上对上了", gist: "记录里写的那次修补,在这只碗上找得到对应的痕迹。" },
+  "obs.phase.t1": { short: "出事之前的影像", gist: "一张更早时候的样子,可以拿来当比较的底子。" },
+  "obs.structure.major.cross-time": { short: "两个时候的结构差别", gist: "把两个时候的内部结构一块一块摆在一起,哪里变了看得见。" },
+  "obs.structure.major.documented-cross-time": { short: "两个时候的结构差别(底子来自档案)", gist: "拿档案给的那个时间点当底子比出来的差别 —— 所以这条结论要靠「档案说的是这只碗」才站得住。" },
+  "obs.phase.t3": { short: "更晚的一批处理记录", gist: "时间更靠后的一批处理记录,说明后来还有人动过它。" },
+  "obs.archive.t3.object-attribution": { short: "后期记录说的是这只碗", gist: "那批更晚的记录讲的也是手里这一只。" },
+  "obs.archive.t3.current-corroboration": { short: "后期处理在这只碗上对上了", gist: "那批后期处理,在这只碗对应的地方找得到。" },
+  "obs.key-material.substrate-readings": { short: "关键几处的底子是什么", gist: "要紧那几处底下究竟是原来的瓷,还是后来补起来的。" },
+  "obs.key-material.layer-sequence": { short: "各层的先后顺序", gist: "一层层上去的先后 —— 谁压在谁上面。" },
+  "obs.surface.point-layering": { short: "试窗点上的层次关系", gist: "开窗的那几个点上,补绘压在哪一层之上,由此定出后加的和原有的谁先谁后。" },
+  "obs.surface.resolved": { short: "补绘范围有多大,已经说得出来", gist: "把各个点连成片,补绘覆盖多大范围现在有答案了。" },
+  "obs.stability.resolved": { short: "结不结实,已经说得出来", gist: "受力怎么传、能不能摆出来展，都评估过了。" },
+  "obs.documentation.resolved": { short: "来源链查到哪一步为止", gist: "经手记录能追到哪一步,而且这一段里没有互相打架的文件。" },
 };
 
 /* ---------- 主张的槽位标签。空槽位就是「还差哪一块」。 ---------- */
+/* 主张标签必须是**陈述句**,而且必须说的是它自己那两个槽位管的事。
+   2026-08-31 盲测教训:`identity` 原本叫「它属于哪一路」,可它的槽位是「这只碗本身的
+   工艺读数」+「与历史时点是同一件器物」—— 讲的是身份链接上了,不是窑口归属。
+   玩家因此把它读成一个只有问题没有答案的结论,等一个永远不会来的答案。 */
 export const CLAIM_LABEL = {
-  identity: "它属于哪一路",
-  majorReassembly: "它曾被大幅重组过",
-  threePhase: "重组分三个时点发生",
-  coherentDecisionProfile: "整份判断内部自洽",
+  identity: "这只碗就是档案里记的那一只",
+  majorReassembly: "这只碗被大改过",
+  threePhase: "改动分三次发生,不是一次",
+  coherentDecisionProfile: "整份判断内部不矛盾",
 };
 /* g1 与 appearanceRestore 不进地图:前者是阶段结果(DEC-032 第十节),
    后者是单条事实而非主张。 */
 export const CLAIM_NOT_ON_MAP = new Set(["g1", "appearanceRestore"]);
 
+/* 槽位标签就是「还差哪一块」,所以每一条都要让玩家看得出缺的是什么东西。 */
 export const SLOT_LABEL = {
   identity: {
-    currentObject: "现器本身的工艺读数",
-    path: "与历史时点是同一件器物",
+    currentObject: "这只碗本身的工艺读数",
+    path: "它与记录里那一只是同一件",
   },
   majorReassembly: {
-    currentRepairMap: "可具名的干预分布图",
-    documentedSourceGroup: "记录组自洽并归到本器",
-    documentedCrossTime: "档案所述与跨时点物证对得上",
-    physicalStructureMap: "逐区结构读数",
-    physicalCrossTime: "跨时点结构变化",
+    currentRepairMap: "说得出哪几处被动过手",
+    documentedSourceGroup: "几份记录互不矛盾,而且说的是这只碗",
+    documentedCrossTime: "档案里写的事,在两个时候的实物对比上对得上",
+    physicalStructureMap: "一块一块拍出来的内部结构",
+    physicalCrossTime: "两个时候的结构差别",
   },
   threePhase: {
-    t1: "事故之前的状态",
-    t2: "事故与那一次重组",
-    t3: "后期的处理",
+    t1: "出事之前是什么状态",
+    t2: "那次事故和随后的修补",
+    t3: "后来又有人动过的部分",
   },
   coherentDecisionProfile: {
-    documentation: "文件边界清楚且无冲突",
-    keyMaterial: "关键材料已定",
-    stability: "稳定性已定",
-    surface: "表面处理已定",
+    documentation: "经手记录查到哪为止,而且不互相打架",
+    keyMaterial: "要紧那几处的底子说得出来",
+    stability: "结不结实说得出来",
+    surface: "表面被补过多少说得出来",
   },
 };
 
+/* 查一批记录要分别过三道:记录之间对不对得上、说的是不是这只碗、写的事在实物上找不找得到。
+   这三道必须能被玩家一次看全 —— 盲测者的原话是「三关系到底是哪三个,要我从三段说明里
+   自己拼」,而且他把「三关系」和「第几关」混着读。所以界面上只准出现这三句,
+   不准再出现「档案三关系」「第一关／第二关」这种要玩家自己去凑的说法。 */
 export const ARCHIVE_REL_LABEL = {
-  recordCoherence: "记录之间自洽吗",
-  objectAttribution: "记录说的是这只碗吗",
-  eventCorroboration: "记录说的事在物证上对得上吗",
+  recordCoherence: "这几份记录互相对得上吗",
+  objectAttribution: "这些记录说的是这只碗吗",
+  eventCorroboration: "记录里写的事,在实物上找得到吗",
 };
 export const ARCHIVE_REL_STATE = {
   unresolved: "还没结论",
-  suggestive: "有指向性,但还没归到本器",
-  established: "已建立",
-  contested: "有冲突",
+  suggestive: "有指向,但还不能确定说的就是这只碗",
+  established: "已经确定",
+  contested: "对不上,互相打架",
 };
 export const ARCHIVE_GROUP_LABEL = { t2: "事故那一组记录", t3: "后期处理那一组记录" };
 
+/* 三种边。**两种是有方向的**,所以图上必须画箭头 —— 盲测者说没有箭头时他会按
+   上下左右猜哪头是前提,猜反了就去点点不了的东西,然后当成 bug。
+   句子也照方向写,不再用「悬空／被接住」这种他明说想象不出画面的说法。 */
 export const EDGE_KINDS = {
-  latent: "说的是同一件底层的事",
-  prereq: "没有前一条,后一条拿不到",
-  caught: "后来这条把先前悬空的那条接住了",
+  latent: "两头讲的是同一件事",
+  prereq: "箭尾那条先到手,箭头那条才拿得到",
+  caught: "箭尾这条后来到手,才让箭头那条有了意义",
 };
+/* 哪些边有方向。latent 是对称关系,画箭头反而会让玩家以为有先后。 */
+export const EDGE_DIRECTED = new Set(["prereq", "caught", "supports"]);
 
 /* ================= 心智地图 ================= */
 export function mentalMap(solved) {
@@ -213,7 +227,9 @@ export function mentalMap(solved) {
     axioms.push({
       type: "axiom", id: "AX:" + claimId, claimId,
       short: CLAIM_LABEL[claimId] ?? claimId,
-      line: (CLAIM_LABEL[claimId] ?? claimId) + " —— 已定,不再需要论证",
+      /* 不再叫「公理」。盲测者第一反应是数学课上「不证自明」的公理,而这里恰好相反 ——
+         这是玩家花步数查实的东西。他明写每次看到都要在两种理解之间切换一次。 */
+      line: (CLAIM_LABEL[claimId] ?? claimId) + " —— 已经查实,不用再查",
       supports: claimSupporters(solved, claimId),
     });
   }
@@ -308,16 +324,18 @@ export function decisionSurface(solved, workbenchRows) {
     const need = caw[id]?.requiredFacts ?? EVENT_BY_OBS.get(id)?.requiresContextFacts ?? [];
     items.push({
       kind: "suspended", id: "S:" + id,
-      title: (nodeById.get(id)?.short ?? id) + " 暂时接不上",
-      body: "这条已经拿到了,但缺一个前提才能安全解释它。补上之后它会自动接进来,而且不重复计权。",
+      title: (nodeById.get(id)?.short ?? id) + " 现在还读不出结论",
+      body: "这条你已经拿到手了,但少一个前提,所以现在还不能拿它下判断。" +
+            "把那个前提补上,它会自己变成有用的证据 —— 不用重新花钱买一次,也不会因为等过一阵就打折。",
       means: meansForFacts(need),
     });
   }
   for (const id of negativeIds) {
     items.push({
       kind: "negative", id: "N:" + id,
-      title: (nodeById.get(id)?.short ?? id) + " 没筛出东西,但不够格下结论",
-      body: "这次没有发现信号。问题是这次筛查的能力不足以支撑「没有」这个结论 —— 阴性要成为证据,得先证明手段够格。换一种更能定层的手段去问同一件事。",
+      title: (nodeById.get(id)?.short ?? id) + " 没查到,但这不等于没有",
+      body: "这一次什么也没查到。问题在于这个手段本身不够灵,不足以支撑「确实没有」这个结论 —— " +
+            "「没查到」要能当证据用,得先有一个足够灵的手段来查。换一个看得更深的手段,去问同一件事。",
       means: siblingMeans(id),
     });
   }
@@ -394,7 +412,8 @@ export function decisionSurface(solved, workbenchRows) {
     items.push({
       kind: "onemore", id: "A:" + group + ":" + k,
       title: `${ARCHIVE_GROUP_LABEL[group] ?? group}:${ARCHIVE_REL_LABEL[k]} —— ${ARCHIVE_REL_STATE[v]}`,
-      body: "档案要分三件事看:记录之间自洽吗、记录说的是这只碗吗、记录说的事在物证上对得上吗。你已经落定了其中的一部分,这一环还没有。",
+      body: "查一批记录要分别过三道:①这几份记录互相对得上吗 ②这些记录说的是这只碗吗 " +
+            "③记录里写的事,在实物上找得到吗。这三道是并列的,不分先后。你已经过了其中一部分,这一道还没有。",
       means: meansForArchive(group, k, meansOf),
     });
   }
@@ -461,7 +480,7 @@ export function decisionSurface(solved, workbenchRows) {
   const clear = items.length === 0;
   const clearLine = clear
     ? (map.nodes.length === 0
-        ? "还没有任何情报。左边那只碗随便看,免费的几眼不要钱。"
+        ? "还没有任何情报。先从左边那只碗看起:看它不花钱,但每一个手段都占掉一步。"
         : "没有悬而未决的东西了:没有接不上的情报,没有差一件就合拢的,也没有打架的。" +
           "收手是一个正当选择;想往下走,就得自己开一条新线 —— 开哪条由你定。")
     : null;
@@ -551,6 +570,10 @@ export function readout(solved, session) {
     name: sem?.name ?? solved.stage,
     line: sem?.meaning ?? "",
     used: session?.log?.length ?? 0,
+    budget: session?.budget ?? null,
+    /* 账单按档计数,不求和 —— 理由见 session.mjs 的 newSession 注释。
+       本阶段钱不约束任何东西,只在局末告知,所以这里给的是构成而不是一个总数。 */
+    billed: [...(session?.billed ?? [0, 0, 0, 0])],
     routes: [
       { id: "documented", ...ROUTE_SEMANTICS.documented, open: !!paths.documented },
       { id: "physical", ...ROUTE_SEMANTICS.physical, open: !!paths.physical },

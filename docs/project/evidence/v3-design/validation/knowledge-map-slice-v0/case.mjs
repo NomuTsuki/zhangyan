@@ -53,16 +53,18 @@ export const ACTIONS = [
     name: "逐区看纹饰与色差", ask: "外观有没有被重新整合过?",
     outcome: () => "appearance" },
 
+  /* 2026-08-31 盲测:「语料」是语言学的词,他第一猜是去比对款识题字,而碗上没有文字;
+     「非构图稳定锚点」是他全屏最看不懂的一条。手段名是玩家要点的按钮,不能留行话。 */
   { id: "A.COMPARE.CORPUS", place: "CORPUS", cost: T.LOW,
-    name: "比同期真品语料", ask: "这种制造特征在同期真品里常见吗?",
+    name: "拿同期真品比一比", ask: "这种做法放到同时代的真品里,算常见还是罕见?",
     outcome: () => "corpus" },
 
   { id: "A.COMPARE.CORPUS.RECHECK", place: "RPT", cost: T.LOW,
-    name: "再调一批语料复核", ask: "换一批语料会不会得出别的结论?",
+    name: "换一批真品再比一次", ask: "换一批真品来比,会不会比出别的结论?",
     outcome: () => "corpusDuplicate" },
 
   { id: "A.VERIFY.OBJECT_CONTINUITY", place: "OBJ_R", cost: T.MID,
-    name: "核对非构图稳定锚点", ask: "手里这只和记录里那只是同一只吗?",
+    name: "核对那些没被改动过的特征", ask: "手里这只和记录里那只,是同一只吗?",
     outcome: () => "identityContinuity" },
 
   { id: "A.IMAGE.XRAY", place: "XRAY", cost: T.HIGH,
@@ -74,64 +76,66 @@ export const ACTIONS = [
     outcome: () => "noSignalUnresolved" },
 
   { id: "A.RESEARCH.ACCIDENT", place: "T2", cost: T.LOW,
-    name: "检索事故记录组", ask: "有人记录过一次重大损坏吗?",
+    name: "查有没有出过事的记录", ask: "有人记录过一次严重损坏吗?",
     outcome: () => "accident" },
 
   { id: "A.RELATE.ARCHIVE.T2_TO_OBJECT", place: "T2", cost: T.LOW,
-    name: "核对事故记录的对象归属", ask: "那组记录说的是这只碗吗?",
+    name: "看事故记录说的是不是这只碗", ask: "那组记录讲的是手里这一只吗?",
     outcome: () => "t2Attribution" },
 
   { id: "A.CORROBORATE.ARCHIVE.T2_CURRENT", place: "T2", cost: T.LOW,
-    name: "拿事故记录对现器物证", ask: "记录描述的事,现器上找得到吗?",
+    name: "拿事故记录去对这只碗", ask: "记录里写的事,在这只碗上找得到吗?",
     outcome: () => "documentedCurrentCorroboration" },
 
   { id: "A.LOCATE.HISTORIC_IMAGE", place: "T1", cost: T.LOW,
-    name: "找早期影像", ask: "这只碗以前长什么样?",
+    name: "找更早的影像", ask: "这只碗以前长什么样?",
     outcome: () => "t1" },
 
   /* 唯一带额外前置的动作:跨时点对照需要有第二个时点可对。
      两条入口对应 G2 的两条 OR 路线,与冻结场景一致。 */
   { id: "A.MAP.REGION_CONTINUITY", place: "OBJ_W", cost: T.MID,
-    name: "逐区跨时点对照", ask: "结构从那时到现在变了什么?",
+    name: "把两个时候一块一块对比", ask: "从那时到现在,结构上变了什么?",
     needs: (f) => f.has("currentStructureReadoutByRegion") || f.has("t2ArchiveObjectAttribution"),
-    needsWhy: "得先有第二个时点可以对 —— 要么拿到可读的逐区结构读数,要么先把事故记录归到本器",
+    /* 理由必须点名玩家该去点哪个手段(harness K2 段守着这一条),不能只描述缺什么。 */
+    needsWhy: "对比要两头,现在只有一头 —— 要么先用「X 射线多角度逐区成像」拍出它现在的内部结构," +
+      "要么先用「看事故记录说的是不是这只碗」把更早那一头定下来。这不是锁,是没有两头就无从对比",
     outcome: (f) => f.has("currentStructureReadoutByRegion")
       ? "repairContinuity" : "documentedCrossTime" },
 
   { id: "A.RESEARCH.LATE_TREATMENT", place: "T3", cost: T.LOW,
-    name: "检索后期处理记录组", ask: "后来还有人动过它吗?",
+    name: "查后来还有没有人动过", ask: "更晚的时候还有人动过它吗?",
     outcome: () => "t3" },
 
   { id: "A.RELATE.ARCHIVE.T3_TO_OBJECT", place: "T3", cost: T.LOW,
-    name: "核对后期记录的对象归属", ask: "那批后期记录也是这只碗的吗?",
+    name: "看后期记录说的是不是这只碗", ask: "那批更晚的记录讲的也是手里这一只吗?",
     outcome: () => "t3Attribution" },
 
   { id: "A.CORROBORATE.ARCHIVE.T3_CURRENT", place: "T3", cost: T.LOW,
-    name: "拿后期记录对现器区域", ask: "后期处理在现器上对得上吗?",
+    name: "拿后期记录去对这只碗", ask: "那些后期处理,在这只碗上对得上吗?",
     outcome: () => "t3CurrentCorroboration" },
 
   { id: "A.ANALYZE.MATERIAL.SUBSTRATE", place: "MAT", cost: T.HIGH,
-    name: "点位材料基底分析", ask: "关键区是原片还是重建的?",
+    name: "化验要紧几处的底子", ask: "要紧那几处底下,是原来的瓷还是后来补的?",
     outcome: () => "materialSubstrate" },
 
   { id: "A.INSPECT.MATERIAL.LAYER_SEQUENCE", place: "MAT", cost: T.HIGH,
-    name: "微观层序检查", ask: "这些层是按什么顺序上去的?",
+    name: "查各层的先后顺序", ask: "这些层是按什么先后上去的?",
     outcome: () => "materialLayerSequence" },
 
   { id: "A.INSPECT.WINDOWS", place: "SURF", cost: T.MID,
-    name: "开表面试窗点位", ask: "补绘到底压在哪一层上?",
+    name: "在表面开几个小窗看层次", ask: "补绘到底压在哪一层上?",
     outcome: () => "surfacePoint" },
 
   { id: "A.SYNTHESIZE.SURFACE_REGIONS", place: "SURF", cost: T.MID,
-    name: "表面区域综合", ask: "补绘范围有多大?",
+    name: "把开过的小窗连成片", ask: "补绘一共盖了多大范围?",
     outcome: () => "surface" },
 
   { id: "A.ASSESS.TREATED_AND_UNTREATED", place: "STAB", cost: T.MID,
-    name: "评估承力与陈列条件", ask: "现在还能安全陈列吗?",
+    name: "看它结不结实、能不能摆出来", ask: "现在还能安全摆出来展吗?",
     outcome: () => "stability" },
 
   { id: "A.TRACE.PROVENANCE_CHAIN", place: "PROV", cost: T.LOW,
-    name: "追来源链", ask: "它的流转记录到哪一步为止?",
+    name: "追它经手过谁", ask: "它的经手记录能追到哪一步为止?",
     outcome: () => "documentation" },
 ];
 
@@ -142,8 +146,30 @@ export const ACTION_BY_ID = new Map(ACTIONS.map((a) => [a.id, a]));
  *   1. 冻结事件自带的 acquisitionRequires 还没满足;
  *   2. 本表声明的 needs 还没满足(目前只有跨时点对照一条)。
  * 已经做过的动作不消失,标成"做过了",再做一次仍然允许(重复要看得见,DEC-030)。
+ *
+ * 2026-08-31:原先这里把缺失的事实 id 直接拼进理由里,于是开局第一屏就把
+ * `还缺前置:currentBody、baseManufacture` 这种内部键摆给了玩家(真人试玩当场指出)。
+ * 现在改为**反查出该先做哪个动作并说出它的名字** —— 这不只是换个说法:
+ * 玩家追问的"这是需要解锁吗"本身说明旧措辞把逻辑前置误传成了剧情门,
+ * 而点名动作直接告诉他"这一步要用到那一步的结果",没有解锁这回事。
  */
+
+/* 事实 → 当前状态下能产出它的动作。冻结事件自带 facts 与 acquisitionActionId,
+   所以这是查出来的而非另建一张表;按当前 facts 算 outcome,分支动作也能算对。 */
+function producersOf(facts) {
+  const m = new Map();
+  for (const a of ACTIONS) {
+    const ev = events[a.outcome(facts)];
+    for (const f of ev.facts ?? []) {
+      if (!m.has(f)) m.set(f, []);
+      if (!m.get(f).includes(a)) m.get(f).push(a);
+    }
+  }
+  return m;
+}
+
 export function availability(facts, doneActionIds) {
+  const producers = producersOf(facts);
   return ACTIONS.map((a) => {
     const ev = events[a.outcome(facts)];
     const missing = ev.acquisitionRequires.filter((f) => !facts.has(f));
@@ -152,11 +178,31 @@ export function availability(facts, doneActionIds) {
       action: a,
       done: doneActionIds.includes(a.id),
       usable: missing.length === 0 && !gated,
-      why: missing.length
-        ? `还缺前置:${missing.join("、")}`
+      why: missing.length ? missingWhy(missing, producers, a)
         : gated ? a.needsWhy : null,
+      /* 给界面用:该先做的那几个动作,让它可以做成可点的链接而不是一句死话 */
+      needsActionIds: missing.length ? prereqActions(missing, producers, a).map((x) => x.id) : [],
     };
   });
+}
+
+function prereqActions(missing, producers, self) {
+  const out = [];
+  for (const f of missing) {
+    for (const p of producers.get(f) ?? []) {
+      if (p.id !== self.id && !out.includes(p)) out.push(p);
+    }
+  }
+  return out;
+}
+
+/* 一句人话。**任何情况下都不许把事实 id 漏出去** —— 查不到产出动作时说不知道,
+   也不要退回去打印内部键。 */
+function missingWhy(missing, producers, self) {
+  const acts = prereqActions(missing, producers, self);
+  if (!acts.length) return "这一步要用到别处的结果,而现在没有手段能直接去拿";
+  const names = acts.map((x) => `「${x.name}」`).join("和");
+  return `得先有${names}的结果 —— 不是锁,是这一步的推理要拿它当依据`;
 }
 
 /* ---------- 玩家可见读数 ----------

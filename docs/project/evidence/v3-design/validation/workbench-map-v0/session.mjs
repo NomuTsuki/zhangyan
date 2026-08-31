@@ -12,7 +12,19 @@ import { solveFixture, assertLegalAcquisitionOrder } from
   "../first-ceramic-author-scenarios-v0/solver.mjs";
 import { ACTION_BY_ID, availability } from "../knowledge-map-slice-v0/case.mjs";
 
-export const BUDGET = 12; /* param slice.investigationBudget,见 docs/project/PARAMS.md */
+/* param slice.investigationBudget,见 docs/project/PARAMS.md
+   开局前可调,范围 [BUDGET_MIN, BUDGET_MAX]。下界 12 是原先的固定值,来自冻结场景的
+   路线长度反推;上界由 ceiling.mjs 从冻结拓扑跑出,等于"互异动作各做一次"的步数,
+   超过它每一步都只能是重复。默认取上界 —— 先慷慨,压力靠玩家自己收手而不是靠预算卡。 */
+export const BUDGET_MIN = 12;
+export const BUDGET_MAX = 22;
+export const BUDGET_DEFAULT = BUDGET_MAX;
+
+export function clampBudget(n) {
+  const v = Math.round(Number(n));
+  if (!Number.isFinite(v)) return BUDGET_DEFAULT;
+  return Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, v));
+}
 
 function liveFixture(acquired, playerChoice) {
   return {
@@ -24,8 +36,23 @@ function liveFixture(acquired, playerChoice) {
   };
 }
 
-export function newSession() {
-  return { acquired: [], log: [], spent: 0, stopped: false };
+/* 两种货币,只有一种约束(2026-08-31 用户决定):
+   —— 步数是唯一硬约束,每个动作恰好扣 1 步,不分档;
+   —— 钱只累加、局末告知,本阶段不设预算、不订数值。
+
+   `billed` 按档计数而**不求和**。求和(旧的 `spent += a.cost`)等于断言中档花的钱
+   是低档的两倍,而档位只是序数,那个倍数从未被批准。等钱的数值系统定下来,
+   把这四个计数乘上单价即可,不必回头拆一个已经混在一起的和。 */
+export function newSession(budget = BUDGET_DEFAULT) {
+  return { acquired: [], log: [], billed: [0, 0, 0, 0], stopped: false,
+           budget: clampBudget(budget) };
+}
+
+/* 预算只在开局前可改:一步都还没走时改是调难度,走过之后改是作弊。 */
+export function setBudget(s, n) {
+  if (s.log.length) return { ok: false, why: "已经动过手了,本局预算不能再改" };
+  s.budget = clampBudget(n);
+  return { ok: true, budget: s.budget };
 }
 
 export function solve(s) {
@@ -45,13 +72,13 @@ export function workbench(s) {
   return availability(facts, done).map((x) => ({
     ...x,
     done: done.includes(x.action.id),
-    affordable: s.log.length < BUDGET && !s.stopped,
+    affordable: s.log.length < s.budget && !s.stopped,
   }));
 }
 
 export function take(s, actionId) {
   if (s.stopped) return { ok: false, why: "本局已经收手" };
-  if (s.log.length >= BUDGET) return { ok: false, why: "调查机会已经用完" };
+  if (s.log.length >= s.budget) return { ok: false, why: "行动点数已经用完" };
   const a = ACTION_BY_ID.get(actionId);
   if (!a) return { ok: false, why: `没有这个动作:${actionId}` };
   const facts = factsOf(s);
@@ -69,7 +96,7 @@ export function take(s, actionId) {
   }
   const before = solve(s);
   s.acquired = next;
-  s.spent += a.cost;
+  s.billed[a.cost] += 1;
   s.log.push({ actionId, eventKey, observationId: ev.observationId, cost: a.cost });
   const after = solve(s);
 

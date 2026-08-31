@@ -1,7 +1,8 @@
 /* 无界面自检:先把投影层验掉,再写任何界面。跑法:node harness.mjs */
 import { proofRoleContracts } from "../first-ceramic-author-scenarios-v0/fixtures.mjs";
 import { ACTIONS, ACTION_BY_ID, COST_LABEL } from "../knowledge-map-slice-v0/case.mjs";
-import { newSession, take, solve, workbench, BUDGET } from "./session.mjs";
+import { newSession, take, solve, workbench, setBudget, clampBudget,
+         BUDGET_MIN, BUDGET_MAX, BUDGET_DEFAULT } from "./session.mjs";
 import { mentalMap, decisionSurface, readout, OBS_LABEL, SLOT_LABEL, SLOT_FACTS,
          CLAIM_LABEL, CLAIM_NOT_ON_MAP } from "./projection.mjs";
 
@@ -56,7 +57,7 @@ function play(label, actionIds, { stop = false, quiet = false } = {}) {
     line(`  ---- 读数(不在地图上) ----`);
     line(`  ${ro.name} — ${ro.line}`);
     line(`  路线:档案=${ro.routes[0].open ? "通" : "未通"} 物证=${ro.routes[1].open ? "通" : "未通"}` +
-      ` · 用掉机会 ${ro.used}/${BUDGET}`);
+      ` · 用掉点数 ${ro.used}/${ro.budget}`);
   }
   return { s, solved, map, ds, ro };
 }
@@ -70,7 +71,7 @@ line("### A. 标签覆盖");
   for (const a of ACTIONS) {
     const r = take(s, a.id);
     if (r.ok) seenObs.add(r.observationId);
-    else if (s.log.length >= BUDGET) { s.log.length = 0; s.spent = 0; /* 解开预算继续铺 */ }
+    else if (s.log.length >= s.budget) { s.log.length = 0; /* 解开步数继续铺 */ }
   }
   const solved = solve(s);
   for (const id of solved.evidence.observationIds) seenObs.add(id);
@@ -115,7 +116,7 @@ line("\n### B. 空局:右侧必须是空的");
 line("\n### A2. SLOT_FACTS 防漂移");
 {
   const s = newSession();
-  for (const a of ACTIONS) { if (s.log.length >= BUDGET) s.log.length = 0; take(s, a.id); }
+  for (const a of ACTIONS) { if (s.log.length >= s.budget) s.log.length = 0; take(s, a.id); }
   const solved = solve(s);
   const drift = [];
   for (const [claim, pw] of Object.entries(solved.coverage.proofWitnesses ?? {})) {
@@ -190,7 +191,7 @@ check("出现差一件即可合拢一类", g1.ds.items.some((i) => i.kind === "o
 /* 独立来源不够时必须按来源并集判断,不能按 witness 个数 */
 check("满局不会因为 witness 只有一个就误报差来源", (() => {
   const s = newSession();
-  for (const a of ACTIONS) { if (s.log.length >= BUDGET) s.log.length = 0; take(s, a.id); }
+  for (const a of ACTIONS) { if (s.log.length >= s.budget) s.log.length = 0; take(s, a.id); }
   const solved = solve(s);
   const ds = decisionSurface(solved, workbench(s));
   const bogus = ds.items.filter((i) => i.id.startsWith("R:"));
@@ -268,6 +269,19 @@ line("\n### J. 玩家可见文本不含内部标识符与作者答案");
   }
   texts.push(ro.name, ro.line, ...ro.routes.flatMap((r) => [r.name, r.meaning]));
   texts.push(ds.clearLine ?? "");
+  /* 工作台弹窗的四段文本与不可用理由。
+     2026-08-31 补:原先这里只扫投影层的输出,漏掉了 case.mjs 的 availability().why,
+     于是开局第一屏那句 `还缺前置:currentBody、baseManufacture` 一路漏到玩家眼前,
+     是真人试玩当场抓出来的。**按界面来源抄,不按模块抄。** */
+  for (const st of [newSession(), (() => {
+    const x = newSession();
+    for (const id of ["A.OBSERVE.WHOLE", "A.OBSERVE.BASE"]) take(x, id);
+    return x;
+  })()]) {
+    for (const row of workbench(st)) {
+      texts.push(row.action.name, row.action.ask, row.why ?? "");
+    }
+  }
   /* 把清空文案也扫一遍:另起一个到 G2 的干净局面 */
   {
     const s2 = newSession();
@@ -318,6 +332,108 @@ line("\n### K. 手段标价与不排序(DEC-032 第七节判定标准)");
   const json = JSON.stringify(ds.items);
   const hit = forbidden.filter((k) => json.includes(`"${k}"`));
   check("输出里没有排序/权重字段", hit.length === 0, "命中:" + hit.join(","));
+}
+
+/* ---------------- K2. 不可用理由必须点名动作,永不吐事实 id ---------------- */
+line("\n### K2. 不可用理由(2026-08-31 真人试玩抓出的泄题)");
+{
+  /* 把整局每一步的每一条不可用理由都收集起来,不只看开局 */
+  const s = newSession(22);
+  const whys = [];
+  const collect = () => {
+    for (const row of workbench(s)) if (!row.usable) whys.push({ row, why: row.why });
+  };
+  collect();
+  for (const a of ACTIONS) { take(s, a.id); collect(); }
+
+  check(`扫过 ${whys.length} 条不可用理由`, whys.length > 0);
+  const idLike = whys.filter((w) => /[a-z]+[A-Z]|^[a-z]+\./.test(w.why ?? ""));
+  check("没有一条理由吐出内部事实 id",
+    idLike.length === 0, idLike.slice(0, 3).map((w) => w.why).join(" | "));
+  /* 原先这里给「跨时点对照」那条 needsWhy 开了一个按原文豁免的后门。
+     2026-08-31 把那句改成真的点名两个手段后,后门已无必要 —— 删掉,保证反而更强:
+     每一条理由都必须用「」点到具体手段,或者明说没有手段可用。 */
+  const vague = whys.filter((w) => !/「.+」/.test(w.why) && !w.why.includes("没有手段"));
+  check("每条理由要么点名动作、要么明说没有手段", vague.length === 0,
+    vague.slice(0, 3).map((w) => w.why).join(" | "));
+  /* needsActionIds 必须指向真实存在的动作,界面才能做成可点的链接 */
+  const badRef = whys.flatMap((w) => (w.row.needsActionIds ?? []))
+    .filter((id) => !ACTION_BY_ID.has(id));
+  check("点名的动作都真实存在", badRef.length === 0, badRef.join(","));
+  const sample = [...new Set(whys.map((w) => w.why))].slice(0, 4);
+  for (const t of sample) line(`  例:${t}`);
+}
+
+/* ---------------- L. 行动点数:范围、开局前可改、局中锁死 ---------------- */
+line("\n### L. 行动点数(param slice.investigationBudget)");
+{
+  check(`下界 ${BUDGET_MIN}、上界 ${BUDGET_MAX}、默认取上界`,
+    BUDGET_MIN === 12 && BUDGET_MAX === 22 && BUDGET_DEFAULT === BUDGET_MAX,
+    `实际 ${BUDGET_MIN}/${BUDGET_MAX}/${BUDGET_DEFAULT}`);
+
+  /* 上界必须等于"互异动作各做一次"的步数 —— 由 ceiling.mjs 跑出 22 全可达。
+     动作表若增删而这里忘了改,本项立刻失败。 */
+  check("上界等于动作表长度(超过它每一步只能是重复)", BUDGET_MAX === ACTIONS.length,
+    `上界 ${BUDGET_MAX} vs 动作表 ${ACTIONS.length}`);
+
+  check("越界一律夹到范围内", clampBudget(0) === BUDGET_MIN && clampBudget(999) === BUDGET_MAX
+    && clampBudget(11) === BUDGET_MIN && clampBudget(23) === BUDGET_MAX);
+  check("非数字回落到默认", clampBudget("x") === BUDGET_DEFAULT && clampBudget(undefined) === BUDGET_DEFAULT);
+  check("小数取整", clampBudget(15.4) === 15 && clampBudget(15.6) === 16);
+
+  /* 开局前可改 */
+  const s = newSession();
+  check("默认开局点数即上界", s.budget === BUDGET_MAX, `实际 ${s.budget}`);
+  check("一步未走时可改", setBudget(s, 14).ok && s.budget === 14, `实际 ${s.budget}`);
+
+  /* 走一步之后锁死 */
+  take(s, "A.OBSERVE.WHOLE");
+  const locked = setBudget(s, 20);
+  check("动过手之后改不动", locked.ok === false && s.budget === 14, locked.why ?? "");
+
+  /* 点数确实卡得住:设成下界,走满就不许再走 */
+  const t = newSession(BUDGET_MIN);
+  const order = ACTIONS.map((a) => a.id);
+  let taken = 0;
+  for (const id of order) { if (take(t, id).ok) taken++; }
+  check(`设成 ${BUDGET_MIN} 时最多走 ${BUDGET_MIN} 步`, t.log.length === BUDGET_MIN,
+    `实际 ${t.log.length}(尝试 ${order.length} 个动作)`);
+  const after = take(t, "A.OBSERVE.WHOLE");
+  check("用完之后动作被挡住且给人话理由",
+    after.ok === false && /点数|机会/.test(after.why), after.why ?? "");
+  check("用完之后工作台全部标为不可负担",
+    workbench(t).every((r) => r.affordable === false));
+
+  /* 慷慨设定不会把读数或投影搞坏 */
+  const u = newSession(BUDGET_MAX);
+  for (const a of ACTIONS) take(u, a.id);
+  const uSolved = solve(u);
+  const uRo = readout(uSolved, u);
+  check("满点数一局能把 22 个动作全走完", u.log.length === ACTIONS.length,
+    `实际 ${u.log.length}`);
+  check("读数如实回报本局点数", uRo.budget === BUDGET_MAX && uRo.used === u.log.length,
+    `${uRo.used}/${uRo.budget}`);
+  const uDs = decisionSurface(uSolved, workbench(u));
+  check("走满之后决策面仍然说得出话(空也要有理由)",
+    uDs.items.length > 0 || (uDs.clear && !!uDs.clearLine),
+    `${uDs.items.length} 条 / clear=${uDs.clear}`);
+  line(`  满点数一局:阶段 ${uRo.stage} · 档案路线${uRo.routes[0].open ? "通" : "未通"}` +
+    ` · 物证路线${uRo.routes[1].open ? "通" : "未通"} · 账单按档 ${uRo.billed.join("/")}`);
+
+  /* M. 两种货币:步数约束、钱只记账。账单按档计数,不许悄悄求和 */
+  line("\nM. 两种货币(2026-08-31 用户决定:步数唯一约束,钱只累加告知)");
+  const m = newSession(BUDGET_MAX);
+  check("新局账单四档全为 0", readout(solve(m), m).billed.join(",") === "0,0,0,0",
+    readout(solve(m), m).billed.join(","));
+  let mSteps = 0;
+  for (const a of ACTIONS) if (take(m, a.id).ok) mSteps += 1;
+  const mBilled = readout(solve(m), m).billed;
+  check("账单四档之和恒等于走过的步数(每步恰好记一笔)",
+    mBilled.reduce((x, y) => x + y, 0) === mSteps,
+    `${mBilled.join("+")} vs ${mSteps} 步`);
+  check("会话不再暴露 spent 这个把档位序数相加的字段", m.spent === undefined,
+    String(m.spent));
+  check("免费档确实被记了账(不花钱不等于没发生)", mBilled[0] > 0, `免费×${mBilled[0]}`);
 }
 
 line(`\n${fails === 0 ? "全部通过" : `${fails} 项失败`}`);

@@ -34,6 +34,19 @@
   .meters{padding:9px 16px;min-width:250px;border-right:1px solid var(--line)}
   .meters div{font-size:12px;color:var(--dim)}
   .meters b{color:var(--ink);font-variant-numeric:tabular-nums}
+  /* 开局设置:行动点数只在一步都还没走时可调 */
+  .setup{padding:7px 14px;min-width:286px;border-right:1px solid var(--line)}
+  .setup .sl{font-size:10.5px;letter-spacing:.14em;color:var(--dim2);text-transform:uppercase}
+  .setup .sr{display:flex;align-items:center;gap:9px;margin:1px 0 1px}
+  .setup .sr input[type=range]{flex:1;min-width:0}
+  .setup .sr input[type=number]{
+    width:50px;flex:0 0 auto;background:var(--panel2);color:var(--gold);
+    border:1px solid var(--line);border-radius:3px;padding:2px 4px;font:inherit;
+    font-size:13px;text-align:center;font-variant-numeric:tabular-nums
+  }
+  .setup .sr input[type=number]:focus{outline:none;border-color:var(--gold2)}
+  .setup .sh{font-size:10.5px;color:var(--dim2);line-height:1.35}
+  .setup.locked .sr input{opacity:.45}
   .tools{padding:10px 14px;display:flex;gap:8px;align-items:flex-start}
   button.t{
     background:var(--panel2);color:var(--ink);border:1px solid var(--line);
@@ -146,6 +159,8 @@
   }
   .lgd i{font-style:normal;display:inline-flex;align-items:center;gap:5px}
   .sw{width:16px;height:0;border-top-width:2px;border-top-style:solid;display:inline-block}
+  /* 图注里的箭头,紧跟在线段样本后面,标明这一种边是有方向的 */
+  .swa{margin-left:-4px;margin-right:1px;font-size:11px;line-height:1;color:var(--dim2)}
 
   /* ---------- 右:决策面 ---------- */
   #deckbody{flex:1;overflow:auto;padding:2px 12px 14px}
@@ -178,6 +193,24 @@
   .mean.blocked .nm{color:var(--dim2)}
   .clear{color:var(--dim);font-size:12px;padding:12px 4px;line-height:1.9}
 
+  /* ---------- 开局委托卡 ----------
+     2026-08-31 盲测第一名挡路项:玩家说不出游戏要他干什么,第一步只能靠「免费」两个字瞎猜。
+     这张卡只交代委托、要回答什么、怎么花步数,**不解释三档结果的含义** —— 那一项用户还没定。 */
+  #brief{
+    position:fixed;inset:0;z-index:70;background:rgba(8,8,10,.96);
+    display:none;align-items:center;justify-content:center;padding:24px
+  }
+  #brief .bx{max-width:660px;background:var(--panel);border:1px solid var(--line);
+    border-radius:6px;padding:26px 30px}
+  #brief h3{margin:0 0 4px;font-size:16px;font-weight:600;letter-spacing:.4px}
+  #brief .sub{color:var(--dim2);font-size:11.5px;margin-bottom:16px}
+  #brief p{margin:0 0 11px;font-size:13px;line-height:1.95;color:var(--fg)}
+  #brief p.q{color:var(--gold2)}
+  #brief ul{margin:0 0 13px;padding-left:19px}
+  #brief li{font-size:12.5px;line-height:1.9;color:var(--dim);margin-bottom:3px}
+  #brief .go2{margin-top:6px;padding:8px 20px;font-size:13px;cursor:pointer;
+    background:var(--gold);color:#14140f;border:0;border-radius:4px;font-weight:600}
+
   /* ---------- 历史回放浮层 ---------- */
   #hist{
     position:fixed;inset:0;z-index:60;background:rgba(8,8,10,.94);display:none;
@@ -201,7 +234,13 @@
     <div class="brand"><b>掌眼 V3</b><span>工作台 ／ 心智地图 呈现变体 v0</span></div>
     <div class="readout" id="ro"></div>
     <div class="meters" id="mt"></div>
+    <div class="setup" id="su">
+      <div class="sl" id="sulab">开局行动点数</div>
+      <div class="sr"><input type="range" id="subud"><input type="number" id="subudn"></div>
+      <div class="sh" id="suhint"></div>
+    </div>
     <div class="tools">
+      <button class="t" id="bbrief">委托</button>
       <button class="t" id="bhist">历史回放</button>
       <button class="t" id="bstop">收手</button>
       <button class="t" id="breset">重开</button>
@@ -211,16 +250,16 @@
   <main>
     <div class="col" id="bench">
       <div class="zone" id="objwrap">
-        <div class="zt">器物世界 <em>—— 摆在面前的这只碗,随便翻看</em></div>
+        <div class="zt">这只碗 <em>—— 对着实物本身能做的事,看它不花钱</em></div>
         <svg id="obj" viewBox="0 0 306 268" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
       <div class="zone" style="flex:1">
-        <div class="zt">器物之外 <em>—— 长不到器物上的手段</em></div>
+        <div class="zt">碗以外的路子 <em>—— 查档案、送化验、比真品,这些要花钱</em></div>
         <div id="outside"></div>
       </div>
     </div>
     <div class="col" id="mapcol">
-      <div class="zt">心智地图 <em>—— 你已经知道的东西,以及它们之间的逻辑</em></div>
+      <div class="zt">已知与推理 <em>—— 你查到的东西,以及它们之间怎么串起来</em></div>
       <div id="mapwrap">
         <svg id="map"></svg>
         <div id="mapempty"></div>
@@ -229,13 +268,36 @@
       </div>
     </div>
     <div class="col" id="deck">
-      <div class="zt">决策面 <em>—— 当前需要你判断的东西</em></div>
+      <div class="zt">现在该判断什么 <em>—— 手上悬着、等你决定下一步的东西</em></div>
       <div id="deckbody"></div>
     </div>
   </main>
 </div>
 
 <div id="pop"></div>
+
+<div id="brief">
+  <div class="bx">
+    <h3>这一趟是受人委托</h3>
+    <div class="sub">开局说明 · 随时可以从右上角「委托」再看一遍</div>
+    <p>你是个替人看东西的鉴定人。今天的委托人正准备接手这只碗,钱还没付。
+      他不问你「真的还是假的」——他问的是:<b>这东西究竟经历过什么,我该不该接。</b></p>
+    <p class="q">你要交回去的,是一份说得出根据的判断:你查到了什么、据此能说到哪一步、
+      以及哪些地方你还不敢说。</p>
+    <p>手上这只碗的疑点是:<b>它像是被大改过</b>。要把这件事说实,有两条路 ——
+      一条靠翻纸面记录,一条靠查实物本身。两条都能走通,也可以混着走;
+      走哪条取决于你的步数花在哪边。</p>
+    <ul>
+      <li>左边是<b>你能用的手段</b>。上半是对着碗本身看,下半是碗以外的路子(查档案、送化验、比真品)。</li>
+      <li>每用一个手段<b>占 1 步</b>,步数是你唯一会用完的东西。花不花钱另算,只记账,不设上限。</li>
+      <li>中间那张图是<b>你查到的东西和它们之间的关系</b>,系统会自动替你连线,不额外收费。</li>
+      <li>右边告诉你<b>现在有哪些东西悬着</b>,等你决定下一步。它不会替你排先后。</li>
+      <li>什么时候够了由你说 —— 按「收手」交差。左上那行会告诉你,以现在手上的东西你能说到什么程度。</li>
+    </ul>
+    <p>有些情报刚买回来是读不出结论的,得等另一样东西到手才变得有用。这是常态,不是你买错了。</p>
+    <button class="go2" id="bgo">接了这活</button>
+  </div>
+</div>
 
 <div id="hist">
   <div class="hh">
@@ -255,18 +317,18 @@ const STAMP = {
   "sha": {
     "FIXTURES": "B3ED4F357B8FB84EAAB4F14CAF4629E62BF11F9C44BEFA5AAD6730C3393E0FDD",
     "SOLVER": "E217CAF56A9961EA7C46151E1CA6B0546A6C408CCC8ECDDB21E4B9DA66EE72D1",
-    "CASE": "AC4F96A609895ACF4FB7A8607AC8DA14B790E65C69D42F9F6037F8D887F5E256",
-    "SEMANTICS": "D435722F1E6E75C86DF84D80727D06EA1FD964D08E0660A84F17E80D045E7231",
-    "SESSION": "A97D08A5E930A4957CACACBF1DB2ECDFC92D40547A0C37DEAAC6BFCDA76AC041",
-    "PROJECTION": "F83D27D0BB5CCC580B1C05F8AE1F5E06FCD23575CDEB244FF2A62FDB70BFED21"
+    "CASE": "7F078BC68394B9238783080EE72E6DEC2CE514EA962829668A4443041805AA05",
+    "SEMANTICS": "397EAB3305DCE9EE5BF7E996B4C4E0C1CA081FF29BE0C2F54F6B5524CC85D833",
+    "SESSION": "83D1DD707F9A4ACCFEB162C299387DFE3BEB6A720045C8E09A22939FDD0B1351",
+    "PROJECTION": "813364B256C5FE987BC95BFCF18BA05711DDF98276BBC9D284D3AAEEAA06417F"
   },
   "exports": {
     "FIXTURES": 13,
     "SOLVER": 10,
     "CASE": 5,
     "SEMANTICS": 6,
-    "SESSION": 6,
-    "PROJECTION": 13
+    "SESSION": 10,
+    "PROJECTION": 14
   }
 };
 /* ==== FIXTURES ==== */
@@ -3821,16 +3883,18 @@ const ACTIONS = [
     name: "逐区看纹饰与色差", ask: "外观有没有被重新整合过?",
     outcome: () => "appearance" },
 
+  /* 2026-08-31 盲测:「语料」是语言学的词,他第一猜是去比对款识题字,而碗上没有文字;
+     「非构图稳定锚点」是他全屏最看不懂的一条。手段名是玩家要点的按钮,不能留行话。 */
   { id: "A.COMPARE.CORPUS", place: "CORPUS", cost: T.LOW,
-    name: "比同期真品语料", ask: "这种制造特征在同期真品里常见吗?",
+    name: "拿同期真品比一比", ask: "这种做法放到同时代的真品里,算常见还是罕见?",
     outcome: () => "corpus" },
 
   { id: "A.COMPARE.CORPUS.RECHECK", place: "RPT", cost: T.LOW,
-    name: "再调一批语料复核", ask: "换一批语料会不会得出别的结论?",
+    name: "换一批真品再比一次", ask: "换一批真品来比,会不会比出别的结论?",
     outcome: () => "corpusDuplicate" },
 
   { id: "A.VERIFY.OBJECT_CONTINUITY", place: "OBJ_R", cost: T.MID,
-    name: "核对非构图稳定锚点", ask: "手里这只和记录里那只是同一只吗?",
+    name: "核对那些没被改动过的特征", ask: "手里这只和记录里那只,是同一只吗?",
     outcome: () => "identityContinuity" },
 
   { id: "A.IMAGE.XRAY", place: "XRAY", cost: T.HIGH,
@@ -3842,64 +3906,66 @@ const ACTIONS = [
     outcome: () => "noSignalUnresolved" },
 
   { id: "A.RESEARCH.ACCIDENT", place: "T2", cost: T.LOW,
-    name: "检索事故记录组", ask: "有人记录过一次重大损坏吗?",
+    name: "查有没有出过事的记录", ask: "有人记录过一次严重损坏吗?",
     outcome: () => "accident" },
 
   { id: "A.RELATE.ARCHIVE.T2_TO_OBJECT", place: "T2", cost: T.LOW,
-    name: "核对事故记录的对象归属", ask: "那组记录说的是这只碗吗?",
+    name: "看事故记录说的是不是这只碗", ask: "那组记录讲的是手里这一只吗?",
     outcome: () => "t2Attribution" },
 
   { id: "A.CORROBORATE.ARCHIVE.T2_CURRENT", place: "T2", cost: T.LOW,
-    name: "拿事故记录对现器物证", ask: "记录描述的事,现器上找得到吗?",
+    name: "拿事故记录去对这只碗", ask: "记录里写的事,在这只碗上找得到吗?",
     outcome: () => "documentedCurrentCorroboration" },
 
   { id: "A.LOCATE.HISTORIC_IMAGE", place: "T1", cost: T.LOW,
-    name: "找早期影像", ask: "这只碗以前长什么样?",
+    name: "找更早的影像", ask: "这只碗以前长什么样?",
     outcome: () => "t1" },
 
   /* 唯一带额外前置的动作:跨时点对照需要有第二个时点可对。
      两条入口对应 G2 的两条 OR 路线,与冻结场景一致。 */
   { id: "A.MAP.REGION_CONTINUITY", place: "OBJ_W", cost: T.MID,
-    name: "逐区跨时点对照", ask: "结构从那时到现在变了什么?",
+    name: "把两个时候一块一块对比", ask: "从那时到现在,结构上变了什么?",
     needs: (f) => f.has("currentStructureReadoutByRegion") || f.has("t2ArchiveObjectAttribution"),
-    needsWhy: "得先有第二个时点可以对 —— 要么拿到可读的逐区结构读数,要么先把事故记录归到本器",
+    /* 理由必须点名玩家该去点哪个手段(harness K2 段守着这一条),不能只描述缺什么。 */
+    needsWhy: "对比要两头,现在只有一头 —— 要么先用「X 射线多角度逐区成像」拍出它现在的内部结构," +
+      "要么先用「看事故记录说的是不是这只碗」把更早那一头定下来。这不是锁,是没有两头就无从对比",
     outcome: (f) => f.has("currentStructureReadoutByRegion")
       ? "repairContinuity" : "documentedCrossTime" },
 
   { id: "A.RESEARCH.LATE_TREATMENT", place: "T3", cost: T.LOW,
-    name: "检索后期处理记录组", ask: "后来还有人动过它吗?",
+    name: "查后来还有没有人动过", ask: "更晚的时候还有人动过它吗?",
     outcome: () => "t3" },
 
   { id: "A.RELATE.ARCHIVE.T3_TO_OBJECT", place: "T3", cost: T.LOW,
-    name: "核对后期记录的对象归属", ask: "那批后期记录也是这只碗的吗?",
+    name: "看后期记录说的是不是这只碗", ask: "那批更晚的记录讲的也是手里这一只吗?",
     outcome: () => "t3Attribution" },
 
   { id: "A.CORROBORATE.ARCHIVE.T3_CURRENT", place: "T3", cost: T.LOW,
-    name: "拿后期记录对现器区域", ask: "后期处理在现器上对得上吗?",
+    name: "拿后期记录去对这只碗", ask: "那些后期处理,在这只碗上对得上吗?",
     outcome: () => "t3CurrentCorroboration" },
 
   { id: "A.ANALYZE.MATERIAL.SUBSTRATE", place: "MAT", cost: T.HIGH,
-    name: "点位材料基底分析", ask: "关键区是原片还是重建的?",
+    name: "化验要紧几处的底子", ask: "要紧那几处底下,是原来的瓷还是后来补的?",
     outcome: () => "materialSubstrate" },
 
   { id: "A.INSPECT.MATERIAL.LAYER_SEQUENCE", place: "MAT", cost: T.HIGH,
-    name: "微观层序检查", ask: "这些层是按什么顺序上去的?",
+    name: "查各层的先后顺序", ask: "这些层是按什么先后上去的?",
     outcome: () => "materialLayerSequence" },
 
   { id: "A.INSPECT.WINDOWS", place: "SURF", cost: T.MID,
-    name: "开表面试窗点位", ask: "补绘到底压在哪一层上?",
+    name: "在表面开几个小窗看层次", ask: "补绘到底压在哪一层上?",
     outcome: () => "surfacePoint" },
 
   { id: "A.SYNTHESIZE.SURFACE_REGIONS", place: "SURF", cost: T.MID,
-    name: "表面区域综合", ask: "补绘范围有多大?",
+    name: "把开过的小窗连成片", ask: "补绘一共盖了多大范围?",
     outcome: () => "surface" },
 
   { id: "A.ASSESS.TREATED_AND_UNTREATED", place: "STAB", cost: T.MID,
-    name: "评估承力与陈列条件", ask: "现在还能安全陈列吗?",
+    name: "看它结不结实、能不能摆出来", ask: "现在还能安全摆出来展吗?",
     outcome: () => "stability" },
 
   { id: "A.TRACE.PROVENANCE_CHAIN", place: "PROV", cost: T.LOW,
-    name: "追来源链", ask: "它的流转记录到哪一步为止?",
+    name: "追它经手过谁", ask: "它的经手记录能追到哪一步为止?",
     outcome: () => "documentation" },
 ];
 
@@ -3910,8 +3976,30 @@ const ACTION_BY_ID = new Map(ACTIONS.map((a) => [a.id, a]));
  *   1. 冻结事件自带的 acquisitionRequires 还没满足;
  *   2. 本表声明的 needs 还没满足(目前只有跨时点对照一条)。
  * 已经做过的动作不消失,标成"做过了",再做一次仍然允许(重复要看得见,DEC-030)。
+ *
+ * 2026-08-31:原先这里把缺失的事实 id 直接拼进理由里,于是开局第一屏就把
+ * `还缺前置:currentBody、baseManufacture` 这种内部键摆给了玩家(真人试玩当场指出)。
+ * 现在改为**反查出该先做哪个动作并说出它的名字** —— 这不只是换个说法:
+ * 玩家追问的"这是需要解锁吗"本身说明旧措辞把逻辑前置误传成了剧情门,
+ * 而点名动作直接告诉他"这一步要用到那一步的结果",没有解锁这回事。
  */
+
+/* 事实 → 当前状态下能产出它的动作。冻结事件自带 facts 与 acquisitionActionId,
+   所以这是查出来的而非另建一张表;按当前 facts 算 outcome,分支动作也能算对。 */
+function producersOf(facts) {
+  const m = new Map();
+  for (const a of ACTIONS) {
+    const ev = events[a.outcome(facts)];
+    for (const f of ev.facts ?? []) {
+      if (!m.has(f)) m.set(f, []);
+      if (!m.get(f).includes(a)) m.get(f).push(a);
+    }
+  }
+  return m;
+}
+
 function availability(facts, doneActionIds) {
+  const producers = producersOf(facts);
   return ACTIONS.map((a) => {
     const ev = events[a.outcome(facts)];
     const missing = ev.acquisitionRequires.filter((f) => !facts.has(f));
@@ -3920,11 +4008,31 @@ function availability(facts, doneActionIds) {
       action: a,
       done: doneActionIds.includes(a.id),
       usable: missing.length === 0 && !gated,
-      why: missing.length
-        ? `还缺前置:${missing.join("、")}`
+      why: missing.length ? missingWhy(missing, producers, a)
         : gated ? a.needsWhy : null,
+      /* 给界面用:该先做的那几个动作,让它可以做成可点的链接而不是一句死话 */
+      needsActionIds: missing.length ? prereqActions(missing, producers, a).map((x) => x.id) : [],
     };
   });
+}
+
+function prereqActions(missing, producers, self) {
+  const out = [];
+  for (const f of missing) {
+    for (const p of producers.get(f) ?? []) {
+      if (p.id !== self.id && !out.includes(p)) out.push(p);
+    }
+  }
+  return out;
+}
+
+/* 一句人话。**任何情况下都不许把事实 id 漏出去** —— 查不到产出动作时说不知道,
+   也不要退回去打印内部键。 */
+function missingWhy(missing, producers, self) {
+  const acts = prereqActions(missing, producers, self);
+  if (!acts.length) return "这一步要用到别处的结果,而现在没有手段能直接去拿";
+  const names = acts.map((x) => `「${x.name}」`).join("和");
+  return `得先有${names}的结果 —— 不是锁,是这一步的推理要拿它当依据`;
 }
 
 /* ---------- 玩家可见读数 ----------
@@ -4021,12 +4129,12 @@ const ACTION_SEMANTICS = {
     whyLong:
       "鉴定的第一步从来不是上仪器,而是先把器物当一个整体看完。器型与胎釉决定了它自称属于哪一路," +
       "这是后面一切比对的坐标;而肉眼可见的干预痕迹分布,决定了你接下来该往哪些区花钱。" +
-      "跳过这一步直接上仪器,你会得到一堆没有坐标的读数 —— 知道某个点有什么,却不知道那个点在整器上算不算要紧。" +
-      "这一步免费,但它产出的干预分布图在后面不可替代:想靠实物独立证明曾发生重大重组,少了它这条路走不通。",
+      "跳过这一步直接上仪器,你会得到一堆没有坐标的读数 —— 知道某个点有什么,却不知道那个点放在整只碗上算不算要紧。" +
+      "这一步免费,但它产出的「哪几处被动过手」的分布在后面不可替代:想靠实物独立证明曾发生重大重组,少了它这条路走不通。",
     gotWhat: "器型归类、胎釉面貌,以及肉眼可见的干预痕迹分布在哪些区。",
     relates:
       "它同时坐在两条底层线索上 —— 一条是这只碗怎么做出来的,一条是它被修过哪里。" +
-      "所以它既能往语料比对那边接,也能往表面与结构那边接。",
+      "所以它既能往「和同期真品比」那边接,也能往表面与结构那边接。",
   },
 
   "A.OBSERVE.BASE": {
@@ -4036,7 +4144,8 @@ const ACTION_SEMANTICS = {
       "底足是器物身上最不设防的地方。它通常不进入观赏面,所以既少被后世修补,也少被作伪者精心经营;" +
       "而修削的手法、旋坯的走向、足端的收法都带着窑口与年代的习惯,属于难以刻意模仿的那类特征。" +
       "行内看一只碗常常先翻底,不是迷信,是因为这里的信噪比最高。" +
-      "它单独看给不出结论,但它是把整器面貌拿去和真品比对时必须带上的另一半。",
+      "它单独看给不出结论。拿整只碗的样貌去和真品比时,得连着底足一起带上 —— " +
+      "两样凑齐才算一套完整的工艺特征,只带一样比出来的结论站不住。",
     gotWhat: "底足一带的制造工艺特征。",
     relates: "与整体形制共享同一条底层线索。两样都到手,才够拿去和同期真品比。",
   },
@@ -4055,31 +4164,31 @@ const ACTION_SEMANTICS = {
 
   "A.COMPARE.CORPUS": {
     doesWhat: "把手上这套工艺特征拿去和同期已确认真品的记录比。",
-    whyShort: "单看一只碗只知道它长这样;比过语料才知道这样算常见还是罕见。",
+    whyShort: "单看一只碗只知道它长这样;和同期真品比过,才知道这样算常见还是罕见。",
     whyLong:
-      "一件器物的特征本身不带对错,只有放进同期的分布里才有意义。语料比对做的是排除:" +
-      "把明显不相容的候选身份剔掉,让剩下的方向收窄。要小心两件事 —— 罕见不等于假,真品里也有罕见样本;" +
-      "而语料本身有偏,存世的、被记录的、被承认的样本从来不是全体。" +
-      "所以它给的是方向而不是判决,但把一团混沌收成一个可以往下查的问题,主要靠它。",
+      "一件东西的特征本身不带对错,只有放进同时代的一堆真品里对照才有意义。这一步做的是排除:" +
+      "把明显对不上的可能剔掉,让剩下的方向收窄。要小心两件事 —— 罕见不等于假,真品里也有罕见的;" +
+      "而拿来比的那批真品本身就不全,传下来的、被记录下来的、被公认的,从来只是当年的一小部分。" +
+      "所以它给的是方向,不是判决;但把一团乱麻收成一个能往下查的问题,主要靠它。",
     gotWhat: "这套工艺特征在同期谱系里的位置,以及被排除掉的候选身份。",
     relates: "落在这只碗怎么做出来的这条线索上,是这条线索上的第三条读数。",
   },
 
   "A.COMPARE.CORPUS.RECHECK": {
-    doesWhat: "换一批语料重做一次比对。",
-    whyShort: "它检验的是方法而不是给结论加码 —— 重复不会让系统更相信。",
+    doesWhat: "换一批同期真品,把比对重做一次。",
+    whyShort: "它查的是方法靠不靠得住,不会让结论更硬 —— 同一招做两次不加分。",
     whyLong:
-      "同一个方法做第二次,系统不会因此更相信结论:重复不重复计权是本作的硬规则," +
-      "否则反复刷同一个动作就能刷出确信。但换一批语料重做仍然有意义 —— 它检验第一次的结论" +
-      "有没有被语料选择带偏。如果两批语料指向不同,那本身就是重要情报,说明这条方向比看起来脆弱。" +
-      "把它当成对方法的检验,不是对结论的加码。",
-    gotWhat: "换一批语料后的比对结果,以及这次是一次重复观察这件事本身。",
+      "同一个方法做第二次,不会因此更可信:重复不加分是这个游戏的硬规矩," +
+      "否则反复点同一个手段就能点出确信。但换一批真品重做仍然有用 —— 它查的是第一次的结论" +
+      "有没有被那一批样本本身的偏向带歪。如果两批比出来指向不同,这本身就是重要情报," +
+      "说明这条方向比看起来脆。把它当成对方法的检查,不是给结论加码。",
+    gotWhat: "换一批真品之后的比对结果,以及「这一步是重复做的」这件事本身。",
     relates: "与前一次比对同属这只碗怎么做出来的这条线索。",
   },
 
   "A.VERIFY.OBJECT_CONTINUITY": {
     doesWhat: "挑不参与画面构图、因此不会在修复中被重画的稳定特征,和记录里描述的那一只逐项对。",
-    whyShort: "它是所有档案证据能否算到本器头上的总闸。",
+    whyShort: "它是所有档案证据能否算到这只碗头上的总闸。",
     whyLong:
       "档案的价值完全取决于它说的是不是眼前这一只。一份写得再详细的修复记录,如果说的是另一只同类器," +
       "那它对你手上这只毫无证明力,甚至有害。核对要用非构图的锚点,理由是参与画面的部分可能被重画," +
@@ -4091,15 +4200,15 @@ const ACTION_SEMANTICS = {
 
   "A.IMAGE.XRAY": {
     doesWhat: "多角度逐区拍片,看釉面底下的结构。",
-    whyShort: "全场最贵,而且刚拿到时读不出结论,要等对象连续性到位才自动生效。",
+    whyShort: "全场最贵,而且刚拿到时读不出结论,要等「手里这只就是记录里那只」到位才自动生效。",
     whyLong:
       "射线能看到釉下的接缝、填充与结构变化,是少数能越过表面直接看结构的手段,也因此最贵。" +
       "它有两个必须提前知道的性质。第一,单次成像不能外推全器:片子上没显示的区域不等于那里没事," +
       "只等于那里没被拍到,所以结论只在被声明的成像范围内成立。" +
       "第二,它出来的是一批分区读数而不是结论 —— 这些读数要和手里这只就是记录里那只合起来," +
-      "才能被读成结构变化;在那之前它们会挂在一边,等条件到位后自动被接住。" +
+      "才能被读成结构变化;在那之前它们会先躺在图上读不出结论,等你补上那个条件,它们会自己变成有用的证据。" +
       "花这笔钱之前值得先问一句:我是否已经有了让它生效的条件。",
-    gotWhat: "一批分区的原始结构读数。对象连续性成立后,它们会自动转成可用的逐区结构读数。",
+    gotWhat: "一批分区的原始结构读数。「手里这只就是记录里那只」成立后,它们会自动转成可用的一块一块拍出来的内部结构。",
     relates:
       "落在它被修过哪里这条线索上,与整体观察、逐区纹饰同线;" +
       "转成结构读数之后,它是靠实物独立证明重大重组那条路的核心一块。",
@@ -4122,48 +4231,50 @@ const ACTION_SEMANTICS = {
     doesWhat: "检索那一组疑似记载过重大损坏的档案,看它们彼此是否吻合、各自声称了什么。",
     whyShort: "便宜且信息量大,但它只能证明记录之间自洽,还不能证明说的是这只碗。",
     whyLong:
-      "档案要分三件事看,混在一起就会高估它的证明力:记录彼此之间是否自洽、这组记录说的是不是眼前这一只、" +
-      "以及记录描述的事在现器上是否找得到对应。这一步只解决第一件。" +
+      "查一批记录要分别过三道,混在一起就会高估它的份量:①这几份记录互相对得上吗 " +
+      "②这些记录说的是不是眼前这一只 ③记录里写的事,在这只碗上找得到吗。" +
+      "这一步只过第一道:记录互相对不对得上。" +
       "一组内部自洽的记录很有价值 —— 它意味着你面对的不是互相打架的传闻;" +
-      "但它对本器的证明力要等归属那一步才成立。先拿这一步、再决定要不要往下核归属,是省钱的常见顺序。",
+      "但它对这只碗的证明力要等归属那一步才成立。先拿这一步、再决定要不要往下核归属,是省钱的常见顺序。",
     gotWhat: "这组记录内部是否自洽,以及它们分别声称了什么。",
-    relates: "它自己占一条线索 —— 那次事故本身;要和归属、对现器印证合起来才构成档案这一路。",
+    relates: "它自己占一条线索 —— 那次事故本身;要和归属、对这只碗印证合起来才构成档案这一路。",
   },
 
   "A.RELATE.ARCHIVE.T2_TO_OBJECT": {
-    doesWhat: "拿记录里描述的稳定特征和手上这只逐项对,判断这组记录说的是不是本器。",
-    whyShort: "档案对本器的证明力从这一步开始,在它之前记录再详细也只是有指向性。",
+    doesWhat: "拿记录里描述的稳定特征和手上这只逐项对,判断这组记录说的是不是这只碗。",
+    whyShort: "档案对这只碗的证明力从这一步开始,在它之前记录再详细也只是有指向性。",
     whyLong:
-      "这是档案三关系里的第二关。归属没建立时,系统只会说这组记录有指向性、还没归到本器 —— " +
-      "这不是系统在拿捏措辞,而是它确实还不能把记录内容算成本器的证据。" +
-      "核对要用不参与构图的稳定特征,理由和核对对象连续性一样:参与画面的部分可能在修复中被重画。" +
+      "这是三道里的第二道:这些记录说的是不是眼前这一只。没定下来之前,记录再详细也只能算「有指向」," +
+      "还不能当成这只碗的证据 —— 因为一批记录完全可能讲的是同类的另一只。" +
+      "核对要用那些没被改动过的特征,理由和「核对那些没被改动过的特征」那一步一样:" +
+      "画面上看得见的部分,可能在修补时被重画过。" +
       "归属一旦建立,前面检索到的记录内容会整批变得可用 —— 这是档案路线上性价比最高的一步。",
-    gotWhat: "这组记录与本器之间的归属关系状态。",
-    relates: "它连的不是器物的某个部位,而是记录与现器之间的关系本身。",
+    gotWhat: "这组记录与这只碗之间的归属关系状态。",
+    relates: "它连的不是器物的某个部位,而是记录与这只碗之间的关系本身。",
   },
 
   "A.CORROBORATE.ARCHIVE.T2_CURRENT": {
-    doesWhat: "把记录描述的那件事拿到现器上找对应痕迹。",
-    whyShort: "第三关 —— 记录说发生过,现器上得对得上,才算有物证支持。",
+    doesWhat: "把记录描述的那件事拿到这只碗上找对应痕迹。",
+    whyShort: "三道里的第三道 —— 记录说发生过,这只碗上得找得到,才算有实物撑着。",
     whyLong:
-      "记录自洽、归属成立之后,还剩一个问题:记录描述的事件在现器上是否留下了可以对上的痕迹。" +
-      "这一关补的是档案的软肋 —— 文字可以准确、可以夸大,也可以描述一个后来又被改动过的状态。" +
+      "前两道过了之后还剩一个问题:记录里写的那件事,在这只碗上有没有留下能对上的痕迹。" +
+      "这一道补的是档案的软肋 —— 文字可以准确、可以夸大,也可能描述的是一个后来又被改动过的状态。" +
       "找到对应痕迹,档案就从有人这么写升级为有人这么写而且器物上对得上;" +
       "找不到,则要么记录有问题,要么后来的处理把痕迹盖掉了 —— 这两种都是需要继续查的情报,不是死局。",
-    gotWhat: "记录所述事件与现器痕迹之间的对应关系。",
+    gotWhat: "记录所述事件与这只碗痕迹之间的对应关系。",
     relates:
       "它连的是所述事件与物证这层关系;它和逐区跨时点对照互为替代 —— 档案路线上二者取一即可,不必都做。",
   },
 
   "A.LOCATE.HISTORIC_IMAGE": {
     doesWhat: "找这只碗更早时候的影像或图录记录,作为一个时间锚点。",
-    whyShort: "便宜,但拿到时读不出结论,要等对象连续性到位才自动生效。",
+    whyShort: "便宜,但拿到时读不出结论,要等「手里这只就是记录里那只」到位才自动生效。",
     whyLong:
       "判断一件器物变了什么,至少需要两个时间点,早期影像提供的是较早那一个。" +
-      "它的陷阱在于:一张老照片本身不会告诉你照的是不是眼前这一只,所以在对象连续性成立之前," +
-      "它只是一份原始读数,挂在图上等条件。这类先拿到、后来才变得有意义的情报在本作里是常态而不是失误 —— " +
+      "它的陷阱在于:一张老照片本身不会告诉你照的是不是眼前这一只,所以在「手里这只就是记录里那只」成立之前," +
+      "它只是一份原始读数,先躺在图上等那个条件。这类先拿到手、后来才变得有用的情报在这个游戏里是常态,不是你买错了 —— " +
       "便宜时先拿下、等条件补齐后自动生效,是一种合理打法。",
-    gotWhat: "一份较早时点的原始读数。对象连续性成立后,它会自动转为可用的时间锚点。",
+    gotWhat: "一份较早时点的原始读数。「手里这只就是记录里那只」成立后,它会自动转为可用的时间锚点。",
     relates: "它自己占一条线索 —— 事故之前是什么样;要和现在的读数配成一对才谈得上变化。",
   },
 
@@ -4172,8 +4283,8 @@ const ACTION_SEMANTICS = {
     whyShort: "重大重组是一个变化而不是一个状态,这是它唯一的直接证据。",
     whyLong:
       "前面所有观察给的都是现在是什么样,而重大重组是一个变化,只有把两个时点对起来才能直接证明。" +
-      "它有两个入口:要么已经拿到可读的逐区结构读数,和当前状况对;" +
-      "要么已经把事故记录归到本器,拿记录描述的当时状况对。" +
+      "它有两个入口:要么已经拿到可读的一块一块拍出来的内部结构,和当前状况对;" +
+      "要么已经把事故记录归到这只碗,拿记录描述的当时状况对。" +
       "两条入口分别通向证明重大重组的两条不同路线 —— 这不是同一条路的两种写法,而是真的两条路," +
       "你走哪条取决于前面的钱花在了哪一边。",
     gotWhat: "逐区的跨时点变化。走物证入口还是档案入口,决定它落在哪条证明路线上。",
@@ -4184,32 +4295,32 @@ const ACTION_SEMANTICS = {
     doesWhat: "检索更晚一批处理记录,看这组记录是否自洽、声称做过什么。",
     whyShort: "同一处痕迹可能来自那次重大事件,也可能来自后来的局部处理。",
     whyLong:
-      "一件器物往往不只被动过一次。晚一批的处理记录说明的是在那次重大事件之后还发生了什么," +
-      "这对判断现在看到的状态是谁造成的很关键:同一处痕迹,可能来自那次重组,也可能来自后来的局部处理," +
-      "归错了就会把两件事算成一件。这一步同样只解决三关系里的第一关。",
+      "一件东西往往不只被动过一次。更晚那批处理记录讲的是在那次大事之后还发生了什么," +
+      "这对判断现在看到的样子是谁造成的很关键:同一处痕迹,可能来自那次修补,也可能来自后来的局部处理," +
+      "算错了就会把两件事当成一件。这一步同样只过第一道:这几份记录互相对不对得上。",
     gotWhat: "这组后期记录是否自洽,以及它们声称做过哪些局部处理。",
     relates: "它自己占一条线索 —— 后期处理的范围。",
   },
 
   "A.RELATE.ARCHIVE.T3_TO_OBJECT": {
-    doesWhat: "判断这批后期记录说的是不是本器。",
-    whyShort: "和事故记录一样的第二关 —— 归属不成立,内容就用不上。",
+    doesWhat: "判断这批后期记录说的是不是这只碗。",
+    whyShort: "和事故记录一样的第二道 —— 定不下说的是这只碗,里面写什么都用不上。",
     whyLong:
       "后期处理记录常常比早期记录更容易混淆对象:同一批藏品里同类器多、处理往往成批进行、记录也更简略。" +
       "所以归属这一步在这里同样不能省。它成立之后,这批记录的内容才能进入判断," +
       "并且能和事故记录一起把时间线排起来。",
-    gotWhat: "这批后期记录与本器之间的归属关系状态。",
-    relates: "连的是记录与现器这层关系。",
+    gotWhat: "这批后期记录与这只碗之间的归属关系状态。",
+    relates: "连的是记录与这只碗这层关系。",
   },
 
   "A.CORROBORATE.ARCHIVE.T3_CURRENT": {
-    doesWhat: "把后期记录声称处理过的区域拿到现器上核对。",
+    doesWhat: "把后期记录声称处理过的区域拿到这只碗上核对。",
     whyShort: "它除了印证记录,更重要的作用是划界。",
     whyLong:
       "这一步的价值除了印证记录,还在于划界:哪些痕迹属于后期的局部处理,就不该再被算到那次重大事件头上。" +
       "把这两批事分开,是把修复史读成一条时间线而不是一团痕迹的关键 —— " +
       "而这条时间线是后段能不能形成较完整解释的前提之一。",
-    gotWhat: "后期处理记录与现器区域之间的对应关系。",
+    gotWhat: "后期处理记录与这只碗区域之间的对应关系。",
     relates: "连的是所述事件与物证这层关系。",
   },
 
@@ -4257,7 +4368,7 @@ const ACTION_SEMANTICS = {
       "单个试窗只能说明那一个点,而补绘范围有多大是个区域性问题,对价值判断影响很直接:" +
       "局部小面积的修整和大面积重绘,是两个完全不同的结论。" +
       "综合这一步把点位升级成区域覆盖,并明确哪些区已被覆盖、哪些区还是空白。" +
-      "后者同样重要:它告诉你这个结论的边界在哪儿,免得把查过的地方没事读成整器没事。",
+      "后者同样重要:它告诉你这个结论管到哪儿为止,免得把「查过的几处没事」读成「整只碗都没事」。",
     gotWhat: "表面问题的区域性覆盖与结论,以及仍是空白的区。",
     relates: "同属表面这层是什么状况这条线索,是这条线索上的收口。",
   },
@@ -4281,7 +4392,7 @@ const ACTION_SEMANTICS = {
       "来源链的作用是外部约束:一条能追到较早、且沿途没有互相打架的记录链,会让别的证据更可信;" +
       "而链条断在哪一步,本身就是一条需要登记的未知。" +
       "它不能替代物证 —— 记录完整的赝品和记录残缺的真品都存在。" +
-      "它需要先有对象连续性,理由和档案一样:不能确认是同一只,追的就是另一件东西的历史。",
+      "它需要先有「手里这只就是记录里那只」,理由和档案一样:不能确认是同一只,追的就是另一件东西的历史。",
     gotWhat: "流转链的可追边界,以及沿途是否存在冲突。",
     relates: "它自己占一条线索 —— 它的流转链;给整体判断提供外部约束。",
   },
@@ -4295,7 +4406,7 @@ const LATENT_SEMANTICS = {
   "latent.current-craft": {
     name: "这只碗是怎么做出来的",
     meaning:
-      "整体形制、底足修足、语料比对说的都是同一件事:制造这只碗的那套工艺习惯。" +
+      "整体形制、底足修足、和同期真品的比对,说的都是同一件事:做这只碗的那套工艺习惯。" +
       "它们互相印证,方向就硬;互相矛盾,说明至少有一处读错了 —— 矛盾本身也是情报。",
   },
   "latent.repair-map": {
@@ -4315,20 +4426,20 @@ const LATENT_SEMANTICS = {
   "latent.object-match": {
     name: "手上这只和记录里那只是不是同一只",
     meaning:
-      "只有一个动作落在这条线索上,但它是所有档案证据能否算到本器头上的总闸," +
+      "只有一个动作落在这条线索上,但它是所有档案证据能否算到这只碗头上的总闸," +
       "也是两份挂起读数的解锁条件。",
   },
   "latent.accident-event": {
     name: "那次被记载的重大事件",
-    meaning: "描述的是那次被记载的损坏事件本身。记录自洽只说明记载可信,不说明它属于本器。",
+    meaning: "描述的是那次被记载的损坏事件本身。记录自洽只说明记载可信,不说明它属于这只碗。",
   },
   "latent.archive-t2-object-relation": {
-    name: "事故记录与本器的归属",
+    name: "事故记录与这只碗的归属",
     meaning: "这条线索不长在器物上,它是记录和这只碗之间的关系;归属成立,记录内容才可用。",
   },
   "latent.archive-t2-event-relation": {
     name: "事故所述与物证的对应",
-    meaning: "记录说发生过的事,在现器上找不找得到对应痕迹。",
+    meaning: "记录说发生过的事,在这只碗上找不找得到对应痕迹。",
   },
   "latent.pre-accident-reading": {
     name: "事故之前是什么样",
@@ -4345,12 +4456,12 @@ const LATENT_SEMANTICS = {
       "免得把后期处理算到早先那次头上。",
   },
   "latent.archive-t3-object-relation": {
-    name: "后期记录与本器的归属",
+    name: "后期记录与这只碗的归属",
     meaning: "与事故记录同理的归属关系。后期记录更容易混淆对象,这一关不能省。",
   },
   "latent.archive-t3-event-relation": {
     name: "后期所述与物证的对应",
-    meaning: "后期处理声称动过的区域,在现器上是否对得上。",
+    meaning: "后期处理声称动过的区域,在这只碗上是否对得上。",
   },
   "latent.condition-session": {
     name: "现状能不能用",
@@ -4369,62 +4480,65 @@ const LATENT_SEMANTICS = {
  */
 const PROOF_ROLE_SEMANTICS = {
   "PROOF.CURRENT.NAMED_REPAIR_MAP": {
-    name: "可具名的干预分布图",
+    name: "说得出哪几处被动过手",
     meaning:
-      "一份说得出哪儿动过的分布图。它是靠实物独立证明重大重组那条路上必需的一块," +
-      "而它唯一的来源是全场最便宜的那次整体观察 —— 免费的第一眼不是热身。",
+      "一份指得出具体位置的分布。想不靠纸面记录、单凭实物就证明它被大改过,少了这一块走不通;" +
+      "而它唯一的来源是那次不花钱的整体观察 —— 那一眼不是热身。",
   },
   "PROOF.ARCHIVE.T2.RECORD_COHERENCE": {
-    name: "事故记录组内部自洽",
-    meaning: "档案路线的第一块。它证明记载彼此不打架,单独不足以证明本器。",
+    name: "那几份事故记录互相对得上",
+    meaning: "靠纸面记录走通的第一块。它只说明这几份记载不打架,单凭它还证明不了这只碗。",
   },
   "PROOF.ARCHIVE.T2.OBJECT_ATTRIBUTION": {
-    name: "事故记录归属本器",
-    meaning: "档案路线的闸门。没有它,前后两块都用不上。",
+    name: "事故记录说的是这只碗",
+    meaning: "靠纸面记录走通的总闸。没有它,前后两块都用不上。",
   },
   "PROOF.ARCHIVE.T2.EVENT_CURRENT_CORROBORATION": {
-    name: "记录所述在现器上找到对应",
-    meaning: "档案路线的第三块。它与跨时点印证是二者取一,不必都有。",
+    name: "记录里写的事在这只碗上找到了",
+    meaning: "靠纸面记录走通的第三块。它和下面那条是二选一,不必都有。",
   },
   "PROOF.ARCHIVE.T2.EVENT_CROSS_TIME_CORROBORATION": {
-    name: "记录所述由跨时点对照印证",
-    meaning: "与上一条互为替代。走哪一条取决于你先花钱花在了哪边。",
+    name: "记录里写的事由两个时候的对比证实",
+    meaning: "与上一条互为替代,有一样就够。走哪一条,取决于你先把钱花在了哪一边。",
   },
   "PROOF.ARCHIVE.T3.RECORD_COHERENCE": {
-    name: "后期处理记录组内部自洽",
-    meaning: "把后期处理和早先那次分开的第一块。",
+    name: "那几份后期记录互相对得上",
+    meaning: "把后来那次处理和早先那次分开算的第一块。",
   },
   "PROOF.ARCHIVE.T3.OBJECT_ATTRIBUTION": {
-    name: "后期记录归属本器",
-    meaning: "后期记录的闸门,与事故记录同理。",
+    name: "后期记录说的是这只碗",
+    meaning: "后期记录的总闸,道理和事故记录那边一样。",
   },
   "PROOF.ARCHIVE.T3.EVENT_CURRENT_CORROBORATION": {
-    name: "后期所述在现器区域上找到对应",
-    meaning: "把后期处理划到它自己的范围里,不让它污染早先那次的账。",
+    name: "后期处理在这只碗对应的地方找到了",
+    meaning: "把后来那次处理圈进它自己的范围,不让它算到早先那次的账上。",
   },
   "PROOF.MAJOR.PHYSICAL.STRUCTURE_MAP": {
-    name: "逐区结构图",
-    meaning: "物证路线的核心一块,来自射线读数被激活之后。它不依赖任何档案。",
+    name: "一块一块拍出来的内部结构",
+    meaning: "靠实物走通的核心一块,来自射线读数生效之后。它一点都不依赖纸面记录。",
   },
   "PROOF.MAJOR.PHYSICAL.CROSS_TIME": {
-    name: "物证侧的跨时点变化",
-    meaning: "物证路线的另一块。它和逐区结构图一起,让重大重组完全不靠档案也能成立。",
+    name: "实物上两个时候的差别",
+    meaning: "靠实物走通的另一块。它和上一块凑齐,「被大改过」就能完全不靠记录成立。",
   },
 };
 
 /* ---------- G2 的两条路线 ---------- */
+/* 2026-08-31 盲测把这两句列为第三名挡路项:七个名词他一个都不认识,而这是第一屏
+   唯一像目标的东西 —— 等于「目标本身是用玩家不认识的语言写的」。改成一句句人话。 */
 const ROUTE_SEMANTICS = {
   documented: {
-    name: "档案路线",
+    name: "靠纸面记录走通",
     meaning:
-      "记录内部自洽、归属归到本器、再加上现器印证或跨时点印证之一。" +
-      "它便宜,但每一块都依赖档案说的是这只碗。",
+      "要凑齐:①几份记录互相对得上 ②这些记录说的是这只碗 " +
+      "③再加上「记录里写的事在碗上找得到」或者「两个时候的对比对得上」,这两样有一样就行。" +
+      "这条花钱少,但每一块都压在「记录说的确实是这只碗」上面 —— 那一步塌了,整条一起塌。",
   },
   physical: {
-    name: "物证路线",
+    name: "靠实物本身走通",
     meaning:
-      "干预分布图、逐区结构读数、跨时点变化三块齐。它贵,但完全不依赖档案 —— " +
-      "档案有问题时,这条路仍然走得通。",
+      "要凑齐三样:说得出哪几处被动过手、一块一块拍出来的内部结构、两个时候的结构差别。" +
+      "这条花钱多,但完全不靠纸面记录 —— 记录不可靠的时候,它照样走得通。",
   },
 };
 
@@ -4458,28 +4572,28 @@ const STAGE_SEMANTICS = {
  */
 const UNKNOWN_SEMANTICS = {
   "identity-whether-late18": {
-    label: "身份方向还没定下来",
-    meaning: "还不能说它属于哪一路。这是最上游的一条,压着后面很多话不能说。",
+    label: "它到底是什么年代什么窑,还没定下来",
+    meaning: "还说不出它是哪个年代、哪个窑口的东西。这是最上游的一条,压着后面很多话都不能说。",
   },
   "three-phase-relation": {
-    label: "几次干预之间的先后关系还没排出来",
-    meaning: "知道被动过不止一次,但排不出次序,就说不清现在的状态是谁造成的。",
+    label: "被动过的那几次,先后顺序还排不出来",
+    meaning: "知道不止被动过一次,但排不出先后,就说不清现在这个样子是哪一次造成的。",
   },
   "key-material-core-regions": {
-    label: "关键区的材料还没读数",
-    meaning: "最要紧的那几个区是原片还是重建,目前没有直接读数。",
+    label: "要紧那几处的底子还没化验",
+    meaning: "最要紧的那几处底下是原来的瓷还是后来补的,目前没有直接的化验结果。",
   },
   "surface-decision-boundary": {
-    label: "表面问题的判定边界还没划清",
-    meaning: "补绘算修整还是掩盖,取决于它压在什么之上;这条界没划清,范围也就说不准。",
+    label: "补绘算修整还是算遮掩,这条界还没划",
+    meaning: "同样的补绘,压在原有的层上算修整,盖住破损算遮掩。界没划清,范围也就说不准。",
   },
   "load-path-stability": {
-    label: "承力与陈列条件还没评估",
-    meaning: "不知道现在能不能安全地摆出来。它不影响这是什么,但影响能不能用。",
+    label: "结不结实、能不能摆出来,还没评估",
+    meaning: "不知道现在能不能安全地摆出来展。它不影响「这是什么」,但影响「能不能用」。",
   },
   "documentation-conflict": {
-    label: "流转记录里有未解决的冲突",
-    meaning: "链条上有互相打架的地方。冲突没解决,别的证据借不到它的力。",
+    label: "经手记录里有对不上的地方,还没解决",
+    meaning: "经手记录上有互相打架的地方。这个不解决,别的证据也借不到它的力。",
   },
   "exact-treatment-formula": {
     label: "具体处理配方不明",
@@ -4507,7 +4621,19 @@ const { events, thresholds, expectedProfile, claimScopeRequirements, actionContr
 const { solveFixture, assertLegalAcquisitionOrder } = SOLVER;
 const { ACTION_BY_ID, availability } = CASE;
 
-const BUDGET = 12; /* param slice.investigationBudget,见 docs/project/PARAMS.md */
+/* param slice.investigationBudget,见 docs/project/PARAMS.md
+   开局前可调,范围 [BUDGET_MIN, BUDGET_MAX]。下界 12 是原先的固定值,来自冻结场景的
+   路线长度反推;上界由 ceiling.mjs 从冻结拓扑跑出,等于"互异动作各做一次"的步数,
+   超过它每一步都只能是重复。默认取上界 —— 先慷慨,压力靠玩家自己收手而不是靠预算卡。 */
+const BUDGET_MIN = 12;
+const BUDGET_MAX = 22;
+const BUDGET_DEFAULT = BUDGET_MAX;
+
+function clampBudget(n) {
+  const v = Math.round(Number(n));
+  if (!Number.isFinite(v)) return BUDGET_DEFAULT;
+  return Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, v));
+}
 
 function liveFixture(acquired, playerChoice) {
   return {
@@ -4519,8 +4645,23 @@ function liveFixture(acquired, playerChoice) {
   };
 }
 
-function newSession() {
-  return { acquired: [], log: [], spent: 0, stopped: false };
+/* 两种货币,只有一种约束(2026-08-31 用户决定):
+   —— 步数是唯一硬约束,每个动作恰好扣 1 步,不分档;
+   —— 钱只累加、局末告知,本阶段不设预算、不订数值。
+
+   `billed` 按档计数而**不求和**。求和(旧的 `spent += a.cost`)等于断言中档花的钱
+   是低档的两倍,而档位只是序数,那个倍数从未被批准。等钱的数值系统定下来,
+   把这四个计数乘上单价即可,不必回头拆一个已经混在一起的和。 */
+function newSession(budget = BUDGET_DEFAULT) {
+  return { acquired: [], log: [], billed: [0, 0, 0, 0], stopped: false,
+           budget: clampBudget(budget) };
+}
+
+/* 预算只在开局前可改:一步都还没走时改是调难度,走过之后改是作弊。 */
+function setBudget(s, n) {
+  if (s.log.length) return { ok: false, why: "已经动过手了,本局预算不能再改" };
+  s.budget = clampBudget(n);
+  return { ok: true, budget: s.budget };
 }
 
 function solve(s) {
@@ -4540,13 +4681,13 @@ function workbench(s) {
   return availability(facts, done).map((x) => ({
     ...x,
     done: done.includes(x.action.id),
-    affordable: s.log.length < BUDGET && !s.stopped,
+    affordable: s.log.length < s.budget && !s.stopped,
   }));
 }
 
 function take(s, actionId) {
   if (s.stopped) return { ok: false, why: "本局已经收手" };
-  if (s.log.length >= BUDGET) return { ok: false, why: "调查机会已经用完" };
+  if (s.log.length >= s.budget) return { ok: false, why: "行动点数已经用完" };
   const a = ACTION_BY_ID.get(actionId);
   if (!a) return { ok: false, why: `没有这个动作:${actionId}` };
   const facts = factsOf(s);
@@ -4564,7 +4705,7 @@ function take(s, actionId) {
   }
   const before = solve(s);
   s.acquired = next;
-  s.spent += a.cost;
+  s.billed[a.cost] += 1;
   s.log.push({ actionId, eventKey, observationId: ev.observationId, cost: a.cost });
   const after = solve(s);
 
@@ -4584,7 +4725,7 @@ function take(s, actionId) {
   };
 }
 
-return { BUDGET, newSession, solve, factsOf, workbench, take };
+return { BUDGET_MIN, BUDGET_MAX, BUDGET_DEFAULT, clampBudget, newSession, setBudget, solve, factsOf, workbench, take };
 })();
 
 /* ==== PROJECTION ==== */
@@ -4622,85 +4763,99 @@ for (const ev of Object.values(events)) {
 
 /* ---------- 情报标签。节点是情报,不是行动,所以不能拿动作名当标签。 ---------- */
 const OBS_LABEL = {
-  "obs.current.whole": { short: "整器读数", gist: "器型与胎釉的整体面貌,加上肉眼可见的干预痕迹分布在哪几区。" },
+  "obs.current.whole": { short: "整只碗的样貌", gist: "器型与胎釉的整体面貌,加上肉眼看得见的动过手的地方分布在哪几块。" },
   "obs.current.base": { short: "底足痕迹", gist: "圈足与修足留下的成型痕迹 —— 制造工艺的指纹。" },
-  "obs.appearance.restore": { short: "外观重整痕迹", gist: "纹饰与色差显示外观被重新整合过的那些区。" },
-  "obs.corpus.identity": { short: "语料比对结果", gist: "这套制造特征在同期真品语料里是常见还是罕见。" },
-  "obs.corpus.identity.repeat": { short: "语料复核(同一结论)", gist: "换一批语料复核,结论与上次一致 —— 是本局经历,但不额外计权。" },
-  "obs.object.continuity": { short: "同一器物", gist: "不参与重组的稳定锚点对得上:手里这只与记录里那只是同一件。" },
-  "obs.structure.xray.early": { short: "釉下结构影像", gist: "多角度射线下逐区的结构读数。" },
-  "obs.surface.no-signal.unresolved": { short: "紫外无信号(未定)", gist: "没筛出补绘信号,但这次筛查的能力不足以支撑「没有补绘」这个结论。" },
-  "obs.accident.major": { short: "事故记录组", gist: "一组彼此自洽的记录,描述了一次重大损坏与随后的重组。" },
-  "obs.archive.t2.object-attribution": { short: "事故记录归属本器", gist: "那组事故记录说的就是这只碗。" },
-  "obs.archive.t2.current-corroboration": { short: "事故记录对上现器", gist: "记录描述的那次重组,在现器上找得到对应痕迹。" },
-  "obs.phase.t1": { short: "事故前影像", gist: "一个更早时点的样貌,可作比较基线。" },
-  "obs.structure.major.cross-time": { short: "跨时点结构变化", gist: "把两个时点的逐区结构摆一起,变了什么看得见。" },
-  "obs.structure.major.documented-cross-time": { short: "跨时点变化(依档案)", gist: "以档案给的时点作基线得出的跨时点变化 —— 结论依赖档案说的是这只碗。" },
-  "obs.phase.t3": { short: "后期处理记录", gist: "更晚的一批处理记录,说明后来还有人动过它。" },
-  "obs.archive.t3.object-attribution": { short: "后期记录归属本器", gist: "那批后期记录也是这只碗的。" },
-  "obs.archive.t3.current-corroboration": { short: "后期记录对上现器", gist: "后期处理在现器对应区域找得到。" },
-  "obs.key-material.substrate-readings": { short: "关键点基底读数", gist: "关键区的材料基底:是原片还是重建的。" },
-  "obs.key-material.layer-sequence": { short: "微观层序", gist: "各层上去的先后顺序 —— 谁压在谁上面。" },
-  "obs.surface.point-layering": { short: "表面试窗点位", gist: "开窗点上补绘压在哪一层之上,以此定后加层与原层的关系。" },
-  "obs.surface.resolved": { short: "表面范围已定", gist: "把点位综合成区域,补绘范围有多大说得出来了。" },
-  "obs.stability.resolved": { short: "稳定性已定", gist: "承力路径与陈列条件评估完成。" },
-  "obs.documentation.resolved": { short: "来源链边界", gist: "流转记录到哪一步为止,且这段里没有互相打架的文件。" },
+  "obs.appearance.restore": { short: "外观被重整过的痕迹", gist: "纹饰与色差显示外观被重新整合过的那些地方。" },
+  "obs.corpus.identity": { short: "与同期真品的比对结果", gist: "这套制造特征放到同时代的真品里看,是常见还是罕见。" },
+  "obs.corpus.identity.repeat": { short: "换一批真品复核(结论没变)", gist: "换一批同期真品再比一次,结论与上次一致 —— 是本局经历,但不额外加分。" },
+  "obs.object.continuity": { short: "手里这只就是记录里那只", gist: "那些没被改动过的稳定特征对得上,所以手里这只与记录里那只是同一件。" },
+  "obs.structure.xray.early": { short: "釉下结构影像", gist: "多角度射线下一块一块拍出来的内部结构。" },
+  "obs.surface.no-signal.unresolved": { short: "紫外没照出补绘(还不能当证据)", gist: "没照出补绘的迹象,但这一次照的灵敏度不够,所以还不能据此说「没有补绘」。" },
+  "obs.accident.major": { short: "那一组事故记录", gist: "几份彼此不矛盾的记录,描述了一次严重损坏和随后的修补。" },
+  "obs.archive.t2.object-attribution": { short: "事故记录说的是这只碗", gist: "那组事故记录讲的就是手里这一只,不是同类的另一只。" },
+  "obs.archive.t2.current-corroboration": { short: "事故记录在这只碗上对上了", gist: "记录里写的那次修补,在这只碗上找得到对应的痕迹。" },
+  "obs.phase.t1": { short: "出事之前的影像", gist: "一张更早时候的样子,可以拿来当比较的底子。" },
+  "obs.structure.major.cross-time": { short: "两个时候的结构差别", gist: "把两个时候的内部结构一块一块摆在一起,哪里变了看得见。" },
+  "obs.structure.major.documented-cross-time": { short: "两个时候的结构差别(底子来自档案)", gist: "拿档案给的那个时间点当底子比出来的差别 —— 所以这条结论要靠「档案说的是这只碗」才站得住。" },
+  "obs.phase.t3": { short: "更晚的一批处理记录", gist: "时间更靠后的一批处理记录,说明后来还有人动过它。" },
+  "obs.archive.t3.object-attribution": { short: "后期记录说的是这只碗", gist: "那批更晚的记录讲的也是手里这一只。" },
+  "obs.archive.t3.current-corroboration": { short: "后期处理在这只碗上对上了", gist: "那批后期处理,在这只碗对应的地方找得到。" },
+  "obs.key-material.substrate-readings": { short: "关键几处的底子是什么", gist: "要紧那几处底下究竟是原来的瓷,还是后来补起来的。" },
+  "obs.key-material.layer-sequence": { short: "各层的先后顺序", gist: "一层层上去的先后 —— 谁压在谁上面。" },
+  "obs.surface.point-layering": { short: "试窗点上的层次关系", gist: "开窗的那几个点上,补绘压在哪一层之上,由此定出后加的和原有的谁先谁后。" },
+  "obs.surface.resolved": { short: "补绘范围有多大,已经说得出来", gist: "把各个点连成片,补绘覆盖多大范围现在有答案了。" },
+  "obs.stability.resolved": { short: "结不结实,已经说得出来", gist: "受力怎么传、能不能摆出来展，都评估过了。" },
+  "obs.documentation.resolved": { short: "来源链查到哪一步为止", gist: "经手记录能追到哪一步,而且这一段里没有互相打架的文件。" },
 };
 
 /* ---------- 主张的槽位标签。空槽位就是「还差哪一块」。 ---------- */
+/* 主张标签必须是**陈述句**,而且必须说的是它自己那两个槽位管的事。
+   2026-08-31 盲测教训:`identity` 原本叫「它属于哪一路」,可它的槽位是「这只碗本身的
+   工艺读数」+「与历史时点是同一件器物」—— 讲的是身份链接上了,不是窑口归属。
+   玩家因此把它读成一个只有问题没有答案的结论,等一个永远不会来的答案。 */
 const CLAIM_LABEL = {
-  identity: "它属于哪一路",
-  majorReassembly: "它曾被大幅重组过",
-  threePhase: "重组分三个时点发生",
-  coherentDecisionProfile: "整份判断内部自洽",
+  identity: "这只碗就是档案里记的那一只",
+  majorReassembly: "这只碗被大改过",
+  threePhase: "改动分三次发生,不是一次",
+  coherentDecisionProfile: "整份判断内部不矛盾",
 };
 /* g1 与 appearanceRestore 不进地图:前者是阶段结果(DEC-032 第十节),
    后者是单条事实而非主张。 */
 const CLAIM_NOT_ON_MAP = new Set(["g1", "appearanceRestore"]);
 
+/* 槽位标签就是「还差哪一块」,所以每一条都要让玩家看得出缺的是什么东西。 */
 const SLOT_LABEL = {
   identity: {
-    currentObject: "现器本身的工艺读数",
-    path: "与历史时点是同一件器物",
+    currentObject: "这只碗本身的工艺读数",
+    path: "它与记录里那一只是同一件",
   },
   majorReassembly: {
-    currentRepairMap: "可具名的干预分布图",
-    documentedSourceGroup: "记录组自洽并归到本器",
-    documentedCrossTime: "档案所述与跨时点物证对得上",
-    physicalStructureMap: "逐区结构读数",
-    physicalCrossTime: "跨时点结构变化",
+    currentRepairMap: "说得出哪几处被动过手",
+    documentedSourceGroup: "几份记录互不矛盾,而且说的是这只碗",
+    documentedCrossTime: "档案里写的事,在两个时候的实物对比上对得上",
+    physicalStructureMap: "一块一块拍出来的内部结构",
+    physicalCrossTime: "两个时候的结构差别",
   },
   threePhase: {
-    t1: "事故之前的状态",
-    t2: "事故与那一次重组",
-    t3: "后期的处理",
+    t1: "出事之前是什么状态",
+    t2: "那次事故和随后的修补",
+    t3: "后来又有人动过的部分",
   },
   coherentDecisionProfile: {
-    documentation: "文件边界清楚且无冲突",
-    keyMaterial: "关键材料已定",
-    stability: "稳定性已定",
-    surface: "表面处理已定",
+    documentation: "经手记录查到哪为止,而且不互相打架",
+    keyMaterial: "要紧那几处的底子说得出来",
+    stability: "结不结实说得出来",
+    surface: "表面被补过多少说得出来",
   },
 };
 
+/* 查一批记录要分别过三道:记录之间对不对得上、说的是不是这只碗、写的事在实物上找不找得到。
+   这三道必须能被玩家一次看全 —— 盲测者的原话是「三关系到底是哪三个,要我从三段说明里
+   自己拼」,而且他把「三关系」和「第几关」混着读。所以界面上只准出现这三句,
+   不准再出现「档案三关系」「第一关／第二关」这种要玩家自己去凑的说法。 */
 const ARCHIVE_REL_LABEL = {
-  recordCoherence: "记录之间自洽吗",
-  objectAttribution: "记录说的是这只碗吗",
-  eventCorroboration: "记录说的事在物证上对得上吗",
+  recordCoherence: "这几份记录互相对得上吗",
+  objectAttribution: "这些记录说的是这只碗吗",
+  eventCorroboration: "记录里写的事,在实物上找得到吗",
 };
 const ARCHIVE_REL_STATE = {
   unresolved: "还没结论",
-  suggestive: "有指向性,但还没归到本器",
-  established: "已建立",
-  contested: "有冲突",
+  suggestive: "有指向,但还不能确定说的就是这只碗",
+  established: "已经确定",
+  contested: "对不上,互相打架",
 };
 const ARCHIVE_GROUP_LABEL = { t2: "事故那一组记录", t3: "后期处理那一组记录" };
 
+/* 三种边。**两种是有方向的**,所以图上必须画箭头 —— 盲测者说没有箭头时他会按
+   上下左右猜哪头是前提,猜反了就去点点不了的东西,然后当成 bug。
+   句子也照方向写,不再用「悬空／被接住」这种他明说想象不出画面的说法。 */
 const EDGE_KINDS = {
-  latent: "说的是同一件底层的事",
-  prereq: "没有前一条,后一条拿不到",
-  caught: "后来这条把先前悬空的那条接住了",
+  latent: "两头讲的是同一件事",
+  prereq: "箭尾那条先到手,箭头那条才拿得到",
+  caught: "箭尾这条后来到手,才让箭头那条有了意义",
 };
+/* 哪些边有方向。latent 是对称关系,画箭头反而会让玩家以为有先后。 */
+const EDGE_DIRECTED = new Set(["prereq", "caught", "supports"]);
 
 /* ================= 心智地图 ================= */
 function mentalMap(solved) {
@@ -4803,7 +4958,9 @@ function mentalMap(solved) {
     axioms.push({
       type: "axiom", id: "AX:" + claimId, claimId,
       short: CLAIM_LABEL[claimId] ?? claimId,
-      line: (CLAIM_LABEL[claimId] ?? claimId) + " —— 已定,不再需要论证",
+      /* 不再叫「公理」。盲测者第一反应是数学课上「不证自明」的公理,而这里恰好相反 ——
+         这是玩家花步数查实的东西。他明写每次看到都要在两种理解之间切换一次。 */
+      line: (CLAIM_LABEL[claimId] ?? claimId) + " —— 已经查实,不用再查",
       supports: claimSupporters(solved, claimId),
     });
   }
@@ -4898,16 +5055,18 @@ function decisionSurface(solved, workbenchRows) {
     const need = caw[id]?.requiredFacts ?? EVENT_BY_OBS.get(id)?.requiresContextFacts ?? [];
     items.push({
       kind: "suspended", id: "S:" + id,
-      title: (nodeById.get(id)?.short ?? id) + " 暂时接不上",
-      body: "这条已经拿到了,但缺一个前提才能安全解释它。补上之后它会自动接进来,而且不重复计权。",
+      title: (nodeById.get(id)?.short ?? id) + " 现在还读不出结论",
+      body: "这条你已经拿到手了,但少一个前提,所以现在还不能拿它下判断。" +
+            "把那个前提补上,它会自己变成有用的证据 —— 不用重新花钱买一次,也不会因为等过一阵就打折。",
       means: meansForFacts(need),
     });
   }
   for (const id of negativeIds) {
     items.push({
       kind: "negative", id: "N:" + id,
-      title: (nodeById.get(id)?.short ?? id) + " 没筛出东西,但不够格下结论",
-      body: "这次没有发现信号。问题是这次筛查的能力不足以支撑「没有」这个结论 —— 阴性要成为证据,得先证明手段够格。换一种更能定层的手段去问同一件事。",
+      title: (nodeById.get(id)?.short ?? id) + " 没查到,但这不等于没有",
+      body: "这一次什么也没查到。问题在于这个手段本身不够灵,不足以支撑「确实没有」这个结论 —— " +
+            "「没查到」要能当证据用,得先有一个足够灵的手段来查。换一个看得更深的手段,去问同一件事。",
       means: siblingMeans(id),
     });
   }
@@ -4984,7 +5143,8 @@ function decisionSurface(solved, workbenchRows) {
     items.push({
       kind: "onemore", id: "A:" + group + ":" + k,
       title: `${ARCHIVE_GROUP_LABEL[group] ?? group}:${ARCHIVE_REL_LABEL[k]} —— ${ARCHIVE_REL_STATE[v]}`,
-      body: "档案要分三件事看:记录之间自洽吗、记录说的是这只碗吗、记录说的事在物证上对得上吗。你已经落定了其中的一部分,这一环还没有。",
+      body: "查一批记录要分别过三道:①这几份记录互相对得上吗 ②这些记录说的是这只碗吗 " +
+            "③记录里写的事,在实物上找得到吗。这三道是并列的,不分先后。你已经过了其中一部分,这一道还没有。",
       means: meansForArchive(group, k, meansOf),
     });
   }
@@ -5051,7 +5211,7 @@ function decisionSurface(solved, workbenchRows) {
   const clear = items.length === 0;
   const clearLine = clear
     ? (map.nodes.length === 0
-        ? "还没有任何情报。左边那只碗随便看,免费的几眼不要钱。"
+        ? "还没有任何情报。先从左边那只碗看起:看它不花钱,但每一个手段都占掉一步。"
         : "没有悬而未决的东西了:没有接不上的情报,没有差一件就合拢的,也没有打架的。" +
           "收手是一个正当选择;想往下走,就得自己开一条新线 —— 开哪条由你定。")
     : null;
@@ -5141,6 +5301,10 @@ function readout(solved, session) {
     name: sem?.name ?? solved.stage,
     line: sem?.meaning ?? "",
     used: session?.log?.length ?? 0,
+    budget: session?.budget ?? null,
+    /* 账单按档计数,不求和 —— 理由见 session.mjs 的 newSession 注释。
+       本阶段钱不约束任何东西,只在局末告知,所以这里给的是构成而不是一个总数。 */
+    billed: [...(session?.billed ?? [0, 0, 0, 0])],
     routes: [
       { id: "documented", ...ROUTE_SEMANTICS.documented, open: !!paths.documented },
       { id: "physical", ...ROUTE_SEMANTICS.physical, open: !!paths.physical },
@@ -5149,13 +5313,14 @@ function readout(solved, session) {
   };
 }
 
-return { OBS_LABEL, CLAIM_LABEL, CLAIM_NOT_ON_MAP, SLOT_LABEL, ARCHIVE_REL_LABEL, ARCHIVE_REL_STATE, ARCHIVE_GROUP_LABEL, EDGE_KINDS, mentalMap, claimSupporters, decisionSurface, SLOT_FACTS, readout };
+return { OBS_LABEL, CLAIM_LABEL, CLAIM_NOT_ON_MAP, SLOT_LABEL, ARCHIVE_REL_LABEL, ARCHIVE_REL_STATE, ARCHIVE_GROUP_LABEL, EDGE_KINDS, EDGE_DIRECTED, mentalMap, claimSupporters, decisionSurface, SLOT_FACTS, readout };
 })();
 
 /* ==================== 以下是呈现层。规则一律来自上面内联的冻结求解器。 ==================== */
 const { ACTIONS, ACTION_BY_ID, COST_LABEL } = CASE;
-const { newSession, take, solve, workbench, BUDGET } = SESSION;
-const { mentalMap, decisionSurface, readout, EDGE_KINDS } = PROJECTION;
+const { newSession, take, solve, workbench, setBudget,
+        BUDGET_MIN, BUDGET_MAX, BUDGET_DEFAULT } = SESSION;
+const { mentalMap, decisionSurface, readout, EDGE_KINDS, EDGE_DIRECTED } = PROJECTION;
 const { ACTION_SEMANTICS } = SEMANTICS;
 
 const $ = (s) => document.querySelector(s);
@@ -5172,26 +5337,26 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 /* 坐标是手放的。这一版只求语义站得住:器物侧行动落在它对应的部位上。 */
 const ON_OBJECT = {
   OBJ_D: { x: 96,  y: 92,  label: "纹饰与色差", anchor: "end" },
-  OBJ_R: { x: 214, y: 84,  label: "稳定锚点",   anchor: "start" },
-  OBJ_W: { x: 153, y: 138, label: "整器",       anchor: "middle" },
+  OBJ_R: { x: 214, y: 84,  label: "没被改动的特征", anchor: "start" },
+  OBJ_W: { x: 153, y: 138, label: "整只碗",     anchor: "middle" },
   SURF:  { x: 196, y: 132, label: "表面",       anchor: "start" },
   OBJ_F: { x: 153, y: 204, label: "底足与修足", anchor: "middle" },
 };
 const OUTSIDE = [
-  { grp: "仪器", places: [
+  { grp: "送去化验／拍片", places: [
     { id: "XRAY", label: "X 射线成像" },
-    { id: "UV",   label: "紫外筛查" },
-    { id: "MAT",  label: "材料分析" }]},
-  { grp: "档案", places: [
-    { id: "T1",   label: "早期影像" },
-    { id: "T2",   label: "事故记录组" },
-    { id: "T3",   label: "后期处理记录组" },
-    { id: "PROV", label: "来源链" }]},
-  { grp: "语料", places: [
-    { id: "CORPUS", label: "同期真品语料" },
-    { id: "RPT",    label: "另一批语料" }]},
-  { grp: "状况评估", places: [
-    { id: "STAB", label: "承力与陈列条件" }]},
+    { id: "UV",   label: "紫外照一照" },
+    { id: "MAT",  label: "材料化验" }]},
+  { grp: "翻纸面记录", places: [
+    { id: "T1",   label: "更早的影像" },
+    { id: "T2",   label: "出过事的记录" },
+    { id: "T3",   label: "后来动过的记录" },
+    { id: "PROV", label: "经手记录" }]},
+  { grp: "拿真品对比", places: [
+    { id: "CORPUS", label: "同期的真品" },
+    { id: "RPT",    label: "换一批真品" }]},
+  { grp: "看现在的状况", places: [
+    { id: "STAB", label: "结不结实、能不能展" }]},
 ];
 
 /* 每个 place 上有哪些动作 */
@@ -5209,8 +5374,10 @@ for (const a of ACTIONS) {
 
 /* ---------- 状态 ---------- */
 let S, wbRows, view, history, positions, pinned, anim;
+/* 重开沿用上次设定的点数 —— 调完难度再开一局是常见动作,不该每次回到默认 */
+let chosenBudget = BUDGET_DEFAULT;
 function reset() {
-  S = newSession();
+  S = newSession(chosenBudget);
   history = [];
   positions = new Map();
   pinned = new Set();
@@ -5309,6 +5476,7 @@ function layout(graph, { iters = 260 } = {}) {
 /* ==================== 渲染 ==================== */
 function renderAll() {
   renderHeader();
+  renderSetup();
   renderObject();
   renderOutside();
   layout(view.map);
@@ -5320,16 +5488,74 @@ function renderHeader() {
   const ro = view.ro;
   $("#ro").innerHTML =
     `<div class="st">${esc(ro.name)}${ro.frozenStage ? "(已收手,冻结)" : ""}</div>` +
-    `<div class="ln">${esc(ro.line)}</div>`;
+    `<div class="ln">${esc(ro.line)}</div>` +
+    /* 局末结账。钱在本阶段不约束任何东西,但玩家有权知道这一局替委托人花了多少。 */
+    (ro.frozenStage
+      ? `<div class="ln">这一局花掉:${esc(billLine(ro.billed))}　·　` +
+        `共走 ${S.log.length} 步。钱本阶段只记账,没有预算上限。</div>`
+      : "");
   const r = ro.routes;
   $("#mt").innerHTML =
-    `<div>调查机会 <b>${BUDGET - S.log.length}</b> / ${BUDGET}　·　费用档合计 <b>${S.spent}</b></div>` +
+    `<div>还剩 <b>${S.budget - S.log.length}</b> 步 / 共 ${S.budget} 步　·　` +
+      `已花 ${billLine(ro.billed)}</div>` +
     `<div>${r.map((x) => esc(x.name) + " " + (x.open ? "已通" : "未通")).join("　·　")}</div>`;
   $("#wb").textContent =
     "呈现变体,不是产品,也不是美术方向。规则全部来自冻结求解器(" +
     Object.keys(STAMP.sha).length + " 个模块已内联,构建于 " + STAMP.builtAt + ")。" +
-    "费用只给定性档位,没有货币数字;系统不给动作排序,也不预测全部后果。只做电脑浏览器尺寸。";
+    "步数是唯一约束,每个手段都占一步;钱本阶段只记账、不设预算,局末告知。" +
+    "系统不给动作排序,也不预测全部后果。只做电脑浏览器尺寸。";
 }
+
+/* 账单只报构成,不报总数 —— 档位是序数,把它们相加等于凭空断言中档是低档的两倍。
+   钱的数值系统未定(2026-08-31 用户决定推后),定了以后这里乘单价即可。 */
+function billLine(billed) {
+  const parts = billed
+    .map((n, i) => (n ? `${COST_LABEL[i]}×${n}` : null))
+    .filter(Boolean);
+  return parts.length ? parts.join(" ") : "还没花钱";
+}
+
+/* ---------- 开局设置 ----------
+   点数只在一步都没走时可调。滑杆本身是常驻 DOM,不随渲染重建 ——
+   重建会在拖动中打断拖动。 */
+function renderSetup() {
+  const pre = S.log.length === 0 && !S.stopped;
+  for (const inp of [$("#subud"), $("#subudn")]) {
+    inp.min = BUDGET_MIN;
+    inp.max = BUDGET_MAX;
+    inp.step = 1;
+    inp.value = S.budget;
+    inp.disabled = !pre;
+  }
+  $("#su").classList.toggle("locked", !pre);
+  $("#sulab").textContent = pre ? "开局行动点数" : "本局行动点数";
+  $("#suhint").textContent = pre
+    ? `可调 ${BUDGET_MIN}–${BUDGET_MAX}。${BUDGET_MAX} 是把每个互异手段各做一次的步数,` +
+      `再多只能重复;${BUDGET_MIN} 够走完一条完整路线。`
+    : "开局后本局不可改。重开沿用当前设定。";
+}
+/* 滑杆与数字框是同一个值的两个入口。只改对侧显示,不整块重渲染 ——
+   重渲染会在拖动或输入中途夺走焦点。 */
+function onBudgetInput(raw, peerId) {
+  const r = setBudget(S, raw);
+  if (!r.ok) { renderSetup(); return; }
+  chosenBudget = S.budget;
+  $(peerId).value = S.budget;
+  renderHeader();
+}
+$("#subud").addEventListener("input", (e) => onBudgetInput(e.target.value, "#subudn"));
+/* 数字框在 change 时才夹范围:input 时就夹会让人打不出两位数 */
+$("#subudn").addEventListener("input", (e) => {
+  const v = Number(e.target.value);
+  if (!Number.isFinite(v) || v < BUDGET_MIN || v > BUDGET_MAX) return;
+  onBudgetInput(v, "#subud");
+});
+/* 收笔时把越界值夹回来,并且把框里的显示一起改掉 ——
+   只夹内部值会让框里留着一个假数字 */
+$("#subudn").addEventListener("change", (e) => {
+  onBudgetInput(e.target.value, "#subud");
+  e.target.value = S.budget;
+});
 
 /* ---------- 左上:器物 ---------- */
 function renderObject() {
@@ -5412,7 +5638,10 @@ function openPop(pid, anchorEl) {
       `<div class="why">${esc(sem.whyShort ?? "")}</div>` +
       `<div class="long" data-long>${esc(sem.whyLong ?? "")}</div>` +
       (row?.usable ? "" : `<div class="no">${esc(row?.why ?? (S.stopped ? "本局已经收手" : "现在不能做"))}</div>`) +
-      `<div class="foot"><span class="cost">费用 ${esc(COST_LABEL[a.cost])}` +
+      /* 两种货币必须在同一行分得开:旧写法只说「费用 免费」,盲测者据此以为这一步
+         什么都不耗,而它照样占掉一步 —— 而步数是唯一的硬约束。 */
+      `<div class="foot"><span class="cost">占 1 步 · ` +
+        `${a.cost === 0 ? "不花钱" : "花钱 " + esc(COST_LABEL[a.cost])}` +
         `${row?.done ? " · 已经做过" : ""}</span>` +
         `<span class="acts"><button class="lk" data-more>为什么要紧</button>` +
         `<button class="go" ${row?.usable && row?.affordable ? "" : "disabled"} data-run>做这一步</button>` +
@@ -5452,6 +5681,26 @@ function nodeShape(n) {
   }
   return el("rect", { class: "n-ax", x: -9, y: -7, width: 18, height: 14, rx: 2 });
 }
+/* 三种有方向的边各要一个同色箭头。marker 不能继承 stroke,所以逐色定义。 */
+const ARROW_COLOR = { prereq: "#4a5560", caught: "#a97fc2", supports: "#3d4a38" };
+function arrowDefs() {
+  const defs = el("defs");
+  for (const [kind, color] of Object.entries(ARROW_COLOR)) {
+    const m = el("marker", {
+      id: "ar-" + kind, viewBox: "0 0 8 8", refX: 7, refY: 4,
+      markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse",
+    });
+    m.appendChild(el("path", { d: "M0,0 L8,4 L0,8 z", fill: color }));
+    defs.appendChild(m);
+  }
+  return defs;
+}
+/* 沿 (fx,fy)→(tx,ty) 方向,把终点往回缩 d 像素。 */
+function pullBack(fx, fy, tx, ty, d) {
+  const vx = tx - fx, vy = ty - fy;
+  const len = Math.hypot(vx, vy) || 1;
+  return { x: tx - (vx / len) * d, y: ty - (vy / len) * d };
+}
 function renderMap(target) {
   const svg = target ? $("#hsvg") : $("#map");
   const g = target ? target : view.map;
@@ -5465,12 +5714,13 @@ function renderMap(target) {
   if (!target) {
     $("#mapempty").style.display = empty ? "flex" : "none";
     $("#mapempty").textContent = empty
-      ? "右边现在是空的。这不是隐藏 —— 你还没有任何情报,所以这里没有任何位置。左边那只碗随便看,免费的几眼不要钱。"
+      ? "右边现在是空的。这不是隐藏 —— 你还没有任何情报,所以这里没有任何位置。先从左边那只碗看起:看它不花钱,但每一个手段都占掉一步。"
       : "";
     $("#lgd").innerHTML = empty ? "" : legendHTML();
   }
   if (empty) return;
 
+  svg.appendChild(arrowDefs());
   const layer = el("g");
   for (const e of graph.edges) {
     const a = pos.get(e.from), b = pos.get(e.to);
@@ -5478,9 +5728,14 @@ function renderMap(target) {
     const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
     const dx = b.x - a.x, dy = b.y - a.y;
     const cx = mx - dy * 0.09, cy = my + dx * 0.09;
+    const dir = EDGE_DIRECTED.has(e.kind);
+    /* 有方向的边要把终点从节点圆心往回缩,否则箭头压在节点底下看不见。
+       缩的方向沿控制点→终点的切线,曲线才不会在末端拐一下。 */
+    const end = dir ? pullBack(cx, cy, b.x, b.y, 14) : b;
     layer.appendChild(el("path", {
-      class: "edge e-" + e.kind, d: `M${a.x},${a.y} Q${cx},${cy} ${b.x},${b.y}`,
+      class: "edge e-" + e.kind, d: `M${a.x},${a.y} Q${cx},${cy} ${end.x},${end.y}`,
       "data-edge": e.kind + "|" + e.from + "|" + e.to,
+      ...(dir ? { "marker-end": `url(#ar-${e.kind})` } : {}),
     }));
   }
   svg.appendChild(layer);
@@ -5507,14 +5762,15 @@ function renderMap(target) {
 }
 function legendHTML() {
   const sw = (c, d) => `<span class="sw" style="border-top-color:${c};border-top-style:${d}"></span>`;
+  const ar = `<span class="swa">▸</span>`;
   return [
     `<i>${sw("#5d5a52", "solid")}${esc(EDGE_KINDS.latent)}</i>`,
-    `<i>${sw("#4a5560", "dashed")}${esc(EDGE_KINDS.prereq)}</i>`,
-    `<i>${sw("#a97fc2", "solid")}${esc(EDGE_KINDS.caught)}</i>`,
-    `<i>${sw("#3d4a38", "solid")}支持一条已定的公理</i>`,
-    `<i><span style="color:var(--obs)">●</span> 情报</i>`,
-    `<i><span style="color:var(--find)">⬣</span> 局部 Finding(系统免费连出来的)</i>`,
-    `<i><span style="color:var(--axiom)">▬</span> 公理</i>`,
+    `<i>${sw("#4a5560", "dashed")}${ar}${esc(EDGE_KINDS.prereq)}</i>`,
+    `<i>${sw("#a97fc2", "solid")}${ar}${esc(EDGE_KINDS.caught)}</i>`,
+    `<i>${sw("#3d4a38", "solid")}${ar}这条情报支持箭头指的那条已查实的结论</i>`,
+    `<i><span style="color:var(--obs)">●</span> 你查到的一条情报</i>`,
+    `<i><span style="color:var(--find)">⬣</span> 这几条说的是同一件事(系统自动连的,不花钱)</i>`,
+    `<i><span style="color:var(--axiom)">▬</span> 已经查实的结论</i>`,
   ].join("");
 }
 function showTip(n, ev) {
@@ -5530,9 +5786,9 @@ function showTip(n, ev) {
 
 /* ---------- 右:决策面 ---------- */
 const KIND_LABEL = {
-  suspended: "意义未定的情报", negative: "不够格的阴性结果",
-  onemore: "差一件就合拢", gap: "已经动起来,还缺几块",
-  conflict: "打架的", island: "还没连上主结构",
+  suspended: "拿到了,但还读不出结论", negative: "没查到,但还不能当证据",
+  onemore: "只差一块就合拢", gap: "已经动起来,还缺几块",
+  conflict: "对不上,互相打架", island: "还没和别的东西接上",
 };
 function renderDeck() {
   const box = $("#deckbody");
@@ -5589,7 +5845,7 @@ function doAction(actionId, pid) {
   const fresh = [...view.map.nodes, ...view.map.findings, ...view.map.axioms]
     .filter((n) => !beforeIds.has(n.id)).map((n) => n.id);
 
-  renderHeader(); renderObject(); renderOutside();
+  renderHeader(); renderSetup(); renderObject(); renderOutside();
 
   /* 先按旧位置画一遍,让新节点从左侧飞入 */
   const { w, h } = mapBox();
@@ -5674,6 +5930,10 @@ $("#bhist").addEventListener("click", () => {
   r.value = String(history.length - 1);
   drawHistory(history.length - 1);
 });
+/* 开局委托卡。开局自动弹一次,之后随时可以从「委托」再看。
+   刻意不做「下次不再显示」—— 这一版正在验证的就是「玩家读完能不能说出要干什么」。 */
+$("#bbrief").addEventListener("click", () => { $("#brief").style.display = "flex"; });
+$("#bgo").addEventListener("click", () => { $("#brief").style.display = "none"; });
 $("#hclose").addEventListener("click", () => { $("#hist").style.display = "none"; });
 $("#hr").addEventListener("input", (e) => drawHistory(+e.target.value));
 function drawHistory(i) {
@@ -5712,6 +5972,7 @@ $("#breset").addEventListener("click", reset);
 window.addEventListener("resize", () => { if (!anim) { layout(view.map, { iters: 90 }); renderMap(); } });
 
 reset();
+$("#brief").style.display = "flex";
 </script>
 </body>
 </html>

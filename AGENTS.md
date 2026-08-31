@@ -30,6 +30,7 @@
 
 ## 行为内核(每条背后都有本项目的历史教训,删除前先读 docs/EPITAPH.md)
 
+- **Windows 中文编码(已踩两次,机械照做):** 本仓库文档与代码大量含中文且一律 UTF-8,而本机 PowerShell 默认代码页是 936(GBK)。①**禁止用 PowerShell 读写这些文件** —— `Get-Content`/`Set-Content`/`Out-File`/`Tee-Object` 会按 GBK 往返并静默改坏整个文件(2026-08-31 曾把 `harness.mjs` 改成 93 行乱码,靠 `git checkout` 才救回);读写一律用编辑器工具(Read/StrReplace/Write)。②**要看含中文的命令输出,一律 `cmd /c "node x.mjs > out.txt 2>&1"` 落盘再用 Read 读**,它保留原始 UTF-8 字节;`chcp 65001` 只能修直接输出,命令一旦经过 PowerShell 管道(`Select-Object`/`Tee-Object`/`Out-File`)就会被重新解码成乱码,写出的文件还会被 git 当二进制。④PowerShell 5 不支持 `&&` 与三元 `? :`,分隔命令用 `;`。
 - 文件、代码、测试、搜索能回答的事实,自己查,不问用户。
 - 把计划当证据的滚动视图;优先做"证据价值不低于再讨论一轮"的最小安全动作。
 - 一次只问一个问题,必须带推荐;结论给一个主推荐加至多一个有意义的替代。

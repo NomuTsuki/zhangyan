@@ -4,7 +4,7 @@
 - **交付与用途**:本项目是用户在企业实习中独立负责的项目,导师最终要的交付物是一份**策划案**,不是手机尺寸原型或正式上线页面;同时本项目**首要服务作品集制作**(594×210mm 跨页)。项目不涉及隐私或保密协议,过程资产可自由留存、截图与展示。
 - **视口政策(2026-08-24 决定,2026-08-28 由 DEC-033 转为阶段范围)**:V3 一切切片、草图、验证与**正式切片**只做电脑浏览器尺寸。手机端**不在本阶段范围**,且**不为其预留布局退路**——不做响应式断点、不做上下折叠变体、不做窄屏降级。手机竖屏是 V1/V2 的历史事实,其归档资产保持手机竖屏。2026-08-24 那条"先／暂"的临时豁免已被 DEC-033 取代,**上一版的提醒已于 2026-08-28 触发并由用户答复,不要再重复问同一个问题**。**新的提醒触发:产品定性被重新讨论(尤其"是否仍为微信端小游戏")、出现真实手机端交付要求、或桌面版通过真人测试并进入上线准备时,必须提醒用户重估移动端约束。**欠款已记在 DEC-033:若定性仍为微信端,欠一次完整竖屏信息架构设计,其中"决策面四类能否在竖屏同屏可比"可能与 DEC-032 的反派工保证冲突。
 - 版本边界:V1(教师演示,冻结)/ V2(玩家试玩底座,冻结于 tag `v2.0.0-player-prototype-freeze`,不许改动)/ **V3(当前)**:物品真相拓扑与玩家知识地图,分支 `codex/v3-object-truth-topology`。
-- V3 当前状态:知识地图语义已闭合(DEC-026 骨架 + DEC-028 地标汇合 + DEC-029 罗盘排序范围),无未决前置条件;**下一步是桌面尺寸的可丢弃可玩地图切片**。正式数值、产品代码开工、真人测试均未批准,以 `docs/project/03-NEXT-ACTIONS.md` 为准。
+- V3 当前状态:知识地图语义已闭合(DEC-026 骨架 + DEC-028 地标汇合 + DEC-029 罗盘排序范围);DEC-032 的可玩实现 `workbench-map-v0` 已做出,**真人试玩两轮与两轮零背景盲测都没通过,开局即停手**。正式数值、产品代码开工均未批准。以 `docs/project/03-NEXT-ACTIONS.md` 为准。
 - 设计核心(不可动摇):作者真相模型(隐藏、固定)与玩家知识图(渐进显影)严格分离;证据≠结论;意义可以延迟、证据只计一次;玩家手动停手;双轨结算(客观结果 + 判断质量)。
 - 领域词义以根目录 `CONTEXT.md` 为准。项目记忆入口:`docs/project/00-PROJECT-COMPASS.md` → `02-CURRENT-STATE.md` → `03-NEXT-ACTIONS.md`,其余记录按任务需要读,不默认通读。
 - V2 原型与测试位于 `掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/`(node 测试套件在其 `tests/`)。需 Node `>=22.13.0`(实测 v24 可用),全部命令在该目录下执行,首次先 `npm install`:
@@ -49,7 +49,7 @@
 ## 治理边界(本文件是本项目唯一治理权威)
 
 - 本文件不使用托管块,任何工具不得整段覆写它;规则变更只由人明确决定。
-- 本项目自带 skill 在 `.cursor/skills/`:`reorient`、`playtest-protocol`、`tune-params`、`research-decision`、`portfolio-capture`。`evidence-before-done` 与 `learning-handoff` 是全局 skill,不在仓库内,换机器会失效。
+- 本项目自带 skill 在 `.cursor/skills/`:`reorient`、`playtest-protocol`、`tune-params`、`research-decision`、`portfolio-capture`、`blind-playtest`(零背景玩家,只碰仓库外成品 HTML)、`repo-audit`(只读通审,只举手不修)。`evidence-before-done` 与 `learning-handoff` 是全局 skill,不在仓库内,换机器会失效。Cursor 用 `/skill-name`;Codex 用 `$skill-name`,同一份 `SKILL.md`。
 - 记法:Cursor 用 `/skill-name` 手动触发(不是 Codex 的 `$`);Cursor 同时读取 `.cursor/skills/`、`.agents/skills/`、`.claude/skills/`、`~/.codex/skills/`,所以旧体系仍会被看见,靠下一条停用清单约束而非删文件。
 - 默认停用,只在用户当次点名时用一次:旧治理体系 `project-co-lead` / `project-co-leader-v2` / `project-agent-governance`、`superpowers:*`、`structured-handoff`(其收尾格式与上面的完成定义冲突)、`ui-task-flow-review`,以及仓库内 `.agents/skills/` 的 `frontend-design` 与 `product-design-and-ux`。后两个已加 `disable-model-invocation: true` 机械禁用;前面那些装在仓库外的用户目录里,只能靠本条文字约束。
 

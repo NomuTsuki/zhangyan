@@ -41,4 +41,4 @@ Before tuning or simulating:
 
 Hard rules: never tune only until a test passes; never silently widen a
 tolerance or regenerate a baseline after a failure; never claim a simulation
-proves fun — feel goes to `/playtest-protocol`.
+proves fun — feel goes to the sibling `playtest-protocol` skill.

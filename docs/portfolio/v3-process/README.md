@@ -1,7 +1,7 @@
 # V3 作品集过程资产入口
 
 按里程碑采集,每组一个日期目录、一份 README、每张图一句英文 caption、并标注候选跨页槽位。
-采集规范见 [`portfolio-capture`](../../../.cursor/skills/portfolio-capture/SKILL.md);**视口按 [DEC-033](../../project/decisions/DEC-033-v3-desktop-only-for-the-formal-slice-mobile-out-of-stage-scope.md) 取电脑浏览器尺寸,移动端不在本阶段范围**。
+采集规范见 [`portfolio-capture`](../../../.agents/skills/portfolio-capture/SKILL.md);**视口按 [DEC-033](../../project/decisions/DEC-033-v3-desktop-only-for-the-formal-slice-mobile-out-of-stage-scope.md) 取电脑浏览器尺寸,移动端不在本阶段范围**。
 
 ## 已采集
 

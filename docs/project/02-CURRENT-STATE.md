@@ -2,7 +2,13 @@
 
 > 只保存 V3 此刻的真实状态。V2 终态由 frozen tag 与对应项目记录保留。
 
-更新时间：2026-09-01
+更新时间：2026-09-04
+
+## 2026-09-04 增量状态
+
+`69f5b74` 已保存不覆盖旧入口的 Experimental 地图布局试玩版 `workbench-map-layout-v1/prototype.html`。用户真人上手只评价为“比以前略好一点点”，未通过；Finding 语义、三栏联动、逻辑自上而下布局与古董内容负担的问题已记录在 [2026-09-04 真人试玩复核](evidence/v3-design/validation/workbench-map-layout-v1/PLAYTEST-RESULT-2026-09-04.md)。用户随后批准先做内容骨架、暂不改界面；[第一器物玩家推理骨架 v0](evidence/v3-design/2026-09-04-first-ceramic-player-reasoning-backbone-v0.md) 已把 22 个手段逐项归入五个长期问题，当前身份只是待用户复核的 Design Candidate。这些问题和候选调整均未升格为批准决定，冻结求解器／夹具、G1/G2/G3 语义与正式产品代码边界未变。本节覆盖下方 2026-09-01 状态中“地图布局重做尚未实施”等已经过时的执行描述；其余历史与验证边界继续有效。
+
+用户随后批准把这套内容骨架做成一个**独立试玩对照**；[五问共同聚焦试玩 v0](evidence/v3-design/validation/workbench-map-focus-v0/README.md) 已生成离线入口 `workbench-map-focus-v0/prototype.html`，没有替换 `workbench-map-v0` 或 `workbench-map-layout-v1`。它把右侧改为五个可穿插调查的短问题，把“接手还要看哪些方面”拆成关键材料／表面／稳定／来路边界四个状态，并让左侧位置或手段、中间相关节点、右侧直接问题与牵连问题共享一次聚焦。焦点模型检查、原有 harness 和浏览器实跑已经通过；**这些只能证明接线可运行，是否更自然、更容易理解仍等待用户真人试玩**。本轮没有改冻结求解器／夹具、G1/G2/G3 语义、游戏规则或旧试玩入口；五问及四个状态仍是用于比较的 Experimental 投影，不是正式定案。
 
 ## 一句话状态
 

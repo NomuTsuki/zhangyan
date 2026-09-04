@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>掌眼 V3 · 已知与推理布局对照 v0</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d0f12;
+      --panel: #14171c;
+      --panel-2: #191d23;
+      --line: #2a3038;
+      --text: #e8e1d4;
+      --muted: #969187;
+      --quiet: #69665f;
+      --blue: #72a6c2;
+      --orange: #c7894a;
+      --green: #82a968;
+      --purple: #b47bd0;
+      --focus: #e5bd70;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-width: 1180px; min-height: 100%; background: var(--bg); color: var(--text); }
+    body { font: 14px/1.45 "Microsoft YaHei", "PingFang SC", system-ui, sans-serif; }
+    button { font: inherit; }
+    .masthead {
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #16191e 0%, #101216 100%);
+      padding: 18px 24px 14px;
+    }
+    .title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 28px; }
+    .eyebrow { color: var(--focus); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+    h1 { margin: 3px 0 5px; font-size: 23px; font-weight: 620; letter-spacing: .01em; }
+    .subtitle { margin: 0; color: var(--muted); max-width: 900px; }
+    .scope {
+      flex: 0 0 auto; max-width: 360px; padding: 9px 12px; border: 1px solid #48402f;
+      background: #1b1812; color: #c7b78f; border-radius: 7px; font-size: 12px;
+    }
+    .toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 18px; margin-top: 14px; }
+    .control { display: flex; align-items: center; gap: 7px; }
+    .control-label { color: var(--quiet); font-size: 12px; }
+    .segmented { display: inline-flex; border: 1px solid #353b44; border-radius: 7px; overflow: hidden; }
+    .segmented button, .plain-button {
+      appearance: none; border: 0; border-right: 1px solid #353b44; padding: 7px 11px;
+      background: #171a20; color: #aaa69e; cursor: pointer;
+    }
+    .segmented button:last-child { border-right: 0; }
+    .segmented button:hover, .plain-button:hover { background: #20242b; color: var(--text); }
+    .segmented button[aria-pressed="true"] { background: #2b3038; color: #fff5df; box-shadow: inset 0 -2px var(--focus); }
+    button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    .plain-button { border: 1px solid #353b44; border-radius: 7px; }
+    .summary { margin-left: auto; color: #b9b3a8; font-size: 12px; }
+    .summary strong { color: #f0dfba; font-weight: 600; }
+
+    .stage { padding: 14px 18px 18px; }
+    .canvas-shell { border: 1px solid var(--line); background: #0b0d10; border-radius: 9px; overflow: hidden; }
+    .canvas-head {
+      display: grid; grid-template-columns: minmax(250px, .65fr) minmax(440px, 1.35fr);
+      align-items: start; gap: 18px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: #13161b;
+    }
+    .mode-title { font-size: 15px; color: #f1e9da; }
+    .mode-note { margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .legend { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 5px 13px; color: #8f8b83; font-size: 11px; }
+    .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+    .swatch { width: 18px; height: 2px; display: inline-block; background: currentColor; }
+    .swatch.dashed { background: repeating-linear-gradient(90deg, currentColor 0 5px, transparent 5px 8px); }
+    .swatch.dot { width: 8px; height: 8px; border-radius: 50%; }
+    .map-wrap { position: relative; width: 100%; background: radial-gradient(circle at 50% 35%, #12161b 0%, #090b0e 72%); }
+    #graph { display: block; width: 100%; height: calc(100vh - 300px); min-height: 620px; max-height: 920px; }
+    .canvas-foot {
+      display: grid; grid-template-columns: 1.05fr 1.3fr; gap: 18px; min-height: 66px;
+      padding: 10px 14px; border-top: 1px solid var(--line); background: #13161b;
+    }
+    .checkpoint-note, .detail { color: #aaa59b; font-size: 12px; }
+    .checkpoint-note strong, .detail strong { color: #eee3d0; }
+    .detail { border-left: 1px solid #30353d; padding-left: 16px; }
+    .stamp { margin: 8px 2px 0; color: #66635d; font-size: 11px; }
+
+    .edge { fill: none; stroke-width: 1.35; opacity: .58; transition: opacity .12s, stroke-width .12s; }
+    .edge.latent { stroke: #60765d; }
+    .edge.prereq { stroke: #87929c; stroke-dasharray: 5 4; }
+    .edge.caught { stroke: var(--purple); stroke-width: 1.8; }
+    .edge.supports { stroke: #719060; opacity: .12; }
+    .edge.active { opacity: 1; stroke-width: 3; }
+    .edge.dim { opacity: .035; }
+
+    .node { cursor: pointer; opacity: 1; transition: opacity .12s; }
+    .node.dim { opacity: .16; }
+    .node text { pointer-events: none; }
+    .node:focus { outline: none; }
+    .node-label { fill: #e7e0d5; font-size: 12px; font-weight: 530; paint-order: stroke; stroke: #0b0d10; stroke-width: 4px; stroke-linejoin: round; }
+
+    .force-glyph { fill: #101419; stroke-width: 2; }
+    .node.obs .force-glyph { stroke: var(--blue); }
+    .node.finding .force-glyph { stroke: var(--orange); }
+    .node.axiom .force-glyph { stroke: var(--green); }
+    .island-node.negative .force-glyph, .island-node.suspended .force-glyph { stroke-dasharray: 3 3; }
+    .force-hit { fill: transparent; }
+    .force-ring { fill: none; stroke: transparent; stroke-width: 3; }
+    .node:focus .force-ring, .node.selected .force-ring { stroke: var(--focus); }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="title-row">
+      <div>
+        <div class="eyebrow">V3 layout probe · experimental</div>
+        <h1>“已知与推理”布局对照 v0</h1>
+        <p class="subtitle">同一局、同一批节点、同一批关系，只调整力导向的节点分布。看地图能否既保留自由探索，又帮助你追出“我为什么这样判断”。</p>
+      </div>
+      <div class="scope">这是可丢弃的布局探针。候选不分栏、不预告未来，也不改变证据、结论、行动顺序或四类关系。</div>
+    </div>
+    <div class="toolbar">
+      <div class="control">
+        <span class="control-label">内容状态</span>
+        <div class="segmented" id="checkpoint-controls" role="group" aria-label="选择内容快照"></div>
+      </div>
+      <div class="control">
+        <span class="control-label">布局</span>
+        <div class="segmented" id="layout-controls" role="group" aria-label="选择布局方案"></div>
+      </div>
+      <button class="plain-button" id="clear-focus" type="button">显示全部关系</button>
+      <div class="summary" id="summary"></div>
+    </div>
+  </header>
+
+  <main class="stage">
+    <section class="canvas-shell" aria-label="布局对照画布">
+      <div class="canvas-head">
+        <div>
+          <div class="mode-title" id="mode-title"></div>
+          <div class="mode-note" id="mode-note"></div>
+        </div>
+        <div class="legend" aria-label="图例">
+          <span class="legend-item" style="color:#72a6c2"><i class="swatch dot"></i>玩家取得的情报</span>
+          <span class="legend-item" style="color:#c7894a"><i class="swatch dot"></i>系统整理的局部判断</span>
+          <span class="legend-item" style="color:#82a968"><i class="swatch dot"></i>已经查实的结论</span>
+          <span class="legend-item" style="color:#60765d"><i class="swatch"></i>同一底层问题</span>
+          <span class="legend-item" style="color:#87929c"><i class="swatch dashed"></i>取得后者所需的前置条件</span>
+          <span class="legend-item" style="color:#b47bd0"><i class="swatch"></i>为既有证据补足解释条件</span>
+          <span class="legend-item" style="color:#719060"><i class="swatch"></i>支撑结论（选中时展开）</span>
+        </div>
+      </div>
+      <div class="map-wrap">
+        <svg id="graph" viewBox="0 0 1400 920" role="application" aria-label="可选择节点查看关系的知识图"></svg>
+      </div>
+      <div class="canvas-foot">
+        <div class="checkpoint-note" id="checkpoint-note"></div>
+        <div class="detail" id="detail"></div>
+      </div>
+    </section>
+    <div class="stamp" id="stamp"></div>
+  </main>
+
+  <script>
+  "use strict";
+  /*__PROBE_DATA__*/
+
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  const TYPE_LABEL = {
+    obs: "玩家取得的情报",
+    finding: "系统整理的局部判断",
+    axiom: "已经查实的结论",
+  };
+  const EDGE_LABEL = {
+    latent: "指向同一底层问题",
+    prereq: "取得后者所需的前置条件",
+    caught: "前者为后者补足解释条件",
+    supports: "前者支撑这条结论",
+  };
+  const DIRECTED = new Set(["prereq", "caught", "supports"]);
+  const LAYOUTS = [
+    {
+      id: "force",
+      label: "当前力导向",
+      title: "当前原语：所有关系都参与拉扯",
+      note: "只有已查实结论钉住；其余节点在每一步后整体重算。距离与方向没有稳定的玩家含义。",
+    },
+    {
+      id: "islands",
+      label: "候选：逻辑岛",
+      title: "候选原语：逻辑关系聚成局部岛，旧结构只做软锚定",
+      note: "同一底层问题、前置与后来接住旧证据的关系主导局部聚合；支撑结论的扇形边只保留极弱引力。没有问题栏或取得顺序栏。",
+    },
+  ];
+
+  let checkpointIndex = PROBE.checkpoints.length - 1;
+  let layoutId = "islands";
+  let selectedId = null;
+
+  const $ = (selector) => document.querySelector(selector);
+  const graphSvg = $("#graph");
+
+  function svgElement(tag, attributes = {}, text = null) {
+    const element = document.createElementNS(SVG_NS, tag);
+    for (const [name, value] of Object.entries(attributes)) {
+      if (value !== null && value !== undefined) element.setAttribute(name, String(value));
+    }
+    if (text !== null) element.textContent = text;
+    return element;
+  }
+
+  function allNodes(graph) {
+    return [...graph.nodes, ...graph.findings, ...graph.axioms];
+  }
+
+  function nodeById(graph) {
+    return new Map(allNodes(graph).map((node) => [node.id, node]));
+  }
+
+  function currentState() {
+    return PROBE.checkpoints[checkpointIndex];
+  }
+
+  function currentLayout() {
+    return LAYOUTS.find((layout) => layout.id === layoutId);
+  }
+
+  function positionsFor(state, mode = layoutId) {
+    return state.layouts[mode].positions;
+  }
+
+  function connectedSet(graph) {
+    if (!selectedId) return null;
+    const connected = new Set([selectedId]);
+    for (const edge of graph.edges) {
+      if (edge.from === selectedId || edge.to === selectedId) {
+        connected.add(edge.from);
+        connected.add(edge.to);
+      }
+    }
+    return connected;
+  }
+
+  function addArrowDefs(svg) {
+    const defs = svgElement("defs");
+    for (const [kind, color] of Object.entries({ prereq: "#87929c", caught: "#b47bd0", supports: "#719060" })) {
+      const marker = svgElement("marker", {
+        id: `arrow-${kind}`,
+        markerWidth: 8,
+        markerHeight: 8,
+        refX: 7,
+        refY: 4,
+        orient: "auto",
+        markerUnits: "strokeWidth",
+      });
+      marker.appendChild(svgElement("path", { d: "M0,0 L8,4 L0,8 z", fill: color }));
+      defs.appendChild(marker);
+    }
+    svg.appendChild(defs);
+  }
+
+  function edgeClass(edge, connected) {
+    const incident = selectedId && (edge.from === selectedId || edge.to === selectedId);
+    const classes = ["edge", edge.kind];
+    if (selectedId && !incident) classes.push("dim");
+    if (incident) classes.push("active");
+    if (!selectedId && connected && (!connected.has(edge.from) || !connected.has(edge.to))) classes.push("dim");
+    return classes.join(" ");
+  }
+
+  function nodeClass(node, connected) {
+    const classes = ["node", node.type, node.state ?? ""];
+    if (selectedId === node.id) classes.push("selected");
+    if (connected && !connected.has(node.id)) classes.push("dim");
+    return classes.filter(Boolean).join(" ");
+  }
+
+  function installNodeInteraction(group, node) {
+    group.setAttribute("tabindex", "0");
+    group.setAttribute("role", "button");
+    group.setAttribute("aria-label", `${TYPE_LABEL[node.type]}：${node.short}`);
+    const activate = () => {
+      selectedId = selectedId === node.id ? null : node.id;
+      render();
+      if (selectedId) graphSvg.querySelector(`[data-node-id="${CSS.escape(node.id)}"]`)?.focus();
+    };
+    group.addEventListener("click", (event) => { event.stopPropagation(); activate(); });
+    group.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        activate();
+      }
+    });
+  }
+
+  function pointEdgePath(from, to) {
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const distance = Math.hypot(dx, dy) || 1;
+    const startRadius = from.role === "finding" ? 15 : from.role === "axiom" ? 14 : 12;
+    const endRadius = to.role === "finding" ? 17 : to.role === "axiom" ? 16 : 14;
+    const start = { x: from.x + (dx / distance) * startRadius, y: from.y + (dy / distance) * startRadius };
+    const end = { x: to.x - (dx / distance) * endRadius, y: to.y - (dy / distance) * endRadius };
+    return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
+  }
+
+  function labelLines(node, position) {
+    if (position.labelLines) return position.labelLines;
+    const limit = node.type === "obs" ? 12 : node.type === "finding" ? 15 : 18;
+    const characters = [...String(node.short)];
+    const lines = [];
+    for (let index = 0; index < characters.length; index += limit) {
+      lines.push(characters.slice(index, index + limit).join(""));
+    }
+    return lines.length ? lines : [""];
+  }
+
+  function renderPointGraph(state, connected) {
+    const positions = positionsFor(state);
+    const edgeLayer = svgElement("g", { "aria-hidden": "true" });
+    for (const edge of state.graph.edges) {
+      const from = positions[edge.from];
+      const to = positions[edge.to];
+      if (!from || !to) continue;
+      const path = svgElement("path", {
+        d: pointEdgePath(from, to),
+        class: edgeClass(edge, connected),
+        "marker-end": DIRECTED.has(edge.kind) ? `url(#arrow-${edge.kind})` : null,
+      });
+      path.appendChild(svgElement("title", {}, EDGE_LABEL[edge.kind]));
+      edgeLayer.appendChild(path);
+    }
+    graphSvg.appendChild(edgeLayer);
+
+    const nodeLayer = svgElement("g");
+    for (const node of allNodes(state.graph)) {
+      const position = positions[node.id];
+      if (!position) continue;
+      const group = svgElement("g", {
+        class: `${nodeClass(node, connected)} ${layoutId === "islands" ? "island-node" : "force-node"}`,
+        transform: `translate(${position.x},${position.y})`,
+        "data-node-id": node.id,
+      });
+      group.appendChild(svgElement("circle", { class: "force-hit", cx: 0, cy: 0, r: 24 }));
+      group.appendChild(svgElement("circle", { class: "force-ring", cx: 0, cy: 0, r: 15 }));
+      if (node.type === "axiom") {
+        group.appendChild(svgElement("rect", {
+          class: "force-glyph", x: -10, y: -8, width: 20, height: 16, rx: 3,
+        }));
+      } else if (node.type === "finding") {
+        group.appendChild(svgElement("path", {
+          class: "force-glyph",
+          d: "M 0 -11 L 10 -5 L 10 5 L 0 11 L -10 5 L -10 -5 Z",
+        }));
+      } else {
+        group.appendChild(svgElement("circle", { class: "force-glyph", cx: 0, cy: 0, r: 8 }));
+      }
+
+      const lines = labelLines(node, position);
+      const text = svgElement("text", {
+        class: "node-label",
+        x: 0,
+        y: position.labelY ?? (-18 - (lines.length - 1) * 14),
+        "text-anchor": "middle",
+      });
+      lines.forEach((line, index) => {
+        text.appendChild(svgElement("tspan", { x: 0, dy: index === 0 ? 0 : 14 }, line));
+      });
+      group.appendChild(text);
+      group.appendChild(svgElement("title", {}, `${TYPE_LABEL[node.type]}：${node.short}`));
+      installNodeInteraction(group, node);
+      nodeLayer.appendChild(group);
+    }
+    graphSvg.appendChild(nodeLayer);
+  }
+
+  function displacement(stateIndex, mode) {
+    if (stateIndex === 0) return "这是第一个对照快照";
+    const previous = PROBE.checkpoints[stateIndex - 1];
+    const current = PROBE.checkpoints[stateIndex];
+    const before = positionsFor(previous, mode);
+    const after = positionsFor(current, mode);
+    let common = 0;
+    let moved = 0;
+    let total = 0;
+    for (const [id, from] of Object.entries(before)) {
+      const to = after[id];
+      if (!to) continue;
+      const distance = Math.hypot(to.x - from.x, to.y - from.y);
+      common += 1;
+      total += distance;
+      if (distance > 12) moved += 1;
+    }
+    const average = common ? Math.round(total / common) : 0;
+    return `相对上一快照：${moved}/${common} 个旧节点位移超过 12px，平均位移 ${average}px`;
+  }
+
+  function renderDetail(state, index) {
+    if (!selectedId) {
+      $("#detail").innerHTML = "<strong>读图动作：</strong>点击任一节点，只保留与它直接相连的关系。再点一次或按“显示全部关系”返回全图。";
+      return;
+    }
+    const nodes = nodeById(state.graph);
+    const node = nodes.get(selectedId);
+    if (!node) {
+      selectedId = null;
+      renderDetail(state, index);
+      return;
+    }
+    const related = state.graph.edges.filter((edge) => edge.from === node.id || edge.to === node.id);
+    const byKind = related.reduce((counts, edge) => {
+      counts[edge.kind] = (counts[edge.kind] ?? 0) + 1;
+      return counts;
+    }, {});
+    const relationText = Object.entries(byKind).map(([kind, count]) => `${EDGE_LABEL[kind]} ×${count}`).join("；") || "当前没有连接";
+    $("#detail").textContent = `${TYPE_LABEL[node.type]}：${node.short}。${relationText}`;
+  }
+
+  function render() {
+    const state = currentState();
+    if (selectedId && !nodeById(state.graph).has(selectedId)) selectedId = null;
+    const connected = connectedSet(state.graph);
+    graphSvg.textContent = "";
+    addArrowDefs(graphSvg);
+    renderPointGraph(state, connected);
+
+    const layout = currentLayout();
+    $("#mode-title").textContent = layout.title;
+    $("#mode-note").textContent = layout.note;
+    $("#summary").innerHTML = `<strong>${state.label}</strong> · ${state.counts.observations} 情报 · ${state.counts.findings} Finding · ${state.counts.conclusions} 结论 · ${state.counts.edges} 关系`;
+    $("#checkpoint-note").innerHTML = `<strong>这一屏重点：</strong>${state.note}<br>${displacement(checkpointIndex, layoutId)}`;
+    renderDetail(state, checkpointIndex);
+    document.querySelectorAll("[data-checkpoint]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(Number(button.dataset.checkpoint) === checkpointIndex));
+    });
+    document.querySelectorAll("[data-layout]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.layout === layoutId));
+    });
+  }
+
+  function buildControls() {
+    for (const [index, state] of PROBE.checkpoints.entries()) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = state.label;
+      button.dataset.checkpoint = String(index);
+      button.addEventListener("click", () => {
+        checkpointIndex = index;
+        selectedId = null;
+        render();
+      });
+      $("#checkpoint-controls").appendChild(button);
+    }
+    for (const layout of LAYOUTS) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = layout.label;
+      button.dataset.layout = layout.id;
+      button.addEventListener("click", () => {
+        layoutId = layout.id;
+        selectedId = null;
+        render();
+      });
+      $("#layout-controls").appendChild(button);
+    }
+    $("#clear-focus").addEventListener("click", () => { selectedId = null; render(); });
+    graphSvg.addEventListener("click", () => { selectedId = null; render(); });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && selectedId) {
+        selectedId = null;
+        render();
+      }
+    });
+  }
+
+  $("#stamp").textContent = `构建于 ${PROBE.stamp.builtAt} · 数据由现有 case / session / projection 只读生成 · ${Object.keys(PROBE.stamp.sourceSha).length} 个来源文件已记录 SHA-256`;
+  buildControls();
+  render();
+  </script>
+</body>
+</html>

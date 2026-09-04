@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>掌眼 V3 · 已知与推理布局对照 v0</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d0f12;
+      --panel: #14171c;
+      --panel-2: #191d23;
+      --line: #2a3038;
+      --text: #e8e1d4;
+      --muted: #969187;
+      --quiet: #69665f;
+      --blue: #72a6c2;
+      --orange: #c7894a;
+      --green: #82a968;
+      --purple: #b47bd0;
+      --focus: #e5bd70;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-width: 1180px; min-height: 100%; background: var(--bg); color: var(--text); }
+    body { font: 14px/1.45 "Microsoft YaHei", "PingFang SC", system-ui, sans-serif; }
+    button { font: inherit; }
+    .masthead {
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #16191e 0%, #101216 100%);
+      padding: 18px 24px 14px;
+    }
+    .title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 28px; }
+    .eyebrow { color: var(--focus); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+    h1 { margin: 3px 0 5px; font-size: 23px; font-weight: 620; letter-spacing: .01em; }
+    .subtitle { margin: 0; color: var(--muted); max-width: 900px; }
+    .scope {
+      flex: 0 0 auto; max-width: 360px; padding: 9px 12px; border: 1px solid #48402f;
+      background: #1b1812; color: #c7b78f; border-radius: 7px; font-size: 12px;
+    }
+    .toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 18px; margin-top: 14px; }
+    .control { display: flex; align-items: center; gap: 7px; }
+    .control-label { color: var(--quiet); font-size: 12px; }
+    .segmented { display: inline-flex; border: 1px solid #353b44; border-radius: 7px; overflow: hidden; }
+    .segmented button, .plain-button {
+      appearance: none; border: 0; border-right: 1px solid #353b44; padding: 7px 11px;
+      background: #171a20; color: #aaa69e; cursor: pointer;
+    }
+    .segmented button:last-child { border-right: 0; }
+    .segmented button:hover, .plain-button:hover { background: #20242b; color: var(--text); }
+    .segmented button[aria-pressed="true"] { background: #2b3038; color: #fff5df; box-shadow: inset 0 -2px var(--focus); }
+    button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    .plain-button { border: 1px solid #353b44; border-radius: 7px; }
+    .summary { margin-left: auto; color: #b9b3a8; font-size: 12px; }
+    .summary strong { color: #f0dfba; font-weight: 600; }
+
+    .stage { padding: 14px 18px 18px; }
+    .canvas-shell { border: 1px solid var(--line); background: #0b0d10; border-radius: 9px; overflow: hidden; }
+    .canvas-head {
+      display: grid; grid-template-columns: minmax(250px, .65fr) minmax(440px, 1.35fr);
+      align-items: start; gap: 18px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: #13161b;
+    }
+    .mode-title { font-size: 15px; color: #f1e9da; }
+    .mode-note { margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .legend { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 5px 13px; color: #8f8b83; font-size: 11px; }
+    .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+    .swatch { width: 18px; height: 2px; display: inline-block; background: currentColor; }
+    .swatch.dashed { background: repeating-linear-gradient(90deg, currentColor 0 5px, transparent 5px 8px); }
+    .swatch.dot { width: 8px; height: 8px; border-radius: 50%; }
+    .map-wrap { position: relative; width: 100%; background: radial-gradient(circle at 50% 35%, #12161b 0%, #090b0e 72%); }
+    #graph { display: block; width: 100%; height: calc(100vh - 300px); min-height: 620px; max-height: 920px; }
+    .canvas-foot {
+      display: grid; grid-template-columns: 1.05fr 1.3fr; gap: 18px; min-height: 66px;
+      padding: 10px 14px; border-top: 1px solid var(--line); background: #13161b;
+    }
+    .checkpoint-note, .detail { color: #aaa59b; font-size: 12px; }
+    .checkpoint-note strong, .detail strong { color: #eee3d0; }
+    .detail { border-left: 1px solid #30353d; padding-left: 16px; }
+    .stamp { margin: 8px 2px 0; color: #66635d; font-size: 11px; }
+
+    .edge { fill: none; stroke-width: 1.35; opacity: .58; transition: opacity .12s, stroke-width .12s; }
+    .edge.latent { stroke: #60765d; }
+    .edge.prereq { stroke: #87929c; stroke-dasharray: 5 4; }
+    .edge.caught { stroke: var(--purple); stroke-width: 1.8; }
+    .edge.supports { stroke: #719060; opacity: .12; }
+    .edge.active { opacity: 1; stroke-width: 3; }
+    .edge.dim { opacity: .035; }
+
+    .node { cursor: pointer; opacity: 1; transition: opacity .12s; }
+    .node.dim { opacity: .16; }
+    .node text { pointer-events: none; }
+    .node:focus { outline: none; }
+    .node-label { fill: #e7e0d5; font-size: 12px; font-weight: 530; paint-order: stroke; stroke: #0b0d10; stroke-width: 4px; stroke-linejoin: round; }
+
+    .force-glyph { fill: #101419; stroke-width: 2; }
+    .node.obs .force-glyph { stroke: var(--blue); }
+    .node.finding .force-glyph { stroke: var(--orange); }
+    .node.axiom .force-glyph { stroke: var(--green); }
+    .island-node.negative .force-glyph, .island-node.suspended .force-glyph { stroke-dasharray: 3 3; }
+    .force-hit { fill: transparent; }
+    .force-ring { fill: none; stroke: transparent; stroke-width: 3; }
+    .node:focus .force-ring, .node.selected .force-ring { stroke: var(--focus); }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="title-row">
+      <div>
+        <div class="eyebrow">V3 layout probe · experimental</div>
+        <h1>“已知与推理”布局对照 v0</h1>
+        <p class="subtitle">同一局、同一批节点、同一批关系，只调整力导向的节点分布。看地图能否既保留自由探索，又帮助你追出“我为什么这样判断”。</p>
+      </div>
+      <div class="scope">这是可丢弃的布局探针。候选不分栏、不预告未来，也不改变证据、结论、行动顺序或四类关系。</div>
+    </div>
+    <div class="toolbar">
+      <div class="control">
+        <span class="control-label">内容状态</span>
+        <div class="segmented" id="checkpoint-controls" role="group" aria-label="选择内容快照"></div>
+      </div>
+      <div class="control">
+        <span class="control-label">布局</span>
+        <div class="segmented" id="layout-controls" role="group" aria-label="选择布局方案"></div>
+      </div>
+      <button class="plain-button" id="clear-focus" type="button">显示全部关系</button>
+      <div class="summary" id="summary"></div>
+    </div>
+  </header>
+
+  <main class="stage">
+    <section class="canvas-shell" aria-label="布局对照画布">
+      <div class="canvas-head">
+        <div>
+          <div class="mode-title" id="mode-title"></div>
+          <div class="mode-note" id="mode-note"></div>
+        </div>
+        <div class="legend" aria-label="图例">
+          <span class="legend-item" style="color:#72a6c2"><i class="swatch dot"></i>玩家取得的情报</span>
+          <span class="legend-item" style="color:#c7894a"><i class="swatch dot"></i>系统整理的局部判断</span>
+          <span class="legend-item" style="color:#82a968"><i class="swatch dot"></i>已经查实的结论</span>
+          <span class="legend-item" style="color:#60765d"><i class="swatch"></i>同一底层问题</span>
+          <span class="legend-item" style="color:#87929c"><i class="swatch dashed"></i>取得后者所需的前置条件</span>
+          <span class="legend-item" style="color:#b47bd0"><i class="swatch"></i>为既有证据补足解释条件</span>
+          <span class="legend-item" style="color:#719060"><i class="swatch"></i>支撑结论（选中时展开）</span>
+        </div>
+      </div>
+      <div class="map-wrap">
+        <svg id="graph" viewBox="0 0 1400 920" role="application" aria-label="可选择节点查看关系的知识图"></svg>
+      </div>
+      <div class="canvas-foot">
+        <div class="checkpoint-note" id="checkpoint-note"></div>
+        <div class="detail" id="detail"></div>
+      </div>
+    </section>
+    <div class="stamp" id="stamp"></div>
+  </main>
+
+  <script>
+  "use strict";
+  const PROBE = {"stamp":{"builtAt":"2026-09-04","sourceSha":{"fixtures":"B3ED4F357B8FB84EAAB4F14CAF4629E62BF11F9C44BEFA5AAD6730C3393E0FDD","solver":"E217CAF56A9961EA7C46151E1CA6B0546A6C408CCC8ECDDB21E4B9DA66EE72D1","case":"7F078BC68394B9238783080EE72E6DEC2CE514EA962829668A4443041805AA05","semantics":"397EAB3305DCE9EE5BF7E996B4C4E0C1CA081FF29BE0C2F54F6B5524CC85D833","session":"83D1DD707F9A4ACCFEB162C299387DFE3BEB6A720045C8E09A22939FDD0B1351","projection":"813364B256C5FE987BC95BFCF18BA05711DDF98276BBC9D284D3AAEEAA06417F","probeData":"BE4319B4E1D14579F80B864CDB871577E3348E7450D6DAF4C05364E8711D126C","layout":"CA7F989E459D52E5D79B6EDF681F96364D9C2BBD25D768FECF498ADFCB054BC8"},"canvas":{"width":1400,"height":920},"checkpoints":[{"step":6,"observations":6,"findings":2,"conclusions":1,"edges":14},{"step":12,"observations":12,"findings":2,"conclusions":2,"edges":21},{"step":22,"observations":22,"findings":4,"conclusions":4,"edges":43}]},"checkpoints":[{"step":6,"actionId":"A.IMAGE.XRAY","graph":{"nodes":[{"type":"obs","id":"obs.appearance.restore","state":"active","short":"外观被重整过的痕迹","gist":"纹饰与色差显示外观被重新整合过的那些地方。","actionId":"A.OBSERVE.REGION_DECOR","latents":["latent.repair-map"],"region":"declared-restored-zone","method":"visual"},{"type":"obs","id":"obs.corpus.identity","state":"active","short":"与同期真品的比对结果","gist":"这套制造特征放到同时代的真品里看,是常见还是罕见。","actionId":"A.COMPARE.CORPUS","latents":["latent.current-craft"],"region":"manufacture-comparison","method":"corpus"},{"type":"obs","id":"obs.current.base","state":"active","short":"底足痕迹","gist":"圈足与修足留下的成型痕迹 —— 制造工艺的指纹。","actionId":"A.OBSERVE.BASE","latents":["latent.current-craft"],"region":"base-and-inner","method":"visual"},{"type":"obs","id":"obs.current.whole","state":"active","short":"整只碗的样貌","gist":"器型与胎釉的整体面貌,加上肉眼看得见的动过手的地方分布在哪几块。","actionId":"A.OBSERVE.WHOLE","latents":["latent.current-craft","latent.repair-map"],"region":"whole-visible","method":"visual"},{"type":"obs","id":"obs.object.continuity","state":"active","short":"手里这只就是记录里那只","gist":"那些没被改动过的稳定特征对得上,所以手里这只与记录里那只是同一件。","actionId":"A.VERIFY.OBJECT_CONTINUITY","latents":["latent.object-match"],"region":"stable-anchors","method":"cross-time"},{"type":"obs","id":"obs.structure.xray.early","state":"caught","short":"釉下结构影像","gist":"多角度射线下一块一块拍出来的内部结构。","actionId":"A.IMAGE.XRAY","latents":["latent.repair-map"],"region":"declared-major-scope-multi-view-readable","method":"xray"}],"findings":[{"type":"finding","id":"F:latent.current-craft","latentId":"latent.current-craft","short":"这只碗是怎么做出来的","gist":"整体形制、底足修足、和同期真品的比对,说的都是同一件事:做这只碗的那套工艺习惯。它们互相印证,方向就硬;互相矛盾,说明至少有一处读错了 —— 矛盾本身也是情报。","members":["obs.corpus.identity","obs.current.base","obs.current.whole"]},{"type":"finding","id":"F:latent.repair-map","latentId":"latent.repair-map","short":"它被修过哪里","gist":"整体观察的干预分布、逐区纹饰色差、射线的结构读数,指向同一张哪儿动过的分布图。三者粒度不同:肉眼看外观,射线看结构,合起来才是完整的一张。","members":["obs.appearance.restore","obs.current.whole","obs.structure.xray.early"]}],"axioms":[{"type":"axiom","id":"AX:identity","claimId":"identity","short":"这只碗就是档案里记的那一只","line":"这只碗就是档案里记的那一只 —— 已经查实,不用再查","supports":["obs.corpus.identity","obs.current.base","obs.current.whole","obs.object.continuity"]}],"edges":[{"from":"obs.corpus.identity","to":"F:latent.current-craft","kind":"latent","note":"这只碗是怎么做出来的"},{"from":"obs.current.base","to":"F:latent.current-craft","kind":"latent","note":"这只碗是怎么做出来的"},{"from":"obs.current.whole","to":"F:latent.current-craft","kind":"latent","note":"这只碗是怎么做出来的"},{"from":"obs.appearance.restore","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.current.whole","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.structure.xray.early","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.current.whole","to":"obs.corpus.identity","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.current.base","to":"obs.corpus.identity","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.current.base","to":"obs.object.continuity","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.object.continuity","to":"obs.structure.xray.early","kind":"caught","note":"箭尾这条后来到手,才让箭头那条有了意义"},{"from":"obs.corpus.identity","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.current.base","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.current.whole","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.object.continuity","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"}],"components":[["AX:identity","F:latent.current-craft","F:latent.repair-map","obs.appearance.restore","obs.corpus.identity","obs.current.base","obs.current.whole","obs.object.continuity","obs.structure.xray.early"]]},"counts":{"observations":6,"findings":2,"conclusions":1,"edges":14},"label":"少量内容","note":"关系刚刚成形：看两处局部判断是否各自聚成可辨认的小簇。","layouts":{"force":{"positions":{"obs.current.whole":{"x":554.2320256151131,"y":560.0659850405335,"role":"obs"},"obs.current.base":{"x":929.6400828106468,"y":545.2643116174442,"role":"obs"},"F:latent.current-craft":{"x":737.4779551143436,"y":685.2480325922761,"role":"finding"},"obs.appearance.restore":{"x":399.2733721826303,"y":163.77390308609816,"role":"obs"},"F:latent.repair-map":{"x":495.96409188156497,"y":343.1848390052576,"role":"finding"},"obs.corpus.identity":{"x":714.6377070601193,"y":434.0717230447274,"role":"obs"},"AX:identity":{"x":765.9546670246934,"y":562.0668169241839,"role":"axiom"},"obs.object.continuity":{"x":878.6013621824296,"y":344.47513655483067,"role":"obs"},"obs.structure.xray.early":{"x":690.3181284484094,"y":219.5559043662256,"role":"obs"}}},"islands":{"positions":{"AX:identity":{"x":328.07,"y":680.49,"width":164.79999999999995,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["这只碗就是档案里记的那一只"],"labelY":-18,"role":"axiom"},"F:latent.current-craft":{"x":791.21,"y":435.66,"width":129.99999999999997,"height":52,"boxOffsetX":0,"boxOffsetY":-8,"labelLines":["这只碗是怎么做出来的"],"labelY":-18,"role":"finding"},"F:latent.repair-map":{"x":561.78,"y":503.73,"width":83.6,"height":52,"boxOffsetX":0,"boxOffsetY":-8,"labelLines":["它被修过哪里"],"labelY":-18,"role":"finding"},"obs.appearance.restore":{"x":418.36,"y":420.42,"width":118.39999999999998,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["外观被重整过的痕迹"],"labelY":-18,"role":"obs"},"obs.corpus.identity":{"x":886.56,"y":326.1,"width":129.99999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["与同期真品的比对结果"],"labelY":-18,"role":"obs"},"obs.current.base":{"x":868.19,"y":567.23,"width":60.4,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["底足痕迹"],"labelY":-18,"role":"obs"},"obs.current.whole":{"x":652.17,"y":365.18,"width":83.6,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["整只碗的样貌"],"labelY":-18,"role":"obs"},"obs.object.continuity":{"x":841.46,"y":780.68,"width":141.59999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["手里这只就是记录里那只"],"labelY":-18,"role":"obs"},"obs.structure.xray.early":{"x":652.01,"y":653.59,"width":83.6,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["釉下结构影像"],"labelY":-18,"role":"obs"}},"islands":[{"id":"F:latent.current-craft","members":["F:latent.current-craft","F:latent.repair-map","obs.appearance.restore","obs.corpus.identity","obs.current.base","obs.current.whole","obs.object.continuity","obs.structure.xray.early"]},{"id":"AX:identity","members":["AX:identity"]}],"newNodeIds":["obs.structure.xray.early"],"affectedNodeIds":["F:latent.current-craft","F:latent.repair-map","obs.appearance.restore","obs.corpus.identity","obs.current.base","obs.current.whole","obs.object.continuity","obs.structure.xray.early"],"softAnchoredNodeIds":["AX:identity","F:latent.current-craft","F:latent.repair-map","obs.appearance.restore","obs.corpus.identity","obs.current.base","obs.current.whole","obs.object.continuity"]}}},{"step":12,"actionId":"A.RESEARCH.LATE_TREATMENT","graph":{"nodes":[{"type":"obs","id":"obs.accident.major","state":"active","short":"那一组事故记录","gist":"几份彼此不矛盾的记录,描述了一次严重损坏和随后的修补。","actionId":"A.RESEARCH.ACCIDENT","latents":["latent.accident-event"],"region":"declared-record-group","method":"archive"},{"type":"obs","id":"obs.appearance.restore","state":"active","short":"外观被重整过的痕迹","gist":"纹饰与色差显示外观被重新整合过的那些地方。","actionId":"A.OBSERVE.REGION_DECOR","latents":["latent.repair-map"],"region":"declared-restored-zone","method":"visual"},{"type":"obs","id":"obs.archive.t2.current-corroboration","state":"active","short":"事故记录在这只碗上对上了","gist":"记录里写的那次修补,在这只碗上找得到对应的痕迹。","actionId":"A.CORROBORATE.ARCHIVE.T2_CURRENT","latents":["latent.archive-t2-event-relation"],"region":"declared-major-scope","method":"record-current"},{"type":"obs","id":"obs.archive.t2.object-attribution","state":"active","short":"事故记录说的是这只碗","gist":"那组事故记录讲的就是手里这一只,不是同类的另一只。","actionId":"A.RELATE.ARCHIVE.T2_TO_OBJECT","latents":["latent.archive-t2-object-relation"],"region":"stable-noncomposition-anchors","method":"object-attribution"},{"type":"obs","id":"obs.corpus.identity","state":"active","short":"与同期真品的比对结果","gist":"这套制造特征放到同时代的真品里看,是常见还是罕见。","actionId":"A.COMPARE.CORPUS","latents":["latent.current-craft"],"region":"manufacture-comparison","method":"corpus"},{"type":"obs","id":"obs.current.base","state":"active","short":"底足痕迹","gist":"圈足与修足留下的成型痕迹 —— 制造工艺的指纹。","actionId":"A.OBSERVE.BASE","latents":["latent.current-craft"],"region":"base-and-inner","method":"visual"},{"type":"obs","id":"obs.current.whole","state":"active","short":"整只碗的样貌","gist":"器型与胎釉的整体面貌,加上肉眼看得见的动过手的地方分布在哪几块。","actionId":"A.OBSERVE.WHOLE","latents":["latent.current-craft","latent.repair-map"],"region":"whole-visible","method":"visual"},{"type":"obs","id":"obs.object.continuity","state":"active","short":"手里这只就是记录里那只","gist":"那些没被改动过的稳定特征对得上,所以手里这只与记录里那只是同一件。","actionId":"A.VERIFY.OBJECT_CONTINUITY","latents":["latent.object-match"],"region":"stable-anchors","method":"cross-time"},{"type":"obs","id":"obs.phase.t1","state":"caught","short":"出事之前的影像","gist":"一张更早时候的样子,可以拿来当比较的底子。","actionId":"A.LOCATE.HISTORIC_IMAGE","latents":["latent.pre-accident-reading"],"region":"declared-time-anchor","method":"archive"},{"type":"obs","id":"obs.phase.t3","state":"active","short":"更晚的一批处理记录","gist":"时间更靠后的一批处理记录,说明后来还有人动过它。","actionId":"A.RESEARCH.LATE_TREATMENT","latents":["latent.treatment-scope"],"region":"declared-treatment-records","method":"archive"},{"type":"obs","id":"obs.structure.major.cross-time","state":"active","short":"两个时候的结构差别","gist":"把两个时候的内部结构一块一块摆在一起,哪里变了看得见。","actionId":"A.MAP.REGION_CONTINUITY","latents":["latent.repair-map"],"region":"declared-major-scope","method":"cross-time"},{"type":"obs","id":"obs.structure.xray.early","state":"caught","short":"釉下结构影像","gist":"多角度射线下一块一块拍出来的内部结构。","actionId":"A.IMAGE.XRAY","latents":["latent.repair-map"],"region":"declared-major-scope-multi-view-readable","method":"xray"}],"findings":[{"type":"finding","id":"F:latent.current-craft","latentId":"latent.current-craft","short":"这只碗是怎么做出来的","gist":"整体形制、底足修足、和同期真品的比对,说的都是同一件事:做这只碗的那套工艺习惯。它们互相印证,方向就硬;互相矛盾,说明至少有一处读错了 —— 矛盾本身也是情报。","members":["obs.corpus.identity","obs.current.base","obs.current.whole"]},{"type":"finding","id":"F:latent.repair-map","latentId":"latent.repair-map","short":"它被修过哪里","gist":"整体观察的干预分布、逐区纹饰色差、射线的结构读数,指向同一张哪儿动过的分布图。三者粒度不同:肉眼看外观,射线看结构,合起来才是完整的一张。","members":["obs.appearance.restore","obs.current.whole","obs.structure.major.cross-time","obs.structure.xray.early"]}],"axioms":[{"type":"axiom","id":"AX:identity","claimId":"identity","short":"这只碗就是档案里记的那一只","line":"这只碗就是档案里记的那一只 —— 已经查实,不用再查","supports":["obs.corpus.identity","obs.current.base","obs.current.whole","obs.object.continuity"]},{"type":"axiom","id":"AX:majorReassembly","claimId":"majorReassembly","short":"这只碗被大改过","line":"这只碗被大改过 —— 已经查实,不用再查","supports":["obs.accident.major","obs.archive.t2.current-corroboration","obs.current.whole","obs.structure.major.cross-time","obs.structure.xray.early"]}],"edges":[{"from":"obs.corpus.identity","to":"F:latent.current-craft","kind":"latent","note":"这只碗是怎么做出来的"},{"from":"obs.current.base","to":"F:latent.current-craft","kind":"latent","note":"这只碗是怎么做出来的"},{"from":"obs.current.whole","to":"F:latent.current-craft","kind":"latent","note":"这只碗是怎么做出来的"},{"from":"obs.appearance.restore","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.current.whole","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.structure.major.cross-time","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.structure.xray.early","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.current.whole","to":"obs.corpus.identity","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.current.base","to":"obs.corpus.identity","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.current.base","to":"obs.object.continuity","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.object.continuity","to":"obs.phase.t1","kind":"caught","note":"箭尾这条后来到手,才让箭头那条有了意义"},{"from":"obs.object.continuity","to":"obs.structure.xray.early","kind":"caught","note":"箭尾这条后来到手,才让箭头那条有了意义"},{"from":"obs.corpus.identity","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.current.base","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.current.whole","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.object.continuity","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.accident.major","to":"AX:majorReassembly","kind":"supports","note":"这只碗被大改过"},{"from":"obs.archive.t2.current-corroboration","to":"AX:majorReassembly","kind":"supports","note":"这只碗被大改过"},{"from":"obs.current.whole","to":"AX:majorReassembly","kind":"supports","note":"这只碗被大改过"},{"from":"obs.structure.major.cross-time","to":"AX:majorReassembly","kind":"supports","note":"这只碗被大改过"},{"from":"obs.structure.xray.early","to":"AX:majorReassembly","kind":"supports","note":"这只碗被大改过"}],"components":[["AX:identity","AX:majorReassembly","F:latent.current-craft","F:latent.repair-map","obs.accident.major","obs.appearance.restore","obs.archive.t2.current-corroboration","obs.corpus.identity","obs.current.base","obs.current.whole","obs.object.continuity","obs.phase.t1","obs.structure.major.cross-time","obs.structure.xray.early"],["obs.archive.t2.object-attribution"],["obs.phase.t3"]]},"counts":{"observations":12,"findings":2,"conclusions":2,"edges":21},"label":"关系成形","note":"另一批档案证据加入：看新内容是否只扰动相关邻域，而非冲散整张地图。","layouts":{"force":{"positions":{"obs.current.whole":{"x":547.5892557338749,"y":590.3595289391097,"role":"obs"},"obs.current.base":{"x":865.3391491826899,"y":740.9865679669911,"role":"obs"},"F:latent.current-craft":{"x":607.835588623201,"y":838.9385676471242,"role":"finding"},"obs.appearance.restore":{"x":274.1910114572208,"y":249.0816092945551,"role":"obs"},"F:latent.repair-map":{"x":474.2697242447393,"y":352.82723774539215,"role":"finding"},"obs.corpus.identity":{"x":694.1082009359202,"y":720.5052985684043,"role":"obs"},"AX:identity":{"x":765.9546670246934,"y":562.0668169241839,"role":"axiom"},"obs.object.continuity":{"x":950.5045714934148,"y":508.14490894460533,"role":"obs"},"obs.structure.xray.early":{"x":778.7078872791502,"y":307.494088771741,"role":"obs"},"obs.structure.major.cross-time":{"x":357.29678129348224,"y":488.4228694619717,"role":"obs"},"AX:majorReassembly":{"x":582.5094924593751,"y":354.0145157836917,"role":"axiom"},"obs.accident.major":{"x":508.24701212108204,"y":130.23431220231828,"role":"obs"},"obs.archive.t2.object-attribution":{"x":1165.3458812182582,"y":92.67012764178722,"role":"obs"},"obs.archive.t2.current-corroboration":{"x":707.9893602808329,"y":131.86299916315835,"role":"obs"},"obs.phase.t1":{"x":1146.967953941788,"y":441.5580135626446,"role":"obs"},"obs.phase.t3":{"x":738.3935279676766,"y":430.69636037968087,"role":"obs"}}},"islands":{"positions":{"AX:identity":{"x":325.87,"y":685.05,"width":164.79999999999995,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["这只碗就是档案里记的那一只"],"labelY":-18,"role":"axiom"},"AX:majorReassembly":{"x":1187.65,"y":440.72,"width":95.19999999999999,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["这只碗被大改过"],"labelY":-18,"role":"axiom"},"F:latent.current-craft":{"x":797.22,"y":394.82,"width":129.99999999999997,"height":52,"boxOffsetX":0,"boxOffsetY":-8,"labelLines":["这只碗是怎么做出来的"],"labelY":-18,"role":"finding"},"F:latent.repair-map":{"x":548.65,"y":473.6,"width":83.6,"height":52,"boxOffsetX":0,"boxOffsetY":-8,"labelLines":["它被修过哪里"],"labelY":-18,"role":"finding"},"obs.accident.major":{"x":1334.4,"y":726.92,"width":95.19999999999999,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["那一组事故记录"],"labelY":-18,"role":"obs"},"obs.appearance.restore":{"x":409.88,"y":381.55,"width":118.39999999999998,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["外观被重整过的痕迹"],"labelY":-18,"role":"obs"},"obs.archive.t2.current-corroboration":{"x":1122.15,"y":52,"width":153.19999999999996,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["事故记录在这只碗上对上了"],"labelY":-18,"role":"obs"},"obs.archive.t2.object-attribution":{"x":83,"y":527.34,"width":129.99999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["事故记录说的是这只碗"],"labelY":-18,"role":"obs"},"obs.corpus.identity":{"x":873.03,"y":275.54,"width":129.99999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["与同期真品的比对结果"],"labelY":-18,"role":"obs"},"obs.current.base":{"x":878.4,"y":532.16,"width":60.4,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["底足痕迹"],"labelY":-18,"role":"obs"},"obs.current.whole":{"x":647.99,"y":333.99,"width":83.6,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["整只碗的样貌"],"labelY":-18,"role":"obs"},"obs.object.continuity":{"x":782.37,"y":762.95,"width":141.59999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["手里这只就是记录里那只"],"labelY":-18,"role":"obs"},"obs.phase.t1":{"x":983.1,"y":787.24,"width":95.19999999999999,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["出事之前的影像"],"labelY":-18,"role":"obs"},"obs.phase.t3":{"x":437.84,"y":885,"width":118.39999999999998,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["更晚的一批处理记录"],"labelY":-18,"role":"obs"},"obs.structure.major.cross-time":{"x":696.82,"y":523.02,"width":118.39999999999998,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["两个时候的结构差别"],"labelY":-18,"role":"obs"},"obs.structure.xray.early":{"x":606.35,"y":642.34,"width":83.6,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["釉下结构影像"],"labelY":-18,"role":"obs"}},"islands":[{"id":"F:latent.current-craft","members":["F:latent.current-craft","F:latent.repair-map","obs.appearance.restore","obs.corpus.identity","obs.current.base","obs.current.whole","obs.object.continuity","obs.phase.t1","obs.structure.major.cross-time","obs.structure.xray.early"]},{"id":"AX:identity","members":["AX:identity"]},{"id":"AX:majorReassembly","members":["AX:majorReassembly"]},{"id":"obs.accident.major","members":["obs.accident.major"]},{"id":"obs.archive.t2.current-corroboration","members":["obs.archive.t2.current-corroboration"]},{"id":"obs.archive.t2.object-attribution","members":["obs.archive.t2.object-attribution"]},{"id":"obs.phase.t3","members":["obs.phase.t3"]}],"newNodeIds":["obs.phase.t3"],"affectedNodeIds":["obs.phase.t3"],"softAnchoredNodeIds":["AX:identity","AX:majorReassembly","F:latent.current-craft","F:latent.repair-map","obs.accident.major","obs.appearance.restore","obs.archive.t2.current-corroboration","obs.archive.t2.object-attribution","obs.corpus.identity","obs.current.base","obs.current.whole","obs.object.continuity","obs.phase.t1","obs.structure.major.cross-time","obs.structure.xray.early"]}}},{"step":22,"actionId":"A.COMPARE.CORPUS.RECHECK","graph":{"nodes":[{"type":"obs","id":"obs.accident.major","state":"active","short":"那一组事故记录","gist":"几份彼此不矛盾的记录,描述了一次严重损坏和随后的修补。","actionId":"A.RESEARCH.ACCIDENT","latents":["latent.accident-event"],"region":"declared-record-group","method":"archive"},{"type":"obs","id":"obs.appearance.restore","state":"active","short":"外观被重整过的痕迹","gist":"纹饰与色差显示外观被重新整合过的那些地方。","actionId":"A.OBSERVE.REGION_DECOR","latents":["latent.repair-map"],"region":"declared-restored-zone","method":"visual"},{"type":"obs","id":"obs.archive.t2.current-corroboration","state":"active","short":"事故记录在这只碗上对上了","gist":"记录里写的那次修补,在这只碗上找得到对应的痕迹。","actionId":"A.CORROBORATE.ARCHIVE.T2_CURRENT","latents":["latent.archive-t2-event-relation"],"region":"declared-major-scope","method":"record-current"},{"type":"obs","id":"obs.archive.t2.object-attribution","state":"active","short":"事故记录说的是这只碗","gist":"那组事故记录讲的就是手里这一只,不是同类的另一只。","actionId":"A.RELATE.ARCHIVE.T2_TO_OBJECT","latents":["latent.archive-t2-object-relation"],"region":"stable-noncomposition-anchors","method":"object-attribution"},{"type":"obs","id":"obs.archive.t3.current-corroboration","state":"active","short":"后期处理在这只碗上对上了","gist":"那批后期处理,在这只碗对应的地方找得到。","actionId":"A.CORROBORATE.ARCHIVE.T3_CURRENT","latents":["latent.archive-t3-event-relation"],"region":"declared-treatment-scope","method":"record-current"},{"type":"obs","id":"obs.archive.t3.object-attribution","state":"active","short":"后期记录说的是这只碗","gist":"那批更晚的记录讲的也是手里这一只。","actionId":"A.RELATE.ARCHIVE.T3_TO_OBJECT","latents":["latent.archive-t3-object-relation"],"region":"stable-noncomposition-anchors","method":"object-attribution"},{"type":"obs","id":"obs.corpus.identity","state":"active","short":"与同期真品的比对结果","gist":"这套制造特征放到同时代的真品里看,是常见还是罕见。","actionId":"A.COMPARE.CORPUS","latents":["latent.current-craft"],"region":"manufacture-comparison","method":"corpus"},{"type":"obs","id":"obs.corpus.identity.repeat","state":"active","short":"换一批真品复核(结论没变)","gist":"换一批同期真品再比一次,结论与上次一致 —— 是本局经历,但不额外加分。","actionId":"A.COMPARE.CORPUS.RECHECK","latents":["latent.current-craft"],"region":"manufacture-comparison","method":"corpus"},{"type":"obs","id":"obs.current.base","state":"active","short":"底足痕迹","gist":"圈足与修足留下的成型痕迹 —— 制造工艺的指纹。","actionId":"A.OBSERVE.BASE","latents":["latent.current-craft"],"region":"base-and-inner","method":"visual"},{"type":"obs","id":"obs.current.whole","state":"active","short":"整只碗的样貌","gist":"器型与胎釉的整体面貌,加上肉眼看得见的动过手的地方分布在哪几块。","actionId":"A.OBSERVE.WHOLE","latents":["latent.current-craft","latent.repair-map"],"region":"whole-visible","method":"visual"},{"type":"obs","id":"obs.documentation.resolved","state":"active","short":"来源链查到哪一步为止","gist":"经手记录能追到哪一步,而且这一段里没有互相打架的文件。","actionId":"A.TRACE.PROVENANCE_CHAIN","latents":["latent.event-chain"],"region":"declared-document-boundary","method":"archive"},{"type":"obs","id":"obs.key-material.layer-sequence","state":"active","short":"各层的先后顺序","gist":"一层层上去的先后 —— 谁压在谁上面。","actionId":"A.INSPECT.MATERIAL.LAYER_SEQUENCE","latents":["latent.region-map"],"region":"declared-layer-interface-points","method":"micro-layering"},{"type":"obs","id":"obs.key-material.substrate-readings","state":"active","short":"关键几处的底子是什么","gist":"要紧那几处底下究竟是原来的瓷,还是后来补起来的。","actionId":"A.ANALYZE.MATERIAL.SUBSTRATE","latents":["latent.region-map"],"region":"declared-key-material-points","method":"point-analysis"},{"type":"obs","id":"obs.object.continuity","state":"active","short":"手里这只就是记录里那只","gist":"那些没被改动过的稳定特征对得上,所以手里这只与记录里那只是同一件。","actionId":"A.VERIFY.OBJECT_CONTINUITY","latents":["latent.object-match"],"region":"stable-anchors","method":"cross-time"},{"type":"obs","id":"obs.phase.t1","state":"caught","short":"出事之前的影像","gist":"一张更早时候的样子,可以拿来当比较的底子。","actionId":"A.LOCATE.HISTORIC_IMAGE","latents":["latent.pre-accident-reading"],"region":"declared-time-anchor","method":"archive"},{"type":"obs","id":"obs.phase.t3","state":"active","short":"更晚的一批处理记录","gist":"时间更靠后的一批处理记录,说明后来还有人动过它。","actionId":"A.RESEARCH.LATE_TREATMENT","latents":["latent.treatment-scope"],"region":"declared-treatment-records","method":"archive"},{"type":"obs","id":"obs.stability.resolved","state":"active","short":"结不结实,已经说得出来","gist":"受力怎么传、能不能摆出来展，都评估过了。","actionId":"A.ASSESS.TREATED_AND_UNTREATED","latents":["latent.condition-session"],"region":"declared-load-paths-supported-static-display","method":"condition"},{"type":"obs","id":"obs.structure.major.cross-time","state":"active","short":"两个时候的结构差别","gist":"把两个时候的内部结构一块一块摆在一起,哪里变了看得见。","actionId":"A.MAP.REGION_CONTINUITY","latents":["latent.repair-map"],"region":"declared-major-scope","method":"cross-time"},{"type":"obs","id":"obs.structure.xray.early","state":"caught","short":"釉下结构影像","gist":"多角度射线下一块一块拍出来的内部结构。","actionId":"A.IMAGE.XRAY","latents":["latent.repair-map"],"region":"declared-major-scope-multi-view-readable","method":"xray"},{"type":"obs","id":"obs.surface.no-signal.unresolved","state":"suspended","short":"紫外没照出补绘(还不能当证据)","gist":"没照出补绘的迹象,但这一次照的灵敏度不够,所以还不能据此说「没有补绘」。","actionId":"A.SCREEN.UV","latents":["latent.surface-map"],"region":"declared-screen-zone","method":"uv-screen"},{"type":"obs","id":"obs.surface.point-layering","state":"active","short":"试窗点上的层次关系","gist":"开窗的那几个点上,补绘压在哪一层之上,由此定出后加的和原有的谁先谁后。","actionId":"A.INSPECT.WINDOWS","latents":["latent.surface-map"],"region":"declared-surface-points","method":"layering"},{"type":"obs","id":"obs.surface.resolved","state":"active","short":"补绘范围有多大,已经说得出来","gist":"把各个点连成片,补绘覆盖多大范围现在有答案了。","actionId":"A.SYNTHESIZE.SURFACE_REGIONS","latents":["latent.surface-map"],"region":"declared-surface-regions","method":"regional-synthesis"}],"findings":[{"type":"finding","id":"F:latent.current-craft","latentId":"latent.current-craft","short":"这只碗是怎么做出来的","gist":"整体形制、底足修足、和同期真品的比对,说的都是同一件事:做这只碗的那套工艺习惯。它们互相印证,方向就硬;互相矛盾,说明至少有一处读错了 —— 矛盾本身也是情报。","members":["obs.corpus.identity","obs.corpus.identity.repeat","obs.current.base","obs.current.whole"]},{"type":"finding","id":"F:latent.region-map","latentId":"latent.region-map","short":"关键区是原片还是重建","gist":"点位基底分析与微观层序检查落在同一批关键区上,一个问这里是什么,一个问按什么次序形成。","members":["obs.key-material.layer-sequence","obs.key-material.substrate-readings"]},{"type":"finding","id":"F:latent.repair-map","latentId":"latent.repair-map","short":"它被修过哪里","gist":"整体观察的干预分布、逐区纹饰色差、射线的结构读数,指向同一张哪儿动过的分布图。三者粒度不同:肉眼看外观,射线看结构,合起来才是完整的一张。","members":["obs.appearance.restore","obs.current.whole","obs.structure.major.cross-time","obs.structure.xray.early"]},{"type":"finding","id":"F:latent.surface-map","latentId":"latent.surface-map","short":"表面这层是什么状况","gist":"紫外筛查、试窗点位、区域综合都在描述表面这一层。筛查挑地方,试窗定性质,综合定范围。","members":["obs.surface.point-layering","obs.surface.resolved"]}],"axioms":[{"type":"axiom","id":"AX:coherentDecisionProfile","claimId":"coherentDecisionProfile","short":"整份判断内部不矛盾","line":"整份判断内部不矛盾 —— 已经查实,不用再查","supports":["obs.documentation.resolved","obs.key-material.layer-sequence","obs.key-material.substrate-readings","obs.stability.resolved","obs.surface.point-layering","obs.surface.resolved"]},{"type":"axiom","id":"AX:identity","claimId":"identity","short":"这只碗就是档案里记的那一只","line":"这只碗就是档案里记的那一只 —— 已经查实,不用再查","supports":["obs.corpus.identity","obs.corpus.identity.repeat","obs.current.base","obs.current.whole","obs.object.continuity"]},{"type":"axiom","id":"AX:majorReassembly","claimId":"majorReassembly","short":"这只碗被大改过","line":"这只碗被大改过 —— 已经查实,不用再查","supports":["obs.accident.major","obs.archive.t2.current-corroboration","obs.current.whole","obs.structure.major.cross-time","obs.structure.xray.early"]},{"type":"axiom","id":"AX:threePhase","claimId":"threePhase","short":"改动分三次发生,不是一次","line":"改动分三次发生,不是一次 —— 已经查实,不用再查","supports":["obs.accident.major","obs.archive.t2.current-corroboration","obs.archive.t2.object-attribution","obs.archive.t3.current-corroboration","obs.archive.t3.object-attribution","obs.phase.t1","obs.phase.t3"]}],"edges":[{"from":"obs.corpus.identity","to":"F:latent.current-craft","kind":"latent","note":"这只碗是怎么做出来的"},{"from":"obs.corpus.identity.repeat","to":"F:latent.current-craft","kind":"latent","note":"这只碗是怎么做出来的"},{"from":"obs.current.base","to":"F:latent.current-craft","kind":"latent","note":"这只碗是怎么做出来的"},{"from":"obs.current.whole","to":"F:latent.current-craft","kind":"latent","note":"这只碗是怎么做出来的"},{"from":"obs.key-material.layer-sequence","to":"F:latent.region-map","kind":"latent","note":"关键区是原片还是重建"},{"from":"obs.key-material.substrate-readings","to":"F:latent.region-map","kind":"latent","note":"关键区是原片还是重建"},{"from":"obs.appearance.restore","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.current.whole","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.structure.major.cross-time","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.structure.xray.early","to":"F:latent.repair-map","kind":"latent","note":"它被修过哪里"},{"from":"obs.surface.point-layering","to":"F:latent.surface-map","kind":"latent","note":"表面这层是什么状况"},{"from":"obs.surface.resolved","to":"F:latent.surface-map","kind":"latent","note":"表面这层是什么状况"},{"from":"obs.current.whole","to":"obs.corpus.identity","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.current.base","to":"obs.corpus.identity","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.current.whole","to":"obs.corpus.identity.repeat","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.current.base","to":"obs.corpus.identity.repeat","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.object.continuity","to":"obs.documentation.resolved","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.current.base","to":"obs.object.continuity","kind":"prereq","note":"箭尾那条先到手,箭头那条才拿得到"},{"from":"obs.object.continuity","to":"obs.phase.t1","kind":"caught","note":"箭尾这条后来到手,才让箭头那条有了意义"},{"from":"obs.object.continuity","to":"obs.structure.xray.early","kind":"caught","note":"箭尾这条后来到手,才让箭头那条有了意义"},{"from":"obs.documentation.resolved","to":"AX:coherentDecisionProfile","kind":"supports","note":"整份判断内部不矛盾"},{"from":"obs.key-material.layer-sequence","to":"AX:coherentDecisionProfile","kind":"supports","note":"整份判断内部不矛盾"},{"from":"obs.key-material.substrate-readings","to":"AX:coherentDecisionProfile","kind":"supports","note":"整份判断内部不矛盾"},{"from":"obs.stability.resolved","to":"AX:coherentDecisionProfile","kind":"supports","note":"整份判断内部不矛盾"},{"from":"obs.surface.point-layering","to":"AX:coherentDecisionProfile","kind":"supports","note":"整份判断内部不矛盾"},{"from":"obs.surface.resolved","to":"AX:coherentDecisionProfile","kind":"supports","note":"整份判断内部不矛盾"},{"from":"obs.corpus.identity","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.corpus.identity.repeat","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.current.base","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.current.whole","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.object.continuity","to":"AX:identity","kind":"supports","note":"这只碗就是档案里记的那一只"},{"from":"obs.accident.major","to":"AX:majorReassembly","kind":"supports","note":"这只碗被大改过"},{"from":"obs.archive.t2.current-corroboration","to":"AX:majorReassembly","kind":"supports","note":"这只碗被大改过"},{"from":"obs.current.whole","to":"AX:majorReassembly","kind":"supports","note":"这只碗被大改过"},{"from":"obs.structure.major.cross-time","to":"AX:majorReassembly","kind":"supports","note":"这只碗被大改过"},{"from":"obs.structure.xray.early","to":"AX:majorReassembly","kind":"supports","note":"这只碗被大改过"},{"from":"obs.accident.major","to":"AX:threePhase","kind":"supports","note":"改动分三次发生,不是一次"},{"from":"obs.archive.t2.current-corroboration","to":"AX:threePhase","kind":"supports","note":"改动分三次发生,不是一次"},{"from":"obs.archive.t2.object-attribution","to":"AX:threePhase","kind":"supports","note":"改动分三次发生,不是一次"},{"from":"obs.archive.t3.current-corroboration","to":"AX:threePhase","kind":"supports","note":"改动分三次发生,不是一次"},{"from":"obs.archive.t3.object-attribution","to":"AX:threePhase","kind":"supports","note":"改动分三次发生,不是一次"},{"from":"obs.phase.t1","to":"AX:threePhase","kind":"supports","note":"改动分三次发生,不是一次"},{"from":"obs.phase.t3","to":"AX:threePhase","kind":"supports","note":"改动分三次发生,不是一次"}],"components":[["AX:coherentDecisionProfile","AX:identity","AX:majorReassembly","AX:threePhase","F:latent.current-craft","F:latent.region-map","F:latent.repair-map","F:latent.surface-map","obs.accident.major","obs.appearance.restore","obs.archive.t2.current-corroboration","obs.archive.t2.object-attribution","obs.archive.t3.current-corroboration","obs.archive.t3.object-attribution","obs.corpus.identity","obs.corpus.identity.repeat","obs.current.base","obs.current.whole","obs.documentation.resolved","obs.key-material.layer-sequence","obs.key-material.substrate-readings","obs.object.continuity","obs.phase.t1","obs.phase.t3","obs.stability.resolved","obs.structure.major.cross-time","obs.structure.xray.early","obs.surface.point-layering","obs.surface.resolved"],["obs.surface.no-signal.unresolved"]]},"counts":{"observations":22,"findings":4,"conclusions":4,"edges":43},"label":"完整内容","note":"全部内容在场：看主簇、小簇与暂未接上的点能否同时保持可读。","layouts":{"force":{"positions":{"obs.current.whole":{"x":497.43063102005476,"y":532.7316927240153,"role":"obs"},"obs.current.base":{"x":650.324801142351,"y":779.3576944343794,"role":"obs"},"F:latent.current-craft":{"x":435.85853580845185,"y":725.8840835292763,"role":"finding"},"obs.appearance.restore":{"x":295.9219924428389,"y":223.14462905397497,"role":"obs"},"F:latent.repair-map":{"x":442.0807448669484,"y":340.34164958612456,"role":"finding"},"obs.corpus.identity":{"x":552.9322948217075,"y":699.7666769410041,"role":"obs"},"AX:identity":{"x":765.9546670246934,"y":562.0668169241839,"role":"axiom"},"obs.object.continuity":{"x":742.7777405212616,"y":654.673167422584,"role":"obs"},"obs.structure.xray.early":{"x":604.235806991882,"y":481.950808511161,"role":"obs"},"obs.structure.major.cross-time":{"x":350.7519022049363,"y":435.7000730931512,"role":"obs"},"AX:majorReassembly":{"x":582.5094924593751,"y":354.0145157836917,"role":"axiom"},"obs.accident.major":{"x":752.9803897721958,"y":295.90259309509827,"role":"obs"},"obs.archive.t2.object-attribution":{"x":902.1833498311295,"y":67.79940766823326,"role":"obs"},"obs.archive.t2.current-corroboration":{"x":683.8618380172683,"y":193.6270086825181,"role":"obs"},"obs.phase.t1":{"x":841.341620072672,"y":442.04995476203084,"role":"obs"},"obs.phase.t3":{"x":1091.4003068412064,"y":232.62649887164528,"role":"obs"},"obs.archive.t3.object-attribution":{"x":1035.5487654863462,"y":81.46145170025945,"role":"obs"},"obs.archive.t3.current-corroboration":{"x":776.0615681454857,"y":78.33662646884886,"role":"obs"},"AX:threePhase":{"x":939.9251671458329,"y":241.09973344034577,"role":"axiom"},"obs.key-material.substrate-readings":{"x":976.7466739444686,"y":819.0331546268346,"role":"obs"},"obs.key-material.layer-sequence":{"x":1196.6267753775012,"y":725.6692455928419,"role":"obs"},"F:latent.region-map":{"x":1124.0829353848853,"y":854.9110834964376,"role":"finding"},"obs.surface.point-layering":{"x":1152.2910159946712,"y":471.02768745656573,"role":"obs"},"obs.surface.resolved":{"x":1136.3449152367166,"y":629.3495846982796,"role":"obs"},"F:latent.surface-map":{"x":1283.9661663277327,"y":557.4246524717757,"role":"finding"},"obs.surface.no-signal.unresolved":{"x":1271.521465735122,"y":158.90399842658863,"role":"obs"},"obs.stability.resolved":{"x":1013.7054178448003,"y":433.10381774242705,"role":"obs"},"obs.documentation.resolved":{"x":867.9561017431436,"y":745.8126110228292,"role":"obs"},"AX:coherentDecisionProfile":{"x":1022.19651686306,"y":615.1405436099054,"role":"axiom"},"obs.corpus.identity.repeat":{"x":603.5624454560734,"y":624.4252723022892,"role":"obs"}}},"islands":{"positions":{"AX:coherentDecisionProfile":{"x":1065.57,"y":593.77,"width":118.39999999999998,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["整份判断内部不矛盾"],"labelY":-18,"role":"axiom"},"AX:identity":{"x":333.7,"y":710.54,"width":164.79999999999995,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["这只碗就是档案里记的那一只"],"labelY":-18,"role":"axiom"},"AX:majorReassembly":{"x":1203.83,"y":431.79,"width":95.19999999999999,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["这只碗被大改过"],"labelY":-18,"role":"axiom"},"AX:threePhase":{"x":233.91,"y":303.44,"width":147.99999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["改动分三次发生,不是一次"],"labelY":-18,"role":"axiom"},"F:latent.current-craft":{"x":856.9,"y":307.32,"width":129.99999999999997,"height":52,"boxOffsetX":0,"boxOffsetY":-8,"labelLines":["这只碗是怎么做出来的"],"labelY":-18,"role":"finding"},"F:latent.region-map":{"x":217.72,"y":651.54,"width":129.99999999999997,"height":52,"boxOffsetX":0,"boxOffsetY":-8,"labelLines":["关键区是原片还是重建"],"labelY":-18,"role":"finding"},"F:latent.repair-map":{"x":630.45,"y":427.26,"width":83.6,"height":52,"boxOffsetX":0,"boxOffsetY":-8,"labelLines":["它被修过哪里"],"labelY":-18,"role":"finding"},"F:latent.surface-map":{"x":77.2,"y":93.32,"width":118.39999999999998,"height":52,"boxOffsetX":0,"boxOffsetY":-8,"labelLines":["表面这层是什么状况"],"labelY":-18,"role":"finding"},"obs.accident.major":{"x":1334.4,"y":706.6,"width":95.19999999999999,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["那一组事故记录"],"labelY":-18,"role":"obs"},"obs.appearance.restore":{"x":545.45,"y":285.08,"width":118.39999999999998,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["外观被重整过的痕迹"],"labelY":-18,"role":"obs"},"obs.archive.t2.current-corroboration":{"x":1140.18,"y":52,"width":153.19999999999996,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["事故记录在这只碗上对上了"],"labelY":-18,"role":"obs"},"obs.archive.t2.object-attribution":{"x":83,"y":538.92,"width":129.99999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["事故记录说的是这只碗"],"labelY":-18,"role":"obs"},"obs.archive.t3.current-corroboration":{"x":94.6,"y":885,"width":153.19999999999996,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["后期处理在这只碗上对上了"],"labelY":-18,"role":"obs"},"obs.archive.t3.object-attribution":{"x":407.39,"y":52,"width":129.99999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["后期记录说的是这只碗"],"labelY":-18,"role":"obs"},"obs.corpus.identity":{"x":915.05,"y":184.16,"width":129.99999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["与同期真品的比对结果"],"labelY":-18,"role":"obs"},"obs.corpus.identity.repeat":{"x":764.97,"y":419.12,"width":147.99999999999997,"height":65,"boxOffsetX":0,"boxOffsetY":-15.5,"labelLines":["换一批真品复核(结论没变",")"],"labelY":-32,"role":"obs"},"obs.current.base":{"x":939.77,"y":444.03,"width":60.4,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["底足痕迹"],"labelY":-18,"role":"obs"},"obs.current.whole":{"x":702.51,"y":254.38,"width":83.6,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["整只碗的样貌"],"labelY":-18,"role":"obs"},"obs.documentation.resolved":{"x":760.09,"y":885,"width":129.99999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["来源链查到哪一步为止"],"labelY":-18,"role":"obs"},"obs.key-material.layer-sequence":{"x":247.35,"y":508.12,"width":95.19999999999999,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["各层的先后顺序"],"labelY":-18,"role":"obs"},"obs.key-material.substrate-readings":{"x":385.99,"y":590.9,"width":129.99999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["关键几处的底子是什么"],"labelY":-18,"role":"obs"},"obs.object.continuity":{"x":830.44,"y":693,"width":141.59999999999997,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["手里这只就是记录里那只"],"labelY":-18,"role":"obs"},"obs.phase.t1":{"x":960.83,"y":845.57,"width":95.19999999999999,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["出事之前的影像"],"labelY":-18,"role":"obs"},"obs.phase.t3":{"x":457.03,"y":885,"width":118.39999999999998,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["更晚的一批处理记录"],"labelY":-18,"role":"obs"},"obs.stability.resolved":{"x":1237.7,"y":885,"width":136.39999999999998,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["结不结实,已经说得出来"],"labelY":-18,"role":"obs"},"obs.structure.major.cross-time":{"x":754.03,"y":538.18,"width":118.39999999999998,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["两个时候的结构差别"],"labelY":-18,"role":"obs"},"obs.structure.xray.early":{"x":638.99,"y":609.21,"width":83.6,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["釉下结构影像"],"labelY":-18,"role":"obs"},"obs.surface.no-signal.unresolved":{"x":361.76,"y":376.44,"width":147.99999999999997,"height":65,"boxOffsetX":0,"boxOffsetY":-15.5,"labelLines":["紫外没照出补绘(还不能当","证据)"],"labelY":-32,"role":"obs"},"obs.surface.point-layering":{"x":208.36,"y":52,"width":118.39999999999998,"height":51,"boxOffsetX":0,"boxOffsetY":-8.5,"labelLines":["试窗点上的层次关系"],"labelY":-18,"role":"obs"},"obs.surface.resolved":{"x":92,"y":243.98,"width":147.99999999999997,"height":65,"boxOffsetX":0,"boxOffsetY":-15.5,"labelLines":["补绘范围有多大,已经说得","出来"],"labelY":-32,"role":"obs"}},"islands":[{"id":"F:latent.current-craft","members":["F:latent.current-craft","F:latent.repair-map","obs.appearance.restore","obs.corpus.identity","obs.corpus.identity.repeat","obs.current.base","obs.current.whole","obs.documentation.resolved","obs.object.continuity","obs.phase.t1","obs.structure.major.cross-time","obs.structure.xray.early"]},{"id":"F:latent.region-map","members":["F:latent.region-map","obs.key-material.layer-sequence","obs.key-material.substrate-readings"]},{"id":"F:latent.surface-map","members":["F:latent.surface-map","obs.surface.point-layering","obs.surface.resolved"]},{"id":"AX:coherentDecisionProfile","members":["AX:coherentDecisionProfile"]},{"id":"AX:identity","members":["AX:identity"]},{"id":"AX:majorReassembly","members":["AX:majorReassembly"]},{"id":"AX:threePhase","members":["AX:threePhase"]},{"id":"obs.accident.major","members":["obs.accident.major"]},{"id":"obs.archive.t2.current-corroboration","members":["obs.archive.t2.current-corroboration"]},{"id":"obs.archive.t2.object-attribution","members":["obs.archive.t2.object-attribution"]},{"id":"obs.archive.t3.current-corroboration","members":["obs.archive.t3.current-corroboration"]},{"id":"obs.archive.t3.object-attribution","members":["obs.archive.t3.object-attribution"]},{"id":"obs.phase.t3","members":["obs.phase.t3"]},{"id":"obs.stability.resolved","members":["obs.stability.resolved"]},{"id":"obs.surface.no-signal.unresolved","members":["obs.surface.no-signal.unresolved"]}],"newNodeIds":["obs.corpus.identity.repeat"],"affectedNodeIds":["F:latent.current-craft","F:latent.repair-map","obs.appearance.restore","obs.corpus.identity","obs.corpus.identity.repeat","obs.current.base","obs.current.whole","obs.documentation.resolved","obs.object.continuity","obs.phase.t1","obs.structure.major.cross-time","obs.structure.xray.early"],"softAnchoredNodeIds":["AX:coherentDecisionProfile","AX:identity","AX:majorReassembly","AX:threePhase","F:latent.current-craft","F:latent.region-map","F:latent.repair-map","F:latent.surface-map","obs.accident.major","obs.appearance.restore","obs.archive.t2.current-corroboration","obs.archive.t2.object-attribution","obs.archive.t3.current-corroboration","obs.archive.t3.object-attribution","obs.corpus.identity","obs.current.base","obs.current.whole","obs.documentation.resolved","obs.key-material.layer-sequence","obs.key-material.substrate-readings","obs.object.continuity","obs.phase.t1","obs.phase.t3","obs.stability.resolved","obs.structure.major.cross-time","obs.structure.xray.early","obs.surface.no-signal.unresolved","obs.surface.point-layering","obs.surface.resolved"]}}}]};
+
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  const TYPE_LABEL = {
+    obs: "玩家取得的情报",
+    finding: "系统整理的局部判断",
+    axiom: "已经查实的结论",
+  };
+  const EDGE_LABEL = {
+    latent: "指向同一底层问题",
+    prereq: "取得后者所需的前置条件",
+    caught: "前者为后者补足解释条件",
+    supports: "前者支撑这条结论",
+  };
+  const DIRECTED = new Set(["prereq", "caught", "supports"]);
+  const LAYOUTS = [
+    {
+      id: "force",
+      label: "当前力导向",
+      title: "当前原语：所有关系都参与拉扯",
+      note: "只有已查实结论钉住；其余节点在每一步后整体重算。距离与方向没有稳定的玩家含义。",
+    },
+    {
+      id: "islands",
+      label: "候选：逻辑岛",
+      title: "候选原语：逻辑关系聚成局部岛，旧结构只做软锚定",
+      note: "同一底层问题、前置与后来接住旧证据的关系主导局部聚合；支撑结论的扇形边只保留极弱引力。没有问题栏或取得顺序栏。",
+    },
+  ];
+
+  let checkpointIndex = PROBE.checkpoints.length - 1;
+  let layoutId = "islands";
+  let selectedId = null;
+
+  const $ = (selector) => document.querySelector(selector);
+  const graphSvg = $("#graph");
+
+  function svgElement(tag, attributes = {}, text = null) {
+    const element = document.createElementNS(SVG_NS, tag);
+    for (const [name, value] of Object.entries(attributes)) {
+      if (value !== null && value !== undefined) element.setAttribute(name, String(value));
+    }
+    if (text !== null) element.textContent = text;
+    return element;
+  }
+
+  function allNodes(graph) {
+    return [...graph.nodes, ...graph.findings, ...graph.axioms];
+  }
+
+  function nodeById(graph) {
+    return new Map(allNodes(graph).map((node) => [node.id, node]));
+  }
+
+  function currentState() {
+    return PROBE.checkpoints[checkpointIndex];
+  }
+
+  function currentLayout() {
+    return LAYOUTS.find((layout) => layout.id === layoutId);
+  }
+
+  function positionsFor(state, mode = layoutId) {
+    return state.layouts[mode].positions;
+  }
+
+  function connectedSet(graph) {
+    if (!selectedId) return null;
+    const connected = new Set([selectedId]);
+    for (const edge of graph.edges) {
+      if (edge.from === selectedId || edge.to === selectedId) {
+        connected.add(edge.from);
+        connected.add(edge.to);
+      }
+    }
+    return connected;
+  }
+
+  function addArrowDefs(svg) {
+    const defs = svgElement("defs");
+    for (const [kind, color] of Object.entries({ prereq: "#87929c", caught: "#b47bd0", supports: "#719060" })) {
+      const marker = svgElement("marker", {
+        id: `arrow-${kind}`,
+        markerWidth: 8,
+        markerHeight: 8,
+        refX: 7,
+        refY: 4,
+        orient: "auto",
+        markerUnits: "strokeWidth",
+      });
+      marker.appendChild(svgElement("path", { d: "M0,0 L8,4 L0,8 z", fill: color }));
+      defs.appendChild(marker);
+    }
+    svg.appendChild(defs);
+  }
+
+  function edgeClass(edge, connected) {
+    const incident = selectedId && (edge.from === selectedId || edge.to === selectedId);
+    const classes = ["edge", edge.kind];
+    if (selectedId && !incident) classes.push("dim");
+    if (incident) classes.push("active");
+    if (!selectedId && connected && (!connected.has(edge.from) || !connected.has(edge.to))) classes.push("dim");
+    return classes.join(" ");
+  }
+
+  function nodeClass(node, connected) {
+    const classes = ["node", node.type, node.state ?? ""];
+    if (selectedId === node.id) classes.push("selected");
+    if (connected && !connected.has(node.id)) classes.push("dim");
+    return classes.filter(Boolean).join(" ");
+  }
+
+  function installNodeInteraction(group, node) {
+    group.setAttribute("tabindex", "0");
+    group.setAttribute("role", "button");
+    group.setAttribute("aria-label", `${TYPE_LABEL[node.type]}：${node.short}`);
+    const activate = () => {
+      selectedId = selectedId === node.id ? null : node.id;
+      render();
+      if (selectedId) graphSvg.querySelector(`[data-node-id="${CSS.escape(node.id)}"]`)?.focus();
+    };
+    group.addEventListener("click", (event) => { event.stopPropagation(); activate(); });
+    group.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        activate();
+      }
+    });
+  }
+
+  function pointEdgePath(from, to) {
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const distance = Math.hypot(dx, dy) || 1;
+    const startRadius = from.role === "finding" ? 15 : from.role === "axiom" ? 14 : 12;
+    const endRadius = to.role === "finding" ? 17 : to.role === "axiom" ? 16 : 14;
+    const start = { x: from.x + (dx / distance) * startRadius, y: from.y + (dy / distance) * startRadius };
+    const end = { x: to.x - (dx / distance) * endRadius, y: to.y - (dy / distance) * endRadius };
+    return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
+  }
+
+  function labelLines(node, position) {
+    if (position.labelLines) return position.labelLines;
+    const limit = node.type === "obs" ? 12 : node.type === "finding" ? 15 : 18;
+    const characters = [...String(node.short)];
+    const lines = [];
+    for (let index = 0; index < characters.length; index += limit) {
+      lines.push(characters.slice(index, index + limit).join(""));
+    }
+    return lines.length ? lines : [""];
+  }
+
+  function renderPointGraph(state, connected) {
+    const positions = positionsFor(state);
+    const edgeLayer = svgElement("g", { "aria-hidden": "true" });
+    for (const edge of state.graph.edges) {
+      const from = positions[edge.from];
+      const to = positions[edge.to];
+      if (!from || !to) continue;
+      const path = svgElement("path", {
+        d: pointEdgePath(from, to),
+        class: edgeClass(edge, connected),
+        "marker-end": DIRECTED.has(edge.kind) ? `url(#arrow-${edge.kind})` : null,
+      });
+      path.appendChild(svgElement("title", {}, EDGE_LABEL[edge.kind]));
+      edgeLayer.appendChild(path);
+    }
+    graphSvg.appendChild(edgeLayer);
+
+    const nodeLayer = svgElement("g");
+    for (const node of allNodes(state.graph)) {
+      const position = positions[node.id];
+      if (!position) continue;
+      const group = svgElement("g", {
+        class: `${nodeClass(node, connected)} ${layoutId === "islands" ? "island-node" : "force-node"}`,
+        transform: `translate(${position.x},${position.y})`,
+        "data-node-id": node.id,
+      });
+      group.appendChild(svgElement("circle", { class: "force-hit", cx: 0, cy: 0, r: 24 }));
+      group.appendChild(svgElement("circle", { class: "force-ring", cx: 0, cy: 0, r: 15 }));
+      if (node.type === "axiom") {
+        group.appendChild(svgElement("rect", {
+          class: "force-glyph", x: -10, y: -8, width: 20, height: 16, rx: 3,
+        }));
+      } else if (node.type === "finding") {
+        group.appendChild(svgElement("path", {
+          class: "force-glyph",
+          d: "M 0 -11 L 10 -5 L 10 5 L 0 11 L -10 5 L -10 -5 Z",
+        }));
+      } else {
+        group.appendChild(svgElement("circle", { class: "force-glyph", cx: 0, cy: 0, r: 8 }));
+      }
+
+      const lines = labelLines(node, position);
+      const text = svgElement("text", {
+        class: "node-label",
+        x: 0,
+        y: position.labelY ?? (-18 - (lines.length - 1) * 14),
+        "text-anchor": "middle",
+      });
+      lines.forEach((line, index) => {
+        text.appendChild(svgElement("tspan", { x: 0, dy: index === 0 ? 0 : 14 }, line));
+      });
+      group.appendChild(text);
+      group.appendChild(svgElement("title", {}, `${TYPE_LABEL[node.type]}：${node.short}`));
+      installNodeInteraction(group, node);
+      nodeLayer.appendChild(group);
+    }
+    graphSvg.appendChild(nodeLayer);
+  }
+
+  function displacement(stateIndex, mode) {
+    if (stateIndex === 0) return "这是第一个对照快照";
+    const previous = PROBE.checkpoints[stateIndex - 1];
+    const current = PROBE.checkpoints[stateIndex];
+    const before = positionsFor(previous, mode);
+    const after = positionsFor(current, mode);
+    let common = 0;
+    let moved = 0;
+    let total = 0;
+    for (const [id, from] of Object.entries(before)) {
+      const to = after[id];
+      if (!to) continue;
+      const distance = Math.hypot(to.x - from.x, to.y - from.y);
+      common += 1;
+      total += distance;
+      if (distance > 12) moved += 1;
+    }
+    const average = common ? Math.round(total / common) : 0;
+    return `相对上一快照：${moved}/${common} 个旧节点位移超过 12px，平均位移 ${average}px`;
+  }
+
+  function renderDetail(state, index) {
+    if (!selectedId) {
+      $("#detail").innerHTML = "<strong>读图动作：</strong>点击任一节点，只保留与它直接相连的关系。再点一次或按“显示全部关系”返回全图。";
+      return;
+    }
+    const nodes = nodeById(state.graph);
+    const node = nodes.get(selectedId);
+    if (!node) {
+      selectedId = null;
+      renderDetail(state, index);
+      return;
+    }
+    const related = state.graph.edges.filter((edge) => edge.from === node.id || edge.to === node.id);
+    const byKind = related.reduce((counts, edge) => {
+      counts[edge.kind] = (counts[edge.kind] ?? 0) + 1;
+      return counts;
+    }, {});
+    const relationText = Object.entries(byKind).map(([kind, count]) => `${EDGE_LABEL[kind]} ×${count}`).join("；") || "当前没有连接";
+    $("#detail").textContent = `${TYPE_LABEL[node.type]}：${node.short}。${relationText}`;
+  }
+
+  function render() {
+    const state = currentState();
+    if (selectedId && !nodeById(state.graph).has(selectedId)) selectedId = null;
+    const connected = connectedSet(state.graph);
+    graphSvg.textContent = "";
+    addArrowDefs(graphSvg);
+    renderPointGraph(state, connected);
+
+    const layout = currentLayout();
+    $("#mode-title").textContent = layout.title;
+    $("#mode-note").textContent = layout.note;
+    $("#summary").innerHTML = `<strong>${state.label}</strong> · ${state.counts.observations} 情报 · ${state.counts.findings} Finding · ${state.counts.conclusions} 结论 · ${state.counts.edges} 关系`;
+    $("#checkpoint-note").innerHTML = `<strong>这一屏重点：</strong>${state.note}<br>${displacement(checkpointIndex, layoutId)}`;
+    renderDetail(state, checkpointIndex);
+    document.querySelectorAll("[data-checkpoint]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(Number(button.dataset.checkpoint) === checkpointIndex));
+    });
+    document.querySelectorAll("[data-layout]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.layout === layoutId));
+    });
+  }
+
+  function buildControls() {
+    for (const [index, state] of PROBE.checkpoints.entries()) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = state.label;
+      button.dataset.checkpoint = String(index);
+      button.addEventListener("click", () => {
+        checkpointIndex = index;
+        selectedId = null;
+        render();
+      });
+      $("#checkpoint-controls").appendChild(button);
+    }
+    for (const layout of LAYOUTS) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = layout.label;
+      button.dataset.layout = layout.id;
+      button.addEventListener("click", () => {
+        layoutId = layout.id;
+        selectedId = null;
+        render();
+      });
+      $("#layout-controls").appendChild(button);
+    }
+    $("#clear-focus").addEventListener("click", () => { selectedId = null; render(); });
+    graphSvg.addEventListener("click", () => { selectedId = null; render(); });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && selectedId) {
+        selectedId = null;
+        render();
+      }
+    });
+  }
+
+  $("#stamp").textContent = `构建于 ${PROBE.stamp.builtAt} · 数据由现有 case / session / projection 只读生成 · ${Object.keys(PROBE.stamp.sourceSha).length} 个来源文件已记录 SHA-256`;
+  buildControls();
+  render();
+  </script>
+</body>
+</html>

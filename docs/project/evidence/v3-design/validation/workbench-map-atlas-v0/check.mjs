@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import { readFile, readdir } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { Script } from 'node:vm';
+const here=dirname(fileURLToPath(import.meta.url));
+const repo=resolve(here,'../../../../../..');
+const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+const before=JSON.parse(await readFile(resolve(here,'protected-before.json'),'utf8'));
+for(const [path,sha] of Object.entries(before))assert.equal(hash(await readFile(resolve(repo,path))),sha,`Protected bytes changed: ${path}`);
+console.log('PASS protected prior entries and frozen author files: '+Object.keys(before).length);
+const html=await readFile(resolve(here,'prototype.html'),'utf8');
+const template=await readFile(resolve(here,'template.html'),'utf8');
+const stamp=JSON.parse(html.match(/const STAMP = (\{[\s\S]*?\n\});/)[1]);
+assert.equal(hash(Buffer.from(template)),stamp.templateSha256,'Template build mismatch');
+for(const item of Object.values(stamp.sources))assert.equal(hash(await readFile(resolve(here,item.path))),item.sha256,`Stale build: ${item.path}`);
+assert.deepEqual(stamp,JSON.parse(await readFile(resolve(here,'build-stamp.json'),'utf8')));
+console.log('PASS embedded build fingerprints: template + '+Object.keys(stamp.sources).length+' modules');
+const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
+new Script(script,{filename:'prototype-inline.js'});
+assert.doesNotMatch(html,/<(?:script|link|img)[^>]+(?:src|href)=["']https?:/i,'External runtime dependency');
+assert.doesNotMatch(template,/@media\s*\([^)]*(?:min|max)-width/i,'Mobile or narrow breakpoint');
+console.log('PASS standalone inline script syntax and desktop-only shell');
+let scanned=0;
+for(const entry of await readdir(here,{withFileTypes:true})){
+ if(!entry.isFile()||! /\.(?:mjs|html|md|json)$/.test(entry.name))continue;
+ const bytes=await readFile(resolve(here,entry.name));
+ const text=new TextDecoder('utf-8',{fatal:true}).decode(bytes);
+ assert.doesNotMatch(text,/^\s*(?:<{7}|={7}|>{7})(?:\s|$)/m,`Conflict marker: ${entry.name}`);
+ assert.doesNotMatch(text,/[\t ]+\r?$/m,`Trailing whitespace: ${entry.name}`);
+ assert.doesNotMatch(text,/\uFFFD/,`Replacement character: ${entry.name}`);
+ scanned++;
+}
+console.log('PASS UTF-8, conflict markers and trailing whitespace: '+scanned+' files');

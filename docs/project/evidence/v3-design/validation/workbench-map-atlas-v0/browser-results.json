@@ -1,0 +1,154 @@
+[
+  {
+    "label": "full-final-1440",
+    "bill": "还剩 0 步 / 共 22 步 · 免费 × 3 · 低 × 10 · 中 × 6 · 高 × 3",
+    "edges": 25,
+    "focus": "overview-button",
+    "height": 900,
+    "mapHeight": "1019",
+    "nodeOverlaps": [],
+    "nodes": 21,
+    "pageHorizontalOverflow": false,
+    "pageVerticalOverflow": false,
+    "stage": "形成了较完整的解释",
+    "width": 1440
+  },
+  {
+    "label": "full-final-1280",
+    "bill": "还剩 0 步 / 共 22 步 · 免费 × 3 · 低 × 10 · 中 × 6 · 高 × 3",
+    "edges": 25,
+    "focus": "overview-button",
+    "height": 900,
+    "mapHeight": "1214",
+    "nodeOverlaps": [],
+    "nodes": 21,
+    "pageHorizontalOverflow": false,
+    "pageVerticalOverflow": false,
+    "stage": "形成了较完整的解释",
+    "width": 1280
+  },
+  {
+    "label": "history-zero",
+    "snapshot": "工作台 / 稳定特征\n想从这里了解什么？\n核对那些没被改动过的特征\n占 1 步 · 费用 中\n\n手里这只和记录里那只,是同一只吗?\n\n这个手段能看什么\n正在回看历史，回到本局后再调查。\n使用这个手段",
+    "places": "看这只碗\n整体\n2 种\n底足\n1 种\n纹饰与色差\n1 种\n稳定特征\n1 种\n表面与层次\n2 种\n查找资料\n事故记录\n3 种\n早期影像\n1 种\n后期处理\n3 种\n经手记录\n1 种\n检测与比对\n同期真品\n1 种\n另一批真品\n1 种\n内部结构\n1 种\n紫外筛查\n1 种\n材料与层序\n2 种\n陈列与稳定\n1 种"
+  },
+  {
+    "label": "history-return-restores-22",
+    "bill": "还剩 0 步 / 共 22 步 · 免费 × 3 · 低 × 10 · 中 × 6 · 高 × 3",
+    "edges": 25,
+    "focus": "BODY",
+    "height": 900,
+    "mapHeight": "976",
+    "nodeOverlaps": [],
+    "nodes": 21,
+    "pageHorizontalOverflow": false,
+    "pageVerticalOverflow": false,
+    "stage": "形成了较完整的解释",
+    "width": 1280
+  },
+  {
+    "label": "full-final-1920",
+    "bill": "还剩 0 步 / 共 22 步 · 免费 × 3 · 低 × 10 · 中 × 6 · 高 × 3",
+    "edges": 25,
+    "focus": "overview-button",
+    "height": 1080,
+    "mapHeight": "830",
+    "nodeOverlaps": [],
+    "nodes": 21,
+    "pageHorizontalOverflow": false,
+    "pageVerticalOverflow": false,
+    "stage": "形成了较完整的解释",
+    "width": 1920
+  },
+  {
+    "label": "history-spatial-restoration",
+    "samePositions": true
+  },
+  {
+    "label": "fold-and-expand",
+    "foldedCount": 17,
+    "expandedCount": 21
+  },
+  {
+    "label": "stopped-actions",
+    "state": "已收手 · 形成了较完整的解释",
+    "inspector": "工作台 / 底足\n想从这里了解什么？\n看底足与修足\n占 1 步 · 不花钱 · 本局做过\n\n制造工艺留下的痕迹是什么样的?\n\n这个手段能看什么\n本局已经收手。\n再做一次"
+  },
+  {
+    "label": "two-pending-islands",
+    "bill": "还剩 20 步 / 共 22 步 · 免费 × 0 · 低 × 1 · 中 × 0 · 高 × 1",
+    "edges": 0,
+    "focus": "overview-button",
+    "height": 900,
+    "mapHeight": "650",
+    "nodeOverlaps": [],
+    "nodes": 2,
+    "pageHorizontalOverflow": false,
+    "pageVerticalOverflow": false,
+    "stage": "还没有方向",
+    "width": 1440
+  },
+  {
+    "label": "old-information-connected",
+    "bill": "还剩 18 步 / 共 22 步 · 免费 × 1 · 低 × 1 · 中 × 1 · 高 × 1",
+    "edges": 2,
+    "focus": "overview-button",
+    "height": 900,
+    "mapHeight": "650",
+    "nodeOverlaps": [],
+    "nodes": 4,
+    "pageHorizontalOverflow": false,
+    "pageVerticalOverflow": false,
+    "stage": "还没有方向",
+    "width": 1440
+  },
+  {
+    "label": "final-build-full-1440",
+    "bill": "还剩 0 步 / 共 22 步 · 免费 × 3 · 低 × 10 · 中 × 6 · 高 × 3",
+    "edges": 25,
+    "focus": "overview-button",
+    "height": 900,
+    "mapHeight": "1019",
+    "nodeOverlaps": [],
+    "nodes": 21,
+    "pageHorizontalOverflow": false,
+    "pageVerticalOverflow": false,
+    "stage": "形成了较完整的解释",
+    "width": 1440
+  },
+  {
+    "label": "final-fold-spatial-restoration",
+    "samePositions": true,
+    "expandedNodes": 21
+  },
+  {
+    "label": "final-history-spatial-restoration",
+    "samePositions": true
+  },
+  {
+    "label": "question-method-keyboard",
+    "expandedMethods": 2,
+    "focusPreserved": "show-methods"
+  },
+  {
+    "label": "final-archive-relationship",
+    "text": "信息之间的关系\n归属与实物对应已确认\n\n稳定锚点确认记录指向此碗。所述处理在声明范围内得到物证对应。\n\n连接的内容\n事故记录组\n整器形制与可见修补\n这条关系的依据\n事故记录归属已核对\n事故所述与实物已核对",
+    "edgeLabels": [
+      "归属与实物对应已确认"
+    ]
+  },
+  {
+    "label": "console-errors",
+    "errors": []
+  },
+  {
+    "label": "g2-stop-with-unknown",
+    "stage": "已收手 · 身份方向与重大重组都立住了",
+    "inspector": "本局已收手\n它经历过什么？\n\n委托人正准备接手这只碗。你来判断它的经历，以及仍有哪些地方拿不准。\n\n阅读地图\n\n点一条内容，看它与谁有关；点一条道路，回查这条关系的依据。\n\n已知内容里仍有这些疑问\n这些改动发生在什么时点？\n本局已经形成的判断\n晚 18 世纪外销瓷方向成立\n曾发生重大重组\n本局结账\n\n免费 × 2 · 低 × 4 · 中 × 0 · 高 × 0\n\n地图和原始依据仍可回看。"
+  },
+  {
+    "label": "zoom-roundtrip",
+    "zoom": "100%",
+    "nodes": 6
+  }
+]

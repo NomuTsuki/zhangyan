@@ -1,0 +1,36 @@
+This turn modified the two state records below and added the atlas directory.
+Pre-existing changes in workbench-map-v0, focus-v1 and screenshot folders were preserved.
+
+docs/project/02-CURRENT-STATE.md
+docs/project/03-NEXT-ACTIONS.md
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/browser-results.json
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/build-output.txt
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/build-stamp.json
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/build.mjs
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/check-output.txt
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/check.mjs
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/frozen-contract-output.txt
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/graph-check-output.txt
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/graph-check.mjs
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/graph.mjs
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/layout-check-output.txt
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/layout-check.mjs
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/layout.mjs
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/PLAYTEST.md
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/PROJECTION.md
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/protected-before.json
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/prototype.html
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/README.md
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/screenshots/archive-bridge-1440.png
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/screenshots/connected-1440.png
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/screenshots/full-1280.png
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/screenshots/full-1440.png
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/screenshots/full-1920.png
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/screenshots/g2-stop-1440.png
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/screenshots/initial-1440.png
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/screenshots/pending-1440.png
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/screenshots/stopped-1920.png
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/serve.mjs
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/template.html
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/VERIFICATION.md
+docs/project/evidence/v3-design/validation/workbench-map-atlas-v0/CHANGES.txt

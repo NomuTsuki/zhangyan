@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>掌眼 · 已知与推理</title>
+<style>
+:root{color-scheme:dark;--bg:#111416;--panel:#171b1e;--ink:#eeeae1;--muted:#aaa99f;--line:#343b40;--blue:#97bdcf;--green:#b7ca9c;--amber:#e3bb79;--red:#e3a192;--focus:#d5e9f3;font:15px/1.6 "Microsoft YaHei","PingFang SC",sans-serif}
+*{box-sizing:border-box}body{margin:0;min-width:1200px;background:var(--bg);color:var(--ink)}button,input{font:inherit}button{color:inherit;background:transparent;border:1px solid var(--line);border-radius:5px;padding:7px 12px;cursor:pointer}button:hover{background:#242c31}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px}button:disabled{cursor:default;color:#a7a7a0;background:#202426}a{color:var(--blue)}h1,h2,h3,p{margin:0}h1{font-size:20px;font-weight:600}h2{font-size:16px;font-weight:600}h3{font-size:15px;font-weight:600}p+p{margin-top:10px}small,.small{font-size:12px;color:var(--muted)}.muted{color:var(--muted)}.eyebrow{font-size:12px;letter-spacing:.1em;color:var(--muted)}.primary{background:#d8dfcc;color:#19211a;border-color:#d8dfcc}.primary:hover{background:#edf2e3}.plain{border:0;padding:5px 8px}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.stack>*+*{margin-top:14px}.divider{border:0;border-top:1px solid var(--line);margin:20px 0}
+header{height:92px;display:flex;align-items:center;gap:28px;padding:18px 24px;border-bottom:1px solid var(--line)}.brand{width:158px;flex:none}.status{flex:1;min-width:320px}.status-title{font-size:16px;color:var(--green)}.status-sub{color:var(--muted);font-size:13px}.top-actions{display:flex;align-items:center;gap:8px}.budget{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}.budget input{background:var(--panel);border:1px solid var(--line);border-radius:4px;color:var(--ink);width:55px;padding:5px}
+.workspace{display:grid;grid-template-columns:190px minmax(580px,1fr) 270px;height:calc(100vh - 92px);min-height:680px}.workbench{padding:22px 12px 20px 20px;border-right:1px solid var(--line);overflow:auto;min-height:0}.workbench h2{margin-bottom:4px}.workbench .group-title{font-size:12px;color:var(--muted);margin:22px 0 7px}.place{display:flex;justify-content:space-between;align-items:center;width:100%;border:0;text-align:left;padding:7px 6px;margin:3px 0}.place[aria-pressed=true]{background:#283137;color:var(--blue)}.place small{margin-left:6px;white-space:nowrap}.atlas{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}.map-head{display:flex;align-items:center;justify-content:space-between;padding:19px 20px 10px}.map-tools button{font-size:13px;padding:4px 9px}.notice{margin:0 20px;min-height:44px;font-size:13px;color:var(--blue);border-bottom:1px solid #262d31;padding-bottom:10px;display:flex;align-items:center}.map-scroll{position:relative;flex:1;min-height:0;overflow:auto;scrollbar-color:#4a555b transparent}.map-canvas{position:relative;min-height:100%}#map{display:block;overflow:visible}#node-controls{position:absolute;left:0;top:0;pointer-events:none}.node-control{position:absolute;border:1px solid transparent;background:transparent;pointer-events:auto;padding:0;border-radius:8px;color:var(--ink);transition:left .35s ease,top .35s ease;line-height:1.45}.node-control:hover{background:#20292e99}.node-control.selected{background:#29363d80;border-color:#6b8797}.node-control.recent{border-color:#8da9ae66}.node-control.claim{color:var(--green)}.node-control.pending{color:var(--amber)}.node-control.contested{color:var(--red)}.node-control.faded{opacity:.5}.node-glyph{position:absolute;width:12px;height:12px;border:1.5px solid currentColor;border-radius:50%;left:calc(50% - 6px);top:13px;background:var(--bg)}.node-control.claim .node-glyph{border-radius:2px;background:#34432e}.node-control.finding .node-glyph{transform:rotate(45deg);border-radius:2px}.node-title{position:absolute;top:35px;left:4px;right:4px;font-size:14px;text-align:center;line-height:20px}.node-state{position:absolute;bottom:4px;left:6px;right:6px;font-size:12px;color:var(--amber);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.route{fill:none;stroke:#677d89;stroke-width:1.2;opacity:.65}.route.context{stroke:#b4a4cd}.route.conflict{stroke:var(--red);stroke-dasharray:5 4}.route.support{stroke:#91a879}.route.selected{stroke-width:2;opacity:1}.route.dimmed{opacity:.18}.route-hit{stroke:transparent;stroke-width:14;fill:none;cursor:pointer}.edge-label{fill:var(--ink);font-size:12px;paint-order:stroke;stroke:var(--bg);stroke-width:5px;stroke-linejoin:round}.empty-map{position:absolute;left:12%;right:12%;top:24%;text-align:center;color:var(--muted);pointer-events:none}.empty-map h2{font-size:22px;font-weight:400;color:var(--ink);margin:16px 0}.empty-map p{max-width:420px;margin:0 auto}.empty-ring{width:84px;height:84px;border:1px dashed #4d6069;border-radius:50%;margin:auto}.map-footer{padding:10px 20px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:10px}.legend{display:flex;gap:16px}.legend span::before{content:"";display:inline-block;width:8px;height:8px;border:1px solid var(--blue);border-radius:50%;margin-right:6px}.legend .judgment::before{border-radius:1px;border-color:var(--green)}.legend .question::before{border:0;content:"?";color:var(--amber)}
+.inspector{border-left:1px solid var(--line);padding:22px 18px;overflow:auto;background:#15191c}.inspector .intro-title{font-size:20px;font-weight:400;margin-top:16px}.detail-title{font-size:18px;line-height:1.55;margin:8px 0 12px}.detail-copy{font-size:14px;color:#d1d0c7;line-height:1.8}.section-label{font-size:12px;color:var(--muted);margin:23px 0 9px}.relation-button,.question-button,.source-button{display:block;width:100%;text-align:left;margin:6px 0;padding:9px 10px;font-size:13px}.relation-button{border-color:#38434a}.relation-button strong{font-weight:500;display:block;color:var(--blue);margin-bottom:3px}.question-button{border-color:#5c513c;color:#e3c38d}.question-button small{display:block;color:#c6b493}.source-button{border:0;border-left:2px solid #45545c;border-radius:0;padding:6px 9px}.method{padding:12px 0;border-bottom:1px solid var(--line)}.method h3{font-size:14px}.method .cost{color:var(--amber);font-size:12px;margin:5px 0}.method p{font-size:13px;color:#c8c9c2}.method .execute{margin-top:10px;width:100%;font-size:13px}.reason{color:#cfb798;font-size:12px;margin-top:7px}.new-direction{border-left:2px solid var(--amber);padding-left:11px;font-size:13px}.history-step{width:100%;text-align:left;display:block;margin:5px 0;font-size:13px}.history-banner{display:none;padding:8px 20px;background:#302b20;color:var(--amber);font-size:13px}.history-banner.visible{display:flex;align-items:center;justify-content:space-between}.stop-summary{border-top:1px solid var(--line);padding-top:12px;margin-top:16px}.fold-button{font-size:12px;width:100%;margin:10px 0}details{font-size:13px}summary{cursor:pointer;color:var(--blue)}dialog{width:620px;max-height:85vh;overflow:auto;background:var(--panel);color:var(--ink);border:1px solid #53616a;border-radius:9px;padding:26px}dialog::backdrop{background:#080b0dc9}.modal-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:22px}.prompt-input{display:block;background:#0f1417;border:1px solid #46525a;color:var(--ink);width:100%;padding:10px;margin-top:8px;font:inherit}.stop-claim{font-size:14px;border-left:2px solid var(--green);padding-left:12px;margin-top:12px}.prototype-label{font-size:11px;color:var(--muted);margin-top:3px}.all-questions{margin-top:18px}.sr-only{position:absolute;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden}@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+<header>
+ <div class="brand"><h1>掌眼</h1><div class="prototype-label">已知与推理 · Experimental</div></div>
+ <div class="status"><div id="stage-title" class="status-title"></div><div id="stage-sub" class="status-sub"></div></div>
+ <div class="top-actions"><label class="budget">开局步数 <input id="budget" type="number" aria-label="开局步数"></label><button id="history-button">调查记录</button><button id="brief-button">委托</button><button id="stop-button" class="primary">收手</button><button id="restart-button" class="plain">重开</button></div>
+</header>
+<main class="workspace">
+ <nav class="workbench" aria-label="调查工作台"><h2>工作台</h2><p class="small">先看手段，再决定是否调查。</p><div id="places"></div></nav>
+ <section class="atlas" aria-labelledby="map-heading">
+  <div class="map-head"><div><h2 id="map-heading">已知与推理</h2><p class="small" id="map-count">每份信息都可以回查。</p></div><div class="row map-tools"><button id="overview-button">全貌</button><button id="zoom-out" aria-label="缩小地图">−</button><span id="zoom-value" class="small">100%</span><button id="zoom-in" aria-label="放大地图">＋</button></div></div>
+  <div id="history-banner" class="history-banner"><span id="history-caption"></span><button id="return-live" class="plain">回到本局</button></div>
+  <div id="notice" class="notice" aria-live="polite">从工作台任选一处开始。地图只呈现你已经取得的信息。</div>
+  <div class="map-scroll" id="map-scroll"><div class="map-canvas" id="map-canvas"><svg id="map" aria-label="已知信息之间的关系" role="img"></svg><div id="node-controls"></div><div class="empty-map" id="empty-map"><div class="empty-ring"></div><h2>先认识眼前这只碗。</h2><p>你可以先看实物，也可以先找资料。取得的信息会留在这里；有了依据，它们才会接通。</p></div></div></div>
+  <div class="map-footer"><div class="legend"><span>信息</span><span class="judgment">判断</span><span class="question">已知中的疑问</span></div><span>点内容或道路，回查它为什么成立</span></div>
+ </section>
+ <aside id="inspector" class="inspector" aria-label="内容与关系详情" tabindex="-1"></aside>
+</main>
+<dialog id="brief-dialog"><div class="modal-heading"><h2>这次委托</h2><button data-close="brief-dialog" aria-label="关闭委托">关闭</button></div><p>委托人准备接手这只碗，钱还没有付。他想知道：这东西经历过什么，还有哪些拿不准的地方？</p><p>你来选择检查实物或查找资料。每个手段占一步；钱按费用档记录，最后一起结账。地图会整理本局取得的信息，以及已经有依据的关系。</p><p>你可以随时收手，留下一份能说出根据、也说清边界的判断。</p></dialog>
+<dialog id="stop-dialog"><div class="modal-heading"><h2>带着现在的判断收手</h2><button data-close="stop-dialog">先继续看</button></div><div id="stop-preview"></div><label class="section-label" for="final-note">我的判断与仍拿不准的地方（可选）</label><textarea id="final-note" class="prompt-input" rows="3" placeholder="我认为……，依据是……；……还没有查清。"></textarea><p class="small" style="margin-top:10px">确认后保留本局地图和调查记录，不再花费步数。</p><div class="modal-actions"><button data-close="stop-dialog">继续调查</button><button id="confirm-stop" class="primary">确认收手</button></div></dialog>
+<dialog id="restart-dialog"><div class="modal-heading"><h2>重新开始一局</h2><button data-close="restart-dialog">取消</button></div><p>当前局的地图与记录会清空。开局步数沿用现在的设定。</p><div class="modal-actions"><button data-close="restart-dialog">保留当前局</button><button id="confirm-restart" class="primary">开始新局</button></div></dialog>
+<script>
+/*__STAMP__*/
+/*__MODULES__*/
+
+const { newSession, solve, take, workbench, setBudget, BUDGET_MIN, BUDGET_MAX } = SESSION;
+const { ACTIONS, ACTION_BY_ID, COST_LABEL } = CASE;
+const { ACTION_SEMANTICS, STAGE_SEMANTICS } = SEMANTICS;
+const { buildGraph } = GRAPH;
+const { layoutGraph } = LAYOUT;
+const $ = id => document.getElementById(id);
+const esc = text => String(text ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const svgNS = 'http://www.w3.org/2000/svg';
+const groups = [
+ ['看这只碗', [['OBJ_W','整体'],['OBJ_F','底足'],['OBJ_D','纹饰与色差'],['OBJ_R','稳定特征'],['SURF','表面与层次']]],
+ ['查找资料', [['T2','事故记录'],['T1','早期影像'],['T3','后期处理'],['PROV','经手记录']]],
+ ['检测与比对', [['CORPUS','同期真品'],['RPT','另一批真品'],['XRAY','内部结构'],['UV','紫外筛查'],['MAT','材料与层序'],['STAB','陈列与稳定']]],
+];
+let session = newSession();
+let graph, solved, layout = null, selection = null, historyIndex = null, zoom = 1;
+let recentIds = new Set(), folded = new Set(), finalNote = '', openQuestionMethods = false;
+let notice = '从工作台任选一处开始。地图只呈现你已经取得的信息。';
+let viewSession = session;
+let liveLayoutBeforeHistory = null;
+let foldPositions = {}, liveFoldsBeforeHistory = null;
+const stateText = {pending:'意义未定',contested:'存在争议',established:'已有依据',limited:'有范围限制',repeat:'重复记录',known:''};
+
+function currentViewSession() {
+ if(historyIndex === null) return session;
+ const copy = newSession(session.budget);
+ for(const step of session.log.slice(0,historyIndex)) { const r=take(copy,step.actionId); if(!r.ok) throw Error(r.why); }
+ return copy;
+}
+function nodeById(id) { return graph.nodes.find(node=>node.id===id); }
+function observationById(id) {
+ const source=Array.isArray(graph.observations)?graph.observations.find(item=>item.id===id||item.observationId===id):graph.observations?.[id];
+ if(source) return source;
+ const log=viewSession.log.find(item=>item.observationId===id);
+ return {id,title:log?ACTION_BY_ID.get(log.actionId)?.name:'原始观察',summary:'本局取得的原始记录。'};
+}
+function labelForSource(id) { const o=observationById(id); return o.title||o.short||o.summary||'原始记录'; }
+function sourceHTML(ids) {return [...new Set(ids||[])].map(id=>`<button class="source-button" data-source="${esc(id)}">${esc(labelForSource(id))}</button>`).join('');}
+function placeName(id) { return groups.flatMap(group=>group[1]).find(place=>place[0]===id)?.[1]||'调查手段'; }
+function renderPlaces() {
+ $('places').innerHTML=groups.map(([name,places])=>`<div class="group-title">${esc(name)}</div>${places.map(([id,title])=>{
+  const items=workbench(viewSession).filter(item=>item.action.place===id);
+  const seen=items.filter(item=>item.done).length;
+  return `<button class="place" data-place="${id}" aria-pressed="${selection?.type==='place'&&selection.id===id}"><span>${esc(title)}</span><small>${seen?`${seen}/${items.length} 已看`:items.length+' 种'}</small></button>`;
+ }).join('')}`).join('');
+}
+function activeIds() {
+ const ids=new Set();
+ if(selection?.type==='node') {ids.add(selection.id);for(const e of graph.edges)if(e.from===selection.id||e.to===selection.id){ids.add(e.from);ids.add(e.to);}}
+ if(selection?.type==='edge'){const e=graph.edges.find(e=>e.id===selection.id);if(e){ids.add(e.from);ids.add(e.to);}}
+ if(selection?.type==='question'){const q=graph.questions.find(q=>q.id===selection.id);for(const id of q?.anchorIds||[])ids.add(id);}
+ return ids;
+}
+function displayGraph() {
+ const hidden=new Set();
+ for(const id of folded){
+  const incoming=graph.edges.filter(e=>e.to===id&&e.kind==='support');
+  for(const edge of incoming){
+   const node=nodeById(edge.from);
+   if(!node||node.kind!=='evidence'||['pending','contested','limited'].includes(node.state))continue;
+   if(graph.questions.some(q=>q.anchorIds.includes(node.id)))continue;
+   const attached=graph.edges.filter(e=>e.from===node.id||e.to===node.id);
+   if(attached.every(e=>e.to===id&&e.kind==='support'))hidden.add(node.id);
+  }
+ }
+ return {...graph,nodes:graph.nodes.filter(n=>!hidden.has(n.id)),edges:graph.edges.filter(e=>!hidden.has(e.from)&&!hidden.has(e.to)),hidden};
+}
+function renderMap(reposition=true) {
+ const display=displayGraph();
+ const width=Math.max(580,$('map-scroll').clientWidth);
+ if(reposition||!layout)layout=layoutGraph(display,{width,height:Math.max(500,$('map-scroll').clientHeight),previous:layout});
+ const contentWidth=Math.max(width,layout.width||width),contentHeight=Math.max(500,layout.height||500);
+ $('map').setAttribute('viewBox',`0 0 ${contentWidth} ${contentHeight}`);
+ $('map').setAttribute('width',contentWidth*zoom);$('map').setAttribute('height',contentHeight*zoom);
+ $('map-canvas').style.width=contentWidth*zoom+'px';$('map-canvas').style.minHeight=contentHeight*zoom+'px';
+ $('node-controls').style.width=contentWidth*zoom+'px';$('node-controls').style.height=contentHeight*zoom+'px';
+ const active=activeIds();
+ $('map').innerHTML='<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L7 4L1 7" fill="none" stroke="#9db5bf" stroke-width="1.1"/></marker></defs>';
+ for(const edge of layout.edges||[]){
+  const focused=selection?.type==='edge'?selection.id===edge.id:active.has(edge.from)&&active.has(edge.to);
+  const path=document.createElementNS(svgNS,'path');path.setAttribute('d',edge.path);path.setAttribute('class',`route ${edge.kind} ${focused?'selected':active.size?'dimmed':''}`);path.setAttribute('marker-end','url(#arrow)');$('map').append(path);
+  const hit=document.createElementNS(svgNS,'path');hit.setAttribute('d',edge.path);hit.setAttribute('class','route-hit');hit.dataset.edge=edge.id;$('map').append(hit);
+  if(focused&&selection?.type==='edge'){const label=document.createElementNS(svgNS,'text');label.setAttribute('x',edge.labelX);label.setAttribute('y',edge.labelY-6);label.setAttribute('text-anchor','middle');label.setAttribute('class','edge-label');label.textContent=edge.label;$('map').append(label);}
+ }
+ $('node-controls').innerHTML=display.nodes.map(node=>{
+  const p=layout.positions[node.id];if(!p)return '';
+  const lines=p.titleLines||p.lines||[node.title];
+  const questions=graph.questions.filter(q=>q.anchorIds.includes(node.id));
+  const ownFold=folded.has(node.id);
+  const title=Array.isArray(lines)?lines.slice(0,2).map(esc).join('<br>'):esc(node.title);
+  return `<button class="node-control ${esc(node.kind)} ${esc(node.state)} ${selection?.type==='node'&&selection.id===node.id?'selected':''} ${recentIds.has(node.id)?'recent':''} ${active.size&&!active.has(node.id)&&!questions.length&&node.state!=='contested'?'faded':''}" data-node="${esc(node.id)}" aria-label="${esc(node.title)}${questions.length?'，有未解疑问':''}" aria-pressed="${selection?.type==='node'&&selection.id===node.id}" style="left:${(p.x-p.width/2)*zoom}px;top:${(p.y-p.height/2)*zoom}px;width:${p.width*zoom}px;height:${p.height*zoom}px"><span class="node-glyph" style="top:${((p.anchorY??p.y-p.height/2+19)-(p.y-p.height/2))*zoom-6}px"></span><span class="node-title" style="font-size:${14*zoom}px;line-height:${20*zoom}px;top:${35*zoom}px">${title}</span><span class="node-state">${ownFold?'依据已收拢':questions.length?esc('? '+questions[0].title):esc(stateText[node.state]||'')}</span></button>`;
+ }).join('');
+ $('empty-map').hidden=graph.nodes.length>0;
+ $('map-count').textContent=`${graph.observations.length??Object.keys(graph.observations).length} 份已得信息 · ${graph.edges.length} 条有据关系${display.hidden.size?' · '+display.hidden.size+' 份依据已收拢':''}`;
+ $('zoom-value').textContent=Math.round(zoom*100)+'%';
+}
+function methodHTML(item){
+ const a=item.action;const sem=ACTION_SEMANTICS[a.id]||{};
+ const available=item.usable&&item.affordable&&historyIndex===null;
+ const reason=historyIndex!==null?'正在回看历史，回到本局后再调查。':session.stopped?'本局已经收手。':!item.affordable?'本局步数已经用完。':item.why;
+ return `<div class="method"><h3>${esc(a.name)}</h3><div class="cost">占 1 步 · ${a.cost===0?'不花钱':'费用 '+esc(COST_LABEL[a.cost])}${item.done?' · 本局做过':''}</div><p>${esc(a.ask)}</p><details style="margin-top:7px"><summary>这个手段能看什么</summary><p>${esc(sem.doesWhat||a.ask)}</p></details>${reason?`<div class="reason">${esc(reason)}</div>`:''}<button class="execute ${available?'primary':''}" data-take="${esc(a.id)}" ${available?'':'disabled'}>${item.done?'再做一次':'使用这个手段'}</button></div>`;
+}
+function relatedQuestions(ids){return graph.questions.filter(q=>q.anchorIds.some(id=>ids.includes(id)));}
+function questionsHTML(questions){return questions.map(q=>`<button class="question-button" data-question="${esc(q.id)}">${esc(q.title)}</button>`).join('');}
+function renderInspector(){
+ const box=$('inspector');
+ if(selection?.type==='place'){
+  box.innerHTML=`<div class="eyebrow">工作台 / ${esc(placeName(selection.id))}</div><h2 class="detail-title">想从这里了解什么？</h2>${workbench(viewSession).filter(item=>item.action.place===selection.id).map(methodHTML).join('')}`;
+ }else if(selection?.type==='node'){
+  const node=nodeById(selection.id);if(!node){selection=null;return renderInspector();}
+  const edges=graph.edges.filter(e=>e.from===node.id||e.to===node.id);
+  const qs=relatedQuestions([node.id]);
+  box.innerHTML=`<div class="eyebrow">${node.kind==='claim'?'当前判断':node.kind==='finding'?'局部认识':'已得信息'}${stateText[node.state]?' / '+esc(stateText[node.state]):''}</div><h2 class="detail-title">${esc(node.title)}</h2><p class="detail-copy">${esc(node.summary)}</p>${edges.length?'<div class="section-label">与已有信息怎样相连</div>'+edges.map(e=>`<button class="relation-button" data-edge="${esc(e.id)}"><strong>${esc(e.label)}</strong>${esc(nodeById(e.from===node.id?e.to:e.from)?.title||'已有信息')}</button>`).join(''):'<p class="small" style="margin-top:15px">目前独立保留。有了相应依据，关系才会出现。</p>'}${qs.length?'<div class="section-label">这里仍拿不准的地方</div>'+questionsHTML(qs):''}${node.sourceIds?.length?'<div class="section-label">回查原始依据</div>'+sourceHTML(node.sourceIds):''}${['claim','finding'].includes(node.kind)?`<button class="fold-button" data-fold="${esc(node.id)}">${folded.has(node.id)?'展开原始依据':'收拢只服务于此的依据'}</button><p class="small">共享的依据、疑问与跨处连接会保留。</p>`:''}`;
+ }else if(selection?.type==='edge'){
+  const edge=graph.edges.find(e=>e.id===selection.id);if(!edge){selection=null;return renderInspector();}
+  box.innerHTML=`<div class="eyebrow">信息之间的关系</div><h2 class="detail-title">${esc(edge.label)}</h2><p class="detail-copy">${esc(edge.details||'这条关系由本局已经取得的依据建立。')}</p><div class="section-label">连接的内容</div>${[edge.from,edge.to].map(id=>`<button class="source-button" data-node="${esc(id)}">${esc(nodeById(id)?.title)}</button>`).join('')}<div class="section-label">这条关系的依据</div>${sourceHTML(edge.sourceIds)}`;
+ }else if(selection?.type==='question'){
+  const q=graph.questions.find(q=>q.id===selection.id);if(!q){selection=null;return renderInspector();}
+  box.innerHTML=`<div class="eyebrow">从已知内容中提出的疑问</div><h2 class="detail-title">${esc(q.title)}</h2><p class="detail-copy">${esc(q.explanation)}</p><div class="section-label">问题从哪里来</div>${q.anchorIds.map(id=>`<button class="source-button" data-node="${esc(id)}">${esc(nodeById(id)?.title)}</button>`).join('')}${q.actionIds.length?`<button id="show-methods" style="margin-top:18px">${openQuestionMethods?'收起调查手段':'有哪些手段可以了解它'}</button>`:'<p class="reason">当前切片没有进一步核对这一点的手段，可以把这项未知写进收手判断。</p>'}${openQuestionMethods?workbench(viewSession).filter(item=>q.actionIds.includes(item.action.id)).map(methodHTML).join(''):''}<p class="small" style="margin-top:16px">是否继续了解，由你决定。其他问题仍留在地图上。</p>`;
+ }else if(selection?.type==='source'){
+  const o=observationById(selection.id);const step=viewSession.log.find(item=>item.observationId===selection.id);const action=step?ACTION_BY_ID.get(step.actionId):null;
+  box.innerHTML=`<div class="eyebrow">原始调查记录</div><h2 class="detail-title">${esc(o.title||o.short||action?.name||'已得信息')}</h2><p class="detail-copy">${esc(o.summary||o.gist||ACTION_SEMANTICS[action?.id]?.gotWhat||'这一份信息已保留在本局记录中。')}</p>${action?`<div class="section-label">从哪里取得</div><p>${esc(action.name)}</p><p class="small">${viewSession.log.filter(item=>item.observationId===selection.id).length} 次取得记录；同一证据不会因此重复计权。</p>`:''}<div class="section-label">在哪些地方使用</div>${graph.nodes.filter(n=>n.sourceIds?.includes(selection.id)).map(n=>`<button class="source-button" data-node="${esc(n.id)}">${esc(n.title)}</button>`).join('')}${graph.edges.filter(e=>e.sourceIds?.includes(selection.id)).map(e=>`<button class="relation-button" data-edge="${esc(e.id)}">${esc(e.label)}</button>`).join('')}`;
+ }else if(selection?.type==='history'){
+  box.innerHTML=`<div class="eyebrow">本局足迹</div><h2 class="detail-title">回看信息怎样接通</h2><p class="small">回看不花步数，也不会改动当前局。</p><button class="history-step" data-history="0">开局 · 尚未取得信息</button>${session.log.map((item,index)=>`<button class="history-step" data-history="${index+1}">${index+1}. ${esc(ACTION_BY_ID.get(item.actionId)?.name)}</button>`).join('')}<button id="history-live" style="margin-top:15px">回到本局</button>`;
+ }else{
+  const claims=graph.nodes.filter(n=>n.kind==='claim');
+  box.innerHTML=`<div class="eyebrow">${session.stopped?'本局已收手':'这次委托'}</div><h2 class="intro-title">它经历过什么？</h2><p class="detail-copy" style="margin-top:12px">委托人正准备接手这只碗。你来判断它的经历，以及仍有哪些地方拿不准。</p><div class="section-label">${graph.nodes.length?'阅读地图':'从哪里开始'}</div><p class="detail-copy">${graph.nodes.length?'点一条内容，看它与谁有关；点一条道路，回查这条关系的依据。':'在左侧任选实物部位、资料或检测手段。可以先看实物，也可以先找资料。'}</p>${graph.questions.length?'<div class="section-label">已知内容里仍有这些疑问</div>'+questionsHTML(graph.questions):''}${claims.length?'<div class="section-label">本局已经形成的判断</div>'+claims.map(n=>`<button class="source-button" data-node="${esc(n.id)}">${esc(n.title)}</button>`).join(''):''}${session.stopped?`<div class="stop-summary"><h3>本局结账</h3><p class="small">${billText(session)}</p>${finalNote?'<p class="detail-copy">'+esc(finalNote)+'</p>':''}<p class="small">地图和原始依据仍可回看。</p></div>`:''}`;
+ }
+}
+function billText(s){return COST_LABEL.map((label,index)=>`${label} × ${s.billed[index]}`).join(' · ');}
+function render(reposition=true){
+ const focus=document.activeElement;
+ const focusKey=focus?.tagName==='BUTTON'?Object.keys(focus.dataset).find(key=>['place','node','edge','question','source','take','history','fold'].includes(key)):null;
+ const focusValue=focusKey?focus.dataset[focusKey]:null;
+ viewSession=currentViewSession();solved=solve(viewSession);graph=buildGraph(solved,viewSession);
+ const stage=STAGE_SEMANTICS[solved.stage];
+ $('stage-title').textContent=(session.stopped&&historyIndex===null?'已收手 · ':'')+stage.name;
+ $('stage-sub').textContent=`还剩 ${viewSession.budget-viewSession.log.length} 步 / 共 ${viewSession.budget} 步 · ${billText(viewSession)}`;
+ $('budget').min=BUDGET_MIN;$('budget').max=BUDGET_MAX;$('budget').value=session.budget;$('budget').disabled=session.log.length>0||session.stopped||historyIndex!==null;
+ $('stop-button').disabled=session.stopped||historyIndex!==null;$('stop-button').textContent=session.stopped?'已收手':'收手';
+ $('history-banner').classList.toggle('visible',historyIndex!==null);$('history-caption').textContent=historyIndex!==null?`正在回看第 ${historyIndex} 步 · 当前局仍保留 ${session.log.length} 步调查`:'';
+ $('notice').textContent=historyIndex===null?notice:'这是当时已知的内容。随时可以返回当前局。';
+ renderPlaces();renderMap(reposition);renderInspector();
+ if(focusKey){
+  const replacement=[...document.querySelectorAll('button')].find(button=>button.dataset[focusKey]===focusValue);
+  if(replacement)replacement.focus({preventScroll:true});else $('inspector').focus({preventScroll:true});
+ }
+}
+function choose(type,id){selection={type,id};openQuestionMethods=false;render(false);}
+function executeAction(id){
+ const previous=graph;const result=take(session,id);
+ if(!result.ok){notice=result.why;render(false);return;}
+ const next=buildGraph(result.after,session);recentIds=new Set(next.nodes.filter(n=>!previous.nodes.some(old=>old.id===n.id)).map(n=>n.id));
+ const connections=next.edges.filter(e=>!previous.edges.some(old=>old.id===e.id));
+ for(const edge of connections){recentIds.add(edge.from);recentIds.add(edge.to);}
+ const interpreted=result.after.evidence.contextualizedObservationIds.filter(id=>!result.before.evidence.contextualizedObservationIds.includes(id));
+ notice=interpreted.length?`${ACTION_BY_ID.get(id).name}：${interpreted.length} 份旧资料获得了解释前提。`:
+  result.kind==='repeat'?'再次核对的结果已留在记录中，同一证据不重复计权。':
+  result.kind==='negative'?'这次没有得到足以作判断的信号，结果与限制已经保留。':
+  result.kind==='suspended'?'资料已经取得；它仍缺少解释所需的上下文。':
+  `${ACTION_BY_ID.get(id).name}：信息已保留${connections.length?'，'+connections.length+' 条关系接通':''}。`;
+ render(true);
+}
+document.addEventListener('click',event=>{
+ const button=event.target.closest('button');
+ if(button?.disabled)return;
+ if(button?.dataset.place)choose('place',button.dataset.place);
+ if(button?.dataset.node)choose('node',button.dataset.node);
+ if(button?.dataset.edge)choose('edge',button.dataset.edge);
+ if(button?.dataset.question)choose('question',button.dataset.question);
+ if(button?.dataset.source)choose('source',button.dataset.source);
+ if(button?.dataset.take)executeAction(button.dataset.take);
+ if(button?.dataset.close)$(button.dataset.close).close();
+ if(button?.dataset.fold){const id=button.dataset.fold;if(folded.has(id)){folded.delete(id);layout={...layout,positions:{...foldPositions,...layout.positions}};}else{foldPositions={...foldPositions,...layout.positions};folded.add(id);}render(true);}
+ if(button?.dataset.history!==undefined){if(historyIndex===null){liveLayoutBeforeHistory=layout;liveFoldsBeforeHistory={folded:new Set(folded),positions:foldPositions};folded=new Set();foldPositions={};}historyIndex=Number(button.dataset.history);layout=null;render(true);}
+ if(button?.id==='show-methods'){openQuestionMethods=!openQuestionMethods;renderInspector();$('show-methods')?.focus({preventScroll:true});}
+ if(button?.id==='history-live')returnLive();
+ if(!button){const edge=event.target.closest('[data-edge]');if(edge)choose('edge',edge.dataset.edge);}
+});
+$('budget').addEventListener('change',()=>{const result=setBudget(session,$('budget').value);if(!result.ok)notice=result.why;render(false);});
+$('brief-button').onclick=()=>$('brief-dialog').showModal();
+$('history-button').onclick=()=>choose('history','');
+$('overview-button').onclick=()=>{selection=null;zoom=1;render(false);};
+$('zoom-in').onclick=()=>{zoom=Math.min(1.5,Math.round((zoom+.1)*10)/10);renderMap(false);};
+$('zoom-out').onclick=()=>{zoom=Math.max(.8,Math.round((zoom-.1)*10)/10);renderMap(false);};
+function returnLive(){historyIndex=null;layout=liveLayoutBeforeHistory;liveLayoutBeforeHistory=null;if(liveFoldsBeforeHistory){folded=liveFoldsBeforeHistory.folded;foldPositions=liveFoldsBeforeHistory.positions;liveFoldsBeforeHistory=null;}render(true);$('history-button').focus({preventScroll:true});}
+$('return-live').onclick=returnLive;
+$('stop-button').onclick=()=>{
+ const claims=graph.nodes.filter(n=>n.kind==='claim');
+ $('stop-preview').innerHTML=`<p>${esc(STAGE_SEMANTICS[solved.stage].meaning)}</p>${claims.map(n=>`<div class="stop-claim">${esc(n.title)}</div>`).join('')}<div class="section-label">还没有说清的地方</div>${graph.questions.length?graph.questions.map(q=>'<p class="small">'+esc(q.title)+'</p>').join(''):'<p class="small">本局仍以已经取得的证据范围为限。</p>'}<p class="small" style="margin-top:15px">用了 ${session.log.length} 步 · ${billText(session)}</p>`;
+ $('stop-dialog').showModal();
+};
+$('confirm-stop').onclick=()=>{session.stopped=true;finalNote=$('final-note').value.trim();selection=null;notice='本局已经收手。判断、依据与剩余疑问都保留在地图中。';$('stop-dialog').close();render(false);};
+$('restart-button').onclick=()=>{if(session.log.length||session.stopped)$('restart-dialog').showModal();else restart();};
+function restart(){session=newSession(session.budget);selection=null;historyIndex=null;layout=null;liveLayoutBeforeHistory=null;liveFoldsBeforeHistory=null;folded.clear();foldPositions={};recentIds.clear();finalNote='';$('final-note').value='';zoom=1;notice='新的一局。从工作台任选一处开始。';render(true);}
+$('confirm-restart').onclick=()=>{$('restart-dialog').close();restart();};
+let resizeFrame;new ResizeObserver(()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>renderMap(true));}).observe($('map-scroll'));
+window.ATLAS_DEBUG={get session(){return session;},get graph(){return graph;},get layout(){return layout;},get stamp(){return STAMP;},get selection(){return selection;}};
+render();
+</script>
+</html>

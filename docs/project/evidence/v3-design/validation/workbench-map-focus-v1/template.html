@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>掌眼 V3 · 工作台与心智地图 呈现变体 v0</title>
+<link rel="icon" href="data:,">
+<title>掌眼 V3 · 主题背景与按需解释试玩 v1</title>
 <style>
   :root{
     --bg:#0d0d0f; --panel:#15151a; --panel2:#1b1b21; --line:#2a2a32;
@@ -55,8 +56,11 @@
   button.t:hover{border-color:var(--gold2)}
   .warnbar{
     flex:0 0 auto;background:#1a1512;border-bottom:1px solid #2e241b;
-    color:#a89272;padding:6px 16px;font-size:11.5px;letter-spacing:.02em
+    color:#a89272;padding:3px 16px;font-size:10.5px;letter-spacing:.02em
   }
+  .warnbar details{display:inline-block}
+  .warnbar summary{cursor:pointer;color:#b59a72;list-style-position:inside}
+  .warnbar .experiment-detail{display:block;padding:3px 0 2px 15px;color:var(--dim)}
 
   /* ---------- 三区 ---------- */
   main{flex:1;display:flex;min-height:0}
@@ -78,6 +82,7 @@
   .hot circle.hit{fill:transparent}
   .hot .dot{fill:var(--panel2);stroke:var(--gold2);stroke-width:1.2}
   .hot:hover .dot,.hot.open .dot{fill:var(--gold);stroke:var(--gold)}
+  .hot.focused .dot{fill:#2c261a;stroke:var(--gold);stroke-width:2.2}
   .hot text{fill:var(--dim);font-size:10.5px}
   .hot:hover text,.hot.open text{fill:var(--ink)}
   .hot .meta{fill:var(--gold2);font-size:8.8px;letter-spacing:.02em}
@@ -85,6 +90,7 @@
   .hot:focus-visible .dot{fill:var(--gold);stroke:#fff;stroke-width:2}
   .hot:focus-visible text{fill:var(--ink)}
   .hot.spent .dot{fill:var(--dim2);stroke:var(--dim2)}
+  .hot.spent.focused .dot{fill:#2c261a;stroke:var(--gold);stroke-width:2.2}
   .bowl{fill:none;stroke:#33313a;stroke-width:1.2}
   .bowlfill{fill:#131318}
 
@@ -98,6 +104,7 @@
   }
   .mrow:hover{background:var(--panel2);border-color:var(--line)}
   .mrow.open{background:var(--panel2);border-color:var(--gold2)}
+  .mrow.focused{background:#1d1a14;border-color:var(--gold2)}
   .mrow:focus-visible{outline:1px solid var(--gold2);outline-offset:-1px;background:var(--panel2)}
   .mrow .nm{flex:1;font-size:12.5px}
   .mrow .cs{color:var(--gold2);font-size:11px;white-space:nowrap}
@@ -111,11 +118,19 @@
     box-shadow:0 14px 40px rgba(0,0,0,.62)
   }
   #pop h4{margin:0 0 2px;font-size:13px;font-weight:600}
+  button.afocus{
+    appearance:none;background:none;border:0;color:var(--ink);font:inherit;font-weight:600;
+    padding:0;cursor:pointer;text-align:left
+  }
+  button.afocus:hover,button.afocus:focus-visible{color:var(--gold);outline:none}
   #pop .cap{color:var(--dim2);font-size:10.5px;letter-spacing:.06em;
     border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:9px}
+  #pop .action-card{border-left:2px solid transparent;padding-left:7px}
+  #pop .action-card.focused{border-left-color:var(--gold)}
   #pop .ask{color:var(--gold);font-size:12px;margin-bottom:7px}
+  #pop .why-pack{margin-top:8px}
   #pop .why{color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:7px}
-  #pop .long{color:var(--dim);font-size:11.5px;margin-top:6px;display:none;
+  #pop .long{color:var(--dim);font-size:11.5px;margin-top:6px;
     border-top:1px dashed var(--line);padding-top:6px}
   #pop .foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
   #pop .cost{color:var(--gold2);font-size:11.5px}
@@ -135,25 +150,48 @@
   #mapwrap{flex:1;position:relative;min-height:0}
   #map{display:block;width:100%;height:100%}
   .edge{stroke-linecap:round;fill:none}
-  .e-latent{stroke:#5d5a52;stroke-width:1.1}
   .e-prereq{stroke:#4a5560;stroke-width:1;stroke-dasharray:1 3}
   .e-caught{stroke:var(--caught);stroke-width:1.3}
   .e-supports{stroke:#3d4a38;stroke-width:1}
   .edge.lit{stroke:var(--gold);stroke-width:2}
+  .edge.dim{opacity:.045}
+  .edge.active{opacity:1;stroke-width:2.4}
   .nd text{font-size:10.5px;fill:var(--dim)}
   .nd.on text{fill:var(--ink)}
   .n-obs{fill:#1a222a;stroke:var(--obs);stroke-width:1.3}
   .n-obs.susp{stroke:var(--dim2);stroke-dasharray:2 2;fill:#17171b}
   .n-obs.neg{stroke:var(--warn);stroke-dasharray:2 2}
   .n-obs.caught{stroke:var(--caught)}
-  .n-find{fill:#241c14;stroke:var(--find);stroke-width:1.4}
   .n-ax{fill:#1a2118;stroke:var(--axiom);stroke-width:1.4}
   .nd{cursor:pointer}
-  .nd.flash circle,.nd.flash polygon,.nd.flash rect{stroke:var(--gold);stroke-width:2.4}
+  .node-hit{fill:transparent;stroke:none;pointer-events:all}
+  .nd.dim{opacity:.13}
+  .nd.related .n-obs,.nd.related .n-ax{stroke-width:1.9}
+  .nd.selected .n-obs,.nd.selected .n-ax{stroke:var(--gold);stroke-width:2.4}
+  .nd.flash .n-obs,.nd.flash .n-ax{stroke:var(--gold);stroke-width:2.4}
+  .topic-bg{pointer-events:none}
+  .topic-envelope{fill:rgba(111,159,191,.028);stroke:#26333c;stroke-width:1;stroke-dasharray:4 7}
+  .topic-bg.dim{opacity:.18}
+  .topic-bg.related .topic-envelope{stroke:#4f6652;fill:rgba(88,116,79,.045)}
+  .topic-bg.selected .topic-envelope{stroke:var(--gold2);fill:rgba(217,177,102,.04)}
+  .topic-label{outline:none;cursor:pointer}
+  .topic-label rect{fill:#0c1013;stroke:#33424c;stroke-width:1}
+  .topic-label text{fill:#617580;font-size:9.5px;letter-spacing:.03em;pointer-events:none}
+  .topic-label:hover rect,.topic-label:focus-visible rect{fill:#151d22;stroke:#5c7482}
+  .topic-label:hover text,.topic-label:focus-visible text{fill:#8ca4b1}
+  .topic-label.dim{opacity:.22}
+  .topic-label.related rect{stroke:#4f6652}
+  .topic-label.selected rect{stroke:var(--gold2)}
+  .topic-label.selected text{fill:var(--gold2)}
   .fly{stroke:var(--gold);stroke-width:1.6;fill:none;stroke-dasharray:5 4}
   #mapempty{
     position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     color:var(--dim2);font-size:12.5px;text-align:center;padding:0 60px;line-height:2
+  }
+  #mapfocus{
+    position:absolute;left:12px;top:10px;z-index:8;display:none;max-width:360px;
+    color:var(--gold);font-size:11px;background:rgba(21,21,26,.9);border:1px solid var(--gold2);
+    border-radius:999px;padding:3px 10px;pointer-events:none
   }
   #tip{
     position:absolute;z-index:30;max-width:250px;background:#191920;border:1px solid var(--line);
@@ -163,24 +201,69 @@
   #tip b{color:var(--ink);display:block;margin-bottom:3px;font-size:12.5px}
   .lgd{
     position:absolute;left:12px;bottom:10px;color:var(--dim2);font-size:10.5px;
-    display:flex;gap:14px;flex-wrap:wrap;max-width:70%
+    max-width:76%
   }
+  .lgd details{background:rgba(13,13,15,.88);border:1px solid transparent;border-radius:3px;padding:2px 6px}
+  .lgd details[open]{border-color:var(--line);padding-bottom:5px}
+  .lgd summary{cursor:pointer;color:var(--dim);font-size:10.5px}
+  .legend-items{display:flex;gap:12px;flex-wrap:wrap;margin-top:5px}
   .lgd i{font-style:normal;display:inline-flex;align-items:center;gap:5px}
+  .topic-key{width:16px;height:9px;border:1px dashed #425866;border-radius:3px;display:inline-block}
   .sw{width:16px;height:0;border-top-width:2px;border-top-style:solid;display:inline-block}
   /* 图注里的箭头,紧跟在线段样本后面,标明这一种边是有方向的 */
   .swa{margin-left:-4px;margin-right:1px;font-size:11px;line-height:1;color:var(--dim2)}
 
   /* ---------- 右:决策面 ---------- */
+  #qrail{flex:0 0 auto;border-bottom:1px solid var(--line);padding:8px 10px 9px;background:#121217}
+  .qrail-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .qrail-head span{color:var(--dim2);font-size:10px;letter-spacing:.12em}
+  .qclear{background:none;border:0;color:var(--dim);font:inherit;font-size:10.5px;cursor:pointer;padding:0}
+  .qclear:hover{color:var(--ink)}
+  .qitems{display:grid;grid-template-columns:1fr;gap:3px}
+  .qbtn{
+    display:flex;align-items:center;gap:7px;width:100%;padding:4px 7px;background:transparent;
+    color:var(--dim);border:1px solid transparent;border-radius:3px;font:inherit;font-size:11.5px;
+    text-align:left;cursor:pointer
+  }
+  .qbtn:hover{background:var(--panel2);color:var(--ink)}
+  .qbtn.active{background:#201b12;border-color:var(--gold2);color:var(--ink)}
+  .qbtn.related{border-color:#3b372d;color:#aaa395;background:#181712}
+  .qbtn.related::after{content:"牵连";margin-left:auto;color:var(--dim2);font-size:9px;letter-spacing:.08em}
+  .qfacet-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:5px 0 0 7px}
+  .qfacet{
+    display:flex;justify-content:space-between;gap:4px;padding:3px 6px;background:var(--panel2);
+    color:var(--dim);border:1px solid var(--line);border-radius:3px;font:inherit;font-size:10.5px;
+    cursor:pointer
+  }
+  .qfacet.active{border-color:var(--gold);color:var(--ink);background:#241e13}
+  .qfacet.done .qs{color:var(--axiom)}
+  .qfacet.progress .qs{color:var(--gold)}
+  .qfacet.blocked .qs{color:var(--warn)}
+  .qs{color:var(--dim2);white-space:nowrap}
+  .qfinal{margin:6px 7px 0;color:var(--dim2);font-size:10px;line-height:1.45}
+  .focusline{margin-top:6px;color:var(--dim);font-size:10.5px;line-height:1.45}
+  .focusline b{color:var(--gold);font-weight:500}
   #deckbody{flex:1;overflow:auto;padding:2px 12px 14px}
   .ax{
     color:var(--axiom);font-size:11.5px;padding:4px 8px;border-left:2px solid var(--axiom);
     background:#151a14;margin:4px 0;border-radius:0 3px 3px 0
   }
+  .ax.dim{opacity:.16}
+  .ax.focused{box-shadow:0 0 0 1px rgba(104,143,73,.2)}
   .card{
-    border:1px solid var(--line);border-radius:4px;padding:9px 10px;margin:9px 0;
+    border:1px solid var(--line);border-radius:4px;padding:0;margin:9px 0;
     background:var(--panel2)
   }
+  .card.dim{opacity:.16}
+  .card.focused{border-color:var(--gold2);box-shadow:0 0 0 1px rgba(217,177,102,.08)}
+  .card-toggle{display:block;width:100%;background:transparent;border:0;color:inherit;text-align:left;
+    padding:8px 9px;cursor:pointer;font:inherit}
+  .card-toggle:hover,.card-toggle:focus-visible{background:#202028;outline:1px solid var(--gold2);outline-offset:-1px}
   .card .kd{font-size:10px;letter-spacing:.14em;color:var(--dim2);margin-bottom:3px}
+  .card-summary{display:flex;align-items:flex-start;gap:7px}
+  .card-summary h5{flex:1}
+  .means-count{flex:0 0 auto;color:var(--gold2);font-size:10.5px;white-space:nowrap}
+  .card-detail{padding:0 9px 9px;border-top:1px solid rgba(42,42,50,.65)}
   .card.k-suspended{border-left:2px solid var(--dim2)}
   .card.k-negative{border-left:2px solid var(--warn)}
   .card.k-onemore{border-left:2px solid var(--gold)}
@@ -193,7 +276,7 @@
   .means .hd{color:var(--dim2);font-size:10.5px;letter-spacing:.1em;margin-bottom:4px}
   .mean{
     display:flex;align-items:baseline;gap:7px;padding:3px 6px;border-radius:3px;cursor:pointer;
-    border:1px solid transparent
+    border:1px solid transparent;background:transparent;color:inherit;font:inherit;width:100%;text-align:left
   }
   .mean:hover{background:#20202a;border-color:var(--line)}
   .mean .nm{flex:1;font-size:12px}
@@ -216,6 +299,12 @@
   #brief p.q{color:var(--gold2)}
   #brief ul{margin:0 0 13px;padding-left:19px}
   #brief li{font-size:12.5px;line-height:1.9;color:var(--dim);margin-bottom:3px}
+  #brief .brief-core{margin-bottom:10px}
+  #brief details{border-top:1px solid var(--line);padding:8px 0 0;margin-top:8px}
+  #brief summary{cursor:pointer;color:var(--dim);font-size:12.5px}
+  #brief details[open] summary{color:var(--gold2);margin-bottom:6px}
+  #brief .brief-detail{padding:0 2px 1px 16px}
+  #brief .brief-detail p,#brief .brief-detail li{font-size:12px;line-height:1.75;color:var(--dim)}
   #brief .go2{margin-top:6px;padding:8px 20px;font-size:13px;cursor:pointer;
     background:var(--gold);color:#14140f;border:0;border-radius:4px;font-weight:600}
 
@@ -239,7 +328,7 @@
 <body>
 <div id="app">
   <header>
-    <div class="brand"><b>掌眼 V3</b><span>工作台 ／ 心智地图 呈现变体 v0</span></div>
+    <div class="brand"><b>掌眼 V3</b><span>工作台 ／ 主题背景与按需解释试玩 v1</span></div>
     <div class="readout" id="ro"></div>
     <div class="meters" id="mt"></div>
     <div class="setup" id="su">
@@ -270,6 +359,7 @@
       <div class="zt">已知与推理 <em>—— 你查到的东西,以及它们之间怎么串起来</em></div>
       <div id="mapwrap">
         <svg id="map"></svg>
+        <div id="mapfocus"></div>
         <div id="mapempty"></div>
         <div class="lgd" id="lgd"></div>
         <div id="tip"></div>
@@ -277,6 +367,7 @@
     </div>
     <div class="col" id="deck">
       <div class="zt">现在该判断什么 <em>—— 手上悬着、等你决定下一步的东西</em></div>
+      <div id="qrail"></div>
       <div id="deckbody"></div>
     </div>
   </main>
@@ -284,25 +375,35 @@
 
 <div id="pop" role="dialog" aria-label="这个位置可用的具体手段" aria-hidden="true" tabindex="-1"></div>
 
-<div id="brief">
+<div id="brief" role="dialog" aria-modal="true" aria-labelledby="brief-title" aria-hidden="true">
   <div class="bx">
-    <h3>这一趟是受人委托</h3>
+    <h3 id="brief-title">这一趟是受人委托</h3>
     <div class="sub">开局说明 · 随时可以从右上角「委托」再看一遍</div>
-    <p>你是个替人看东西的鉴定人。今天的委托人正准备接手这只碗,钱还没付。
-      他不问你「真的还是假的」——他问的是:<b>这东西究竟经历过什么,我该不该接。</b></p>
-    <p class="q">你要交回去的,是一份说得出根据的判断:你查到了什么、据此能说到哪一步、
-      以及哪些地方你还不敢说。</p>
-    <p>手上这只碗的疑点是:<b>它像是被大改过</b>。要把这件事说实,有两条路 ——
-      一条靠翻纸面记录,一条靠查实物本身。两条都能走通,也可以混着走;
-      走哪条取决于你的步数花在哪边。</p>
-    <ul>
-      <li>左边先列的是<b>可以下手的位置和路子,不是具体动作</b>。点开一处,才会看到这里能用的具体手段;上半对着碗本身看,下半查档案、送化验、比真品。</li>
-      <li>每用一个手段<b>占 1 步</b>,步数是你唯一会用完的东西。花不花钱另算,只记账,不设上限。</li>
-      <li>中间那张图是<b>你查到的东西和它们之间的关系</b>,系统会自动替你连线,不额外收费。</li>
-      <li>右边告诉你<b>现在有哪些东西悬着</b>,等你决定下一步。它不会替你排先后。</li>
-      <li>什么时候够了由你说 —— 按「收手」交差。左上那行会告诉你,以现在手上的东西你能说到什么程度。</li>
+    <p>你受人委托,替一位准备接手这只碗的人先看明白。</p>
+    <p class="q">你要回答的是:<b>它经历过什么,该不该接?</b> 判断要说得出根据,也要说明哪些地方还不敢说。</p>
+    <ul class="brief-core">
+      <li>每用一个手段<b>占 1 步</b>;钱只记账,不限制你调查。</li>
+      <li>觉得证据已经够了,就按右上角<b>「收手」</b>,由你亲自结束调查。</li>
     </ul>
-    <p>有些情报刚买回来是读不出结论的,得等另一样东西到手才变得有用。这是常态,不是你买错了。</p>
+    <details>
+      <summary>这三栏怎么配合</summary>
+      <div class="brief-detail">
+        <p>手上这只碗的疑点是:<b>它像是被大改过</b>。要把这件事说实,有两条路 ——
+          一条靠翻纸面记录,一条靠查实物本身。两条都能走通,也可以混着走;
+          走哪条取决于你的步数花在哪边。</p>
+        <ul>
+          <li>左边先列的是<b>可以下手的位置和路子,不是具体动作</b>。点开一处,才会看到这里能用的具体手段;上半对着碗本身看,下半查档案、送化验、比真品。</li>
+          <li>中间那张图是<b>你查到的东西和它们之间的关系</b>,系统会自动替你连线,不额外收费。</li>
+          <li>右边列着<b>五件可以穿插着查的事</b>。点左边一处,中间和右边会一起只亮相关内容;它不会替你排先后。</li>
+        </ul>
+      </div>
+    </details>
+    <details>
+      <summary>为什么有些情报暂时没用</summary>
+      <div class="brief-detail">
+        <p>有些情报刚买回来是读不出结论的,得等另一样东西到手才变得有用。这是常态,不是你买错了。</p>
+      </div>
+    </details>
     <button class="go2" id="bgo">接了这活</button>
   </div>
 </div>
@@ -329,6 +430,9 @@ const { newSession, take, solve, workbench, setBudget,
         BUDGET_MIN, BUDGET_MAX, BUDGET_DEFAULT } = SESSION;
 const { mentalMap, decisionSurface, readout, EDGE_KINDS, EDGE_DIRECTED } = PROJECTION;
 const { ACTION_SEMANTICS } = SEMANTICS;
+const { QUESTIONS, Q5_FACETS, ACTION_FOCUS, focusForAction, focusForActions,
+         focusForPlace, q5FacetStates, relatedNodeIds, decisionItemMatches,
+         actionMatchesFocus, focusForTopic, relatedTopicIds } = FOCUS;
 
 const $ = (s) => document.querySelector(s);
 const el = (t, a = {}, kids = []) => {
@@ -384,15 +488,26 @@ for (const a of ACTIONS) {
 }
 
 /* ---------- 状态 ---------- */
-let S, wbRows, view, history, positions, pinned, anim;
+let S, wbRows, view, history, positions, layoutGraph, layoutViewport, focusedNodeId, focusState, anim;
+let transitionToken = 0;
+let pendingActionLabel = null;
 /* 重开沿用上次设定的点数 —— 调完难度再开一局是常见动作,不该每次回到默认 */
 let chosenBudget = BUDGET_DEFAULT;
+function cancelTransition({ discardPending = true } = {}) {
+  transitionToken += 1;
+  anim = null;
+  if (discardPending) pendingActionLabel = null;
+}
 function reset() {
+  cancelTransition();
+  closePop();
   S = newSession(chosenBudget);
   history = [];
   positions = new Map();
-  pinned = new Set();
-  anim = null;
+  layoutGraph = null;
+  layoutViewport = null;
+  focusedNodeId = null;
+  focusState = null;
   recompute();
   snapshot(null);
   renderAll();
@@ -415,73 +530,184 @@ function snapshot(actLabel) {
   });
 }
 
-/* ==================== 力导向布局 ==================== */
-/* 公理钉住不动(DEC-032 第十二节);需要自由重排的只剩活跃区。 */
+/* ---------- 三栏共用的玩家问题聚焦 ---------- */
+function questionById(questionId) {
+  return QUESTIONS.find((question) => question.id === questionId) ?? null;
+}
+function facetById(facetId) {
+  return Q5_FACETS.find((facet) => facet.id === facetId) ?? null;
+}
+function focusLabel(focus) {
+  if (!focus) return "";
+  if (focus.label) return focus.label;
+  if (focus.facetId) return facetById(focus.facetId)?.label ?? focus.facetId;
+  if (focus.actionId) return ACTION_BY_ID.get(focus.actionId)?.name ?? focus.actionId;
+  return (focus.questionIds ?? []).map((id) => questionById(id)?.label ?? id).join("／");
+}
+function focusWithLabel(focus, label) {
+  return focus ? { ...focus, label } : null;
+}
+function latestObservationForAction(actionId) {
+  return [...S.log].reverse().find((entry) => entry.actionId === actionId)?.observationId ?? null;
+}
+function setSharedFocus(next) {
+  focusState = next;
+  focusedNodeId = null;
+  syncLeftFocus();
+  syncPopupFocus();
+  renderQuestionRail();
+  renderMap();
+  renderDeck();
+  refreshPopAnchor(focusState?.actionId);
+}
+function clearSharedFocus() {
+  setSharedFocus(null);
+}
+function setActionFocus(actionId) {
+  const action = ACTION_BY_ID.get(actionId);
+  setSharedFocus(focusWithLabel(
+    focusForAction(actionId, latestObservationForAction(actionId)),
+    action?.name ?? actionId,
+  ));
+}
+function setPlaceFocus(placeId) {
+  const placeFocus = focusForPlace(placeId);
+  setSharedFocus(focusWithLabel(placeFocus, PLACE_LABEL.get(placeId) ?? placeId));
+}
+function setQuestionFocus(questionId, facetId = null) {
+  const match = { questionIds: [questionId], facetId };
+  const actionIds = ACTIONS.filter((action) => actionMatchesFocus(action.id, match)).map((action) => action.id);
+  const combined = focusForActions(actionIds);
+  const label = facetId
+    ? `${questionById(questionId)?.label ?? questionId}／${facetById(facetId)?.label ?? facetId}`
+    : questionById(questionId)?.label ?? questionId;
+  setSharedFocus(focusWithLabel({
+    ...combined,
+    primaryQuestionIds: [questionId],
+    relatedQuestionIds: [],
+    questionIds: [questionId],
+    facetId,
+    actionId: null,
+  }, label));
+}
+function syncLeftFocus() {
+  const activePlaces = new Set();
+  if (focusState) {
+    for (const action of ACTIONS) {
+      if (actionMatchesFocus(action.id, focusState)) activePlaces.add(action.place);
+    }
+  }
+  document.querySelectorAll("#bench [data-place]").forEach((node) => {
+    node.classList.toggle("focused", activePlaces.has(node.dataset.place));
+  });
+}
+function syncPopupFocus() {
+  document.querySelectorAll("#pop [data-action-card]").forEach((card) => {
+    const active = focusState?.actionId === card.dataset.actionCard;
+    card.classList.toggle("focused", active);
+    const button = card.querySelector("[data-focus-action]");
+    if (button) button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+}
+function refreshPopAnchor(actionId) {
+  if (openPlace == null || popAnchor?.isConnected || !actionId) return;
+  popAnchor = [...document.querySelectorAll("#deckbody [data-act]")]
+    .find((node) => node.dataset.act === actionId)
+    ?? document.querySelector(`[data-place="${openPlace}"]`)
+    ?? popAnchor;
+}
+function renderQuestionRail() {
+  const box = $("#qrail");
+  box.textContent = "";
+  const head = document.createElement("div");
+  head.className = "qrail-head";
+  head.innerHTML = `<span>这五件事可以穿插着查</span><button class="qclear" type="button">看全部</button>`;
+  head.querySelector("button").addEventListener("click", clearSharedFocus);
+  box.appendChild(head);
+
+  const items = document.createElement("div");
+  items.className = "qitems";
+  for (const question of QUESTIONS) {
+    const button = document.createElement("button");
+    const primaryIds = focusState?.primaryQuestionIds ?? focusState?.questionIds ?? [];
+    const relatedIds = focusState?.relatedQuestionIds ?? [];
+    const active = primaryIds.includes(question.id);
+    const related = !active && relatedIds.includes(question.id);
+    button.type = "button";
+    button.className = "qbtn" + (active ? " active" : related ? " related" : "");
+    button.dataset.question = question.id;
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    if (related) button.title = "这一步会牵动这里，但不是直接回答";
+    button.innerHTML = `<span>${esc(question.label)}</span>`;
+    button.addEventListener("click", () => {
+      const onlyThis = focusState?.questionIds?.length === 1
+        && focusState.questionIds[0] === question.id && !focusState.facetId;
+      if (onlyThis) clearSharedFocus(); else setQuestionFocus(question.id);
+    });
+    items.appendChild(button);
+    if (question.id === "Q5") {
+      const facets = document.createElement("div");
+      facets.className = "qfacet-grid";
+      for (const state of q5FacetStates(view.solved, wbRows)) {
+        const facetButton = document.createElement("button");
+        const facetActive = focusState?.facetId === state.id;
+        const shortFacet = { material: "材料", surface: "表面", stability: "稳定", documentation: "来路" }[state.id] ?? state.label;
+        const classByState = { resolved: "done", clue: "progress", blocked: "blocked", unseen: "" };
+        facetButton.type = "button";
+        facetButton.className = `qfacet ${classByState[state.state] ?? ""}${facetActive ? " active" : ""}`;
+        facetButton.dataset.facet = state.id;
+        facetButton.setAttribute("aria-pressed", facetActive ? "true" : "false");
+        facetButton.title = state.label;
+        facetButton.setAttribute("aria-label", `${state.label} ${state.stateLabel}`);
+        facetButton.innerHTML = `<span>${esc(shortFacet)}</span><span class="qs">${esc(state.stateLabel)}</span>`;
+        facetButton.addEventListener("click", () => {
+          if (facetActive) clearSharedFocus(); else setQuestionFocus("Q5", state.id);
+        });
+        facets.appendChild(facetButton);
+      }
+      items.appendChild(facets);
+    }
+  }
+  box.appendChild(items);
+  const finalQuestion = document.createElement("div");
+  finalQuestion.className = "qfinal";
+  finalQuestion.textContent = "最后由你决定：现在够不够我下判断？";
+  box.appendChild(finalQuestion);
+  const line = document.createElement("div");
+  line.className = "focusline";
+  line.innerHTML = focusState
+    ? `正在看：<b>${esc(focusLabel(focusState))}</b>`
+    : "点左侧一处，中间和右边会一起只亮相关内容。";
+  box.appendChild(line);
+}
+
+/* ==================== 结论牵引自由星座布局 ==================== */
+/*
+  仍是一张自由节点图,没有泳道或时间轴。四类关系全部参与坐标求解;
+  supports 使用短目标距离和超长尾惩罚,同时显式惩罚交叉、穿标签与标签互压。
+  旧节点只有软锚,不会因为出现得早而永久钉死。参数均来自 PARAMS.Experimental。
+*/
 function mapBox() {
   const w = $("#mapwrap").clientWidth, h = $("#mapwrap").clientHeight;
   return { w, h };
 }
-function layout(graph, { iters = 260 } = {}) {
+function layout(graph) {
   const { w, h } = mapBox();
-  const nodes = [...graph.nodes, ...graph.findings, ...graph.axioms];
-  const ids = new Set(nodes.map((n) => n.id));
-  for (const id of [...positions.keys()]) if (!ids.has(id)) positions.delete(id);
-
-  /* 新节点先落在中心附近(带确定性抖动,便于复现) */
-  let seed = nodes.length * 7919;
-  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
-  for (const n of nodes) {
-    if (!positions.has(n.id)) {
-      positions.set(n.id, { x: w / 2 + (rnd() - .5) * 140, y: h / 2 + (rnd() - .5) * 140 });
-    }
-  }
-  const adj = graph.edges.filter((e) => positions.has(e.from) && positions.has(e.to));
-  /* 目标边长按画布面积与节点数取,否则节点少时整团缩在中心、画布大半空着 */
-  const K = Math.max(96, Math.min(190, Math.sqrt((w - 150) * (h - 110) / Math.max(3, nodes.length)) * 0.82));
-  const R = K * K * 2.6;             /* 斥力随边长同步放大 */
-  for (let it = 0; it < iters; it++) {
-    const t = 1 - it / iters;
-    const fx = new Map(nodes.map((n) => [n.id, 0]));
-    const fy = new Map(nodes.map((n) => [n.id, 0]));
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = positions.get(nodes[i].id), b = positions.get(nodes[j].id);
-        let dx = a.x - b.x, dy = a.y - b.y;
-        let d2 = dx * dx + dy * dy;
-        if (d2 < 1) { dx = (rnd() - .5); dy = (rnd() - .5); d2 = 1; }
-        const f = R / d2;
-        const d = Math.sqrt(d2);
-        fx.set(nodes[i].id, fx.get(nodes[i].id) + (dx / d) * f);
-        fy.set(nodes[i].id, fy.get(nodes[i].id) + (dy / d) * f);
-        fx.set(nodes[j].id, fx.get(nodes[j].id) - (dx / d) * f);
-        fy.set(nodes[j].id, fy.get(nodes[j].id) - (dy / d) * f);
-      }
-    }
-    for (const e of adj) {
-      const a = positions.get(e.from), b = positions.get(e.to);
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const d = Math.hypot(dx, dy) || 1;
-      const f = (d - K) * 0.055;
-      fx.set(e.from, fx.get(e.from) + (dx / d) * f);
-      fy.set(e.from, fy.get(e.from) + (dy / d) * f);
-      fx.set(e.to, fx.get(e.to) - (dx / d) * f);
-      fy.set(e.to, fy.get(e.to) - (dy / d) * f);
-    }
-    for (const n of nodes) {
-      const p = positions.get(n.id);
-      /* 公理钉住:一旦定案,位置不再参与重排 */
-      if (pinned.has(n.id)) continue;
-      p.x += Math.max(-20, Math.min(20, fx.get(n.id))) * t;
-      p.y += Math.max(-20, Math.min(20, fy.get(n.id))) * t;
-      /* 极轻的向心,只防飘走,不把图拉成一团 */
-      p.x += (w / 2 - p.x) * 0.0022;
-      p.y += (h / 2 - p.y) * 0.0022;
-      p.x = Math.max(84, Math.min(w - 84, p.x));
-      p.y = Math.max(44, Math.min(h - 52, p.y));
-    }
-  }
-  /* 新定案的公理落位后钉住 */
-  for (const a of graph.axioms) pinned.add(a.id);
+  const staged = Object.fromEntries(
+    [...positions].map(([id, point]) => [id, { ...point }]),
+  );
+  const previous = LAYOUT.previousPositionsForGraph(staged, layoutGraph);
+  const viewportChanged = layoutViewport
+    && (Math.abs(layoutViewport.w - w) > 1 || Math.abs(layoutViewport.h - h) > 1);
+  const solved = LAYOUT.constellationLayoutStep(
+    graph,
+    previous,
+    viewportChanged ? null : layoutGraph,
+    { width: w, height: h },
+  );
+  positions = new Map(Object.entries(solved.positions).map(([id, point]) => [id, { ...point }]));
+  layoutGraph = graph;
+  layoutViewport = { w, h };
 }
 
 /* ==================== 渲染 ==================== */
@@ -490,9 +716,11 @@ function renderAll() {
   renderSetup();
   renderObject();
   renderOutside();
+  renderQuestionRail();
   layout(view.map);
   renderMap();
   renderDeck();
+  syncLeftFocus();
 }
 
 function renderHeader() {
@@ -510,11 +738,12 @@ function renderHeader() {
     `<div>还剩 <b>${S.budget - S.log.length}</b> 步 / 共 ${S.budget} 步　·　` +
       `已花 ${billLine(ro.billed)}</div>` +
     `<div>${r.map((x) => esc(x.name) + " " + (x.open ? "已通" : "未通")).join("　·　")}</div>`;
-  $("#wb").textContent =
-    "呈现变体,不是产品,也不是美术方向。规则全部来自冻结求解器(" +
+  const experimentDetail =
+    "这是独立试玩切片,不是产品或美术定案。规则来自冻结求解器(" +
     Object.keys(STAMP.sha).length + " 个模块已内联,构建于 " + STAMP.builtAt + ")。" +
-    "步数是唯一约束,每个手段都占一步;钱本阶段只记账、不设预算,局末告知。" +
-    "系统不给动作排序,也不预测全部后果。只做电脑浏览器尺寸。";
+    "步数是唯一约束;钱只记账。系统不替动作排序,也不预测全部后果。";
+  $("#wb").innerHTML = `<details><summary>实验入口 · 规则未变 · 仅桌面浏览器</summary>` +
+    `<span class="experiment-detail">${esc(experimentDetail)}</span></details>`;
 }
 
 /* 账单只报构成,不报总数 —— 档位是序数,把它们相加等于凭空断言中档是低档的两倍。
@@ -654,18 +883,23 @@ let openPlace = null;
 let popAnchor = null;
 function closePop({ restoreFocus = false } = {}) {
   const anchor = popAnchor;
-  $("#pop").style.display = "none";
-  $("#pop").setAttribute("aria-hidden", "true");
+  const pop = $("#pop");
+  /* 先把焦点送回入口,再把弹层从可访问树隐藏。否则浏览器会留下
+     “aria-hidden 里仍有焦点”的状态,键盘用户也会丢失当前位置。 */
+  if ((restoreFocus || pop.contains(document.activeElement))
+      && anchor?.isConnected && typeof anchor.focus === "function") anchor.focus();
+  pop.style.display = "none";
+  pop.setAttribute("aria-hidden", "true");
   openPlace = null;
   popAnchor = null;
   document.querySelectorAll(".hot.open,.mrow.open").forEach((n) => {
     n.classList.remove("open");
     n.setAttribute("aria-expanded", "false");
   });
-  if (restoreFocus && anchor?.isConnected && typeof anchor.focus === "function") anchor.focus();
 }
-function openPop(pid, anchorEl, { focusFirst = false } = {}) {
+function openPop(pid, anchorEl, { focusFirst = false, actionId = null } = {}) {
   if (openPlace === pid) return closePop({ restoreFocus: focusFirst });
+  const anchorRect = anchorEl.getBoundingClientRect();
   closePop();
   openPlace = pid;
   popAnchor = anchorEl;
@@ -674,6 +908,17 @@ function openPop(pid, anchorEl, { focusFirst = false } = {}) {
      aria-expanded;不要给普通说明行凭空加一个永不复位的可展开状态。 */
   if (anchorEl.hasAttribute("aria-expanded")) anchorEl.setAttribute("aria-expanded", "true");
   const acts = BY_PLACE.get(pid) ?? [];
+  const nextFocus = actionId
+    ? focusForAction(actionId, latestObservationForAction(actionId))
+    : focusForPlace(pid);
+  focusState = focusWithLabel(nextFocus,
+    actionId ? ACTION_BY_ID.get(actionId)?.name ?? actionId : PLACE_LABEL.get(pid) ?? pid);
+  focusedNodeId = null;
+  syncLeftFocus();
+  renderQuestionRail();
+  renderMap();
+  renderDeck();
+  refreshPopAnchor(actionId);
   const pop = $("#pop");
   pop.textContent = "";
   const cap = document.createElement("div");
@@ -683,24 +928,35 @@ function openPop(pid, anchorEl, { focusFirst = false } = {}) {
   acts.forEach((a, i) => {
     const row = wbRows.find((r) => r.action.id === a.id);
     const sem = ACTION_SEMANTICS[a.id] ?? {};
+    const whyId = `action-why-${i}`;
     const wrap = document.createElement("div");
+    wrap.className = "action-card" + (focusState?.actionId === a.id ? " focused" : "");
+    wrap.dataset.actionCard = a.id;
     wrap.innerHTML =
-      `<h4>${esc(a.name)}</h4>` +
+      `<h4><button class="afocus" type="button" data-focus-action aria-pressed="${focusState?.actionId === a.id ? "true" : "false"}">${esc(a.name)}</button></h4>` +
       `<div class="ask">${esc(a.ask)}</div>` +
-      `<div class="why">${esc(sem.whyShort ?? "")}</div>` +
-      `<div class="long" data-long>${esc(sem.whyLong ?? "")}</div>` +
+      `<div class="why-pack" id="${whyId}" data-why-pack hidden>` +
+        `<div class="why">${esc(sem.whyShort ?? "")}</div>` +
+        `<div class="long">${esc(sem.whyLong ?? "")}</div>` +
+      `</div>` +
       (row?.usable ? "" : `<div class="no">${esc(row?.why ?? (S.stopped ? "本局已经收手" : "现在不能做"))}</div>`) +
       /* 两种货币必须在同一行分得开:旧写法只说「费用 免费」,盲测者据此以为这一步
          什么都不耗,而它照样占掉一步 —— 而步数是唯一的硬约束。 */
       `<div class="foot"><span class="cost">占 1 步 · ` +
         `${a.cost === 0 ? "不花钱" : "花钱 " + esc(COST_LABEL[a.cost])}` +
         `${row?.done ? " · 已经做过" : ""}</span>` +
-        `<span class="acts"><button class="lk" data-more>为什么要紧</button>` +
+        `<span class="acts"><button class="lk" data-more aria-expanded="false" aria-controls="${whyId}">为什么要紧</button>` +
         `<button class="go" ${row?.usable && row?.affordable ? "" : "disabled"} data-run>做这一步</button>` +
         `</span></div>`;
+    wrap.querySelector("[data-focus-action]").addEventListener("click", () => setActionFocus(a.id));
     wrap.querySelector("[data-more]").addEventListener("click", () => {
-      const L = wrap.querySelector("[data-long]");
-      L.style.display = L.style.display === "block" ? "none" : "block";
+      setActionFocus(a.id);
+      const button = wrap.querySelector("[data-more]");
+      const pack = wrap.querySelector("[data-why-pack]");
+      const opening = pack.hidden;
+      pack.hidden = !opening;
+      button.setAttribute("aria-expanded", opening ? "true" : "false");
+      button.textContent = opening ? "收起说明" : "为什么要紧";
     });
     const go = wrap.querySelector("[data-run]");
     if (!go.disabled) go.addEventListener("click", () => doAction(a.id, pid));
@@ -710,7 +966,7 @@ function openPop(pid, anchorEl, { focusFirst = false } = {}) {
     }
   });
   /* 定位:贴着左栏右边缘 */
-  const r = anchorEl.getBoundingClientRect();
+  const r = anchorRect;
   pop.style.display = "block";
   pop.setAttribute("aria-hidden", "false");
   const top = Math.min(Math.max(8, r.top - 10), window.innerHeight - pop.offsetHeight - 12);
@@ -738,9 +994,6 @@ function nodeShape(n) {
       : n.state === "negative" ? " neg" : n.state === "caught" ? " caught" : "");
     return el("circle", { class: cls, r: 7, cx: 0, cy: 0 });
   }
-  if (n.type === "finding") {
-    return el("polygon", { class: "n-find", points: "0,-10 9,-5 9,5 0,10 -9,5 -9,-5" });
-  }
   return el("rect", { class: "n-ax", x: -9, y: -7, width: 18, height: 14, rx: 2 });
 }
 /* 三种有方向的边各要一个同色箭头。marker 不能继承 stroke,所以逐色定义。 */
@@ -763,6 +1016,99 @@ function pullBack(fx, fy, tx, ty, d) {
   const len = Math.hypot(vx, vy) || 1;
   return { x: tx - (vx / len) * d, y: ty - (vy / len) * d };
 }
+function topicEnvelope(topic, pos, w, h) {
+  const points = (topic.memberIds ?? []).map((id) => pos.get(id)).filter(Boolean);
+  if (!points.length) return null;
+  let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+  for (const point of points) {
+    const cx = point.x + (point.boxOffsetX ?? 0);
+    const cy = point.y + (point.boxOffsetY ?? 0);
+    const halfW = Math.max(18, (point.width ?? 72) / 2);
+    const halfH = Math.max(18, (point.height ?? 42) / 2);
+    left = Math.min(left, cx - halfW);
+    right = Math.max(right, cx + halfW);
+    top = Math.min(top, cy - halfH);
+    bottom = Math.max(bottom, cy + halfH);
+  }
+  const padX = 22, padY = 18;
+  const x = Math.max(8, left - padX);
+  const y = Math.max(8, top - padY);
+  const x2 = Math.min(w - 8, right + padX);
+  const y2 = Math.min(h - 8, bottom + padY);
+  return { x, y, width: Math.max(46, x2 - x), height: Math.max(38, y2 - y), count: points.length };
+}
+function showTopicTip(topic, envelope) {
+  const t = $("#tip");
+  t.innerHTML = `<b>${esc(`相关：${topic.short} · ${envelope.count}条`)}</b>` +
+    `${esc(topic.summary ?? "同一问题，不等于结论。")}`;
+  const box = $("#mapwrap").getBoundingClientRect();
+  t.style.display = "block";
+  t.style.left = Math.min(envelope.x + 12, box.width - 262) + "px";
+  t.style.top = Math.min(envelope.y + 24, box.height - 90) + "px";
+}
+function renderTopicBackgrounds(svg, graph, pos, w, h, relatedTopics, target) {
+  const layer = el("g", { class: "topic-layer" });
+  const controls = el("g", { class: "topic-controls" });
+  for (const topic of graph.topics ?? []) {
+    const envelope = topicEnvelope(topic, pos, w, h);
+    if (!envelope) continue;
+    const selected = !target && focusState?.topicId === topic.id;
+    const related = !target && relatedTopics?.has(topic.id);
+    const dim = !target && relatedTopics && !related;
+    const label = `相关：${topic.short} · ${envelope.count}条`;
+    const hint = `${label}。同一问题，不等于结论。`;
+    const stateClass = selected ? " selected" : related ? " related" : dim ? " dim" : "";
+    const group = el("g", {
+      class: "topic-bg" + stateClass,
+      "data-topic": topic.id,
+      "aria-hidden": "true",
+    });
+    group.appendChild(el("rect", {
+      class: "topic-envelope", x: envelope.x, y: envelope.y,
+      width: envelope.width, height: envelope.height, rx: 12,
+    }));
+    layer.appendChild(group);
+
+    const labelWidth = Math.min(envelope.width - 12, Math.max(88, [...label].length * 9.5 + 14));
+    const control = el("g", {
+      class: "topic-label" + stateClass,
+      "data-topic-control": topic.id,
+      "aria-label": hint,
+      ...(target
+        ? { role: "img" }
+        : { role: "button", tabindex: "0", "aria-pressed": selected ? "true" : "false" }),
+    });
+    control.appendChild(el("title", {}, [txt(hint)]));
+    control.appendChild(el("rect", {
+      x: envelope.x + 5, y: envelope.y + 3,
+      width: labelWidth, height: 18, rx: 4,
+    }));
+    const labelNode = el("text", { x: envelope.x + 12, y: envelope.y + 15 });
+    labelNode.appendChild(txt(label));
+    control.appendChild(labelNode);
+    if (!target) {
+      const activate = () => {
+        if (focusState?.topicId === topic.id) return clearSharedFocus();
+        const next = focusForTopic(topic.id, graph);
+        if (next) setSharedFocus(focusWithLabel(next, label));
+      };
+      control.addEventListener("mouseenter", () => showTopicTip(topic, envelope));
+      control.addEventListener("mouseleave", () => { $("#tip").style.display = "none"; });
+      control.addEventListener("focus", () => showTopicTip(topic, envelope));
+      control.addEventListener("blur", () => { $("#tip").style.display = "none"; });
+      control.addEventListener("click", (event) => { event.stopPropagation(); activate(); });
+      control.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        event.stopPropagation();
+        activate();
+      });
+    }
+    controls.appendChild(control);
+  }
+  svg.appendChild(layer);
+  return controls;
+}
 function renderMap(target) {
   const svg = target ? $("#hsvg") : $("#map");
   const g = target ? target : view.map;
@@ -771,75 +1117,134 @@ function renderMap(target) {
   svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
   svg.textContent = "";
   const graph = target ? target.map : g;
+  const sharedNodeIds = !target && focusState ? relatedNodeIds(graph, focusState) : null;
+  const sharedTopicIds = !target && focusState ? relatedTopicIds(graph, focusState) : null;
 
   const empty = graph.nodes.length === 0;
   if (!target) {
+    const focusChip = $("#mapfocus");
+    focusChip.style.display = focusState ? "block" : "none";
+    focusChip.textContent = focusState
+      ? `正在看：${focusLabel(focusState)}${sharedNodeIds?.size ? "" : " · 还没有相关已知"}`
+      : "";
     $("#mapempty").style.display = empty ? "flex" : "none";
     $("#mapempty").textContent = empty
-      ? "右边现在是空的。这不是隐藏 —— 你还没有任何情报,所以这里没有任何位置。先从左边那只碗看起:看它不花钱,但每一个手段都占掉一步。"
+      ? "还没有情报。先从左边那只碗选择一处。"
       : "";
     $("#lgd").innerHTML = empty ? "" : legendHTML();
   }
   if (empty) return;
 
   svg.appendChild(arrowDefs());
+  /* topics 只是对现有节点的背景归类,先画包络,不进入节点或边的布局。 */
+  const topicControls = renderTopicBackgrounds(svg, graph, pos, w, h, sharedTopicIds, target);
+  const visibleIds = new Set([...graph.nodes, ...graph.axioms].map((node) => node.id));
   const layer = el("g");
   for (const e of graph.edges) {
+    if (!visibleIds.has(e.from) || !visibleIds.has(e.to)) continue;
     const a = pos.get(e.from), b = pos.get(e.to);
     if (!a || !b) continue;
-    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const cx = mx - dy * 0.09, cy = my + dx * 0.09;
     const dir = EDGE_DIRECTED.has(e.kind);
-    /* 有方向的边要把终点从节点圆心往回缩,否则箭头压在节点底下看不见。
-       缩的方向沿控制点→终点的切线,曲线才不会在末端拐一下。 */
-    const end = dir ? pullBack(cx, cy, b.x, b.y, 14) : b;
+    const end = dir ? pullBack(a.x, a.y, b.x, b.y, 14) : b;
+    const incident = !target && focusedNodeId && (e.from === focusedNodeId || e.to === focusedNodeId);
+    const shared = !target && sharedNodeIds?.has(e.from) && sharedNodeIds.has(e.to);
+    const focusClass = target ? ""
+      : focusedNodeId ? (incident ? " active" : " dim")
+        : sharedNodeIds ? (shared ? " active" : " dim") : "";
     layer.appendChild(el("path", {
-      class: "edge e-" + e.kind, d: `M${a.x},${a.y} Q${cx},${cy} ${end.x},${end.y}`,
+      class: "edge e-" + e.kind + focusClass, d: `M${a.x},${a.y} L${end.x},${end.y}`,
       "data-edge": e.kind + "|" + e.from + "|" + e.to,
       ...(dir ? { "marker-end": `url(#ar-${e.kind})` } : {}),
     }));
   }
   svg.appendChild(layer);
 
-  const all = [...graph.nodes, ...graph.findings, ...graph.axioms];
+  const all = [...graph.nodes, ...graph.axioms];
   for (const n of all) {
     const p = pos.get(n.id);
     if (!p) continue;
-    const gg = el("g", { class: "nd" + (n.type !== "obs" ? " on" : ""), transform: `translate(${p.x},${p.y})`,
-      "data-node": n.id });
+    const connected = !focusedNodeId || focusedNodeId === n.id
+      || graph.edges.some((edge) => (edge.from === focusedNodeId && edge.to === n.id)
+        || (edge.to === focusedNodeId && edge.from === n.id));
+    const directlySelected = focusState?.actionId && n.actionId === focusState.actionId;
+    const focusClass = target ? ""
+      : focusedNodeId === n.id ? " selected"
+        : focusedNodeId ? (connected ? "" : " dim")
+          : sharedNodeIds ? (directlySelected ? " selected" : sharedNodeIds.has(n.id) ? " related" : " dim") : "";
+    const nodeAttrs = { class: "nd" + (n.type !== "obs" ? " on" : "") + focusClass,
+      transform: `translate(${p.x},${p.y})`, "data-node": n.id };
+    if (!target) Object.assign(nodeAttrs, {
+      role: "button", tabindex: "0", "aria-label": `${n.short}，点击聚焦直接关系`,
+      "aria-pressed": focusedNodeId === n.id ? "true" : "false",
+    });
+    const gg = el("g", nodeAttrs);
+    if (!target) gg.appendChild(el("circle", { class: "node-hit", cx: 0, cy: 0, r: 22 }));
     gg.appendChild(nodeShape(n));
-    /* 标签按 id 的稳定哈希分到上下两侧。用哈希而不是用坐标,是为了动画过程中不跳动。 */
-    const r0 = n.type === "finding" ? 15 : 12;
-    const below = hash(n.id) % 2 === 1;
-    const t = el("text", { x: 0, y: below ? r0 + 9 : -r0, "text-anchor": "middle" });
-    t.appendChild(txt(n.short));
+    /* 可见文字与布局碰撞盒共用同一套换行,避免“点不撞、字却撞”。 */
+    const lines = p.labelLines ?? LAYOUT.wrapLabel(n);
+    const t = el("text", { x: 0, y: p.labelY ?? (-18 - (lines.length - 1) * 14), "text-anchor": "middle" });
+    lines.forEach((line, index) => {
+      const span = el("tspan", { x: 0, dy: index === 0 ? 0 : 14 });
+      span.appendChild(txt(line));
+      t.appendChild(span);
+    });
     gg.appendChild(t);
     if (!target) {
       gg.addEventListener("mouseenter", (ev) => showTip(n, ev));
       gg.addEventListener("mouseleave", () => { $("#tip").style.display = "none"; });
+      const toggleFocus = () => {
+        const clearing = focusedNodeId === n.id;
+        focusedNodeId = clearing ? null : n.id;
+        focusState = clearing || !n.actionId
+          ? null
+          : focusWithLabel(focusForAction(n.actionId, n.id), n.short);
+        syncLeftFocus();
+        renderQuestionRail();
+        renderMap();
+        renderDeck();
+      };
+      gg.addEventListener("click", (event) => {
+        event.stopPropagation();
+        toggleFocus();
+      });
+      gg.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        event.stopPropagation();
+        toggleFocus();
+      });
     }
     svg.appendChild(gg);
   }
+  /* 主题只是背景，但它的文字标签必须在节点之上拥有一个小而确定的点击面。
+     整块包络不拦截节点；点击标签才聚焦主题。 */
+  svg.appendChild(topicControls);
 }
+$("#map").addEventListener("click", () => {
+  if (!focusedNodeId && !focusState) return;
+  focusedNodeId = null;
+  focusState = null;
+  syncLeftFocus();
+  renderQuestionRail();
+  renderMap();
+  renderDeck();
+});
 function legendHTML() {
   const sw = (c, d) => `<span class="sw" style="border-top-color:${c};border-top-style:${d}"></span>`;
   const ar = `<span class="swa">▸</span>`;
-  return [
-    `<i>${sw("#5d5a52", "solid")}${esc(EDGE_KINDS.latent)}</i>`,
+  const items = [
+    `<i><span class="topic-key"></span>相关主题：同一问题，不等于结论</i>`,
     `<i>${sw("#4a5560", "dashed")}${ar}${esc(EDGE_KINDS.prereq)}</i>`,
     `<i>${sw("#a97fc2", "solid")}${ar}${esc(EDGE_KINDS.caught)}</i>`,
     `<i>${sw("#3d4a38", "solid")}${ar}这条情报支持箭头指的那条已查实的结论</i>`,
     `<i><span style="color:var(--obs)">●</span> 你查到的一条情报</i>`,
-    `<i><span style="color:var(--find)">⬣</span> 这几条说的是同一件事(系统自动连的,不花钱)</i>`,
     `<i><span style="color:var(--axiom)">▬</span> 已经查实的结论</i>`,
   ].join("");
+  return `<details><summary>怎么看连线？</summary><div class="legend-items">${items}</div></details>`;
 }
 function showTip(n, ev) {
   const t = $("#tip");
-  const extra = n.type === "finding"
-    ? `<div style="color:var(--find);margin-top:4px">这一条是系统自动连出来的,没花你的钱</div>` : "";
-  t.innerHTML = `<b>${esc(n.short)}</b>${esc(n.gist ?? "")}${extra}`;
+  t.innerHTML = `<b>${esc(n.short)}</b>${esc(n.gist ?? "")}`;
   const box = $("#mapwrap").getBoundingClientRect();
   t.style.display = "block";
   t.style.left = Math.min(ev.clientX - box.left + 14, box.width - 262) + "px";
@@ -852,12 +1257,61 @@ const KIND_LABEL = {
   onemore: "只差一块就合拢", gap: "已经动起来,还缺几块",
   conflict: "对不上,互相打架", island: "还没和别的东西接上",
 };
+let disclosureSerial = 0;
+function decisionCardElement(it, {
+  matchesFocus = false,
+  showMeans = true,
+  historic = false,
+  autoExpand = false,
+} = {}) {
+  const c = document.createElement("div");
+  const means = it.means ?? [];
+  const availableMeans = means.filter((m) => m.usable !== false).length;
+  const expanded = !historic && autoExpand;
+  const detailId = `${historic ? "history" : "decision"}-detail-${++disclosureSerial}`;
+  c.className = "card k-" + it.kind
+    + (!historic && focusState ? (matchesFocus ? " focused" : " dim") : "");
+  c.dataset.card = it.id;
+  let detail = `<div class="card-detail" id="${detailId}"${expanded ? "" : " hidden"}>` +
+    `<p>${esc(it.body)}</p>`;
+  if (showMeans && means.length) {
+    detail += `<div class="means"><div class="hd">可用手段(不分先后)</div>` +
+      means.map((m) => `<button type="button" class="mean${m.usable === false ? " blocked" : ""}" data-act="${esc(m.actionId)}">` +
+        `<span class="nm">${esc(m.name)}</span><span class="cs">${esc(m.costLabel)}` +
+        `${m.usable === false ? " · 暂不可用" : ""}${m.done ? " · 做过" : ""}</span></button>`).join("") +
+      `</div>`;
+  }
+  detail += `</div>`;
+  c.innerHTML = `<button type="button" class="card-toggle" aria-expanded="${expanded ? "true" : "false"}" aria-controls="${detailId}">` +
+      `<div class="kd">${esc(KIND_LABEL[it.kind] ?? it.kind)}</div>` +
+      `<div class="card-summary"><h5>${esc(it.title)}</h5>` +
+      `<span class="means-count">可用 ${availableMeans} 个</span></div>` +
+    `</button>${detail}`;
+  const toggle = c.querySelector(".card-toggle");
+  const body = c.querySelector(".card-detail");
+  toggle.addEventListener("click", () => {
+    const opening = body.hidden;
+    body.hidden = !opening;
+    toggle.setAttribute("aria-expanded", opening ? "true" : "false");
+  });
+  if (showMeans) {
+    c.querySelectorAll("[data-act]").forEach((node) => {
+      node.addEventListener("click", (ev) => {
+        const action = ACTION_BY_ID.get(node.dataset.act);
+        if (action) openPop(action.place, node, { actionId: action.id, focusFirst: ev.detail === 0 });
+      });
+    });
+  }
+  return c;
+}
 function renderDeck() {
   const box = $("#deckbody");
   box.textContent = "";
   for (const a of view.map.axioms) {
     const d = document.createElement("div");
-    d.className = "ax"; d.textContent = a.line;
+    const matchesFocus = !focusState || decisionItemMatches(a, focusState);
+    d.className = "ax" + (focusState ? (matchesFocus ? " focused" : " dim") : "");
+    d.textContent = a.line;
     box.appendChild(d);
   }
   if (view.ds.clear) {
@@ -866,26 +1320,14 @@ function renderDeck() {
     box.appendChild(d);
     return;
   }
+  let expandedOne = false;
   for (const it of view.ds.items) {
-    const c = document.createElement("div");
-    c.className = "card k-" + it.kind;
-    let html = `<div class="kd">${esc(KIND_LABEL[it.kind] ?? it.kind)}</div>` +
-      `<h5>${esc(it.title)}</h5><p>${esc(it.body)}</p>`;
-    if (it.means.length) {
-      html += `<div class="means"><div class="hd">行里通常靠这些手段(不分先后)</div>` +
-        it.means.map((m) => `<div class="mean${m.usable === false ? " blocked" : ""}" data-act="${esc(m.actionId)}">` +
-          `<span class="nm">${esc(m.name)}</span><span class="cs">${esc(m.costLabel)}` +
-          `${m.usable === false ? " · 暂不可用" : ""}${m.done ? " · 做过" : ""}</span></div>`).join("") +
-        `</div>`;
-    }
-    c.innerHTML = html;
-    c.querySelectorAll("[data-act]").forEach((n) => {
-      n.addEventListener("click", () => {
-        const a = ACTION_BY_ID.get(n.dataset.act);
-        if (a) openPop(a.place, n);
-      });
-    });
-    box.appendChild(c);
+    const matchesFocus = !focusState || decisionItemMatches(it, focusState);
+    /* 地点、主题和长期问题往往会命中多张卡；全展开会把一次联动变成上千字。
+       宽范围只高亮。只有精确动作聚焦会替玩家展开第一张相关卡,其余仍按需查看。 */
+    const autoExpand = !expandedOne && !!focusState?.actionId && matchesFocus;
+    if (autoExpand) expandedOne = true;
+    box.appendChild(decisionCardElement(it, { matchesFocus, showMeans: true, autoExpand }));
   }
 }
 
@@ -900,21 +1342,43 @@ function doAction(actionId, pid) {
   const beforePos = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
   const r = take(S, actionId);
   if (!r.ok) { alert(r.why); return; }
+  const actionToken = ++transitionToken;
+  const actionLabel = ACTION_BY_ID.get(actionId)?.name ?? actionId;
+  pendingActionLabel = actionLabel;
   recompute();
+  focusState = focusWithLabel(
+    focusForAction(actionId, r.observationId),
+    ACTION_BY_ID.get(actionId)?.name ?? actionId,
+  );
+  focusedNodeId = null;
 
   const newId = r.observationId;
-  const beforeIds = new Set([...before.nodes, ...before.findings, ...before.axioms].map((n) => n.id));
-  const fresh = [...view.map.nodes, ...view.map.findings, ...view.map.axioms]
+  const beforeIds = new Set([...before.nodes, ...before.axioms].map((n) => n.id));
+  const fresh = [...view.map.nodes, ...view.map.axioms]
     .filter((n) => !beforeIds.has(n.id)).map((n) => n.id);
 
-  renderHeader(); renderSetup(); renderObject(); renderOutside();
+  renderHeader(); renderSetup(); renderObject(); renderOutside(); renderQuestionRail(); syncLeftFocus();
+
+  /* 重复手段会记账、占一步,但不会生成第二份同名情报。旧动画仍把它当新节点
+     拖到左侧入口,随后 sameGraph 快路径又忠实保留了那个假位置。重复结果只闪一下
+     已有节点,地图几何保持不动。 */
+  if (beforeIds.has(r.observationId) && fresh.length === 0) {
+    positions = beforePos;
+    layout(view.map);
+    renderMap();
+    renderDeck();
+    snapshot(actionLabel);
+    pendingActionLabel = null;
+    markFlash([r.observationId], 700);
+    return;
+  }
 
   /* 先按旧位置画一遍,让新节点从左侧飞入 */
   const { w, h } = mapBox();
   positions = beforePos;
   const anchorScreen = placeScreenPoint(pid);
   positions.set(newId, { x: Math.max(90, anchorScreen.x), y: Math.min(Math.max(50, anchorScreen.y), h - 60) });
-  /* 其他新生的(局部 Finding、公理)先藏在新情报附近 */
+  /* 其他新生的已查实结论先藏在新情报附近;topic 只是背景,没有自己的坐标。 */
   for (const id of fresh) if (id !== newId) {
     const p = positions.get(newId);
     positions.set(id, { x: p.x + 18, y: p.y + 18 });
@@ -925,18 +1389,21 @@ function doAction(actionId, pid) {
 
   anim = true;
   setTimeout(() => {                       /* 停顿 */
+    if (actionToken !== transitionToken) return;
     const from = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
     layout(view.map);
     const to = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
     tween(from, to, 620, () => {
+      if (actionToken !== transitionToken) return;
       anim = null;
       renderDeck();
-      snapshot(ACTION_BY_ID.get(actionId)?.name ?? actionId);
+      snapshot(actionLabel);
+      pendingActionLabel = null;
       /* 被这条串起来的那些先亮一下 */
       const touched = view.map.edges.filter((e) => e.from === newId || e.to === newId)
         .flatMap((e) => [e.from, e.to]);
       markFlash([...new Set([newId, ...touched, ...fresh])], 700);
-    });
+    }, actionToken);
   }, 520);
 }
 function placeScreenPoint(pid) {
@@ -968,10 +1435,11 @@ function markFlash(ids, ms = 520) {
 }
 const cssEsc = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/[.:|]/g, "\\$&");
 function hash(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; }
-function tween(from, to, ms, done) {
+function tween(from, to, ms, done, token = transitionToken) {
   const t0 = performance.now();
   const ease = (t) => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   function frame(now) {
+    if (token !== transitionToken) return;
     const k = Math.min(1, (now - t0) / ms), e = ease(k);
     for (const [id, b] of to) {
       const a = from.get(id) ?? b;
@@ -994,8 +1462,43 @@ $("#bhist").addEventListener("click", () => {
 });
 /* 开局委托卡。开局自动弹一次,之后随时可以从「委托」再看。
    刻意不做「下次不再显示」—— 这一版正在验证的就是「玩家读完能不能说出要干什么」。 */
-$("#bbrief").addEventListener("click", () => { $("#brief").style.display = "flex"; });
-$("#bgo").addEventListener("click", () => { $("#brief").style.display = "none"; });
+let briefReturnFocus = null;
+function showBrief({ initial = false } = {}) {
+  const brief = $("#brief");
+  briefReturnFocus = initial ? $("#bbrief") : document.activeElement;
+  $("#app").inert = true;
+  brief.style.display = "flex";
+  brief.setAttribute("aria-hidden", "false");
+  requestAnimationFrame(() => $("#bgo").focus());
+}
+function hideBrief() {
+  const brief = $("#brief");
+  brief.style.display = "none";
+  brief.setAttribute("aria-hidden", "true");
+  $("#app").inert = false;
+  const target = briefReturnFocus?.isConnected ? briefReturnFocus : $("#bbrief");
+  briefReturnFocus = null;
+  target?.focus();
+}
+$("#bbrief").addEventListener("click", () => showBrief());
+$("#bgo").addEventListener("click", hideBrief);
+$("#brief").addEventListener("keydown", (event) => {
+  if (event.key !== "Tab") return;
+  const brief = $("#brief");
+  const focusable = [...brief.querySelectorAll("summary, button")]
+    .filter((node) => !node.disabled && node.getClientRects().length > 0);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const active = document.activeElement;
+  if (event.shiftKey && (active === first || !brief.contains(active))) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && (active === last || !brief.contains(active))) {
+    event.preventDefault();
+    first.focus();
+  }
+});
 $("#hclose").addEventListener("click", () => { $("#hist").style.display = "none"; });
 $("#hr").addEventListener("input", (e) => drawHistory(+e.target.value));
 function drawHistory(i) {
@@ -1016,17 +1519,24 @@ function drawHistory(i) {
     box.appendChild(d);
   }
   for (const it of h.ds.items) {
-    const c = document.createElement("div");
-    c.className = "card k-" + it.kind;
-    c.innerHTML = `<div class="kd">${esc(KIND_LABEL[it.kind] ?? it.kind)}</div>` +
-      `<h5>${esc(it.title)}</h5><p>${esc(it.body)}</p>`;
-    box.appendChild(c);
+    box.appendChild(decisionCardElement(it, { historic: true, showMeans: false }));
   }
 }
 
 /* ==================== 其他 ==================== */
 $("#bstop").addEventListener("click", () => {
   if (S.stopped) return;
+  /* 收手若撞上两拍动画，先把已经付出且已经写进状态的那一步结清，
+     再记“收手”。这样历史里不会凭空吞掉刚做的动作。 */
+  if (anim && pendingActionLabel) {
+    const actionLabel = pendingActionLabel;
+    cancelTransition();
+    layout(view.map);
+    renderAll();
+    snapshot(actionLabel);
+  } else {
+    cancelTransition();
+  }
   S.stopped = true;
   recompute(); renderAll(); snapshot("收手");
 });
@@ -1034,7 +1544,7 @@ $("#breset").addEventListener("click", reset);
 window.addEventListener("resize", () => { if (!anim) { layout(view.map, { iters: 90 }); renderMap(); } });
 
 reset();
-$("#brief").style.display = "flex";
+showBrief({ initial: true });
 </script>
 </body>
 </html>

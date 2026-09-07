@@ -1,0 +1,34 @@
+{
+  "builtAt": "2026-09-05T13:19:18.876Z",
+  "sources": {
+    "FIXTURES": {
+      "path": "../first-ceramic-author-scenarios-v0/fixtures.mjs",
+      "sha256": "b3ed4f357b8fb84eaab4f14caf4629e62bf11f9c44befa5aad6730c3393e0fdd"
+    },
+    "SOLVER": {
+      "path": "../first-ceramic-author-scenarios-v0/solver.mjs",
+      "sha256": "e217caf56a9961ea7c46151e1ca6b0546a6c408ccc8ecddb21e4b9da66ee72d1"
+    },
+    "CASE": {
+      "path": "../knowledge-map-slice-v0/case.mjs",
+      "sha256": "7f078bc68394b9238783080ee72e6dec2ce514ea962829668a4443041805aa05"
+    },
+    "SEMANTICS": {
+      "path": "../evidence-semantics-v0/semantics.mjs",
+      "sha256": "397eab3305dce9ee5bf7e996b4c4e0c1ca081ff29be0c2f54f6b5524cc85d833"
+    },
+    "SESSION": {
+      "path": "../workbench-map-focus-v1/session.mjs",
+      "sha256": "83d1dd707f9a4accfeb162c299387dfe3beb6a720045c8e09a22939fdd0b1351"
+    },
+    "GRAPH": {
+      "path": "graph.mjs",
+      "sha256": "171507d84bafedebadab8e4e96875134823459f65b93fa6e3ce3cceb49c37634"
+    },
+    "LAYOUT": {
+      "path": "layout.mjs",
+      "sha256": "90254b9f5e66e633c939b278853cfacca2f18ff6638a99d4b0724b124d613a4c"
+    }
+  },
+  "templateSha256": "b9ee827e3df00bc86a6f209d06157c123fcefc8ba23962b4c4ea9bce7ba29f83"
+}

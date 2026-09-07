@@ -1,345 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
 <meta charset="utf-8">
-<title>掌眼 V3 · 工作台与心智地图 呈现变体 v0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>掌眼 · 已知与推理</title>
 <style>
-  :root{
-    --bg:#0d0d0f; --panel:#15151a; --panel2:#1b1b21; --line:#2a2a32;
-    --ink:#e8e6e1; --dim:#8f8c86; --dim2:#615f5b;
-    --gold:#d9b166; --gold2:#8a6f3c;
-    --obs:#6f9fbf; --find:#c98f5a; --axiom:#7fa86a;
-    --warn:#c2624f; --caught:#a97fc2;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%}
-  body{
-    background:var(--bg); color:var(--ink); overflow:hidden;
-    font:13px/1.65 "PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
-  }
-  /* 只做电脑浏览器尺寸 —— DEC-033,移动端不在本阶段范围,不留退路 */
-  #app{display:flex;flex-direction:column;height:100vh;min-width:1280px}
-
-  /* ---------- 顶栏 ---------- */
-  header{
-    flex:0 0 auto;border-bottom:1px solid var(--line);background:var(--panel);
-    display:flex;align-items:stretch
-  }
-  .brand{padding:10px 16px;border-right:1px solid var(--line);min-width:210px}
-  .brand b{font-weight:600;letter-spacing:.06em}
-  .brand span{display:block;color:var(--dim2);font-size:11px;letter-spacing:.1em}
-  .readout{flex:1;padding:9px 16px;border-right:1px solid var(--line)}
-  .readout .st{color:var(--gold);font-weight:600}
-  .readout .ln{color:var(--dim);font-size:12px}
-  .meters{padding:9px 16px;min-width:250px;border-right:1px solid var(--line)}
-  .meters div{font-size:12px;color:var(--dim)}
-  .meters b{color:var(--ink);font-variant-numeric:tabular-nums}
-  /* 开局设置:行动点数只在一步都还没走时可调 */
-  .setup{padding:7px 14px;min-width:286px;border-right:1px solid var(--line)}
-  .setup .sl{font-size:10.5px;letter-spacing:.14em;color:var(--dim2);text-transform:uppercase}
-  .setup .sr{display:flex;align-items:center;gap:9px;margin:1px 0 1px}
-  .setup .sr input[type=range]{flex:1;min-width:0}
-  .setup .sr input[type=number]{
-    width:50px;flex:0 0 auto;background:var(--panel2);color:var(--gold);
-    border:1px solid var(--line);border-radius:3px;padding:2px 4px;font:inherit;
-    font-size:13px;text-align:center;font-variant-numeric:tabular-nums
-  }
-  .setup .sr input[type=number]:focus{outline:none;border-color:var(--gold2)}
-  .setup .sh{font-size:10.5px;color:var(--dim2);line-height:1.35}
-  .setup.locked .sr input{opacity:.45}
-  .tools{padding:10px 14px;display:flex;gap:8px;align-items:flex-start}
-  button.t{
-    background:var(--panel2);color:var(--ink);border:1px solid var(--line);
-    border-radius:3px;padding:5px 11px;font-size:12px;cursor:pointer;font-family:inherit
-  }
-  button.t:hover{border-color:var(--gold2)}
-  .warnbar{
-    flex:0 0 auto;background:#1a1512;border-bottom:1px solid #2e241b;
-    color:#a89272;padding:6px 16px;font-size:11.5px;letter-spacing:.02em
-  }
-
-  /* ---------- 三区 ---------- */
-  main{flex:1;display:flex;min-height:0}
-  .col{display:flex;flex-direction:column;min-height:0}
-  #bench{flex:0 0 306px;border-right:1px solid var(--line);background:var(--panel)}
-  #mapcol{flex:1;min-width:0}
-  #deck{flex:0 0 356px;border-left:1px solid var(--line);background:var(--panel)}
-  .zone{border-bottom:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
-  .zt{
-    padding:7px 14px 6px;color:var(--dim2);font-size:10.5px;letter-spacing:.18em;
-    text-transform:uppercase;flex:0 0 auto
-  }
-  .zt em{font-style:normal;color:var(--dim);letter-spacing:0;text-transform:none;font-size:11px}
-
-  /* ---------- 左上:器物世界 ---------- */
-  #objwrap{flex:0 0 auto;position:relative}
-  #obj{display:block;width:100%;height:268px}
-  .hot{cursor:pointer;outline:none}
-  .hot circle.hit{fill:transparent}
-  .hot .dot{fill:var(--panel2);stroke:var(--gold2);stroke-width:1.2}
-  .hot:hover .dot,.hot.open .dot{fill:var(--gold);stroke:var(--gold)}
-  .hot text{fill:var(--dim);font-size:10.5px}
-  .hot:hover text,.hot.open text{fill:var(--ink)}
-  .hot .meta{fill:var(--gold2);font-size:8.8px;letter-spacing:.02em}
-  .hot:hover .meta,.hot.open .meta{fill:var(--gold)}
-  .hot:focus-visible .dot{fill:var(--gold);stroke:#fff;stroke-width:2}
-  .hot:focus-visible text{fill:var(--ink)}
-  .hot.spent .dot{fill:var(--dim2);stroke:var(--dim2)}
-  .bowl{fill:none;stroke:#33313a;stroke-width:1.2}
-  .bowlfill{fill:#131318}
-
-  /* ---------- 左下:器物之外 ---------- */
-  #outside{flex:1;overflow:auto;padding:2px 10px 12px}
-  .grp{margin:8px 0 2px;color:var(--dim2);font-size:10.5px;letter-spacing:.14em}
-  .mrow{
-    display:flex;align-items:baseline;gap:8px;padding:5px 8px;border-radius:3px;
-    width:100%;background:transparent;color:inherit;font:inherit;text-align:left;
-    cursor:pointer;border:1px solid transparent
-  }
-  .mrow:hover{background:var(--panel2);border-color:var(--line)}
-  .mrow.open{background:var(--panel2);border-color:var(--gold2)}
-  .mrow:focus-visible{outline:1px solid var(--gold2);outline-offset:-1px;background:var(--panel2)}
-  .mrow .nm{flex:1;font-size:12.5px}
-  .mrow .cs{color:var(--gold2);font-size:11px;white-space:nowrap}
-  .mrow.spent .nm{color:var(--dim2);text-decoration:line-through}
-  .mrow.blocked .nm{color:var(--dim2)}
-
-  /* ---------- 动作浮层 ---------- */
-  #pop{
-    position:absolute;z-index:40;width:318px;background:#191920;
-    border:1px solid var(--gold2);border-radius:4px;padding:12px 13px;display:none;
-    box-shadow:0 14px 40px rgba(0,0,0,.62)
-  }
-  #pop h4{margin:0 0 2px;font-size:13px;font-weight:600}
-  #pop .cap{color:var(--dim2);font-size:10.5px;letter-spacing:.06em;
-    border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:9px}
-  #pop .ask{color:var(--gold);font-size:12px;margin-bottom:7px}
-  #pop .why{color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:7px}
-  #pop .long{color:var(--dim);font-size:11.5px;margin-top:6px;display:none;
-    border-top:1px dashed var(--line);padding-top:6px}
-  #pop .foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
-  #pop .cost{color:var(--gold2);font-size:11.5px}
-  #pop .no{color:var(--warn);font-size:11.5px;margin-top:7px}
-  #pop .acts{display:flex;gap:6px}
-  button.go{
-    background:var(--gold);color:#171310;border:0;border-radius:3px;padding:5px 12px;
-    font-size:12px;cursor:pointer;font-weight:600;font-family:inherit
-  }
-  button.go[disabled]{background:var(--panel2);color:var(--dim2);cursor:not-allowed}
-  button.lk{background:none;border:0;color:var(--dim);font-size:11.5px;cursor:pointer;
-    text-decoration:underline;font-family:inherit;padding:0}
-  .sep{height:1px;background:var(--line);margin:9px 0}
-
-  /* ---------- 中:心智地图 ---------- */
-  #mapcol .zt{border-bottom:1px solid var(--line)}
-  #mapwrap{flex:1;position:relative;min-height:0}
-  #map{display:block;width:100%;height:100%}
-  .edge{stroke-linecap:round;fill:none}
-  .e-latent{stroke:#5d5a52;stroke-width:1.1}
-  .e-prereq{stroke:#4a5560;stroke-width:1;stroke-dasharray:1 3}
-  .e-caught{stroke:var(--caught);stroke-width:1.3}
-  .e-supports{stroke:#3d4a38;stroke-width:1}
-  .edge.lit{stroke:var(--gold);stroke-width:2}
-  .nd text{font-size:10.5px;fill:var(--dim)}
-  .nd.on text{fill:var(--ink)}
-  .n-obs{fill:#1a222a;stroke:var(--obs);stroke-width:1.3}
-  .n-obs.susp{stroke:var(--dim2);stroke-dasharray:2 2;fill:#17171b}
-  .n-obs.neg{stroke:var(--warn);stroke-dasharray:2 2}
-  .n-obs.caught{stroke:var(--caught)}
-  .n-find{fill:#241c14;stroke:var(--find);stroke-width:1.4}
-  .n-ax{fill:#1a2118;stroke:var(--axiom);stroke-width:1.4}
-  .nd{cursor:pointer}
-  .nd.flash circle,.nd.flash polygon,.nd.flash rect{stroke:var(--gold);stroke-width:2.4}
-  .fly{stroke:var(--gold);stroke-width:1.6;fill:none;stroke-dasharray:5 4}
-  #mapempty{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    color:var(--dim2);font-size:12.5px;text-align:center;padding:0 60px;line-height:2
-  }
-  #tip{
-    position:absolute;z-index:30;max-width:250px;background:#191920;border:1px solid var(--line);
-    border-radius:4px;padding:8px 10px;font-size:11.5px;color:var(--dim);display:none;
-    box-shadow:0 10px 28px rgba(0,0,0,.6)
-  }
-  #tip b{color:var(--ink);display:block;margin-bottom:3px;font-size:12.5px}
-  .lgd{
-    position:absolute;left:12px;bottom:10px;color:var(--dim2);font-size:10.5px;
-    display:flex;gap:14px;flex-wrap:wrap;max-width:70%
-  }
-  .lgd i{font-style:normal;display:inline-flex;align-items:center;gap:5px}
-  .sw{width:16px;height:0;border-top-width:2px;border-top-style:solid;display:inline-block}
-  /* 图注里的箭头,紧跟在线段样本后面,标明这一种边是有方向的 */
-  .swa{margin-left:-4px;margin-right:1px;font-size:11px;line-height:1;color:var(--dim2)}
-
-  /* ---------- 右:决策面 ---------- */
-  #deckbody{flex:1;overflow:auto;padding:2px 12px 14px}
-  .ax{
-    color:var(--axiom);font-size:11.5px;padding:4px 8px;border-left:2px solid var(--axiom);
-    background:#151a14;margin:4px 0;border-radius:0 3px 3px 0
-  }
-  .card{
-    border:1px solid var(--line);border-radius:4px;padding:9px 10px;margin:9px 0;
-    background:var(--panel2)
-  }
-  .card .kd{font-size:10px;letter-spacing:.14em;color:var(--dim2);margin-bottom:3px}
-  .card.k-suspended{border-left:2px solid var(--dim2)}
-  .card.k-negative{border-left:2px solid var(--warn)}
-  .card.k-onemore{border-left:2px solid var(--gold)}
-  .card.k-gap{border-left:2px solid var(--gold2)}
-  .card.k-conflict{border-left:2px solid var(--warn)}
-  .card.k-island{border-left:2px solid var(--obs)}
-  .card h5{margin:0 0 4px;font-size:12.5px;font-weight:600}
-  .card p{margin:0;color:var(--dim);font-size:11.5px}
-  .means{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px}
-  .means .hd{color:var(--dim2);font-size:10.5px;letter-spacing:.1em;margin-bottom:4px}
-  .mean{
-    display:flex;align-items:baseline;gap:7px;padding:3px 6px;border-radius:3px;cursor:pointer;
-    border:1px solid transparent
-  }
-  .mean:hover{background:#20202a;border-color:var(--line)}
-  .mean .nm{flex:1;font-size:12px}
-  .mean .cs{color:var(--gold2);font-size:11px;white-space:nowrap}
-  .mean.blocked .nm{color:var(--dim2)}
-  .clear{color:var(--dim);font-size:12px;padding:12px 4px;line-height:1.9}
-
-  /* ---------- 开局委托卡 ----------
-     2026-08-31 盲测第一名挡路项:玩家说不出游戏要他干什么,第一步只能靠「免费」两个字瞎猜。
-     这张卡只交代委托、要回答什么、怎么花步数,**不解释三档结果的含义** —— 那一项用户还没定。 */
-  #brief{
-    position:fixed;inset:0;z-index:70;background:rgba(8,8,10,.96);
-    display:none;align-items:center;justify-content:center;padding:24px
-  }
-  #brief .bx{max-width:660px;background:var(--panel);border:1px solid var(--line);
-    border-radius:6px;padding:26px 30px}
-  #brief h3{margin:0 0 4px;font-size:16px;font-weight:600;letter-spacing:.4px}
-  #brief .sub{color:var(--dim2);font-size:11.5px;margin-bottom:16px}
-  #brief p{margin:0 0 11px;font-size:13px;line-height:1.95;color:var(--fg)}
-  #brief p.q{color:var(--gold2)}
-  #brief ul{margin:0 0 13px;padding-left:19px}
-  #brief li{font-size:12.5px;line-height:1.9;color:var(--dim);margin-bottom:3px}
-  #brief .go2{margin-top:6px;padding:8px 20px;font-size:13px;cursor:pointer;
-    background:var(--gold);color:#14140f;border:0;border-radius:4px;font-weight:600}
-
-  /* ---------- 历史回放浮层 ---------- */
-  #hist{
-    position:fixed;inset:0;z-index:60;background:rgba(8,8,10,.94);display:none;
-    flex-direction:column;padding:18px 24px
-  }
-  #hist .hh{display:flex;align-items:center;gap:16px;margin-bottom:12px}
-  #hist h3{margin:0;font-size:14px;font-weight:600}
-  #hist .hb{flex:1;display:flex;gap:18px;min-height:0}
-  #hist .hp{flex:1;border:1px solid var(--line);border-radius:4px;background:var(--panel);
-    display:flex;flex-direction:column;min-width:0}
-  #hsvgwrap{flex:1;min-height:0;position:relative}
-  #hsvg{display:block;width:100%;height:100%}
-  #hdeck{flex:0 0 380px;overflow:auto;padding:4px 12px 12px}
-  input[type=range]{flex:1;accent-color:var(--gold)}
-  #hcap{color:var(--dim);font-size:12px;padding:6px 12px;border-top:1px solid var(--line)}
+:root{color-scheme:dark;--bg:#111416;--panel:#171b1e;--ink:#eeeae1;--muted:#aaa99f;--line:#343b40;--blue:#97bdcf;--green:#b7ca9c;--amber:#e3bb79;--red:#e3a192;--focus:#d5e9f3;font:15px/1.6 "Microsoft YaHei","PingFang SC",sans-serif}
+*{box-sizing:border-box}body{margin:0;min-width:1200px;background:var(--bg);color:var(--ink)}button,input{font:inherit}button{color:inherit;background:transparent;border:1px solid var(--line);border-radius:5px;padding:7px 12px;cursor:pointer}button:hover{background:#242c31}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px}button:disabled{cursor:default;color:#a7a7a0;background:#202426}a{color:var(--blue)}h1,h2,h3,p{margin:0}h1{font-size:20px;font-weight:600}h2{font-size:16px;font-weight:600}h3{font-size:15px;font-weight:600}p+p{margin-top:10px}small,.small{font-size:12px;color:var(--muted)}.muted{color:var(--muted)}.eyebrow{font-size:12px;letter-spacing:.1em;color:var(--muted)}.primary{background:#d8dfcc;color:#19211a;border-color:#d8dfcc}.primary:hover{background:#edf2e3}.plain{border:0;padding:5px 8px}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.stack>*+*{margin-top:14px}.divider{border:0;border-top:1px solid var(--line);margin:20px 0}
+header{height:92px;display:flex;align-items:center;gap:28px;padding:18px 24px;border-bottom:1px solid var(--line)}.brand{width:158px;flex:none}.status{flex:1;min-width:320px}.status-title{font-size:16px;color:var(--green)}.status-sub{color:var(--muted);font-size:13px}.top-actions{display:flex;align-items:center;gap:8px}.budget{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}.budget input{background:var(--panel);border:1px solid var(--line);border-radius:4px;color:var(--ink);width:55px;padding:5px}
+.workspace{display:grid;grid-template-columns:190px minmax(580px,1fr) 270px;height:calc(100vh - 92px);min-height:680px}.workbench{padding:22px 12px 20px 20px;border-right:1px solid var(--line);overflow:auto;min-height:0}.workbench h2{margin-bottom:4px}.workbench .group-title{font-size:12px;color:var(--muted);margin:22px 0 7px}.place{display:flex;justify-content:space-between;align-items:center;width:100%;border:0;text-align:left;padding:7px 6px;margin:3px 0}.place[aria-pressed=true]{background:#283137;color:var(--blue)}.place small{margin-left:6px;white-space:nowrap}.atlas{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}.map-head{display:flex;align-items:center;justify-content:space-between;padding:19px 20px 10px}.map-tools button{font-size:13px;padding:4px 9px}.notice{margin:0 20px;min-height:44px;font-size:13px;color:var(--blue);border-bottom:1px solid #262d31;padding-bottom:10px;display:flex;align-items:center}.map-scroll{position:relative;flex:1;min-height:0;overflow:auto;scrollbar-color:#4a555b transparent}.map-canvas{position:relative;min-height:100%}#map{display:block;overflow:visible}#node-controls{position:absolute;left:0;top:0;pointer-events:none}.node-control{position:absolute;border:1px solid transparent;background:transparent;pointer-events:auto;padding:0;border-radius:8px;color:var(--ink);transition:left .35s ease,top .35s ease;line-height:1.45}.node-control:hover{background:#20292e99}.node-control.selected{background:#29363d80;border-color:#6b8797}.node-control.recent{border-color:#8da9ae66}.node-control.claim{color:var(--green)}.node-control.pending{color:var(--amber)}.node-control.contested{color:var(--red)}.node-control.faded{opacity:.5}.node-glyph{position:absolute;width:12px;height:12px;border:1.5px solid currentColor;border-radius:50%;left:calc(50% - 6px);top:13px;background:var(--bg)}.node-control.claim .node-glyph{border-radius:2px;background:#34432e}.node-control.finding .node-glyph{transform:rotate(45deg);border-radius:2px}.node-title{position:absolute;top:35px;left:4px;right:4px;font-size:14px;text-align:center;line-height:20px}.node-state{position:absolute;bottom:4px;left:6px;right:6px;font-size:12px;color:var(--amber);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.route{fill:none;stroke:#677d89;stroke-width:1.2;opacity:.65}.route.context{stroke:#b4a4cd}.route.conflict{stroke:var(--red);stroke-dasharray:5 4}.route.support{stroke:#91a879}.route.selected{stroke-width:2;opacity:1}.route.dimmed{opacity:.18}.route-hit{stroke:transparent;stroke-width:14;fill:none;cursor:pointer}.edge-label{fill:var(--ink);font-size:12px;paint-order:stroke;stroke:var(--bg);stroke-width:5px;stroke-linejoin:round}.empty-map{position:absolute;left:12%;right:12%;top:24%;text-align:center;color:var(--muted);pointer-events:none}.empty-map h2{font-size:22px;font-weight:400;color:var(--ink);margin:16px 0}.empty-map p{max-width:420px;margin:0 auto}.empty-ring{width:84px;height:84px;border:1px dashed #4d6069;border-radius:50%;margin:auto}.map-footer{padding:10px 20px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:10px}.legend{display:flex;gap:16px}.legend span::before{content:"";display:inline-block;width:8px;height:8px;border:1px solid var(--blue);border-radius:50%;margin-right:6px}.legend .judgment::before{border-radius:1px;border-color:var(--green)}.legend .question::before{border:0;content:"?";color:var(--amber)}
+.inspector{border-left:1px solid var(--line);padding:22px 18px;overflow:auto;background:#15191c}.inspector .intro-title{font-size:20px;font-weight:400;margin-top:16px}.detail-title{font-size:18px;line-height:1.55;margin:8px 0 12px}.detail-copy{font-size:14px;color:#d1d0c7;line-height:1.8}.section-label{font-size:12px;color:var(--muted);margin:23px 0 9px}.relation-button,.question-button,.source-button{display:block;width:100%;text-align:left;margin:6px 0;padding:9px 10px;font-size:13px}.relation-button{border-color:#38434a}.relation-button strong{font-weight:500;display:block;color:var(--blue);margin-bottom:3px}.question-button{border-color:#5c513c;color:#e3c38d}.question-button small{display:block;color:#c6b493}.source-button{border:0;border-left:2px solid #45545c;border-radius:0;padding:6px 9px}.method{padding:12px 0;border-bottom:1px solid var(--line)}.method h3{font-size:14px}.method .cost{color:var(--amber);font-size:12px;margin:5px 0}.method p{font-size:13px;color:#c8c9c2}.method .execute{margin-top:10px;width:100%;font-size:13px}.reason{color:#cfb798;font-size:12px;margin-top:7px}.new-direction{border-left:2px solid var(--amber);padding-left:11px;font-size:13px}.history-step{width:100%;text-align:left;display:block;margin:5px 0;font-size:13px}.history-banner{display:none;padding:8px 20px;background:#302b20;color:var(--amber);font-size:13px}.history-banner.visible{display:flex;align-items:center;justify-content:space-between}.stop-summary{border-top:1px solid var(--line);padding-top:12px;margin-top:16px}.fold-button{font-size:12px;width:100%;margin:10px 0}details{font-size:13px}summary{cursor:pointer;color:var(--blue)}dialog{width:620px;max-height:85vh;overflow:auto;background:var(--panel);color:var(--ink);border:1px solid #53616a;border-radius:9px;padding:26px}dialog::backdrop{background:#080b0dc9}.modal-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:22px}.prompt-input{display:block;background:#0f1417;border:1px solid #46525a;color:var(--ink);width:100%;padding:10px;margin-top:8px;font:inherit}.stop-claim{font-size:14px;border-left:2px solid var(--green);padding-left:12px;margin-top:12px}.prototype-label{font-size:11px;color:var(--muted);margin-top:3px}.all-questions{margin-top:18px}.sr-only{position:absolute;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden}@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
-</head>
-<body>
-<div id="app">
-  <header>
-    <div class="brand"><b>掌眼 V3</b><span>工作台 ／ 心智地图 呈现变体 v0</span></div>
-    <div class="readout" id="ro"></div>
-    <div class="meters" id="mt"></div>
-    <div class="setup" id="su">
-      <div class="sl" id="sulab">开局行动点数</div>
-      <div class="sr"><input type="range" id="subud"><input type="number" id="subudn"></div>
-      <div class="sh" id="suhint"></div>
-    </div>
-    <div class="tools">
-      <button class="t" id="bbrief">委托</button>
-      <button class="t" id="bhist">历史回放</button>
-      <button class="t" id="bstop">收手</button>
-      <button class="t" id="breset">重开</button>
-    </div>
-  </header>
-  <div class="warnbar" id="wb"></div>
-  <main>
-    <div class="col" id="bench">
-      <div class="zone" id="objwrap">
-        <div class="zt">这只碗 <em>—— 先点碗上的位置,再选具体手段;看它不花钱</em></div>
-        <svg id="obj" viewBox="0 0 306 268" preserveAspectRatio="xMidYMid meet"></svg>
-      </div>
-      <div class="zone" style="flex:1">
-        <div class="zt">碗以外的路子 <em>—— 先点一行,再选具体手段;这些要花钱</em></div>
-        <div id="outside"></div>
-      </div>
-    </div>
-    <div class="col" id="mapcol">
-      <div class="zt">已知与推理 <em>—— 你查到的东西,以及它们之间怎么串起来</em></div>
-      <div id="mapwrap">
-        <svg id="map"></svg>
-        <div id="mapempty"></div>
-        <div class="lgd" id="lgd"></div>
-        <div id="tip"></div>
-      </div>
-    </div>
-    <div class="col" id="deck">
-      <div class="zt">现在该判断什么 <em>—— 手上悬着、等你决定下一步的东西</em></div>
-      <div id="deckbody"></div>
-    </div>
-  </main>
-</div>
-
-<div id="pop" role="dialog" aria-label="这个位置可用的具体手段" aria-hidden="true" tabindex="-1"></div>
-
-<div id="brief">
-  <div class="bx">
-    <h3>这一趟是受人委托</h3>
-    <div class="sub">开局说明 · 随时可以从右上角「委托」再看一遍</div>
-    <p>你是个替人看东西的鉴定人。今天的委托人正准备接手这只碗,钱还没付。
-      他不问你「真的还是假的」——他问的是:<b>这东西究竟经历过什么,我该不该接。</b></p>
-    <p class="q">你要交回去的,是一份说得出根据的判断:你查到了什么、据此能说到哪一步、
-      以及哪些地方你还不敢说。</p>
-    <p>手上这只碗的疑点是:<b>它像是被大改过</b>。要把这件事说实,有两条路 ——
-      一条靠翻纸面记录,一条靠查实物本身。两条都能走通,也可以混着走;
-      走哪条取决于你的步数花在哪边。</p>
-    <ul>
-      <li>左边先列的是<b>可以下手的位置和路子,不是具体动作</b>。点开一处,才会看到这里能用的具体手段;上半对着碗本身看,下半查档案、送化验、比真品。</li>
-      <li>每用一个手段<b>占 1 步</b>,步数是你唯一会用完的东西。花不花钱另算,只记账,不设上限。</li>
-      <li>中间那张图是<b>你查到的东西和它们之间的关系</b>,系统会自动替你连线,不额外收费。</li>
-      <li>右边告诉你<b>现在有哪些东西悬着</b>,等你决定下一步。它不会替你排先后。</li>
-      <li>什么时候够了由你说 —— 按「收手」交差。左上那行会告诉你,以现在手上的东西你能说到什么程度。</li>
-    </ul>
-    <p>有些情报刚买回来是读不出结论的,得等另一样东西到手才变得有用。这是常态,不是你买错了。</p>
-    <button class="go2" id="bgo">接了这活</button>
-  </div>
-</div>
-
-<div id="hist">
-  <div class="hh">
-    <h3>历史回放</h3>
-    <input type="range" id="hr" min="0" max="0" value="0">
-    <button class="t" id="hclose">关闭</button>
-  </div>
-  <div class="hb">
-    <div class="hp"><div id="hsvgwrap"><svg id="hsvg"></svg></div><div id="hcap"></div></div>
-    <div class="hp" style="flex:0 0 380px"><div id="hdeck"></div></div>
-  </div>
-</div>
-
+<header>
+ <div class="brand"><h1>掌眼</h1><div class="prototype-label">已知与推理 · Experimental</div></div>
+ <div class="status"><div id="stage-title" class="status-title"></div><div id="stage-sub" class="status-sub"></div></div>
+ <div class="top-actions"><label class="budget">开局步数 <input id="budget" type="number" aria-label="开局步数"></label><button id="history-button">调查记录</button><button id="brief-button">委托</button><button id="stop-button" class="primary">收手</button><button id="restart-button" class="plain">重开</button></div>
+</header>
+<main class="workspace">
+ <nav class="workbench" aria-label="调查工作台"><h2>工作台</h2><p class="small">先看手段，再决定是否调查。</p><div id="places"></div></nav>
+ <section class="atlas" aria-labelledby="map-heading">
+  <div class="map-head"><div><h2 id="map-heading">已知与推理</h2><p class="small" id="map-count">每份信息都可以回查。</p></div><div class="row map-tools"><button id="overview-button">全貌</button><button id="zoom-out" aria-label="缩小地图">−</button><span id="zoom-value" class="small">100%</span><button id="zoom-in" aria-label="放大地图">＋</button></div></div>
+  <div id="history-banner" class="history-banner"><span id="history-caption"></span><button id="return-live" class="plain">回到本局</button></div>
+  <div id="notice" class="notice" aria-live="polite">从工作台任选一处开始。地图只呈现你已经取得的信息。</div>
+  <div class="map-scroll" id="map-scroll"><div class="map-canvas" id="map-canvas"><svg id="map" aria-label="已知信息之间的关系" role="img"></svg><div id="node-controls"></div><div class="empty-map" id="empty-map"><div class="empty-ring"></div><h2>先认识眼前这只碗。</h2><p>你可以先看实物，也可以先找资料。取得的信息会留在这里；有了依据，它们才会接通。</p></div></div></div>
+  <div class="map-footer"><div class="legend"><span>信息</span><span class="judgment">判断</span><span class="question">已知中的疑问</span></div><span>点内容或道路，回查它为什么成立</span></div>
+ </section>
+ <aside id="inspector" class="inspector" aria-label="内容与关系详情" tabindex="-1"></aside>
+</main>
+<dialog id="brief-dialog"><div class="modal-heading"><h2>这次委托</h2><button data-close="brief-dialog" aria-label="关闭委托">关闭</button></div><p>委托人准备接手这只碗，钱还没有付。他想知道：这东西经历过什么，还有哪些拿不准的地方？</p><p>你来选择检查实物或查找资料。每个手段占一步；钱按费用档记录，最后一起结账。地图会整理本局取得的信息，以及已经有依据的关系。</p><p>你可以随时收手，留下一份能说出根据、也说清边界的判断。</p></dialog>
+<dialog id="stop-dialog"><div class="modal-heading"><h2>带着现在的判断收手</h2><button data-close="stop-dialog">先继续看</button></div><div id="stop-preview"></div><label class="section-label" for="final-note">我的判断与仍拿不准的地方（可选）</label><textarea id="final-note" class="prompt-input" rows="3" placeholder="我认为……，依据是……；……还没有查清。"></textarea><p class="small" style="margin-top:10px">确认后保留本局地图和调查记录，不再花费步数。</p><div class="modal-actions"><button data-close="stop-dialog">继续调查</button><button id="confirm-stop" class="primary">确认收手</button></div></dialog>
+<dialog id="restart-dialog"><div class="modal-heading"><h2>重新开始一局</h2><button data-close="restart-dialog">取消</button></div><p>当前局的地图与记录会清空。开局步数沿用现在的设定。</p><div class="modal-actions"><button data-close="restart-dialog">保留当前局</button><button id="confirm-restart" class="primary">开始新局</button></div></dialog>
 <script>
 const STAMP = {
-  "builtAt": "2026-09-04",
-  "sha": {
-    "FIXTURES": "B3ED4F357B8FB84EAAB4F14CAF4629E62BF11F9C44BEFA5AAD6730C3393E0FDD",
-    "SOLVER": "E217CAF56A9961EA7C46151E1CA6B0546A6C408CCC8ECDDB21E4B9DA66EE72D1",
-    "CASE": "7F078BC68394B9238783080EE72E6DEC2CE514EA962829668A4443041805AA05",
-    "SEMANTICS": "397EAB3305DCE9EE5BF7E996B4C4E0C1CA081FF29BE0C2F54F6B5524CC85D833",
-    "SESSION": "83D1DD707F9A4ACCFEB162C299387DFE3BEB6A720045C8E09A22939FDD0B1351",
-    "PROJECTION": "813364B256C5FE987BC95BFCF18BA05711DDF98276BBC9D284D3AAEEAA06417F"
+  "builtAt": "2026-09-05T13:19:18.876Z",
+  "sources": {
+    "FIXTURES": {
+      "path": "../first-ceramic-author-scenarios-v0/fixtures.mjs",
+      "sha256": "b3ed4f357b8fb84eaab4f14caf4629e62bf11f9c44befa5aad6730c3393e0fdd"
+    },
+    "SOLVER": {
+      "path": "../first-ceramic-author-scenarios-v0/solver.mjs",
+      "sha256": "e217caf56a9961ea7c46151e1ca6b0546a6c408ccc8ecddb21e4b9da66ee72d1"
+    },
+    "CASE": {
+      "path": "../knowledge-map-slice-v0/case.mjs",
+      "sha256": "7f078bc68394b9238783080ee72e6dec2ce514ea962829668a4443041805aa05"
+    },
+    "SEMANTICS": {
+      "path": "../evidence-semantics-v0/semantics.mjs",
+      "sha256": "397eab3305dce9ee5bf7e996b4c4e0c1ca081ff29be0c2f54f6b5524cc85d833"
+    },
+    "SESSION": {
+      "path": "../workbench-map-focus-v1/session.mjs",
+      "sha256": "83d1dd707f9a4accfeb162c299387dfe3beb6a720045c8e09a22939fdd0b1351"
+    },
+    "GRAPH": {
+      "path": "graph.mjs",
+      "sha256": "171507d84bafedebadab8e4e96875134823459f65b93fa6e3ce3cceb49c37634"
+    },
+    "LAYOUT": {
+      "path": "layout.mjs",
+      "sha256": "90254b9f5e66e633c939b278853cfacca2f18ff6638a99d4b0724b124d613a4c"
+    }
   },
-  "exports": {
-    "FIXTURES": 13,
-    "SOLVER": 10,
-    "CASE": 5,
-    "SEMANTICS": 6,
-    "SESSION": 10,
-    "PROJECTION": 14
-  }
+  "templateSha256": "b9ee827e3df00bc86a6f209d06157c123fcefc8ba23962b4c4ea9bce7ba29f83"
 };
-/* ==== FIXTURES ==== */
 const FIXTURES = (() => {
 const FIXTURE_WEIGHT = 25;
 
@@ -2204,10 +1928,9 @@ const conflictingDependencyEvents = Object.freeze([
   }),
 ]);
 
-return { thresholds, expectedProfile, claimScopeRequirements, unknownRegistry, PROOF_ROLES, proofRoleContracts, actionContracts, events, scenarios, scenarioById, FixtureContractError, eventsForOrder, conflictingDependencyEvents };
+return {thresholds,expectedProfile,claimScopeRequirements,unknownRegistry,PROOF_ROLES,proofRoleContracts,actionContracts,events,scenarios,scenarioById,FixtureContractError,eventsForOrder,conflictingDependencyEvents};
 })();
 
-/* ==== SOLVER ==== */
 const SOLVER = (() => {
 const AXES = Object.freeze({
   Identity: Object.freeze(["REPRODUCTION", "LATE18_EXPORT"]),
@@ -3831,10 +3554,9 @@ function projectPosterior(snapshot, axes) {
   );
 }
 
-return { AXES, AXIS_NAMES, ModelConflict, stableStringify, buildStateSpace, STATE_SPACE, assertLegalAcquisitionOrder, assertSessionCanAcceptEvidence, solveFixture, projectPosterior };
+return {AXES,AXIS_NAMES,ModelConflict,stableStringify,buildStateSpace,STATE_SPACE,assertLegalAcquisitionOrder,assertSessionCanAcceptEvidence,solveFixture,projectPosterior};
 })();
 
-/* ==== CASE ==== */
 const CASE = (() => {
 /* 第一器物的玩家侧投影层 —— 可丢弃切片专用。
  *
@@ -3849,7 +3571,6 @@ const CASE = (() => {
  */
 
 const { events } = FIXTURES;
-
 /* ---------- 结局表 ----------
  * 一个动作在冻结目录里往往对应多个"结局"事件。本案该给哪一个,不是自拟的,
  * 推导规则只有两条:
@@ -4097,10 +3818,9 @@ function playerView(solved) {
   };
 }
 
-return { COST_LABEL, ACTIONS, ACTION_BY_ID, availability, playerView };
+return {COST_LABEL,ACTIONS,ACTION_BY_ID,availability,playerView};
 })();
 
-/* ==== SEMANTICS ==== */
 const SEMANTICS = (() => {
 /* 第一器物的情报语义文本 v0 —— 玩家侧可读层。
  *
@@ -4613,10 +4333,9 @@ const UNKNOWN_SEMANTICS = {
   },
 };
 
-return { ACTION_SEMANTICS, LATENT_SEMANTICS, PROOF_ROLE_SEMANTICS, ROUTE_SEMANTICS, STAGE_SEMANTICS, UNKNOWN_SEMANTICS };
+return {ACTION_SEMANTICS,LATENT_SEMANTICS,PROOF_ROLE_SEMANTICS,ROUTE_SEMANTICS,STAGE_SEMANTICS,UNKNOWN_SEMANTICS};
 })();
 
-/* ==== SESSION ==== */
 const SESSION = (() => {
 /* 一局的状态机。只读冻结求解器与夹具,复用切片的动作投影 case.mjs。
 
@@ -4625,10 +4344,10 @@ const SESSION = (() => {
    测试文件(15/15),而且属于已被 DEC-032 推翻的切片,基本是存档。改它要按项目规矩
    无条件送审,收益却只是省下这四十行。所以这里重抄一份,往后以本文件为准。
    两份若出现分歧,以本文件为准,切片那份不再跟随。 */
-const { events, thresholds, expectedProfile, claimScopeRequirements, actionContracts, proofRoleContracts, unknownRegistry } = FIXTURES;
+const { events, thresholds, expectedProfile, claimScopeRequirements,
+         actionContracts, proofRoleContracts, unknownRegistry } = FIXTURES;
 const { solveFixture, assertLegalAcquisitionOrder } = SOLVER;
 const { ACTION_BY_ID, availability } = CASE;
-
 /* param slice.investigationBudget,见 docs/project/PARAMS.md
    开局前可调,范围 [BUDGET_MIN, BUDGET_MAX]。下界 12 是原先的固定值,来自冻结场景的
    路线长度反推;上界由 ceiling.mjs 从冻结拓扑跑出,等于"互异动作各做一次"的步数,
@@ -4733,1309 +4452,805 @@ function take(s, actionId) {
   };
 }
 
-return { BUDGET_MIN, BUDGET_MAX, BUDGET_DEFAULT, clampBudget, newSession, setBudget, solve, factsOf, workbench, take };
+return {BUDGET_MIN,BUDGET_MAX,BUDGET_DEFAULT,clampBudget,newSession,setBudget,solve,factsOf,workbench,take};
 })();
 
-/* ==== PROJECTION ==== */
-const PROJECTION = (() => {
-/* 心智地图与决策面的投影层。
-   DEC-032 的结构不在冻结求解器的模型里,所以这一层在它外面,把求解器输出翻译成
-   「观察 → 逻辑边 → 局部 Finding → 公理」。冻结文件一个字节都不改。
-
-   拓扑(每一层都能在冻结数据里指出出处):
-     观察节点     = solved.evidence.observationIds        —— 玩家花机会挣来的
-     逻辑边       = 四种既有关系,见下 EDGE_KINDS         —— 系统免费自动生成
-     局部 Finding = 同一潜变量上聚起 ≥2 条观察时自动成形  —— 系统免费自动生成
-     公理         = 已成立且无争议的主张,钉住不动         —— 从决策面离场,留在全图
-     G            不进地图,只作一行读数(DEC-032 第十节)
-
-   这一层无测试覆盖,是 DEC-032「先加投影层试」那个岔口的代价。 */
-const { events, proofRoleContracts } = FIXTURES;
-const { ACTION_BY_ID, COST_LABEL } = CASE;
-const { ACTION_SEMANTICS, LATENT_SEMANTICS, PROOF_ROLE_SEMANTICS, ROUTE_SEMANTICS, STAGE_SEMANTICS } = SEMANTICS;
-
-/* ---------- 从夹具反查的索引(只读) ---------- */
-const EVENT_BY_OBS = new Map();
-for (const ev of Object.values(events)) EVENT_BY_OBS.set(ev.observationId, ev);
-
-/* fact → 能产出它的动作。用于回答「想补这个缺口,行里靠什么手段」。
-   这是领域知识,DEC-032 第七节要求无偿给。 */
-const FACT_PRODUCERS = new Map();
-for (const ev of Object.values(events)) {
-  if (!ACTION_BY_ID.has(ev.acquisitionActionId)) continue;
-  for (const f of [...(ev.facts ?? []), ...(ev.contextualFacts ?? [])]) {
-    if (!FACT_PRODUCERS.has(f)) FACT_PRODUCERS.set(f, new Set());
-    FACT_PRODUCERS.get(f).add(ev.acquisitionActionId);
-  }
-}
-
-/* ---------- 情报标签。节点是情报,不是行动,所以不能拿动作名当标签。 ---------- */
-const OBS_LABEL = {
-  "obs.current.whole": { short: "整只碗的样貌", gist: "器型与胎釉的整体面貌,加上肉眼看得见的动过手的地方分布在哪几块。" },
-  "obs.current.base": { short: "底足痕迹", gist: "圈足与修足留下的成型痕迹 —— 制造工艺的指纹。" },
-  "obs.appearance.restore": { short: "外观被重整过的痕迹", gist: "纹饰与色差显示外观被重新整合过的那些地方。" },
-  "obs.corpus.identity": { short: "与同期真品的比对结果", gist: "这套制造特征放到同时代的真品里看,是常见还是罕见。" },
-  "obs.corpus.identity.repeat": { short: "换一批真品复核(结论没变)", gist: "换一批同期真品再比一次,结论与上次一致 —— 是本局经历,但不额外加分。" },
-  "obs.object.continuity": { short: "手里这只就是记录里那只", gist: "那些没被改动过的稳定特征对得上,所以手里这只与记录里那只是同一件。" },
-  "obs.structure.xray.early": { short: "釉下结构影像", gist: "多角度射线下一块一块拍出来的内部结构。" },
-  "obs.surface.no-signal.unresolved": { short: "紫外没照出补绘(还不能当证据)", gist: "没照出补绘的迹象,但这一次照的灵敏度不够,所以还不能据此说「没有补绘」。" },
-  "obs.accident.major": { short: "那一组事故记录", gist: "几份彼此不矛盾的记录,描述了一次严重损坏和随后的修补。" },
-  "obs.archive.t2.object-attribution": { short: "事故记录说的是这只碗", gist: "那组事故记录讲的就是手里这一只,不是同类的另一只。" },
-  "obs.archive.t2.current-corroboration": { short: "事故记录在这只碗上对上了", gist: "记录里写的那次修补,在这只碗上找得到对应的痕迹。" },
-  "obs.phase.t1": { short: "出事之前的影像", gist: "一张更早时候的样子,可以拿来当比较的底子。" },
-  "obs.structure.major.cross-time": { short: "两个时候的结构差别", gist: "把两个时候的内部结构一块一块摆在一起,哪里变了看得见。" },
-  "obs.structure.major.documented-cross-time": { short: "两个时候的结构差别(底子来自档案)", gist: "拿档案给的那个时间点当底子比出来的差别 —— 所以这条结论要靠「档案说的是这只碗」才站得住。" },
-  "obs.phase.t3": { short: "更晚的一批处理记录", gist: "时间更靠后的一批处理记录,说明后来还有人动过它。" },
-  "obs.archive.t3.object-attribution": { short: "后期记录说的是这只碗", gist: "那批更晚的记录讲的也是手里这一只。" },
-  "obs.archive.t3.current-corroboration": { short: "后期处理在这只碗上对上了", gist: "那批后期处理,在这只碗对应的地方找得到。" },
-  "obs.key-material.substrate-readings": { short: "关键几处的底子是什么", gist: "要紧那几处底下究竟是原来的瓷,还是后来补起来的。" },
-  "obs.key-material.layer-sequence": { short: "各层的先后顺序", gist: "一层层上去的先后 —— 谁压在谁上面。" },
-  "obs.surface.point-layering": { short: "试窗点上的层次关系", gist: "开窗的那几个点上,补绘压在哪一层之上,由此定出后加的和原有的谁先谁后。" },
-  "obs.surface.resolved": { short: "补绘范围有多大,已经说得出来", gist: "把各个点连成片,补绘覆盖多大范围现在有答案了。" },
-  "obs.stability.resolved": { short: "结不结实,已经说得出来", gist: "受力怎么传、能不能摆出来展，都评估过了。" },
-  "obs.documentation.resolved": { short: "来源链查到哪一步为止", gist: "经手记录能追到哪一步,而且这一段里没有互相打架的文件。" },
+const GRAPH = (() => {
+/* Experimental player projection. Only acquired observations and public solver
+ * output are read. A sourceIds entry is an observation ID, never a new evidence
+ * weight. Statements are not promoted from nonempty proof slots. */
+const { events } = FIXTURES;
+const { ACTION_BY_ID } = CASE;
+const { ACTION_SEMANTICS, STAGE_SEMANTICS } = SEMANTICS;
+const eventById = new Map(Object.values(events).map((e) => [e.observationId, e]));
+const unique = (xs) => [...new Set(xs.filter(Boolean))];
+const O = {
+  whole: "obs.current.whole", base: "obs.current.base", corpus: "obs.corpus.identity",
+  repeat: "obs.corpus.identity.repeat", continuity: "obs.object.continuity",
+  xray: "obs.structure.xray.early", t1: "obs.phase.t1", t2: "obs.accident.major", t3: "obs.phase.t3",
+  physical: "obs.structure.major.cross-time", documented: "obs.structure.major.documented-cross-time",
+  surface: "obs.surface.resolved", point: "obs.surface.point-layering",
+  negative: "obs.surface.no-signal.unresolved", substrate: "obs.key-material.substrate-readings",
+  layer: "obs.key-material.layer-sequence", stability: "obs.stability.resolved",
+  provenance: "obs.documentation.resolved", appearance: "obs.appearance.restore",
+};
+const TEXT = {
+  [O.whole]: ["整器形制与可见修补", "已记录形制、胎釉与肉眼可见的干预分布；可见修补本身不证明重大重组。", "craft"],
+  [O.base]: ["底足制造痕迹", "底足留下修削与成型特征，为制造工艺判断提供局部读数。", "craft"],
+  [O.corpus]: ["同期真品比对", "把这只碗的制造特征放入同期真品参照，得到可排除与保留的身份方向。", "craft"],
+  [O.repeat]: ["比对复核未新增证据", "复核仍属于同一证据单元，保留调查经历，不按另一份独立证据累计。", "craft"],
+  [O.continuity]: ["稳定特征确认对象连续", "未改动的稳定特征把现器与历史对象对应起来；这不等于所有事故档案都已归属此碗。", "object"],
+  [O.xray]: ["釉下结构影像", "已取得多角度逐区射线读数。能否据此判断，取决于对象连续性的解释前提。", "structure"],
+  [O.t1]: ["较早时点的影像", "已取得较早状态的读数；对象连续性确认后，才能把它作为这只碗的历史时间锚点。", "history"],
+  [O.t2]: ["事故记录组", "这组记录记述严重损坏与重组。记录之间是否一致、是否属于这只碗、事件是否对应实物，分别核验。", "history"],
+  [O.t3]: ["后期处理记录", "记录记述另一时点的局部处理；记录内容不能未经归属与对应就算作这只碗经历。", "history"],
+  "obs.archive.t2.object-attribution": ["事故记录归属已核对", "已确认事故记录指向这只碗。记录与实物出现后，这份核验会显示在连接上；它不替代事件物证核验。", "history"],
+  "obs.archive.t2.current-corroboration": ["事故所述与实物已核对", "所述处理在声明范围内得到实物对应。事件相符不自动证明记录的对象归属。", "history"],
+  "obs.archive.t3.object-attribution": ["后期记录归属已核对", "已确认后期记录指向这只碗；这项归属与事故档案归属分别成立。", "history"],
+  "obs.archive.t3.current-corroboration": ["后期处理与实物已核对", "后期处理在声明范围内得到对应，有助于划分后期与早先事件的解释边界。", "history"],
+  [O.physical]: ["实物跨时点结构变化", "对比声明范围内的两个时点，取得结构变化读数；它与逐区结构、可见修补分布共同构成物证路线。", "structure"],
+  [O.documented]: ["档案与现状的逐区对应", "以档案给出的时点进行逐区对照；这项对应仍依赖档案属于这只碗。", "structure"],
+  [O.appearance]: ["外观重整痕迹", "纹饰衔接与色差表明外观被重新整合；它不能单独推出结构层面的大改。", "surface"],
+  [O.negative]: ["紫外未见补绘信号", "本次没有检测到信号，但能力不足以证明没有补绘；阴性记录仍保留。", "surface"],
+  [O.point]: ["试窗点位的层压关系", "试窗说明所取点位上各层的上下关系，不自动外推成整区结论。", "surface"],
+  [O.surface]: ["表面处理的覆盖范围", "点位按区域综合后的范围判断，保留已覆盖区域与适用边界。", "surface"],
+  [O.substrate]: ["关键点位的基底读数", "材料分析覆盖声明的关键点位，说明这些点的基底；不能据此宣称整个区域都已化验。", "material"],
+  [O.layer]: ["关键界面的层序读数", "界面叠压顺序提供先后关系；与基底读数回答不同问题，不能彼此替代。", "material"],
+  [O.stability]: ["承力与陈列条件", "结论限于评估过的承力路径与静态陈列条件，不代表任何使用条件下都安全。", "condition"],
+  [O.provenance]: ["流转记录的可追边界", "已核实范围内的流转链与文件一致性；链条边界之外仍可保留未知。", "provenance"],
+};
+const CLAIMS = {
+  identity: ["晚 18 世纪外销瓷方向成立", "整体制造特征与底足读数共同在场，再由比对排除或对象连续性提供身份路径；当前证据支持这一方向。", "craft"],
+  majorReassembly: ["曾发生重大重组", "档案路线或物证路线能够成立。每条路线各自的共同条件必须满足，不能把两条未完成路线拼成一条证明。", "structure"],
+  threePhase: ["修复史可分为三个阶段", "较早状态、事故事件和后期处理建立了先后解释。三个阶段不等于恰好做过三次修补。", "history"],
+  coherentDecisionProfile: ["形成可用于决策的连贯说明", "身份与重大重组、三阶段修复史、材料、表面、承力和记录边界共同支持当前说明；允许保留不阻断判断的未知。", "condition"],
+};
+const TARGETS = {
+  "CLAIM.IDENTITY.LATE18_EXPORT": "identity",
+  "CLAIM.REPAIR.MAJOR_REASSEMBLY": "majorReassembly",
+  "CLAIM.REPAIR.THREE_PHASE": "threePhase",
+  "STAGE_RESULT.G3.COHERENT_DECISION_PROFILE": "coherentDecisionProfile",
+};
+const CONTEST_TEXT = {
+  t2ArchiveRecordCoherenceContested: "事故记录内部有冲突",
+  t2ArchiveObjectAttributionContested: "事故记录归属有冲突",
+  t2EventPhysicalCorrespondenceContested: "事故所述与实物有冲突",
+  t3ArchiveRecordCoherenceContested: "后期记录内部有冲突",
+  t3ArchiveObjectAttributionContested: "后期记录归属有冲突",
+  t3EventPhysicalCorrespondenceContested: "后期所述与实物有冲突",
+  threePhaseChronologyContested: "时序记录互相矛盾",
+};
+const REL = {
+  t2: { record: O.t2, name: "事故记录", prefix: "PROOF.ARCHIVE.T2.",
+    attr: "A.RELATE.ARCHIVE.T2_TO_OBJECT", corr: "A.CORROBORATE.ARCHIVE.T2_CURRENT" },
+  t3: { record: O.t3, name: "后期记录", prefix: "PROOF.ARCHIVE.T3.",
+    attr: "A.RELATE.ARCHIVE.T3_TO_OBJECT", corr: "A.CORROBORATE.ARCHIVE.T3_CURRENT" },
 };
 
-/* ---------- 主张的槽位标签。空槽位就是「还差哪一块」。 ---------- */
-/* 主张标签必须是**陈述句**,而且必须说的是它自己那两个槽位管的事。
-   2026-08-31 盲测教训:`identity` 原本叫「它属于哪一路」,可它的槽位是「这只碗本身的
-   工艺读数」+「与历史时点是同一件器物」—— 讲的是身份链接上了,不是窑口归属。
-   玩家因此把它读成一个只有问题没有答案的结论,等一个永远不会来的答案。 */
-const CLAIM_LABEL = {
-  identity: "这只碗就是档案里记的那一只",
-  majorReassembly: "这只碗被大改过",
-  threePhase: "改动分三次发生,不是一次",
-  coherentDecisionProfile: "整份判断内部不矛盾",
-};
-/* g1 与 appearanceRestore 不进地图:前者是阶段结果(DEC-032 第十节),
-   后者是单条事实而非主张。 */
-const CLAIM_NOT_ON_MAP = new Set(["g1", "appearanceRestore"]);
-
-/* 槽位标签就是「还差哪一块」,所以每一条都要让玩家看得出缺的是什么东西。 */
-const SLOT_LABEL = {
-  identity: {
-    currentObject: "这只碗本身的工艺读数",
-    path: "它与记录里那一只是同一件",
-  },
-  majorReassembly: {
-    currentRepairMap: "说得出哪几处被动过手",
-    documentedSourceGroup: "几份记录互不矛盾,而且说的是这只碗",
-    documentedCrossTime: "档案里写的事,在两个时候的实物对比上对得上",
-    physicalStructureMap: "一块一块拍出来的内部结构",
-    physicalCrossTime: "两个时候的结构差别",
-  },
-  threePhase: {
-    t1: "出事之前是什么状态",
-    t2: "那次事故和随后的修补",
-    t3: "后来又有人动过的部分",
-  },
-  coherentDecisionProfile: {
-    documentation: "经手记录查到哪为止,而且不互相打架",
-    keyMaterial: "要紧那几处的底子说得出来",
-    stability: "结不结实说得出来",
-    surface: "表面被补过多少说得出来",
-  },
-};
-
-/* 查一批记录要分别过三道:记录之间对不对得上、说的是不是这只碗、写的事在实物上找不找得到。
-   这三道必须能被玩家一次看全 —— 盲测者的原话是「三关系到底是哪三个,要我从三段说明里
-   自己拼」,而且他把「三关系」和「第几关」混着读。所以界面上只准出现这三句,
-   不准再出现「档案三关系」「第一关／第二关」这种要玩家自己去凑的说法。 */
-const ARCHIVE_REL_LABEL = {
-  recordCoherence: "这几份记录互相对得上吗",
-  objectAttribution: "这些记录说的是这只碗吗",
-  eventCorroboration: "记录里写的事,在实物上找得到吗",
-};
-const ARCHIVE_REL_STATE = {
-  unresolved: "还没结论",
-  suggestive: "有指向,但还不能确定说的就是这只碗",
-  established: "已经确定",
-  contested: "对不上,互相打架",
-};
-const ARCHIVE_GROUP_LABEL = { t2: "事故那一组记录", t3: "后期处理那一组记录" };
-
-/* 三种边。**两种是有方向的**,所以图上必须画箭头 —— 盲测者说没有箭头时他会按
-   上下左右猜哪头是前提,猜反了就去点点不了的东西,然后当成 bug。
-   句子也照方向写,不再用「悬空／被接住」这种他明说想象不出画面的说法。 */
-const EDGE_KINDS = {
-  latent: "两头讲的是同一件事",
-  prereq: "箭尾那条先到手,箭头那条才拿得到",
-  caught: "箭尾这条后来到手,才让箭头那条有了意义",
-};
-/* 哪些边有方向。latent 是对称关系,画箭头反而会让玩家以为有先后。 */
-const EDGE_DIRECTED = new Set(["prereq", "caught", "supports"]);
-
-/* ================= 心智地图 ================= */
-function mentalMap(solved) {
-  const obsIds = [...solved.evidence.observationIds];
-  const has = new Set(obsIds);
-  const inactive = new Set(solved.evidence.inactiveObservationIds);
-  const negative = new Set(solved.evidence.unresolvedNegativeIds);
-  const scoped = new Set(solved.evidence.scopeLimitedObservationIds);
-  const caughtSet = new Set(solved.evidence.contextualizedObservationIds);
-
-  const nodes = obsIds.map((id) => {
-    const ev = EVENT_BY_OBS.get(id);
-    const label = OBS_LABEL[id];
-    const state =
-      inactive.has(id) ? "suspended"
-      : negative.has(id) ? "negative"
-      : scoped.has(id) ? "scoped"
-      : caughtSet.has(id) ? "caught"
-      : "active";
-    return {
-      type: "obs", id, state,
-      short: label?.short ?? id,
-      gist: label?.gist ?? "",
-      actionId: ev?.acquisitionActionId ?? null,
-      latents: [...(ev?.sharedLatentIds ?? [])],
-      region: ev?.coverage?.region ?? null,
-      method: ev?.coverage?.method ?? null,
+function buildGraph(solved, session) {
+  const evidence = solved.evidence ?? {};
+  const coverage = solved.coverage ?? {};
+  const has = new Set(evidence.observationIds ?? []);
+  const inactive = new Set(evidence.inactiveObservationIds ?? []);
+  const negative = new Set(evidence.unresolvedNegativeIds ?? []);
+  const scoped = new Set(evidence.scopeLimitedObservationIds ?? []);
+  const activated = new Set(evidence.contextualizedObservationIds ?? []);
+  const facts = new Set(coverage.facts ?? []);
+  const acquired = new Map((session?.acquired ?? []).map((e) => [e.observationId, e]));
+  const ev = (id) => acquired.get(id) ?? eventById.get(id);
+  const factIds = (...names) => unique(names.flatMap((f) => (coverage.factWitnesses?.[f] ?? []).map((w) => w.observationId))).filter((id) => has.has(id));
+  const roleIds = (...roles) => unique(roles.flatMap((r) => (coverage.proofRoleWitnesses?.[r] ?? []).map((w) => w.observationId))).filter((id) => has.has(id));
+  const known = (...ids) => ids.filter((id) => has.has(id));
+  const conflictFor = (id) => (solved.conflicts ?? []).filter((c) => c.observationId === id);
+  const order = unique([...(session?.log ?? []).map((l) => l.observationId), ...has]).filter((id) => has.has(id));
+  const observations = order.map((id, i) => {
+    const e = ev(id);
+    const a = ACTION_BY_ID.get(e?.acquisitionActionId);
+    const text = TEXT[id];
+    const isCounter = conflictFor(id).length > 0;
+    const contestFact = (e?.facts ?? []).find((f) => CONTEST_TEXT[f]);
+    const title = text?.[0] ?? CONTEST_TEXT[contestFact] ?? (isCounter ? "新读数对已有判断提出限制" : ACTION_SEMANTICS[a?.id]?.gotWhat ?? "已取得的局部观察");
+    const state = scoped.has(id) ? "limited" : negative.has(id) ? "limited" : inactive.has(id) ? "pending"
+      : conflictFor(id).some((c) => c.blocking) || (e?.facts ?? []).some((f) => /Contested$/.test(f)) ? "contested"
+      : (e?.facts ?? []).includes("repeatObservation") ? "repeat" : "known";
+    const steps = (session?.log ?? []).flatMap((l, n) => l.observationId === id ? [n + 1] : []);
+    return { id, observationId: id, title, summary: text?.[1] ?? (isCounter ? "此项读数的影响按对象、区域、时间及检测能力限定。" : ACTION_SEMANTICS[a?.id]?.gotWhat ?? "保留本次读数及适用范围，不自动升格为完整判断。"),
+      state, group: text?.[2] ?? "object", sourceIds: [id], actionId: e?.acquisitionActionId ?? null,
+      actionName: a?.name ?? "专门核验", steps, firstSeen: steps[0] ?? i + 1, attempts: steps.length || 1,
+      contextualized: activated.has(id), negative: negative.has(id), scopeLimited: scoped.has(id),
+      coverage: coverage.observations?.find((o) => o.observationId === id)?.coverage ?? e?.coverage ?? null,
+      originalSourceIds: [...(e?.sourceIds ?? [])],
     };
   });
-
-  /* --- 局部 Finding:同一潜变量上聚起 ≥2 条观察时自动成形 --- */
-  const byLatent = new Map();
-  for (const n of nodes) {
-    if (n.state === "suspended") continue; /* 悬空的还没接上,不算进 Finding */
-    for (const L of n.latents) {
-      if (!byLatent.has(L)) byLatent.set(L, []);
-      byLatent.get(L).push(n.id);
-    }
-  }
-  const findings = [];
-  for (const [L, members] of byLatent) {
-    if (members.length < 2) continue;
-    const sem = LATENT_SEMANTICS[L];
-    findings.push({
-      type: "finding", id: "F:" + L, latentId: L,
-      short: sem?.name ?? L, gist: sem?.meaning ?? "",
-      members: [...members].sort(),
-    });
-  }
-  findings.sort((a, b) => a.id.localeCompare(b.id));
-
-  /* --- 逻辑边 --- */
+  const byObs = new Map(observations.map((o) => [o.id, o]));
+  const nodes = observations.map((o) => ({ ...o, kind: "evidence" }));
   const edges = [];
-  const seen = new Set();
-  const push = (from, to, kind, note) => {
-    const key = kind + "|" + from + "|" + to;
-    if (seen.has(key)) return;
-    seen.add(key);
-    edges.push({ from, to, kind, note });
+  const questions = [];
+  const hiddenAsRelation = new Map();
+  const node = (id) => nodes.find((n) => n.id === id);
+  const addEdge = (from, to, label, kind, sourceIds, details, id = `${kind}:${from}:${to}`) => {
+    const ids = unique(sourceIds).filter((x) => has.has(x));
+    if (!node(from) || !node(to) || from === to || !ids.length || edges.some((e) => e.id === id)) return;
+    edges.push({ id, from, to, label, kind, sourceIds: ids, details });
+  };
+  const ask = (id, anchors, title, explanation, actionIds = []) => {
+    const anchorIds = unique(anchors).filter((a) => node(a));
+    if (anchorIds.length) questions.push({ id, anchorIds, title, explanation, actionIds: unique(actionIds).filter((a) => ACTION_BY_ID.has(a)) });
+  };
+  const mergeObservationInto = (id, target) => {
+    if (id === target || !node(id) || !node(target)) return;
+    hiddenAsRelation.set(id, target);
+    nodes.splice(nodes.findIndex((n) => n.id === id), 1);
   };
 
-  /* 1. latent:观察 → 它所属的局部 Finding */
-  for (const f of findings) {
-    for (const m of f.members) push(m, f.id, "latent", f.short);
-  }
-  /* 潜变量上只有一条观察时不连边 —— 玩家还没有那个 Finding,图上就不该有它。 */
-
-  /* 2. prereq:B 的获取前置由 A 的事实满足 */
-  const factWitnesses = solved.coverage.factWitnesses ?? {};
-  for (const id of obsIds) {
-    const ev = EVENT_BY_OBS.get(id);
-    for (const need of ev?.acquisitionRequires ?? []) {
-      for (const w of factWitnesses[need] ?? []) {
-        if (w.observationId !== id && has.has(w.observationId)) {
-          push(w.observationId, id, "prereq", EDGE_KINDS.prereq);
-        }
-      }
+  // Two independently acquired relation reports can live on the connection.
+  // No archive/object endpoint is invented when either has not been observed.
+  const archiveSources = {};
+  for (const [group, cfg] of Object.entries(REL)) {
+    const r = coverage.archiveRelations?.[group] ?? {};
+    const recordIds = roleIds(cfg.prefix + "RECORD_COHERENCE");
+    const attrIds = roleIds(cfg.prefix + "OBJECT_ATTRIBUTION");
+    const corrIds = roleIds(cfg.prefix + "EVENT_CURRENT_CORROBORATION", cfg.prefix + "EVENT_CROSS_TIME_CORROBORATION");
+    const all = unique([...recordIds, ...attrIds, ...corrIds]);
+    archiveSources[group] = all;
+    const recordNode = node(cfg.record);
+    if (recordNode) {
+      const labels = { established: "已确认", contested: "有冲突", suggestive: "有指向但未确认", unresolved: "未确认" };
+      recordNode.summary += ` 当前：记录内部${labels[r.recordCoherence] ?? "未确认"}；属于这只碗${labels[r.objectAttribution] ?? "未确认"}；事件与实物对应${labels[r.eventCorroboration] ?? "未确认"}。`;
+      if ([r.recordCoherence, r.objectAttribution, r.eventCorroboration].includes("contested")) recordNode.state = "contested";
+    }
+    for (const o of observations) {
+      const contestedFact = (ev(o.id)?.facts ?? []).find((f) => f.startsWith(group) && CONTEST_TEXT[f]);
+      if (contestedFact) addEdge(o.id, cfg.record, CONTEST_TEXT[contestedFact], "conflict", [o.id], "这项已取得报告指出具体关系发生冲突；记录内部、对象归属和事件对应分别处理。");
+    }
+    const attrOk = r.objectAttribution === "established" && attrIds.length;
+    const corrOk = r.eventCorroboration === "established" && corrIds.length;
+    if (recordNode && node(O.whole) && (attrOk || corrOk)) {
+      const relevant = [...(attrOk ? attrIds : []), ...(corrOk ? corrIds : [])];
+      addEdge(cfg.record, O.whole, attrOk && corrOk ? "归属与实物对应已确认" : attrOk ? "记录属于此碗" : "所述事件与实物相符",
+        corrOk ? "corroboration" : "attribution", relevant,
+        (attrOk ? "稳定锚点确认记录指向此碗。" : "事件相符不自动证明档案归属。") + (corrOk ? "所述处理在声明范围内得到物证对应。" : "归属成立不自动证明记录中每项事件。"), `archive:${group}:object`);
+      for (const id of relevant) if (id !== O.documented) mergeObservationInto(id, cfg.record);
+    }
+    const relationOnly = known(...all).filter((id) => id !== cfg.record);
+    if (recordNode) {
+      const unknown = [];
+      const actions = [];
+      if (r.recordCoherence !== "established") unknown.push("记录内部是否相容");
+      if (r.objectAttribution !== "established") { unknown.push("是否指向眼前这只碗"); actions.push(cfg.attr); }
+      if (r.eventCorroboration !== "established") { unknown.push("所述事件能否在实物上对应"); actions.push(cfg.corr); }
+      if (unknown.length) ask(`question:archive:${group}`, [cfg.record], `${cfg.name}还有哪些关系未核实？`, unknown.join("；") + "。这些是对已取得记录的追问，各自独立，不是已完成证明。", actions);
+    } else if (relationOnly.length) {
+      ask(`question:archive:${group}:source`, relationOnly, "这份关系核验所指的原始记录是什么？", "已经取得关系核验报告；原始记录尚未在本局取得。保留报告，等记录与实物各自出现后再接线。", [group === "t2" ? "A.RESEARCH.ACCIDENT" : "A.RESEARCH.LATE_TREATMENT"]);
     }
   }
 
-  /* 3. caught:谁把悬空的那条接住了 */
-  const caw = solved.coverage.contextActivationWitnesses ?? {};
-  for (const [obsId, info] of Object.entries(caw)) {
-    if (!has.has(obsId)) continue;
-    for (const list of Object.values(info.witnesses ?? {})) {
-      for (const w of list) {
-        if (has.has(w.observationId)) {
-          push(w.observationId, obsId, "caught", EDGE_KINDS.caught);
-        }
-      }
+  // Reinspection keeps a single evidence identity, while every attempt survives.
+  if (node(O.corpus) && node(O.repeat)) {
+    const n = node(O.corpus);
+    n.sourceIds.push(O.repeat);
+    n.summary += " 本局复核没有增加独立证据；可回查复核记录。";
+    n.attempts += byObs.get(O.repeat).attempts;
+    mergeObservationInto(O.repeat, O.corpus);
+  }
+  const representative = (id) => hiddenAsRelation.get(id) ?? id;
+  // A semantic comparison uses these observed readings. These are not generic
+  // acquisitionRequires links: the relation is independently authored here.
+  for (const from of [O.whole, O.base]) addEdge(from, O.corpus, from === O.base ? "底足参与工艺比对" : "整体特征参与比对", "context", known(from, O.corpus), "这次比对使用了这只碗的制造痕迹，比较结果依赖这些实际读数。");
+  for (const [id, info] of Object.entries(coverage.contextActivationWitnesses ?? {})) {
+    if (!activated.has(id)) continue;
+    for (const w of Object.values(info.witnesses ?? {}).flat()) addEdge(representative(w.observationId), id, "补足解释前提", "context", known(w.observationId, id), "对象连续性使已取得读数可以解释。原观察没有重新取得，也不新增证据权重。");
+  }
+  const pending = known(O.xray, O.t1).filter((id) => inactive.has(id));
+  ask("question:context", pending, "这些读数能否归到同一对象？", "资料已经到手，但缺少对象连续性的解释前提。补足后可以重新理解旧读数。", ["A.VERIFY.OBJECT_CONTINUITY"]);
+  if (node(O.xray) && !inactive.has(O.xray) && node(O.physical)) addEdge(O.xray, O.physical, "逐区结构用于跨时点比较", "context", known(O.xray, O.physical), "当前结构与跨时点变化是两项不同读数；共享证据单元不算两份独立证据。");
+  if (node(O.t2) && node(O.documented)) addEdge(O.t2, O.documented, "记录提供历史参照", "context", known(O.t2, O.documented, ...archiveSources.t2), "跨时点对应依赖档案归属；不因比较动作已经做过就宣称整条路线成立。");
+  if (node(O.point) && node(O.surface)) addEdge(O.point, O.surface, "点位读数按区综合", "support", known(O.point, O.surface), "点位层压关系与区域覆盖共同说明表面范围，范围不得超出已声明覆盖。");
+  if (node(O.negative) && !facts.has("surfaceResolved")) ask("question:negative", [O.negative], "未检出能说明没有补绘吗？", "本次检测能力不足以支持没有补绘；点位层次检查能提供另一种观察，但不会抹掉这次阴性记录。", ["A.INSPECT.WINDOWS"]);
+  if (node(O.point) && !facts.has("surfaceResolved")) ask("question:surface", [O.point], "这些点能说明多大范围？", "点位层次已知，尚不能直接把几个点外推到整片区域。", ["A.SYNTHESIZE.SURFACE_REGIONS"]);
+  if (node(O.substrate) && !facts.has("keyMaterialLayerSequenceReadings")) ask("question:material-sequence", [O.substrate], "这些基底与后来各层谁先谁后？", "材料组成已经取得；形成顺序需要界面层序说明。", ["A.INSPECT.MATERIAL.LAYER_SEQUENCE"]);
+  if (node(O.layer) && !facts.has("keyMaterialSubstrateReadings")) ask("question:material-base", [O.layer], "这些层底下是什么材料？", "层序说明先后，不能替代基底材料分析。", ["A.ANALYZE.MATERIAL.SUBSTRATE"]);
+  if (node(O.whole) && !solved.claims?.identity?.established && !node(O.corpus)) ask("question:craft", known(O.whole, O.base), "这些制造特征放进历史参照会怎样？", "把已有的形制与底足读数放进同期真品参照，可以了解哪些身份方向对得上、哪些对不上。", ["A.COMPARE.CORPUS"]);
+  if (node(O.whole) && !node(O.xray) && !node(O.t2) && !node(O.appearance)) ask("question:visible-intervention", [O.whole], "眼见的修补牵涉哪些层面？", "肉眼已经看到修补分布。纹饰色差、内部结构或事件记录能从不同方面继续了解这些改动。", ["A.OBSERVE.REGION_DECOR", "A.IMAGE.XRAY", "A.RESEARCH.ACCIDENT"]);
+  if (node(O.appearance) && !node(O.point) && !node(O.surface)) ask("question:appearance", [O.appearance], "这些外观变化压在哪一层？", "外观整合的迹象已经取得，还需要分清表面层次；这与结构是否大改是不同问题。", ["A.SCREEN.UV", "A.INSPECT.WINDOWS"]);
+  if (node(O.xray) && !inactive.has(O.xray) && !node(O.physical)) ask("question:change", [O.xray], "结构从另一个时点到现在变了什么？", "当前结构已经能读，状态本身仍不能说明发生过什么变化。", ["A.MAP.REGION_CONTINUITY"]);
+
+  // Complete proof packages are disclosed on achieved claims. The solver is
+  // the authority for establishment, contest and route eligibility.
+  const identitySources = unique([...factIds("currentBody", "baseManufacture", "identityComparisonExclusion", "identityObjectContinuity")]);
+  const physicalSources = roleIds("PROOF.CURRENT.NAMED_REPAIR_MAP", "PROOF.MAJOR.PHYSICAL.STRUCTURE_MAP", "PROOF.MAJOR.PHYSICAL.CROSS_TIME");
+  const majorSources = unique([...(coverage.majorProofPaths?.documented ? archiveSources.t2 : []), ...(coverage.majorProofPaths?.physical ? physicalSources : [])]);
+  const threeSources = unique([...factIds("t1Established"), ...archiveSources.t2, ...archiveSources.t3]);
+  const coreSources = factIds("keyMaterialSubstrateReadings", "keyMaterialLayerSequenceReadings", "surfacePointLayering", "surfaceRegionalCoverage", "surfaceResolved", "displayConditionSpecified", "stabilityResolved", "documentationBoundary", "documentationNoConflict");
+  const sourceMap = { identity: identitySources, majorReassembly: majorSources, threePhase: threeSources,
+    coherentDecisionProfile: unique([...identitySources, ...majorSources, ...factIds("appearanceRestore"), ...threeSources, ...coreSources]) };
+  for (const [key, text] of Object.entries(CLAIMS)) {
+    const c = solved.claims?.[key] ?? {};
+    const relevant = (solved.conflicts ?? []).filter((x) => TARGETS[x.targetClaim] === key);
+    const contested = c.contested || c.logicallyRefuted || relevant.some((x) => x.blocking);
+    if (!c.established && !contested) continue;
+    const sourceIds = unique([...sourceMap[key], ...relevant.map((x) => x.observationId)]).filter((id) => has.has(id));
+    if (!sourceIds.length) continue;
+    nodes.push({ id: "claim:" + key, kind: "claim", title: contested ? text[0].replace(/成立$/, "") : text[0], summary: (contested ? "此命题当前" + (c.logicallyRefuted ? "受到直接反驳" : "有冲突") + "，不能作为已成立结论。" : "") + text[1], state: contested ? "contested" : "established", sourceIds, group: text[2] });
+  }
+  const support = (from, key, label, sources, details, suffix = "") => addEdge(representative(from), "claim:" + key, label, "support", sources, details, `proof:${key}:${from}${suffix}`);
+  if (node("claim:identity")) {
+    const paths = unique(factIds("identityComparisonExclusion", "identityObjectContinuity").map(representative)).filter((id) => !inactive.has(id));
+    for (const id of paths) support(id, "identity", paths.length > 1 ? "一条身份论证路径" : "工艺与身份路径共同支持", unique([...factIds("currentBody", "baseManufacture"), id]), "共同条件：整体制造特征 + 底足读数 + 一条身份路径。比对排除与对象连续性是替代路径，不能读成两项都必须做；是否成立还取决于当前命题状态。");
+    for (const id of factIds("currentBody", "baseManufacture")) {
+      // A completed corpus comparison already draws these inputs into the
+      // identity path. The continuity-only route still needs visible AND inputs.
+      const alreadyConnected = edges.some((e) => e.from === id && paths.includes(e.to));
+      if (!alreadyConnected) support(id, "identity", "身份判断的共同条件", identitySources, "这份制造读数必须与另一处工艺读数及一条身份路径共同使用；本箭头不表示它单独能够推出身份。", ":current");
     }
   }
-
-  /* --- 公理:已成立且无争议的主张,钉住不动,从决策面离场 --- */
-  const axioms = [];
-  for (const [claimId, c] of Object.entries(solved.claims ?? {})) {
-    if (CLAIM_NOT_ON_MAP.has(claimId)) continue;
-    if (!c?.established) continue;
-    if (c.contested || c.logicallyRefuted) continue;
-    axioms.push({
-      type: "axiom", id: "AX:" + claimId, claimId,
-      short: CLAIM_LABEL[claimId] ?? claimId,
-      /* 不再叫「公理」。盲测者第一反应是数学课上「不证自明」的公理,而这里恰好相反 ——
-         这是玩家花步数查实的东西。他明写每次看到都要在两种理解之间切换一次。 */
-      line: (CLAIM_LABEL[claimId] ?? claimId) + " —— 已经查实,不用再查",
-      supports: claimSupporters(solved, claimId),
-    });
+  if (coverage.majorProofPaths?.documented) support(O.t2, "majorReassembly", "档案链共同支持", archiveSources.t2, "共同条件：记录内部一致 + 对象归属 + 事件的实物对应。当前对应与跨时点对应可择一；这是一条完整路线。", ":documented");
+  if (coverage.majorProofPaths?.physical) {
+    for (const id of unique(physicalSources.map(representative))) support(id, "majorReassembly", "物证路线的共同条件", physicalSources, "三项必须同时在场：具体修补分布 + 可读的逐区结构 + 跨时点变化。任一条单独不能证明重大重组。", ":physical");
   }
-  axioms.sort((a, b) => a.id.localeCompare(b.id));
-
-  /* 公理 → 支撑它的观察,画作 supports 边(仍属免费自动生成) */
-  for (const ax of axioms) {
-    for (const m of ax.supports) if (has.has(m)) push(m, ax.id, "supports", ax.short);
-  }
-
-  return { nodes, findings, axioms, edges, components: components(nodes, findings, axioms, edges) };
-}
-
-/* 哪些观察在支撑某个主张:proofWitnesses 给槽位 → 事实,factWitnesses 给事实 → 观察。
-   全部来自求解器输出,不复制求解器的判定逻辑。 */
-function claimSupporters(solved, claimId) {
-  const pw = solved.coverage.proofWitnesses?.[claimId];
-  const fw = solved.coverage.factWitnesses ?? {};
-  if (!pw || Array.isArray(pw)) return [];
-  const out = new Set();
-  for (const facts of Object.values(pw)) {
-    for (const f of facts ?? []) for (const w of fw[f] ?? []) out.add(w.observationId);
-  }
-  return [...out].sort();
-}
-
-/* 连通分量。用来找 DEC-032 决策面第四类「孤立小簇」。 */
-function components(nodes, findings, axioms, edges) {
-  const ids = [...nodes.map((n) => n.id), ...findings.map((f) => f.id), ...axioms.map((a) => a.id)];
-  const adj = new Map(ids.map((i) => [i, []]));
-  for (const e of edges) {
-    if (adj.has(e.from) && adj.has(e.to)) { adj.get(e.from).push(e.to); adj.get(e.to).push(e.from); }
-  }
-  const seen = new Set(); const comps = [];
-  for (const i of ids) {
-    if (seen.has(i)) continue;
-    const stack = [i]; const comp = [];
-    seen.add(i);
-    while (stack.length) {
-      const x = stack.pop(); comp.push(x);
-      for (const y of adj.get(x) ?? []) if (!seen.has(y)) { seen.add(y); stack.push(y); }
-    }
-    comps.push(comp.sort());
-  }
-  comps.sort((a, b) => b.length - a.length || a[0].localeCompare(b[0]));
-  return comps;
-}
-
-/* ================= 决策面 ================= */
-/* DEC-032 第八节:只装四类。第七节:多个缺口并列、每个若干手段、都标价、不排序。 */
-function decisionSurface(solved, workbenchRows) {
-  const usableById = new Map((workbenchRows ?? []).map((r) => [r.action.id, r]));
-  const map = mentalMap(solved);
-  const nodeById = new Map(map.nodes.map((n) => [n.id, n]));
-
-  /* 手段:把 fact 或 role 翻译成「行里靠什么手段补它」,带价,不排序。 */
-  const meansForFacts = (facts) => {
-    const acts = new Set();
-    for (const f of facts) for (const a of FACT_PRODUCERS.get(f) ?? []) acts.add(a);
-    return [...acts].map(meansOf).filter(Boolean);
-  };
-  const meansOf = (actionId) => {
-    const a = ACTION_BY_ID.get(actionId);
-    if (!a) return null;
-    const row = usableById.get(actionId);
-    const sem = ACTION_SEMANTICS[actionId];
-    return {
-      actionId, name: a.name, ask: a.ask,
-      cost: a.cost, costLabel: COST_LABEL[a.cost],
-      usable: row ? row.usable : null,
-      why: row?.why ?? null,
-      done: row?.done ?? false,
-      whyShort: sem?.whyShort ?? "",
-    };
-  };
-
-  const items = [];
-
-  /* 第一类:意义未定观察 —— 拿到了,还接不上任何东西 */
-  const caw = solved.coverage.contextActivationWitnesses ?? {};
-  const haveIds = new Set(map.nodes.map((n) => n.id));
-  const negativeIds = new Set(solved.evidence.unresolvedNegativeIds);
-  /* 换一种更够格的手段去问同一件底层的事 —— 从该观察所在的潜变量上找还没拿到的兄弟。
-     只用玩家已经碰过的潜变量,不去枚举他没碰过的。 */
-  const siblingMeans = (id) => {
-    const latents = nodeById.get(id)?.latents ?? [];
-    return meansForFacts(latents.flatMap((L) => latentSiblingFacts(L, haveIds)));
-  };
-  for (const id of solved.evidence.inactiveObservationIds) {
-    if (negativeIds.has(id)) continue; /* 阴性另有说法,不重复列 */
-    /* caw 只在前提已有见证时才出现;没出现时退回夹具的静态声明。 */
-    const need = caw[id]?.requiredFacts ?? EVENT_BY_OBS.get(id)?.requiresContextFacts ?? [];
-    items.push({
-      kind: "suspended", id: "S:" + id,
-      title: (nodeById.get(id)?.short ?? id) + " 现在还读不出结论",
-      body: "这条你已经拿到手了,但少一个前提,所以现在还不能拿它下判断。" +
-            "把那个前提补上,它会自己变成有用的证据 —— 不用重新花钱买一次,也不会因为等过一阵就打折。",
-      means: meansForFacts(need),
-    });
-  }
-  for (const id of negativeIds) {
-    items.push({
-      kind: "negative", id: "N:" + id,
-      title: (nodeById.get(id)?.short ?? id) + " 没查到,但这不等于没有",
-      body: "这一次什么也没查到。问题在于这个手段本身不够灵,不足以支撑「确实没有」这个结论 —— " +
-            "「没查到」要能当证据用,得先有一个足够灵的手段来查。换一个看得更深的手段,去问同一件事。",
-      means: siblingMeans(id),
-    });
-  }
-  for (const id of solved.evidence.scopeLimitedObservationIds) {
-    items.push({
-      kind: "suspended", id: "L:" + id,
-      title: (nodeById.get(id)?.short ?? id) + " 落在范围之外",
-      body: "这条本身站得住,但它覆盖的范围不是当前问题需要的那一块。",
-      means: [],
-    });
-  }
-
-  /* 第二类:差一件即可合拢 —— 夹逼的靶子 */
-  /* 2a. 主张的槽位。恰好只剩一个空 = onemore(夹逼靶子);
-         剩两个以上但已有进展 = gap。
-
-         gap 这一档是执行中放宽出来的,DEC-032 第八节原文只写了「差一件就能合拢」。
-         不放宽会出现空白决策面:主张一旦缺两块以上就什么都不显示,玩家在 G1/G2
-         面对一片空白 —— 那正是 DEC-032 要治的病。已在 README 声明,待用户裁决。 */
-  for (const [claimId, pw] of Object.entries(solved.coverage.proofWitnesses ?? {})) {
-    if (CLAIM_NOT_ON_MAP.has(claimId) || Array.isArray(pw)) continue;
-    if (solved.claims?.[claimId]?.established) continue;
-    const slots = Object.entries(pw);
-    const empty = slots.filter(([, v]) => !(v ?? []).length);
-    const filled = slots.length - empty.length;
-    if (!filled || !empty.length) continue;
-    if (empty.length === 1) {
-      const [slot] = empty[0];
-      items.push({
-        kind: "onemore", id: "C:" + claimId + ":" + slot,
-        title: `「${CLAIM_LABEL[claimId] ?? claimId}」只差一块:${SLOT_LABEL[claimId]?.[slot] ?? slot}`,
-        body: `这项主张要的其他部分你已经有了,缺的是${SLOT_LABEL[claimId]?.[slot] ?? slot}。补上它,这一整块就合拢。`,
-        means: meansForSlot(claimId, slot, meansForFacts),
-      });
-    } else {
-      items.push({
-        kind: "gap", id: "C:" + claimId,
-        title: `「${CLAIM_LABEL[claimId] ?? claimId}」已经动起来了,还缺 ${empty.length} 块`,
-        body: `已经落定的是:${slots.filter(([, v]) => (v ?? []).length)
-          .map(([k]) => SLOT_LABEL[claimId]?.[k] ?? k).join("、")}。` +
-          `还没有的是:${empty.map(([k]) => SLOT_LABEL[claimId]?.[k] ?? k).join("、")}。`,
-        means: dedupeMeans(empty.flatMap(([slot]) => meansForSlot(claimId, slot, meansForFacts))),
-        slots: empty.map(([slot]) => ({
-          slot, label: SLOT_LABEL[claimId]?.[slot] ?? slot,
-          means: meansForSlot(claimId, slot, meansForFacts),
-        })),
-      });
-    }
-  }
-  /* 2b. 证明角色的独立来源不够。注意:minimumSourceCount 数的是来源并集,不是 witness 个数。 */
-  for (const [roleId, contract] of Object.entries(proofRoleContracts)) {
-    const ws = solved.coverage.proofRoleWitnesses?.[roleId];
-    if (!ws?.length) continue;
-    const sources = new Set();
-    for (const w of ws) for (const s of w.sourceIds ?? []) sources.add(s);
-    if (sources.size >= (contract.minimumSourceCount ?? 1)) continue;
-    const sem = PROOF_ROLE_SEMANTICS[roleId];
-    items.push({
-      kind: "onemore", id: "R:" + roleId,
-      title: (sem?.name ?? roleId) + " 还差一个独立来源",
-      body: (sem?.meaning ? sem.meaning + " " : "") +
-        `这一块要 ${contract.minimumSourceCount} 个彼此独立的来源,现在只有 ${sources.size} 个 —— 换一种手段印证同一件事是有用的,重复同一种手段没有用。`,
-      means: [meansOf(contract.acquisitionActionId)].filter(Boolean),
-    });
-  }
-  /* 2c. 档案三关系里差一环 */
-  for (const [group, rel] of Object.entries(solved.coverage.archiveRelations ?? {})) {
-    const states = ["recordCoherence", "objectAttribution", "eventCorroboration"]
-      .map((k) => [k, rel[k]]);
-    const open = states.filter(([, v]) => v === "unresolved" || v === "suggestive");
-    const done = states.filter(([, v]) => v === "established");
-    if (!done.length || open.length !== 1) continue;
-    const [k, v] = open[0];
-    items.push({
-      kind: "onemore", id: "A:" + group + ":" + k,
-      title: `${ARCHIVE_GROUP_LABEL[group] ?? group}:${ARCHIVE_REL_LABEL[k]} —— ${ARCHIVE_REL_STATE[v]}`,
-      body: "查一批记录要分别过三道:①这几份记录互相对得上吗 ②这些记录说的是这只碗吗 " +
-            "③记录里写的事,在实物上找得到吗。这三道是并列的,不分先后。你已经过了其中一部分,这一道还没有。",
-      means: meansForArchive(group, k, meansOf),
-    });
-  }
-
-  /* 第三类:打架的 */
+  for (const id of known(O.t1, O.t2, O.t3)) support(id, "threePhase", "三个阶段共同成立", threeSources, "共同条件：较早时点可解释 + 两组档案分别完成内部一致、对象归属与事件对应 + 无未解时间冲突。不是三条各自独立的完整证明。");
+  for (const key of ["identity", "majorReassembly", "threePhase"]) support("claim:" + key, "coherentDecisionProfile", "整体说明的共同条件", sourceMap.coherentDecisionProfile, "身份、重组、历史阶段、材料、表面、承力与记录边界需要共同站得住，而且不能与已取得的信息冲突。");
+  for (const id of known(O.substrate, O.layer, O.surface, O.stability, O.provenance)) support(id, "coherentDecisionProfile", "补足决策范围", coreSources, "这项局部信息属于整体说明的一项共同条件，不单独推出完整说明。");
   for (const c of solved.conflicts ?? []) {
-    items.push({
-      kind: "conflict", id: "X:" + (c.code ?? c.id ?? JSON.stringify(c).slice(0, 24)),
-      title: "有两处对不上",
-      body: "手上的东西互相矛盾。矛盾本身也是情报 —— 至少有一处读错了,或者其中一条根本不属于这只碗。",
-      means: [], raw: c,
-    });
+    const key = TARGETS[c.targetClaim];
+    const from = representative(c.observationId);
+    if (!node(from)) continue;
+    const effect = c.blocking ? "与当前命题冲突" : c.scopeMatch === false ? "适用范围不覆盖该命题" : "限制当前判断";
+    if (key) addEdge(from, "claim:" + key, effect, "conflict", [c.observationId], c.blocking ? "这项证据与该判断直接矛盾，当前不能把它当作已经成立的结论。" : "保留范围、能力与反证强度的区别，不能把所有不利信息都读成推翻。");
+    if (c.blocking) ask(`question:conflict:${c.observationId}`, [from, "claim:" + key], "这处冲突应怎样理解？", "已有信息发生冲突。当前命题保留但标明争议，系统不替玩家选边。", []);
   }
-  for (const [claimId, c] of Object.entries(solved.claims ?? {})) {
-    if (CLAIM_NOT_ON_MAP.has(claimId)) continue;
-    if (!c?.contested && !c?.logicallyRefuted) continue;
-    items.push({
-      kind: "conflict", id: "XC:" + claimId,
-      title: `「${CLAIM_LABEL[claimId] ?? claimId}」${c.logicallyRefuted ? "已被推翻" : "有争议"}`,
-      body: c.logicallyRefuted
-        ? "有一条证据在逻辑上直接否掉了这项主张。"
-        : "支持与反对同时存在,这项主张现在站不稳。",
-      means: [],
-    });
+  if (node("claim:majorReassembly")?.state === "established" && !solved.claims?.threePhase?.established) {
+    const methods = [];
+    if (!has.has(O.t1)) methods.push("A.LOCATE.HISTORIC_IMAGE");
+    if (!has.has(O.t3)) methods.push("A.RESEARCH.LATE_TREATMENT");
+    ask("question:history", ["claim:majorReassembly", ...known(O.t1, O.t3)], "这些改动发生在什么时点？", "重大重组已经有支撑；更早的状态、后来是否还有处理，可以帮助理解它怎样变成现在的样子。这仍是开放调查，也可以带着未知收手。", methods);
   }
-  for (const [group, rel] of Object.entries(solved.coverage.archiveRelations ?? {})) {
-    for (const k of ["recordCoherence", "objectAttribution", "eventCorroboration"]) {
-      if (rel[k] !== "contested") continue;
-      items.push({
-        kind: "conflict", id: "XA:" + group + ":" + k,
-        title: `${ARCHIVE_GROUP_LABEL[group] ?? group}:${ARCHIVE_REL_LABEL[k]} 有冲突`,
-        body: "这一环上出现了互相打架的说法。",
-        means: meansForArchive(group, k, meansOf),
-      });
-    }
-  }
-
-  /* 第四类:孤立小簇 —— 内部自洽但没连上主结构 */
-  const [main, ...rest] = map.components;
-  for (const comp of rest) {
-    const obsMembers = comp.filter((x) => nodeById.has(x));
-    if (!obsMembers.length) continue;
-    const suspended = new Set([...solved.evidence.inactiveObservationIds]);
-    if (obsMembers.every((x) => suspended.has(x))) continue; /* 已在第一类里说过 */
-    items.push({
-      kind: "island", id: "I:" + comp[0],
-      title: obsMembers.map((x) => nodeById.get(x).short).join("、") + " 还是一座孤岛",
-      body: comp.length === 1
-        ? "这条自己站得住,但还没有和别的东西发生关系。也可能它本来就相对独立 —— 离散不是缺陷。"
-        : "这一小簇内部说得通,但和主结构还没接上。",
-      means: meansForFacts(
-        obsMembers.flatMap((x) => (nodeById.get(x)?.latents ?? []))
-          .flatMap((L) => latentSiblingFacts(L, new Set(map.nodes.map((n) => n.id)))),
-      ),
-    });
-  }
-
-  /* 公理:已定案的一行,离场但仍在全图 */
-  const axiomLines = map.axioms.map((a) => a.line);
-
-  /* 决策面清空是一个有意义的状态,不是空白界面。
-     这里刻意不把「玩家还没动过的主张」列出来充数 —— 那就是 DEC-032 第八节要治的
-     todolist。没有悬而未决的东西时,开不开新线是纯粹的意图,按第七节那是玩家的活。 */
-  const clear = items.length === 0;
-  const clearLine = clear
-    ? (map.nodes.length === 0
-        ? "还没有任何情报。先从左边那只碗看起:看它不花钱,但每一个手段都占掉一步。"
-        : "没有悬而未决的东西了:没有接不上的情报,没有差一件就合拢的,也没有打架的。" +
-          "收手是一个正当选择;想往下走,就得自己开一条新线 —— 开哪条由你定。")
-    : null;
-
-  return { items, clear, clearLine, axioms: map.axioms, axiomLines, map,
-           mainComponentSize: main?.length ?? 0 };
-}
-
-/* 某槽位要哪些事实 → 哪些手段产出这些事实。
-   SLOT_FACTS 抄自满局求解器输出(见 harness 的防漂移检查),不是猜的。 */
-function meansForSlot(claimId, slot, meansForFacts) {
-  return dedupeMeans(meansForFacts(SLOT_FACTS[claimId]?.[slot] ?? []));
-}
-function meansForArchive(group, relKind, meansOf) {
-  const roleId = ARCHIVE_ROLE[group]?.[relKind];
-  const ids = Array.isArray(roleId) ? roleId : [roleId];
-  const out = [];
-  for (const r of ids) {
-    const c = proofRoleContracts[r];
-    if (c) { const m = meansOf(c.acquisitionActionId); if (m) out.push(m); }
-  }
-  return dedupeMeans(out);
-}
-function dedupeMeans(list) {
-  const seen = new Set();
-  return list.filter((m) => (seen.has(m.actionId) ? false : (seen.add(m.actionId), true)));
-}
-/* 同一潜变量上还没拿到的那些观察需要什么事实 —— 用来给孤岛提手段。
-   只用玩家已有节点所在的潜变量,不去枚举玩家没碰过的潜变量。 */
-function latentSiblingFacts(latentId, haveIds) {
-  const out = [];
-  for (const ev of Object.values(events)) {
-    if (!(ev.sharedLatentIds ?? []).includes(latentId)) continue;
-    if (haveIds.has(ev.observationId)) continue;
-    if (!ACTION_BY_ID.has(ev.acquisitionActionId)) continue;
-    out.push(...(ev.facts ?? []));
-  }
-  return out;
-}
-
-/* 槽位 → 它要的事实。抄自满局(22 动作)求解器输出的 coverage.proofWitnesses。
-   harness 会拿满局输出回比这张表,漂移就报错。 */
-const SLOT_FACTS = {
-  identity: {
-    currentObject: ["baseManufacture", "currentBody"],
-    path: ["identityComparisonExclusion", "identityObjectContinuity"],
-  },
-  majorReassembly: {
-    currentRepairMap: ["currentRepairMap"],
-    documentedCrossTime: ["t2EventPhysicalCorrespondence"],
-    documentedSourceGroup: ["t2RecordClaimsDamageExtent", "t2RecordClaimsReassembly"],
-    physicalCrossTime: ["crossTimeMajorChange"],
-    physicalStructureMap: ["currentStructureReadoutByRegion"],
-  },
-  threePhase: {
-    t1: ["t1Established"],
-    t2: ["t2ArchiveObjectAttribution", "t2EventPhysicalCorrespondence", "t2RecordGroupCoherent"],
-    t3: ["t3ArchiveObjectAttribution", "t3EventPhysicalCorrespondence", "t3RecordGroupCoherent"],
-  },
-  coherentDecisionProfile: {
-    documentation: ["documentationBoundary", "documentationNoConflict"],
-    keyMaterial: ["keyMaterialLayerSequenceReadings", "keyMaterialSubstrateReadings"],
-    stability: ["displayConditionSpecified", "stabilityResolved"],
-    surface: ["surfacePointLayering", "surfaceRegionalCoverage", "surfaceResolved"],
-  },
-};
-const ARCHIVE_ROLE = {
-  t2: {
-    recordCoherence: "PROOF.ARCHIVE.T2.RECORD_COHERENCE",
-    objectAttribution: "PROOF.ARCHIVE.T2.OBJECT_ATTRIBUTION",
-    eventCorroboration: ["PROOF.ARCHIVE.T2.EVENT_CURRENT_CORROBORATION",
-                         "PROOF.ARCHIVE.T2.EVENT_CROSS_TIME_CORROBORATION"],
-  },
-  t3: {
-    recordCoherence: "PROOF.ARCHIVE.T3.RECORD_COHERENCE",
-    objectAttribution: "PROOF.ARCHIVE.T3.OBJECT_ATTRIBUTION",
-    eventCorroboration: "PROOF.ARCHIVE.T3.EVENT_CURRENT_CORROBORATION",
-  },
-};
-
-/* ================= G:不进地图,只作一行读数 ================= */
-function readout(solved, session) {
-  const sem = STAGE_SEMANTICS[solved.stage];
-  const paths = solved.coverage.majorProofPaths ?? {};
-  return {
-    stage: solved.stage,
-    name: sem?.name ?? solved.stage,
-    line: sem?.meaning ?? "",
-    used: session?.log?.length ?? 0,
-    budget: session?.budget ?? null,
-    /* 账单按档计数,不求和 —— 理由见 session.mjs 的 newSession 注释。
-       本阶段钱不约束任何东西,只在局末告知,所以这里给的是构成而不是一个总数。 */
-    billed: [...(session?.billed ?? [0, 0, 0, 0])],
-    routes: [
-      { id: "documented", ...ROUTE_SEMANTICS.documented, open: !!paths.documented },
-      { id: "physical", ...ROUTE_SEMANTICS.physical, open: !!paths.physical },
-    ],
-    frozenStage: solved.stopping?.frozenStage ?? null,
+  const registeredUnknowns = {
+    "exact-treatment-formula": [known(O.t3, O.layer), "具体处理配方仍未确定", "已知发生过处理，配方仍未确定；原规则允许保留这一未知。"],
+    "noncritical-region": [known(O.surface, O.whole), "部分非关键区域仍未覆盖", "已知覆盖边界之外还有空白；原规则允许保留这一未知。"],
+    "identity-whether-late18": [known(O.whole, O.corpus), "制造年代与类别仍未确定", "当前已登记的身份问题尚未解决。"],
+    "three-phase-relation": [known(O.t1, O.t2, O.t3), "几个时点的关系仍未解释", "已经接触的时点还缺少连贯关系。"],
+    "key-material-core-regions": [known(O.substrate, O.layer, O.whole), "关键材料的范围仍未说明", "已登记的关键区域材料问题仍需保留。"],
+    "surface-decision-boundary": [known(O.appearance, O.point, O.surface), "表面处理的判断边界仍未说明", "已取得表面信息，仍需保留其未解决边界。"],
+    "load-path-stability": [known(O.stability, O.whole), "承力与使用条件仍未确定", "目前的认识不足以解释已登记的承力问题。"],
+    "documentation-conflict": [known(O.provenance, O.t2, O.t3), "记录中的冲突仍未解决", "已取得记录中仍有登记在案的冲突。"],
   };
+  for (const id of coverage.unknowns ?? []) {
+    const info = registeredUnknowns[id];
+    if (info) ask(`question:registered:${id}`, info[0], info[1], info[2]);
+  }
+  // Preserve compact traceability when an observation is represented by an edge.
+  for (const o of observations) {
+    o.nodeId = representative(o.id);
+    o.edgeIds = edges.filter((e) => e.sourceIds.includes(o.id)).map((e) => e.id);
+    if (hiddenAsRelation.has(o.id)) o.representedAs = o.id === O.repeat ? "record" : "relation";
+  }
+  const stageSem = STAGE_SEMANTICS[solved.stage] ?? STAGE_SEMANTICS.NONE;
+  return { nodes, edges, questions, stage: { key: solved.stage ?? "NONE", title: stageSem.name, summary: stageSem.meaning }, observations };
 }
 
-return { OBS_LABEL, CLAIM_LABEL, CLAIM_NOT_ON_MAP, SLOT_LABEL, ARCHIVE_REL_LABEL, ARCHIVE_REL_STATE, ARCHIVE_GROUP_LABEL, EDGE_KINDS, EDGE_DIRECTED, mentalMap, claimSupporters, decisionSurface, SLOT_FACTS, readout };
+return {buildGraph};
 })();
 
-/* ==================== 以下是呈现层。规则一律来自上面内联的冻结求解器。 ==================== */
-const { ACTIONS, ACTION_BY_ID, COST_LABEL } = CASE;
-const { newSession, take, solve, workbench, setBudget,
-        BUDGET_MIN, BUDGET_MAX, BUDGET_DEFAULT } = SESSION;
-const { mentalMap, decisionSurface, readout, EDGE_KINDS, EDGE_DIRECTED } = PROJECTION;
-const { ACTION_SEMANTICS } = SEMANTICS;
+const LAYOUT = (() => {
+/**
+ * Experimental player-map geometry. Only the currently obtained graph is input.
+ * Positions are centers; old positions are retained unless a resize/collision
+ * makes that impossible. No author topology, topic lane or kind rank is used.
+ */
+const NODE_WIDTH = 168;
+const NODE_HEIGHT = 100;
+const MARGIN = 32;
+const GAP = 30;
+const ROUTE_CLEARANCE = 10;
+const ROAD_START_INSET = 7;
+const ROAD_END_INSET = 9;
 
-const $ = (s) => document.querySelector(s);
-const el = (t, a = {}, kids = []) => {
-  const n = document.createElementNS("http://www.w3.org/2000/svg", t);
-  for (const k in a) n.setAttribute(k, a[k]);
-  for (const c of [].concat(kids)) n.appendChild(c);
-  return n;
-};
-const txt = (s) => document.createTextNode(s);
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const round = value => Math.round(value * 100) / 100;
+const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
+const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const hash = text => [...String(text)].reduce((value, char) => (value * 31 + char.codePointAt(0)) >>> 0, 17);
 
-/* ---------- 地点:器物侧长在碗上,器物之外另置一区 ---------- */
-/* 坐标是手放的。这一版只求语义站得住:器物侧行动落在它对应的部位上。 */
-const ON_OBJECT = {
-  OBJ_D: { x: 96,  y: 92,  label: "纹饰与色差", anchor: "end" },
-  OBJ_R: { x: 214, y: 84,  label: "没被改动的特征", anchor: "start" },
-  OBJ_W: { x: 153, y: 138, label: "整只碗",     anchor: "middle" },
-  SURF:  { x: 196, y: 132, label: "表面",       anchor: "start" },
-  OBJ_F: { x: 153, y: 204, label: "底足与修足", anchor: "middle" },
-};
-const OUTSIDE = [
-  { grp: "送去化验／拍片", places: [
-    { id: "XRAY", label: "X 射线成像" },
-    { id: "UV",   label: "紫外照一照" },
-    { id: "MAT",  label: "材料化验" }]},
-  { grp: "翻纸面记录", places: [
-    { id: "T1",   label: "更早的影像" },
-    { id: "T2",   label: "出过事的记录" },
-    { id: "T3",   label: "后来动过的记录" },
-    { id: "PROV", label: "经手记录" }]},
-  { grp: "拿真品对比", places: [
-    { id: "CORPUS", label: "同期的真品" },
-    { id: "RPT",    label: "换一批真品" }]},
-  { grp: "看现在的状况", places: [
-    { id: "STAB", label: "结不结实、能不能展" }]},
-];
-const PLACE_LABEL = new Map([
-  ...Object.entries(ON_OBJECT).map(([id, p]) => [id, p.label]),
-  ...OUTSIDE.flatMap((g) => g.places.map((p) => [p.id, p.label])),
-]);
-
-/* 每个 place 上有哪些动作 */
-const BY_PLACE = new Map();
-for (const a of ACTIONS) {
-  if (!BY_PLACE.has(a.place)) BY_PLACE.set(a.place, []);
-  BY_PLACE.get(a.place).push(a);
-}
-/* 自检:所有 place 都必须被摆在左侧某处,不许有孤儿动作 */
-{
-  const placed = new Set([...Object.keys(ON_OBJECT), ...OUTSIDE.flatMap((g) => g.places.map((p) => p.id))]);
-  const orphan = [...BY_PLACE.keys()].filter((p) => !placed.has(p));
-  if (orphan.length) console.error("有动作没有落点:", orphan);
+function measuredWidth(text) {
+  return [...text].reduce((total, char) => total + (/[^\x00-\xff]/.test(char) ? 14 : /[MW@]/.test(char) ? 11 : 7.5), 0);
 }
 
-/* ---------- 状态 ---------- */
-let S, wbRows, view, history, positions, pinned, anim;
-/* 重开沿用上次设定的点数 —— 调完难度再开一局是常见动作,不该每次回到默认 */
-let chosenBudget = BUDGET_DEFAULT;
-function reset() {
-  S = newSession(chosenBudget);
-  history = [];
-  positions = new Map();
-  pinned = new Set();
-  anim = null;
-  recompute();
-  snapshot(null);
-  renderAll();
-}
-function recompute() {
-  const solved = solve(S);
-  wbRows = workbench(S);
-  view = {
-    solved,
-    map: mentalMap(solved),
-    ds: decisionSurface(solved, wbRows),
-    ro: readout(solved, S),
-  };
-}
-function snapshot(actLabel) {
-  history.push({
-    step: S.log.length, actLabel,
-    map: view.map, ds: view.ds, ro: view.ro,
-    pos: new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }])),
-  });
+/** Two lines at 14 px. Complete original text remains on the graph node. */
+function splitTitle(title, width = NODE_WIDTH - 12) {
+  const lines = [''];
+  for (const char of [...String(title ?? '')]) {
+    const index = lines.length - 1;
+    if (measuredWidth(lines[index] + char) > width && lines[index]) lines.push(char);
+    else lines[index] += char;
+  }
+  if (lines.length <= 2) return lines;
+  let last = lines[1];
+  while (measuredWidth(last + '…') > width) last = [...last].slice(0, -1).join('');
+  return [lines[0], last + '…'];
 }
 
-/* ==================== 力导向布局 ==================== */
-/* 公理钉住不动(DEC-032 第十二节);需要自由重排的只剩活跃区。 */
-function mapBox() {
-  const w = $("#mapwrap").clientWidth, h = $("#mapwrap").clientHeight;
-  return { w, h };
+function nodePosition(node, x, y) {
+  const lines = splitTitle(node.title);
+  return { x: round(x), y: round(y), width: NODE_WIDTH, height: NODE_HEIGHT,
+    anchorX: round(x), anchorY: round(y - 32), lines, titleLines: lines };
 }
-function layout(graph, { iters = 260 } = {}) {
-  const { w, h } = mapBox();
-  const nodes = [...graph.nodes, ...graph.findings, ...graph.axioms];
-  const ids = new Set(nodes.map((n) => n.id));
-  for (const id of [...positions.keys()]) if (!ids.has(id)) positions.delete(id);
 
-  /* 新节点先落在中心附近(带确定性抖动,便于复现) */
-  let seed = nodes.length * 7919;
-  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
-  for (const n of nodes) {
-    if (!positions.has(n.id)) {
-      positions.set(n.id, { x: w / 2 + (rnd() - .5) * 140, y: h / 2 + (rnd() - .5) * 140 });
+function bounds(position, padding = 0) {
+  return { left: position.x - position.width / 2 - padding, right: position.x + position.width / 2 + padding,
+    top: position.y - position.height / 2 - padding, bottom: position.y + position.height / 2 + padding };
+}
+
+function boxesOverlap(a, b, padding = 0) {
+  const one = bounds(a, padding / 2), two = bounds(b, padding / 2);
+  return one.left < two.right && one.right > two.left && one.top < two.bottom && one.bottom > two.top;
+}
+
+function interior(point, rectangle) {
+  return point.x > rectangle.left && point.x < rectangle.right && point.y > rectangle.top && point.y < rectangle.bottom;
+}
+
+/** Open-interior intersection: corners and travel on a rectangle boundary are legal. */
+function crossesRectangle(a, b, rectangle) {
+  if (interior(a, rectangle) || interior(b, rectangle)) return true;
+  const dx = b.x - a.x, dy = b.y - a.y;
+  let entry = 0, exit = 1;
+  for (const [origin, delta, low, high] of [[a.x, dx, rectangle.left, rectangle.right], [a.y, dy, rectangle.top, rectangle.bottom]]) {
+    if (delta === 0) {
+      if (origin <= low || origin >= high) return false;
+    } else {
+      const values = [(low - origin) / delta, (high - origin) / delta].sort((x, y) => x - y);
+      entry = Math.max(entry, values[0]); exit = Math.min(exit, values[1]);
+      if (entry >= exit) return false;
     }
   }
-  const adj = graph.edges.filter((e) => positions.has(e.from) && positions.has(e.to));
-  /* 目标边长按画布面积与节点数取,否则节点少时整团缩在中心、画布大半空着 */
-  const K = Math.max(96, Math.min(190, Math.sqrt((w - 150) * (h - 110) / Math.max(3, nodes.length)) * 0.82));
-  const R = K * K * 2.6;             /* 斥力随边长同步放大 */
-  for (let it = 0; it < iters; it++) {
-    const t = 1 - it / iters;
-    const fx = new Map(nodes.map((n) => [n.id, 0]));
-    const fy = new Map(nodes.map((n) => [n.id, 0]));
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = positions.get(nodes[i].id), b = positions.get(nodes[j].id);
-        let dx = a.x - b.x, dy = a.y - b.y;
-        let d2 = dx * dx + dy * dy;
-        if (d2 < 1) { dx = (rnd() - .5); dy = (rnd() - .5); d2 = 1; }
-        const f = R / d2;
-        const d = Math.sqrt(d2);
-        fx.set(nodes[i].id, fx.get(nodes[i].id) + (dx / d) * f);
-        fy.set(nodes[i].id, fy.get(nodes[i].id) + (dy / d) * f);
-        fx.set(nodes[j].id, fx.get(nodes[j].id) - (dx / d) * f);
-        fy.set(nodes[j].id, fy.get(nodes[j].id) - (dy / d) * f);
+  return entry < exit && entry < 1 && exit > 0;
+}
+
+function clearSegment(a, b, obstacles) {
+  return !obstacles.some(rectangle => crossesRectangle(a, b, rectangle));
+}
+
+function segmentCrosses(a, b, c, d) {
+  const cross = (p, q, r) => (q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x);
+  return cross(a, b, c) * cross(a, b, d) < 0 && cross(c, d, a) * cross(c, d, b) < 0;
+}
+
+function choosePosition(node, positions, neighbours, graphEdges, width) {
+  const placed = Object.values(positions);
+  const connected = neighbours.map(id => positions[id]).filter(Boolean);
+  const minX = MARGIN + NODE_WIDTH / 2, maxX = width - minX;
+  const minY = MARGIN + NODE_HEIGHT / 2;
+  const desired = connected.length
+    ? { x: connected.reduce((sum, position) => sum + position.x, 0) / connected.length,
+      y: connected.reduce((sum, position) => sum + position.y, 0) / connected.length }
+    : { x: width / 2 + ((hash(node.id) % 3) - 1) * 42, y: minY + 16 };
+  const candidates = [];
+  const add = (x, y) => {
+    if (x >= minX && x <= maxX && y >= minY) candidates.push(nodePosition(node, x, y));
+  };
+  if (!placed.length) add(clamp(desired.x, minX, maxX), minY + 26);
+  add(desired.x, desired.y);
+  const angleOffset = (hash(node.id) % 19) / 19 * Math.PI * 2;
+  for (let ring = 0; ring < 13; ring += 1) {
+    const radius = 178 + ring * 66;
+    for (let index = 0; index < 32; index += 1) {
+      const angle = angleOffset + index / 32 * Math.PI * 2;
+      add(desired.x + Math.cos(angle) * radius, desired.y + Math.sin(angle) * radius * 0.77);
+    }
+  }
+  // Existing edges of occupied boxes define candidate holes. A new addition
+  // can reuse those holes even when a regular sampling lattice would miss one.
+  for (const position of placed) {
+    for (const dx of [-NODE_WIDTH - GAP - 1, 0, NODE_WIDTH + GAP + 1]) {
+      for (const dy of [-NODE_HEIGHT - GAP - 1, 0, NODE_HEIGHT + GAP + 1]) {
+        if (dx || dy) add(position.x + dx, position.y + dy);
       }
     }
-    for (const e of adj) {
-      const a = positions.get(e.from), b = positions.get(e.to);
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const d = Math.hypot(dx, dy) || 1;
-      const f = (d - K) * 0.055;
-      fx.set(e.from, fx.get(e.from) + (dx / d) * f);
-      fy.set(e.from, fy.get(e.from) + (dy / d) * f);
-      fx.set(e.to, fx.get(e.to) - (dx / d) * f);
-      fy.set(e.to, fy.get(e.to) - (dy / d) * f);
-    }
-    for (const n of nodes) {
-      const p = positions.get(n.id);
-      /* 公理钉住:一旦定案,位置不再参与重排 */
-      if (pinned.has(n.id)) continue;
-      p.x += Math.max(-20, Math.min(20, fx.get(n.id))) * t;
-      p.y += Math.max(-20, Math.min(20, fy.get(n.id))) * t;
-      /* 极轻的向心,只防飘走,不把图拉成一团 */
-      p.x += (w / 2 - p.x) * 0.0022;
-      p.y += (h / 2 - p.y) * 0.0022;
-      p.x = Math.max(84, Math.min(w - 84, p.x));
-      p.y = Math.max(44, Math.min(h - 52, p.y));
+  }
+  const columns = Math.max(1, Math.floor((width - MARGIN * 2 + GAP) / (NODE_WIDTH + GAP)));
+  const currentBottom = Math.max(minY + 26, ...placed.map(position => position.y));
+  const bottom = Math.max(minY, ...placed.map(position => position.y)) + NODE_HEIGHT + GAP;
+  for (let row = 0; row <= Math.ceil((bottom - minY) / (NODE_HEIGHT + GAP)) + 1; row += 1) {
+    for (let column = 0; column < columns; column += 1) {
+      add(columns === 1 ? width / 2 : minX + column * (maxX - minX) / (columns - 1), minY + 26 + row * (NODE_HEIGHT + GAP + 1));
     }
   }
-  /* 新定案的公理落位后钉住 */
-  for (const a of graph.axioms) pinned.add(a.id);
-}
-
-/* ==================== 渲染 ==================== */
-function renderAll() {
-  renderHeader();
-  renderSetup();
-  renderObject();
-  renderOutside();
-  layout(view.map);
-  renderMap();
-  renderDeck();
-}
-
-function renderHeader() {
-  const ro = view.ro;
-  $("#ro").innerHTML =
-    `<div class="st">${esc(ro.name)}${ro.frozenStage ? "(已收手,冻结)" : ""}</div>` +
-    `<div class="ln">${esc(ro.line)}</div>` +
-    /* 局末结账。钱在本阶段不约束任何东西,但玩家有权知道这一局替委托人花了多少。 */
-    (ro.frozenStage
-      ? `<div class="ln">这一局花掉:${esc(billLine(ro.billed))}　·　` +
-        `共走 ${S.log.length} 步。钱本阶段只记账,没有预算上限。</div>`
-      : "");
-  const r = ro.routes;
-  $("#mt").innerHTML =
-    `<div>还剩 <b>${S.budget - S.log.length}</b> 步 / 共 ${S.budget} 步　·　` +
-      `已花 ${billLine(ro.billed)}</div>` +
-    `<div>${r.map((x) => esc(x.name) + " " + (x.open ? "已通" : "未通")).join("　·　")}</div>`;
-  $("#wb").textContent =
-    "呈现变体,不是产品,也不是美术方向。规则全部来自冻结求解器(" +
-    Object.keys(STAMP.sha).length + " 个模块已内联,构建于 " + STAMP.builtAt + ")。" +
-    "步数是唯一约束,每个手段都占一步;钱本阶段只记账、不设预算,局末告知。" +
-    "系统不给动作排序,也不预测全部后果。只做电脑浏览器尺寸。";
-}
-
-/* 账单只报构成,不报总数 —— 档位是序数,把它们相加等于凭空断言中档是低档的两倍。
-   钱的数值系统未定(2026-08-31 用户决定推后),定了以后这里乘单价即可。 */
-function billLine(billed) {
-  const parts = billed
-    .map((n, i) => (n ? `${COST_LABEL[i]}×${n}` : null))
-    .filter(Boolean);
-  return parts.length ? parts.join(" ") : "还没花钱";
-}
-
-/* ---------- 开局设置 ----------
-   点数只在一步都没走时可调。滑杆本身是常驻 DOM,不随渲染重建 ——
-   重建会在拖动中打断拖动。 */
-function renderSetup() {
-  const pre = S.log.length === 0 && !S.stopped;
-  for (const inp of [$("#subud"), $("#subudn")]) {
-    inp.min = BUDGET_MIN;
-    inp.max = BUDGET_MAX;
-    inp.step = 1;
-    inp.value = S.budget;
-    inp.disabled = !pre;
+  for (let y = minY + 18; y <= bottom + 200; y += 64) {
+    for (let x = minX + ((Math.floor(y / 64) % 2) * 19); x <= maxX; x += 64) add(x, y);
   }
-  $("#su").classList.toggle("locked", !pre);
-  $("#sulab").textContent = pre ? "开局行动点数" : "本局行动点数";
-  $("#suhint").textContent = pre
-    ? `可调 ${BUDGET_MIN}–${BUDGET_MAX}。${BUDGET_MAX} 是把每个互异手段各做一次的步数,` +
-      `再多只能重复;${BUDGET_MIN} 够走完一条完整路线。`
-    : "开局后本局不可改。重开沿用当前设定。";
-}
-/* 滑杆与数字框是同一个值的两个入口。只改对侧显示,不整块重渲染 ——
-   重渲染会在拖动或输入中途夺走焦点。 */
-function onBudgetInput(raw, peerId) {
-  const r = setBudget(S, raw);
-  if (!r.ok) { renderSetup(); return; }
-  chosenBudget = S.budget;
-  $(peerId).value = S.budget;
-  renderHeader();
-}
-$("#subud").addEventListener("input", (e) => onBudgetInput(e.target.value, "#subudn"));
-/* 数字框在 change 时才夹范围:input 时就夹会让人打不出两位数 */
-$("#subudn").addEventListener("input", (e) => {
-  const v = Number(e.target.value);
-  if (!Number.isFinite(v) || v < BUDGET_MIN || v > BUDGET_MAX) return;
-  onBudgetInput(v, "#subud");
-});
-/* 收笔时把越界值夹回来,并且把框里的显示一起改掉 ——
-   只夹内部值会让框里留着一个假数字 */
-$("#subudn").addEventListener("change", (e) => {
-  onBudgetInput(e.target.value, "#subud");
-  e.target.value = S.budget;
-});
-
-/* ---------- 左上:器物 ---------- */
-function renderObject() {
-  const svg = $("#obj");
-  svg.textContent = "";
-  /* 碗的侧影。只是行动面的底图,不承载任何情报。 */
-  svg.appendChild(el("path", { class: "bowlfill",
-    d: "M74 74 C74 176 106 214 153 214 C200 214 232 176 232 74 Z" }));
-  svg.appendChild(el("path", { class: "bowl",
-    d: "M74 74 C74 176 106 214 153 214 C200 214 232 176 232 74" }));
-  svg.appendChild(el("path", { class: "bowl", d: "M74 74 L232 74" }));
-  svg.appendChild(el("path", { class: "bowl", d: "M129 214 L129 222 L177 222 L177 214",
-    "stroke-dasharray": "0" }));
-
-  for (const [pid, p] of Object.entries(ON_OBJECT)) {
-    const acts = BY_PLACE.get(pid) ?? [];
-    if (!acts.length) continue;
-    const allDone = acts.every((a) => wbRows.find((r) => r.action.id === a.id)?.done);
-    const count = acts.length;
-    const g = el("g", {
-      class: "hot" + (allDone ? " spent" : ""),
-      "data-place": pid, "data-entry": "action-group", "data-action-count": count,
-      role: "button", tabindex: "0", "aria-haspopup": "dialog", "aria-controls": "pop",
-      "aria-expanded": "false", "aria-label": `${p.label},打开 ${count} 个具体手段`,
-    });
-    g.appendChild(el("circle", { class: "hit", cx: p.x, cy: p.y, r: 20 }));
-    g.appendChild(el("circle", { class: "dot", cx: p.x, cy: p.y, r: 5 }));
-    const tx = p.anchor === "end" ? p.x - 11 : p.anchor === "start" ? p.x + 11 : p.x;
-    const ty = p.anchor === "middle" ? p.y + 19 : p.y + 4;
-    const t = el("text", { x: tx, y: ty, "text-anchor": p.anchor });
-    t.appendChild(txt(p.label));
-    g.appendChild(t);
-    const meta = el("text", { class: "meta", x: tx, y: ty + 12, "text-anchor": p.anchor });
-    meta.appendChild(txt(`${count} 个手段 ›`));
-    g.appendChild(meta);
-    g.addEventListener("click", (ev) => openPop(pid, ev.currentTarget));
-    g.addEventListener("keydown", (ev) => {
-      if (ev.key !== "Enter" && ev.key !== " ") return;
-      ev.preventDefault();
-      openPop(pid, ev.currentTarget, { focusFirst: true });
-    });
-    svg.appendChild(g);
-  }
-}
-
-/* ---------- 左下:器物之外 ---------- */
-function renderOutside() {
-  const box = $("#outside");
-  box.textContent = "";
-  for (const grp of OUTSIDE) {
-    const h = document.createElement("div");
-    h.className = "grp"; h.textContent = grp.grp;
-    box.appendChild(h);
-    for (const p of grp.places) {
-      const acts = BY_PLACE.get(p.id) ?? [];
-      if (!acts.length) continue;
-      const rows = acts.map((a) => wbRows.find((r) => r.action.id === a.id));
-      const done = rows.every((r) => r?.done);
-      const blocked = rows.every((r) => !r?.usable);
-      const cheapest = Math.min(...acts.map((a) => a.cost));
-      const d = document.createElement("button");
-      d.type = "button";
-      d.className = "mrow" + (done ? " spent" : "") + (blocked && !done ? " blocked" : "");
-      d.dataset.place = p.id;
-      d.dataset.entry = "action-group";
-      d.dataset.actionCount = acts.length;
-      d.setAttribute("aria-haspopup", "dialog");
-      d.setAttribute("aria-controls", "pop");
-      d.setAttribute("aria-expanded", "false");
-      d.setAttribute("aria-label",
-        `${p.label},打开 ${acts.length} 个具体手段,最低费用档 ${COST_LABEL[cheapest]}`);
-      d.innerHTML = `<span class="nm">${esc(p.label)}</span>` +
-        `<span class="cs">${acts.length} 个手段 · ${esc(COST_LABEL[cheapest])} ` +
-        `<span aria-hidden="true">›</span></span>`;
-      /* 原生 button 的键盘激活会产生 detail=0 的 click。此时把焦点送进弹层;
-         鼠标点击则保留在入口,避免指针用户被强制跳焦点。 */
-      d.addEventListener("click", (ev) => openPop(p.id, d, { focusFirst: ev.detail === 0 }));
-      box.appendChild(d);
+  // Always keep an unoccupied escape row. The canvas grows; text never shrinks.
+  add(clamp(desired.x, minX, maxX), bottom);
+  let best = null, bestScore = Infinity;
+  for (const candidate of candidates) {
+    if (placed.some(position => boxesOverlap(candidate, position, GAP))) continue;
+    const linkDistance = connected.reduce((sum, position) => sum + distance(candidate, position), 0);
+    const isolationDistance = placed.length ? Math.min(...placed.map(position => distance(candidate, position))) : 0;
+    let crossings = 0, occlusions = 0;
+    for (const neighbour of connected) {
+      for (const edge of graphEdges) {
+        const a = positions[edge.from], b = positions[edge.to];
+        if (a && b && a !== neighbour && b !== neighbour && segmentCrosses(candidate, neighbour, a, b)) crossings += 1;
+      }
+      for (const position of placed) {
+        if (position !== neighbour && crossesRectangle(candidate, neighbour, bounds(position, ROUTE_CLEARANCE))) occlusions += 1;
+      }
     }
+    const extentGrowth = Math.max(0, candidate.y - currentBottom);
+    const score = connected.length
+      ? linkDistance / connected.length + crossings * 55 + occlusions * 35 + candidate.y * 0.32 + extentGrowth * 2.2
+      : candidate.y * 0.9 + Math.abs(candidate.x - width / 2) * 0.13 + Math.max(0, 230 - isolationDistance) * 1.7 + extentGrowth;
+    if (score < bestScore) { best = candidate; bestScore = score; }
   }
+  return best ?? nodePosition(node, clamp(desired.x, minX, maxX), bottom);
 }
 
-/* ---------- 动作浮层 ---------- */
-let openPlace = null;
-let popAnchor = null;
-function closePop({ restoreFocus = false } = {}) {
-  const anchor = popAnchor;
-  $("#pop").style.display = "none";
-  $("#pop").setAttribute("aria-hidden", "true");
-  openPlace = null;
-  popAnchor = null;
-  document.querySelectorAll(".hot.open,.mrow.open").forEach((n) => {
-    n.classList.remove("open");
-    n.setAttribute("aria-expanded", "false");
+function routeObstacles(positions, edge) {
+  return Object.entries(positions).map(([id, position]) => {
+    const rectangle = bounds(position, ROUTE_CLEARANCE);
+    // Endpoints connect at their glyph. Their own text remains an obstacle.
+    if (id === edge.from || id === edge.to) rectangle.top = position.y - 15 - ROUTE_CLEARANCE;
+    return { ...rectangle, id };
   });
-  if (restoreFocus && anchor?.isConnected && typeof anchor.focus === "function") anchor.focus();
 }
-function openPop(pid, anchorEl, { focusFirst = false } = {}) {
-  if (openPlace === pid) return closePop({ restoreFocus: focusFirst });
-  closePop();
-  openPlace = pid;
-  popAnchor = anchorEl;
-  anchorEl.classList.add("open");
-  /* 右侧决策卡也会借这个浮层打开具体手段,但只有左栏入口声明了
-     aria-expanded;不要给普通说明行凭空加一个永不复位的可展开状态。 */
-  if (anchorEl.hasAttribute("aria-expanded")) anchorEl.setAttribute("aria-expanded", "true");
-  const acts = BY_PLACE.get(pid) ?? [];
-  const pop = $("#pop");
-  pop.textContent = "";
-  const cap = document.createElement("div");
-  cap.className = "cap";
-  cap.textContent = `${PLACE_LABEL.get(pid) ?? "这里"} · ${acts.length} 个具体手段`;
-  pop.appendChild(cap);
-  acts.forEach((a, i) => {
-    const row = wbRows.find((r) => r.action.id === a.id);
-    const sem = ACTION_SEMANTICS[a.id] ?? {};
-    const wrap = document.createElement("div");
-    wrap.innerHTML =
-      `<h4>${esc(a.name)}</h4>` +
-      `<div class="ask">${esc(a.ask)}</div>` +
-      `<div class="why">${esc(sem.whyShort ?? "")}</div>` +
-      `<div class="long" data-long>${esc(sem.whyLong ?? "")}</div>` +
-      (row?.usable ? "" : `<div class="no">${esc(row?.why ?? (S.stopped ? "本局已经收手" : "现在不能做"))}</div>`) +
-      /* 两种货币必须在同一行分得开:旧写法只说「费用 免费」,盲测者据此以为这一步
-         什么都不耗,而它照样占掉一步 —— 而步数是唯一的硬约束。 */
-      `<div class="foot"><span class="cost">占 1 步 · ` +
-        `${a.cost === 0 ? "不花钱" : "花钱 " + esc(COST_LABEL[a.cost])}` +
-        `${row?.done ? " · 已经做过" : ""}</span>` +
-        `<span class="acts"><button class="lk" data-more>为什么要紧</button>` +
-        `<button class="go" ${row?.usable && row?.affordable ? "" : "disabled"} data-run>做这一步</button>` +
-        `</span></div>`;
-    wrap.querySelector("[data-more]").addEventListener("click", () => {
-      const L = wrap.querySelector("[data-long]");
-      L.style.display = L.style.display === "block" ? "none" : "block";
-    });
-    const go = wrap.querySelector("[data-run]");
-    if (!go.disabled) go.addEventListener("click", () => doAction(a.id, pid));
-    pop.appendChild(wrap);
-    if (i < acts.length - 1) {
-      const s = document.createElement("div"); s.className = "sep"; pop.appendChild(s);
+
+/** Shortest visibility path around known-node rectangles. */
+function route(start, end, obstacles) {
+  if (clearSegment(start, end, obstacles)) return [start, end];
+  const vertices = [start, end];
+  const seen = new Set([`${start.x},${start.y}`, `${end.x},${end.y}`]);
+  for (const rectangle of obstacles) {
+    for (const [x, y] of [[rectangle.left, rectangle.top], [rectangle.left, rectangle.bottom], [rectangle.right, rectangle.top], [rectangle.right, rectangle.bottom]]) {
+      const point = { x, y }, key = `${x},${y}`;
+      if (!seen.has(key) && !obstacles.some(other => interior(point, other))) { seen.add(key); vertices.push(point); }
     }
+  }
+  const costs = vertices.map(() => Infinity), previous = vertices.map(() => -1), closed = new Set();
+  costs[0] = 0;
+  while (closed.size < vertices.length) {
+    let next = -1, nextScore = Infinity;
+    for (let index = 0; index < vertices.length; index += 1) {
+      const score = costs[index] + distance(vertices[index], end);
+      if (!closed.has(index) && score < nextScore) { next = index; nextScore = score; }
+    }
+    if (next < 0) break;
+    if (next === 1) {
+      const result = [];
+      for (let index = 1; index !== -1; index = previous[index]) result.unshift(vertices[index]);
+      return result;
+    }
+    closed.add(next);
+    for (let index = 1; index < vertices.length; index += 1) {
+      if (closed.has(index)) continue;
+      const cost = costs[next] + distance(vertices[next], vertices[index]);
+      if (cost < costs[index] && clearSegment(vertices[next], vertices[index], obstacles)) {
+        costs[index] = cost; previous[index] = next;
+      }
+    }
+  }
+  // Disconnected visibility graph is reported, never silently declared clear.
+  return [start, end];
+}
+
+function toPath(points) {
+  // Rounded bends stay outside original boxes because routing uses a 10px moat.
+  if (points.length < 3) return `M ${round(points[0].x)} ${round(points[0].y)} L ${round(points[1].x)} ${round(points[1].y)}`;
+  let path = `M ${round(points[0].x)} ${round(points[0].y)}`;
+  for (let index = 1; index < points.length - 1; index += 1) {
+    const a = points[index - 1], b = points[index], c = points[index + 1];
+    const radius = Math.min(7, distance(a, b) / 4, distance(b, c) / 4);
+    const nearA = { x: b.x + (a.x - b.x) / distance(a, b) * radius, y: b.y + (a.y - b.y) / distance(a, b) * radius };
+    const nearC = { x: b.x + (c.x - b.x) / distance(b, c) * radius, y: b.y + (c.y - b.y) / distance(b, c) * radius };
+    path += ` L ${round(nearA.x)} ${round(nearA.y)} Q ${round(b.x)} ${round(b.y)} ${round(nearC.x)} ${round(nearC.y)}`;
+  }
+  const last = points.at(-1);
+  return `${path} L ${round(last.x)} ${round(last.y)}`;
+}
+
+function insetRoad(points) {
+  const result = points.map(point => ({ ...point }));
+  const insetStart = (amount) => {
+    while (result.length > 1) {
+      const first = result[0], next = result[1], length = distance(first, next);
+      if (length <= amount && result.length > 2) { amount -= length; result.shift(); continue; }
+      if (length > 0) {
+        const fraction = Math.min(amount, length / 2) / length;
+        result[0] = { x: first.x + (next.x - first.x) * fraction, y: first.y + (next.y - first.y) * fraction };
+      }
+      break;
+    }
+  };
+  // Glyphs have an opaque 12px body. Stop the road outside that body so
+  // the SVG marker tip remains visible instead of ending under the glyph.
+  insetStart(ROAD_START_INSET);
+  result.reverse(); insetStart(ROAD_END_INSET); result.reverse();
+  return result;
+}
+
+function edgeLabel(points, positions) {
+  const segments = points.slice(1).map((point, index) => ({ a: points[index], b: point, length: distance(points[index], point) })).sort((a, b) => b.length - a.length);
+  for (const segment of segments) {
+    for (const fraction of [0.5, 0.35, 0.65]) {
+      const point = { x: segment.a.x + (segment.b.x - segment.a.x) * fraction, y: segment.a.y + (segment.b.y - segment.a.y) * fraction };
+      const labelBox = { ...point, width: 138, height: 24 };
+      if (!Object.values(positions).some(position => boxesOverlap(position, labelBox, 8))) return point;
+    }
+  }
+  const segment = segments[0];
+  return { x: (segment.a.x + segment.b.x) / 2, y: (segment.a.y + segment.b.y) / 2 };
+}
+
+function layoutGraph(graph, { width = 960, height = 680, previous = null } = {}) {
+  width = Math.max(400, Number.isFinite(width) ? width : 960);
+  height = Math.max(240, Number.isFinite(height) ? height : 680);
+  const nodes = Array.isArray(graph?.nodes) ? graph.nodes : [];
+  const rawEdges = Array.isArray(graph?.edges) ? graph.edges : [];
+  const knownIds = new Set(nodes.map(node => node.id));
+  if (knownIds.size !== nodes.length) throw new Error('layoutGraph requires unique node IDs');
+  const edges = rawEdges.filter(edge => knownIds.has(edge.from) && knownIds.has(edge.to) && edge.from !== edge.to);
+  const oldPositions = previous?.positions ?? previous ?? {};
+  const positions = {}, movements = [], relocated = [], adjacency = new Map(nodes.map(node => [node.id, []]));
+  for (const edge of edges) { adjacency.get(edge.from).push(edge.to); adjacency.get(edge.to).push(edge.from); }
+  const pending = [];
+  for (const node of nodes) {
+    const old = oldPositions[node.id];
+    if (old && Number.isFinite(old.x) && Number.isFinite(old.y)) {
+      const candidate = nodePosition(node, clamp(old.x, MARGIN + NODE_WIDTH / 2, width - MARGIN - NODE_WIDTH / 2), Math.max(MARGIN + NODE_HEIGHT / 2, old.y));
+      if (!Object.values(positions).some(position => boxesOverlap(candidate, position, GAP))) positions[node.id] = candidate;
+      else { pending.push(node); relocated.push(node.id); }
+    } else pending.push(node);
+  }
+  while (pending.length) {
+    // Attached additions grow first; a disconnected acquired island is legal.
+    let nextIndex = 0, mostPlaced = -1;
+    for (let index = 0; index < pending.length; index += 1) {
+      const count = adjacency.get(pending[index].id).filter(id => positions[id]).length;
+      if (count > mostPlaced) { mostPlaced = count; nextIndex = index; }
+    }
+    const [node] = pending.splice(nextIndex, 1);
+    positions[node.id] = choosePosition(node, positions, adjacency.get(node.id), edges, width);
+  }
+  const overlaps = [], routeNodeIntersections = [], entries = Object.entries(positions);
+  for (let i = 0; i < entries.length; i += 1) {
+    const [id, position] = entries[i], old = oldPositions[id];
+    if (old && Number.isFinite(old.x) && Number.isFinite(old.y)) movements.push({ id, distance: round(distance(old, position)), from: { x: old.x, y: old.y }, to: { x: position.x, y: position.y } });
+    for (let j = i + 1; j < entries.length; j += 1) if (boxesOverlap(position, entries[j][1])) overlaps.push([id, entries[j][0]]);
+  }
+  const routedEdges = edges.map(edge => {
+    const from = positions[edge.from], to = positions[edge.to];
+    const obstacles = routeObstacles(positions, edge);
+    const points = insetRoad(route({ x: from.anchorX, y: from.anchorY }, { x: to.anchorX, y: to.anchorY }, obstacles));
+    for (let index = 1; index < points.length; index += 1) {
+      for (const rectangle of obstacles) {
+        if (crossesRectangle(points[index - 1], points[index], rectangle)) routeNodeIntersections.push({ edge: edge.id, node: rectangle.id, segment: index - 1 });
+      }
+    }
+    const label = edgeLabel(points, positions);
+    return { ...edge, path: toPath(points), points, labelX: round(label.x), labelY: round(label.y) };
   });
-  /* 定位:贴着左栏右边缘 */
-  const r = anchorEl.getBoundingClientRect();
-  pop.style.display = "block";
-  pop.setAttribute("aria-hidden", "false");
-  const top = Math.min(Math.max(8, r.top - 10), window.innerHeight - pop.offsetHeight - 12);
-  pop.style.left = "312px";
-  pop.style.top = top + "px";
-  if (focusFirst) {
-    const first = pop.querySelector("button.go:not([disabled])") ?? pop.querySelector("button.lk");
-    (first ?? pop).focus();
-  }
-}
-document.addEventListener("click", (e) => {
-  if (openPlace && !$("#pop").contains(e.target) &&
-      !e.target.closest(".hot") && !e.target.closest(".mrow") && !e.target.closest(".mean")) closePop();
-});
-document.addEventListener("keydown", (e) => {
-  if (e.key !== "Escape" || !openPlace) return;
-  e.preventDefault();
-  closePop({ restoreFocus: true });
-});
-
-/* ---------- 中:心智地图 ---------- */
-function nodeShape(n) {
-  if (n.type === "obs") {
-    const cls = "n-obs" + (n.state === "suspended" ? " susp"
-      : n.state === "negative" ? " neg" : n.state === "caught" ? " caught" : "");
-    return el("circle", { class: cls, r: 7, cx: 0, cy: 0 });
-  }
-  if (n.type === "finding") {
-    return el("polygon", { class: "n-find", points: "0,-10 9,-5 9,5 0,10 -9,5 -9,-5" });
-  }
-  return el("rect", { class: "n-ax", x: -9, y: -7, width: 18, height: 14, rx: 2 });
-}
-/* 三种有方向的边各要一个同色箭头。marker 不能继承 stroke,所以逐色定义。 */
-const ARROW_COLOR = { prereq: "#4a5560", caught: "#a97fc2", supports: "#3d4a38" };
-function arrowDefs() {
-  const defs = el("defs");
-  for (const [kind, color] of Object.entries(ARROW_COLOR)) {
-    const m = el("marker", {
-      id: "ar-" + kind, viewBox: "0 0 8 8", refX: 7, refY: 4,
-      markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse",
-    });
-    m.appendChild(el("path", { d: "M0,0 L8,4 L0,8 z", fill: color }));
-    defs.appendChild(m);
-  }
-  return defs;
-}
-/* 沿 (fx,fy)→(tx,ty) 方向,把终点往回缩 d 像素。 */
-function pullBack(fx, fy, tx, ty, d) {
-  const vx = tx - fx, vy = ty - fy;
-  const len = Math.hypot(vx, vy) || 1;
-  return { x: tx - (vx / len) * d, y: ty - (vy / len) * d };
-}
-function renderMap(target) {
-  const svg = target ? $("#hsvg") : $("#map");
-  const g = target ? target : view.map;
-  const pos = target ? target.pos : positions;
-  const { w, h } = target ? { w: $("#hsvgwrap").clientWidth, h: $("#hsvgwrap").clientHeight } : mapBox();
-  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-  svg.textContent = "";
-  const graph = target ? target.map : g;
-
-  const empty = graph.nodes.length === 0;
-  if (!target) {
-    $("#mapempty").style.display = empty ? "flex" : "none";
-    $("#mapempty").textContent = empty
-      ? "右边现在是空的。这不是隐藏 —— 你还没有任何情报,所以这里没有任何位置。先从左边那只碗看起:看它不花钱,但每一个手段都占掉一步。"
-      : "";
-    $("#lgd").innerHTML = empty ? "" : legendHTML();
-  }
-  if (empty) return;
-
-  svg.appendChild(arrowDefs());
-  const layer = el("g");
-  for (const e of graph.edges) {
-    const a = pos.get(e.from), b = pos.get(e.to);
-    if (!a || !b) continue;
-    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const cx = mx - dy * 0.09, cy = my + dx * 0.09;
-    const dir = EDGE_DIRECTED.has(e.kind);
-    /* 有方向的边要把终点从节点圆心往回缩,否则箭头压在节点底下看不见。
-       缩的方向沿控制点→终点的切线,曲线才不会在末端拐一下。 */
-    const end = dir ? pullBack(cx, cy, b.x, b.y, 14) : b;
-    layer.appendChild(el("path", {
-      class: "edge e-" + e.kind, d: `M${a.x},${a.y} Q${cx},${cy} ${end.x},${end.y}`,
-      "data-edge": e.kind + "|" + e.from + "|" + e.to,
-      ...(dir ? { "marker-end": `url(#ar-${e.kind})` } : {}),
-    }));
-  }
-  svg.appendChild(layer);
-
-  const all = [...graph.nodes, ...graph.findings, ...graph.axioms];
-  for (const n of all) {
-    const p = pos.get(n.id);
-    if (!p) continue;
-    const gg = el("g", { class: "nd" + (n.type !== "obs" ? " on" : ""), transform: `translate(${p.x},${p.y})`,
-      "data-node": n.id });
-    gg.appendChild(nodeShape(n));
-    /* 标签按 id 的稳定哈希分到上下两侧。用哈希而不是用坐标,是为了动画过程中不跳动。 */
-    const r0 = n.type === "finding" ? 15 : 12;
-    const below = hash(n.id) % 2 === 1;
-    const t = el("text", { x: 0, y: below ? r0 + 9 : -r0, "text-anchor": "middle" });
-    t.appendChild(txt(n.short));
-    gg.appendChild(t);
-    if (!target) {
-      gg.addEventListener("mouseenter", (ev) => showTip(n, ev));
-      gg.addEventListener("mouseleave", () => { $("#tip").style.display = "none"; });
+  const bottom = Math.max(height, ...entries.map(([, position]) => position.y + NODE_HEIGHT / 2 + MARGIN));
+  const lengths = routedEdges.map(edge => edge.points.slice(1).reduce((sum, point, index) => sum + distance(edge.points[index], point), 0));
+  const components = [], visited = new Set();
+  for (const node of nodes) {
+    if (visited.has(node.id)) continue;
+    const component = [], queue = [node.id]; visited.add(node.id);
+    for (let index = 0; index < queue.length; index += 1) {
+      const id = queue[index]; component.push(id);
+      for (const neighbour of adjacency.get(id)) if (!visited.has(neighbour)) { visited.add(neighbour); queue.push(neighbour); }
     }
-    svg.appendChild(gg);
+    components.push(component);
   }
-}
-function legendHTML() {
-  const sw = (c, d) => `<span class="sw" style="border-top-color:${c};border-top-style:${d}"></span>`;
-  const ar = `<span class="swa">▸</span>`;
-  return [
-    `<i>${sw("#5d5a52", "solid")}${esc(EDGE_KINDS.latent)}</i>`,
-    `<i>${sw("#4a5560", "dashed")}${ar}${esc(EDGE_KINDS.prereq)}</i>`,
-    `<i>${sw("#a97fc2", "solid")}${ar}${esc(EDGE_KINDS.caught)}</i>`,
-    `<i>${sw("#3d4a38", "solid")}${ar}这条情报支持箭头指的那条已查实的结论</i>`,
-    `<i><span style="color:var(--obs)">●</span> 你查到的一条情报</i>`,
-    `<i><span style="color:var(--find)">⬣</span> 这几条说的是同一件事(系统自动连的,不花钱)</i>`,
-    `<i><span style="color:var(--axiom)">▬</span> 已经查实的结论</i>`,
-  ].join("");
-}
-function showTip(n, ev) {
-  const t = $("#tip");
-  const extra = n.type === "finding"
-    ? `<div style="color:var(--find);margin-top:4px">这一条是系统自动连出来的,没花你的钱</div>` : "";
-  t.innerHTML = `<b>${esc(n.short)}</b>${esc(n.gist ?? "")}${extra}`;
-  const box = $("#mapwrap").getBoundingClientRect();
-  t.style.display = "block";
-  t.style.left = Math.min(ev.clientX - box.left + 14, box.width - 262) + "px";
-  t.style.top = Math.min(ev.clientY - box.top + 12, box.height - 90) + "px";
+  return { positions, edges: routedEdges, width, height: Math.ceil(bottom), diagnostics: {
+    overlaps, routeNodeIntersections, movements, maxMovement: Math.max(0, ...movements.map(item => item.distance)), relocated,
+    components, ignoredEdges: rawEdges.filter(edge => !edges.includes(edge)).map(edge => edge.id),
+    algorithm: 'experimental-incremental-known-neighbour-growth', nodeWidth: NODE_WIDTH, nodeHeight: NODE_HEIGHT,
+    nodeBoxAreaRatio: round(entries.length * NODE_WIDTH * NODE_HEIGHT / (width * Math.ceil(bottom))),
+    averageRoadLength: round(lengths.length ? lengths.reduce((sum, length) => sum + length, 0) / lengths.length : 0),
+    maxRoadLength: round(Math.max(0, ...lengths)),
+    roadEndpointInsets: { start: ROAD_START_INSET, end: ROAD_END_INSET },
+    labelPolicy: 'edge labels on local focus only; label-label collisions not optimized',
+  } };
 }
 
-/* ---------- 右:决策面 ---------- */
-const KIND_LABEL = {
-  suspended: "拿到了,但还读不出结论", negative: "没查到,但还不能当证据",
-  onemore: "只差一块就合拢", gap: "已经动起来,还缺几块",
-  conflict: "对不上,互相打架", island: "还没和别的东西接上",
+return {splitTitle,layoutGraph};
+})();
+
+const { newSession, solve, take, workbench, setBudget, BUDGET_MIN, BUDGET_MAX } = SESSION;
+const { ACTIONS, ACTION_BY_ID, COST_LABEL } = CASE;
+const { ACTION_SEMANTICS, STAGE_SEMANTICS } = SEMANTICS;
+const { buildGraph } = GRAPH;
+const { layoutGraph } = LAYOUT;
+const $ = id => document.getElementById(id);
+const esc = text => String(text ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const svgNS = 'http://www.w3.org/2000/svg';
+const groups = [
+ ['看这只碗', [['OBJ_W','整体'],['OBJ_F','底足'],['OBJ_D','纹饰与色差'],['OBJ_R','稳定特征'],['SURF','表面与层次']]],
+ ['查找资料', [['T2','事故记录'],['T1','早期影像'],['T3','后期处理'],['PROV','经手记录']]],
+ ['检测与比对', [['CORPUS','同期真品'],['RPT','另一批真品'],['XRAY','内部结构'],['UV','紫外筛查'],['MAT','材料与层序'],['STAB','陈列与稳定']]],
+];
+let session = newSession();
+let graph, solved, layout = null, selection = null, historyIndex = null, zoom = 1;
+let recentIds = new Set(), folded = new Set(), finalNote = '', openQuestionMethods = false;
+let notice = '从工作台任选一处开始。地图只呈现你已经取得的信息。';
+let viewSession = session;
+let liveLayoutBeforeHistory = null;
+let foldPositions = {}, liveFoldsBeforeHistory = null;
+const stateText = {pending:'意义未定',contested:'存在争议',established:'已有依据',limited:'有范围限制',repeat:'重复记录',known:''};
+
+function currentViewSession() {
+ if(historyIndex === null) return session;
+ const copy = newSession(session.budget);
+ for(const step of session.log.slice(0,historyIndex)) { const r=take(copy,step.actionId); if(!r.ok) throw Error(r.why); }
+ return copy;
+}
+function nodeById(id) { return graph.nodes.find(node=>node.id===id); }
+function observationById(id) {
+ const source=Array.isArray(graph.observations)?graph.observations.find(item=>item.id===id||item.observationId===id):graph.observations?.[id];
+ if(source) return source;
+ const log=viewSession.log.find(item=>item.observationId===id);
+ return {id,title:log?ACTION_BY_ID.get(log.actionId)?.name:'原始观察',summary:'本局取得的原始记录。'};
+}
+function labelForSource(id) { const o=observationById(id); return o.title||o.short||o.summary||'原始记录'; }
+function sourceHTML(ids) {return [...new Set(ids||[])].map(id=>`<button class="source-button" data-source="${esc(id)}">${esc(labelForSource(id))}</button>`).join('');}
+function placeName(id) { return groups.flatMap(group=>group[1]).find(place=>place[0]===id)?.[1]||'调查手段'; }
+function renderPlaces() {
+ $('places').innerHTML=groups.map(([name,places])=>`<div class="group-title">${esc(name)}</div>${places.map(([id,title])=>{
+  const items=workbench(viewSession).filter(item=>item.action.place===id);
+  const seen=items.filter(item=>item.done).length;
+  return `<button class="place" data-place="${id}" aria-pressed="${selection?.type==='place'&&selection.id===id}"><span>${esc(title)}</span><small>${seen?`${seen}/${items.length} 已看`:items.length+' 种'}</small></button>`;
+ }).join('')}`).join('');
+}
+function activeIds() {
+ const ids=new Set();
+ if(selection?.type==='node') {ids.add(selection.id);for(const e of graph.edges)if(e.from===selection.id||e.to===selection.id){ids.add(e.from);ids.add(e.to);}}
+ if(selection?.type==='edge'){const e=graph.edges.find(e=>e.id===selection.id);if(e){ids.add(e.from);ids.add(e.to);}}
+ if(selection?.type==='question'){const q=graph.questions.find(q=>q.id===selection.id);for(const id of q?.anchorIds||[])ids.add(id);}
+ return ids;
+}
+function displayGraph() {
+ const hidden=new Set();
+ for(const id of folded){
+  const incoming=graph.edges.filter(e=>e.to===id&&e.kind==='support');
+  for(const edge of incoming){
+   const node=nodeById(edge.from);
+   if(!node||node.kind!=='evidence'||['pending','contested','limited'].includes(node.state))continue;
+   if(graph.questions.some(q=>q.anchorIds.includes(node.id)))continue;
+   const attached=graph.edges.filter(e=>e.from===node.id||e.to===node.id);
+   if(attached.every(e=>e.to===id&&e.kind==='support'))hidden.add(node.id);
+  }
+ }
+ return {...graph,nodes:graph.nodes.filter(n=>!hidden.has(n.id)),edges:graph.edges.filter(e=>!hidden.has(e.from)&&!hidden.has(e.to)),hidden};
+}
+function renderMap(reposition=true) {
+ const display=displayGraph();
+ const width=Math.max(580,$('map-scroll').clientWidth);
+ if(reposition||!layout)layout=layoutGraph(display,{width,height:Math.max(500,$('map-scroll').clientHeight),previous:layout});
+ const contentWidth=Math.max(width,layout.width||width),contentHeight=Math.max(500,layout.height||500);
+ $('map').setAttribute('viewBox',`0 0 ${contentWidth} ${contentHeight}`);
+ $('map').setAttribute('width',contentWidth*zoom);$('map').setAttribute('height',contentHeight*zoom);
+ $('map-canvas').style.width=contentWidth*zoom+'px';$('map-canvas').style.minHeight=contentHeight*zoom+'px';
+ $('node-controls').style.width=contentWidth*zoom+'px';$('node-controls').style.height=contentHeight*zoom+'px';
+ const active=activeIds();
+ $('map').innerHTML='<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L7 4L1 7" fill="none" stroke="#9db5bf" stroke-width="1.1"/></marker></defs>';
+ for(const edge of layout.edges||[]){
+  const focused=selection?.type==='edge'?selection.id===edge.id:active.has(edge.from)&&active.has(edge.to);
+  const path=document.createElementNS(svgNS,'path');path.setAttribute('d',edge.path);path.setAttribute('class',`route ${edge.kind} ${focused?'selected':active.size?'dimmed':''}`);path.setAttribute('marker-end','url(#arrow)');$('map').append(path);
+  const hit=document.createElementNS(svgNS,'path');hit.setAttribute('d',edge.path);hit.setAttribute('class','route-hit');hit.dataset.edge=edge.id;$('map').append(hit);
+  if(focused&&selection?.type==='edge'){const label=document.createElementNS(svgNS,'text');label.setAttribute('x',edge.labelX);label.setAttribute('y',edge.labelY-6);label.setAttribute('text-anchor','middle');label.setAttribute('class','edge-label');label.textContent=edge.label;$('map').append(label);}
+ }
+ $('node-controls').innerHTML=display.nodes.map(node=>{
+  const p=layout.positions[node.id];if(!p)return '';
+  const lines=p.titleLines||p.lines||[node.title];
+  const questions=graph.questions.filter(q=>q.anchorIds.includes(node.id));
+  const ownFold=folded.has(node.id);
+  const title=Array.isArray(lines)?lines.slice(0,2).map(esc).join('<br>'):esc(node.title);
+  return `<button class="node-control ${esc(node.kind)} ${esc(node.state)} ${selection?.type==='node'&&selection.id===node.id?'selected':''} ${recentIds.has(node.id)?'recent':''} ${active.size&&!active.has(node.id)&&!questions.length&&node.state!=='contested'?'faded':''}" data-node="${esc(node.id)}" aria-label="${esc(node.title)}${questions.length?'，有未解疑问':''}" aria-pressed="${selection?.type==='node'&&selection.id===node.id}" style="left:${(p.x-p.width/2)*zoom}px;top:${(p.y-p.height/2)*zoom}px;width:${p.width*zoom}px;height:${p.height*zoom}px"><span class="node-glyph" style="top:${((p.anchorY??p.y-p.height/2+19)-(p.y-p.height/2))*zoom-6}px"></span><span class="node-title" style="font-size:${14*zoom}px;line-height:${20*zoom}px;top:${35*zoom}px">${title}</span><span class="node-state">${ownFold?'依据已收拢':questions.length?esc('? '+questions[0].title):esc(stateText[node.state]||'')}</span></button>`;
+ }).join('');
+ $('empty-map').hidden=graph.nodes.length>0;
+ $('map-count').textContent=`${graph.observations.length??Object.keys(graph.observations).length} 份已得信息 · ${graph.edges.length} 条有据关系${display.hidden.size?' · '+display.hidden.size+' 份依据已收拢':''}`;
+ $('zoom-value').textContent=Math.round(zoom*100)+'%';
+}
+function methodHTML(item){
+ const a=item.action;const sem=ACTION_SEMANTICS[a.id]||{};
+ const available=item.usable&&item.affordable&&historyIndex===null;
+ const reason=historyIndex!==null?'正在回看历史，回到本局后再调查。':session.stopped?'本局已经收手。':!item.affordable?'本局步数已经用完。':item.why;
+ return `<div class="method"><h3>${esc(a.name)}</h3><div class="cost">占 1 步 · ${a.cost===0?'不花钱':'费用 '+esc(COST_LABEL[a.cost])}${item.done?' · 本局做过':''}</div><p>${esc(a.ask)}</p><details style="margin-top:7px"><summary>这个手段能看什么</summary><p>${esc(sem.doesWhat||a.ask)}</p></details>${reason?`<div class="reason">${esc(reason)}</div>`:''}<button class="execute ${available?'primary':''}" data-take="${esc(a.id)}" ${available?'':'disabled'}>${item.done?'再做一次':'使用这个手段'}</button></div>`;
+}
+function relatedQuestions(ids){return graph.questions.filter(q=>q.anchorIds.some(id=>ids.includes(id)));}
+function questionsHTML(questions){return questions.map(q=>`<button class="question-button" data-question="${esc(q.id)}">${esc(q.title)}</button>`).join('');}
+function renderInspector(){
+ const box=$('inspector');
+ if(selection?.type==='place'){
+  box.innerHTML=`<div class="eyebrow">工作台 / ${esc(placeName(selection.id))}</div><h2 class="detail-title">想从这里了解什么？</h2>${workbench(viewSession).filter(item=>item.action.place===selection.id).map(methodHTML).join('')}`;
+ }else if(selection?.type==='node'){
+  const node=nodeById(selection.id);if(!node){selection=null;return renderInspector();}
+  const edges=graph.edges.filter(e=>e.from===node.id||e.to===node.id);
+  const qs=relatedQuestions([node.id]);
+  box.innerHTML=`<div class="eyebrow">${node.kind==='claim'?'当前判断':node.kind==='finding'?'局部认识':'已得信息'}${stateText[node.state]?' / '+esc(stateText[node.state]):''}</div><h2 class="detail-title">${esc(node.title)}</h2><p class="detail-copy">${esc(node.summary)}</p>${edges.length?'<div class="section-label">与已有信息怎样相连</div>'+edges.map(e=>`<button class="relation-button" data-edge="${esc(e.id)}"><strong>${esc(e.label)}</strong>${esc(nodeById(e.from===node.id?e.to:e.from)?.title||'已有信息')}</button>`).join(''):'<p class="small" style="margin-top:15px">目前独立保留。有了相应依据，关系才会出现。</p>'}${qs.length?'<div class="section-label">这里仍拿不准的地方</div>'+questionsHTML(qs):''}${node.sourceIds?.length?'<div class="section-label">回查原始依据</div>'+sourceHTML(node.sourceIds):''}${['claim','finding'].includes(node.kind)?`<button class="fold-button" data-fold="${esc(node.id)}">${folded.has(node.id)?'展开原始依据':'收拢只服务于此的依据'}</button><p class="small">共享的依据、疑问与跨处连接会保留。</p>`:''}`;
+ }else if(selection?.type==='edge'){
+  const edge=graph.edges.find(e=>e.id===selection.id);if(!edge){selection=null;return renderInspector();}
+  box.innerHTML=`<div class="eyebrow">信息之间的关系</div><h2 class="detail-title">${esc(edge.label)}</h2><p class="detail-copy">${esc(edge.details||'这条关系由本局已经取得的依据建立。')}</p><div class="section-label">连接的内容</div>${[edge.from,edge.to].map(id=>`<button class="source-button" data-node="${esc(id)}">${esc(nodeById(id)?.title)}</button>`).join('')}<div class="section-label">这条关系的依据</div>${sourceHTML(edge.sourceIds)}`;
+ }else if(selection?.type==='question'){
+  const q=graph.questions.find(q=>q.id===selection.id);if(!q){selection=null;return renderInspector();}
+  box.innerHTML=`<div class="eyebrow">从已知内容中提出的疑问</div><h2 class="detail-title">${esc(q.title)}</h2><p class="detail-copy">${esc(q.explanation)}</p><div class="section-label">问题从哪里来</div>${q.anchorIds.map(id=>`<button class="source-button" data-node="${esc(id)}">${esc(nodeById(id)?.title)}</button>`).join('')}${q.actionIds.length?`<button id="show-methods" style="margin-top:18px">${openQuestionMethods?'收起调查手段':'有哪些手段可以了解它'}</button>`:'<p class="reason">当前切片没有进一步核对这一点的手段，可以把这项未知写进收手判断。</p>'}${openQuestionMethods?workbench(viewSession).filter(item=>q.actionIds.includes(item.action.id)).map(methodHTML).join(''):''}<p class="small" style="margin-top:16px">是否继续了解，由你决定。其他问题仍留在地图上。</p>`;
+ }else if(selection?.type==='source'){
+  const o=observationById(selection.id);const step=viewSession.log.find(item=>item.observationId===selection.id);const action=step?ACTION_BY_ID.get(step.actionId):null;
+  box.innerHTML=`<div class="eyebrow">原始调查记录</div><h2 class="detail-title">${esc(o.title||o.short||action?.name||'已得信息')}</h2><p class="detail-copy">${esc(o.summary||o.gist||ACTION_SEMANTICS[action?.id]?.gotWhat||'这一份信息已保留在本局记录中。')}</p>${action?`<div class="section-label">从哪里取得</div><p>${esc(action.name)}</p><p class="small">${viewSession.log.filter(item=>item.observationId===selection.id).length} 次取得记录；同一证据不会因此重复计权。</p>`:''}<div class="section-label">在哪些地方使用</div>${graph.nodes.filter(n=>n.sourceIds?.includes(selection.id)).map(n=>`<button class="source-button" data-node="${esc(n.id)}">${esc(n.title)}</button>`).join('')}${graph.edges.filter(e=>e.sourceIds?.includes(selection.id)).map(e=>`<button class="relation-button" data-edge="${esc(e.id)}">${esc(e.label)}</button>`).join('')}`;
+ }else if(selection?.type==='history'){
+  box.innerHTML=`<div class="eyebrow">本局足迹</div><h2 class="detail-title">回看信息怎样接通</h2><p class="small">回看不花步数，也不会改动当前局。</p><button class="history-step" data-history="0">开局 · 尚未取得信息</button>${session.log.map((item,index)=>`<button class="history-step" data-history="${index+1}">${index+1}. ${esc(ACTION_BY_ID.get(item.actionId)?.name)}</button>`).join('')}<button id="history-live" style="margin-top:15px">回到本局</button>`;
+ }else{
+  const claims=graph.nodes.filter(n=>n.kind==='claim');
+  box.innerHTML=`<div class="eyebrow">${session.stopped?'本局已收手':'这次委托'}</div><h2 class="intro-title">它经历过什么？</h2><p class="detail-copy" style="margin-top:12px">委托人正准备接手这只碗。你来判断它的经历，以及仍有哪些地方拿不准。</p><div class="section-label">${graph.nodes.length?'阅读地图':'从哪里开始'}</div><p class="detail-copy">${graph.nodes.length?'点一条内容，看它与谁有关；点一条道路，回查这条关系的依据。':'在左侧任选实物部位、资料或检测手段。可以先看实物，也可以先找资料。'}</p>${graph.questions.length?'<div class="section-label">已知内容里仍有这些疑问</div>'+questionsHTML(graph.questions):''}${claims.length?'<div class="section-label">本局已经形成的判断</div>'+claims.map(n=>`<button class="source-button" data-node="${esc(n.id)}">${esc(n.title)}</button>`).join(''):''}${session.stopped?`<div class="stop-summary"><h3>本局结账</h3><p class="small">${billText(session)}</p>${finalNote?'<p class="detail-copy">'+esc(finalNote)+'</p>':''}<p class="small">地图和原始依据仍可回看。</p></div>`:''}`;
+ }
+}
+function billText(s){return COST_LABEL.map((label,index)=>`${label} × ${s.billed[index]}`).join(' · ');}
+function render(reposition=true){
+ const focus=document.activeElement;
+ const focusKey=focus?.tagName==='BUTTON'?Object.keys(focus.dataset).find(key=>['place','node','edge','question','source','take','history','fold'].includes(key)):null;
+ const focusValue=focusKey?focus.dataset[focusKey]:null;
+ viewSession=currentViewSession();solved=solve(viewSession);graph=buildGraph(solved,viewSession);
+ const stage=STAGE_SEMANTICS[solved.stage];
+ $('stage-title').textContent=(session.stopped&&historyIndex===null?'已收手 · ':'')+stage.name;
+ $('stage-sub').textContent=`还剩 ${viewSession.budget-viewSession.log.length} 步 / 共 ${viewSession.budget} 步 · ${billText(viewSession)}`;
+ $('budget').min=BUDGET_MIN;$('budget').max=BUDGET_MAX;$('budget').value=session.budget;$('budget').disabled=session.log.length>0||session.stopped||historyIndex!==null;
+ $('stop-button').disabled=session.stopped||historyIndex!==null;$('stop-button').textContent=session.stopped?'已收手':'收手';
+ $('history-banner').classList.toggle('visible',historyIndex!==null);$('history-caption').textContent=historyIndex!==null?`正在回看第 ${historyIndex} 步 · 当前局仍保留 ${session.log.length} 步调查`:'';
+ $('notice').textContent=historyIndex===null?notice:'这是当时已知的内容。随时可以返回当前局。';
+ renderPlaces();renderMap(reposition);renderInspector();
+ if(focusKey){
+  const replacement=[...document.querySelectorAll('button')].find(button=>button.dataset[focusKey]===focusValue);
+  if(replacement)replacement.focus({preventScroll:true});else $('inspector').focus({preventScroll:true});
+ }
+}
+function choose(type,id){selection={type,id};openQuestionMethods=false;render(false);}
+function executeAction(id){
+ const previous=graph;const result=take(session,id);
+ if(!result.ok){notice=result.why;render(false);return;}
+ const next=buildGraph(result.after,session);recentIds=new Set(next.nodes.filter(n=>!previous.nodes.some(old=>old.id===n.id)).map(n=>n.id));
+ const connections=next.edges.filter(e=>!previous.edges.some(old=>old.id===e.id));
+ for(const edge of connections){recentIds.add(edge.from);recentIds.add(edge.to);}
+ const interpreted=result.after.evidence.contextualizedObservationIds.filter(id=>!result.before.evidence.contextualizedObservationIds.includes(id));
+ notice=interpreted.length?`${ACTION_BY_ID.get(id).name}：${interpreted.length} 份旧资料获得了解释前提。`:
+  result.kind==='repeat'?'再次核对的结果已留在记录中，同一证据不重复计权。':
+  result.kind==='negative'?'这次没有得到足以作判断的信号，结果与限制已经保留。':
+  result.kind==='suspended'?'资料已经取得；它仍缺少解释所需的上下文。':
+  `${ACTION_BY_ID.get(id).name}：信息已保留${connections.length?'，'+connections.length+' 条关系接通':''}。`;
+ render(true);
+}
+document.addEventListener('click',event=>{
+ const button=event.target.closest('button');
+ if(button?.disabled)return;
+ if(button?.dataset.place)choose('place',button.dataset.place);
+ if(button?.dataset.node)choose('node',button.dataset.node);
+ if(button?.dataset.edge)choose('edge',button.dataset.edge);
+ if(button?.dataset.question)choose('question',button.dataset.question);
+ if(button?.dataset.source)choose('source',button.dataset.source);
+ if(button?.dataset.take)executeAction(button.dataset.take);
+ if(button?.dataset.close)$(button.dataset.close).close();
+ if(button?.dataset.fold){const id=button.dataset.fold;if(folded.has(id)){folded.delete(id);layout={...layout,positions:{...foldPositions,...layout.positions}};}else{foldPositions={...foldPositions,...layout.positions};folded.add(id);}render(true);}
+ if(button?.dataset.history!==undefined){if(historyIndex===null){liveLayoutBeforeHistory=layout;liveFoldsBeforeHistory={folded:new Set(folded),positions:foldPositions};folded=new Set();foldPositions={};}historyIndex=Number(button.dataset.history);layout=null;render(true);}
+ if(button?.id==='show-methods'){openQuestionMethods=!openQuestionMethods;renderInspector();$('show-methods')?.focus({preventScroll:true});}
+ if(button?.id==='history-live')returnLive();
+ if(!button){const edge=event.target.closest('[data-edge]');if(edge)choose('edge',edge.dataset.edge);}
+});
+$('budget').addEventListener('change',()=>{const result=setBudget(session,$('budget').value);if(!result.ok)notice=result.why;render(false);});
+$('brief-button').onclick=()=>$('brief-dialog').showModal();
+$('history-button').onclick=()=>choose('history','');
+$('overview-button').onclick=()=>{selection=null;zoom=1;render(false);};
+$('zoom-in').onclick=()=>{zoom=Math.min(1.5,Math.round((zoom+.1)*10)/10);renderMap(false);};
+$('zoom-out').onclick=()=>{zoom=Math.max(.8,Math.round((zoom-.1)*10)/10);renderMap(false);};
+function returnLive(){historyIndex=null;layout=liveLayoutBeforeHistory;liveLayoutBeforeHistory=null;if(liveFoldsBeforeHistory){folded=liveFoldsBeforeHistory.folded;foldPositions=liveFoldsBeforeHistory.positions;liveFoldsBeforeHistory=null;}render(true);$('history-button').focus({preventScroll:true});}
+$('return-live').onclick=returnLive;
+$('stop-button').onclick=()=>{
+ const claims=graph.nodes.filter(n=>n.kind==='claim');
+ $('stop-preview').innerHTML=`<p>${esc(STAGE_SEMANTICS[solved.stage].meaning)}</p>${claims.map(n=>`<div class="stop-claim">${esc(n.title)}</div>`).join('')}<div class="section-label">还没有说清的地方</div>${graph.questions.length?graph.questions.map(q=>'<p class="small">'+esc(q.title)+'</p>').join(''):'<p class="small">本局仍以已经取得的证据范围为限。</p>'}<p class="small" style="margin-top:15px">用了 ${session.log.length} 步 · ${billText(session)}</p>`;
+ $('stop-dialog').showModal();
 };
-function renderDeck() {
-  const box = $("#deckbody");
-  box.textContent = "";
-  for (const a of view.map.axioms) {
-    const d = document.createElement("div");
-    d.className = "ax"; d.textContent = a.line;
-    box.appendChild(d);
-  }
-  if (view.ds.clear) {
-    const d = document.createElement("div");
-    d.className = "clear"; d.textContent = view.ds.clearLine;
-    box.appendChild(d);
-    return;
-  }
-  for (const it of view.ds.items) {
-    const c = document.createElement("div");
-    c.className = "card k-" + it.kind;
-    let html = `<div class="kd">${esc(KIND_LABEL[it.kind] ?? it.kind)}</div>` +
-      `<h5>${esc(it.title)}</h5><p>${esc(it.body)}</p>`;
-    if (it.means.length) {
-      html += `<div class="means"><div class="hd">行里通常靠这些手段(不分先后)</div>` +
-        it.means.map((m) => `<div class="mean${m.usable === false ? " blocked" : ""}" data-act="${esc(m.actionId)}">` +
-          `<span class="nm">${esc(m.name)}</span><span class="cs">${esc(m.costLabel)}` +
-          `${m.usable === false ? " · 暂不可用" : ""}${m.done ? " · 做过" : ""}</span></div>`).join("") +
-        `</div>`;
-    }
-    c.innerHTML = html;
-    c.querySelectorAll("[data-act]").forEach((n) => {
-      n.addEventListener("click", () => {
-        const a = ACTION_BY_ID.get(n.dataset.act);
-        if (a) openPop(a.place, n);
-      });
-    });
-    box.appendChild(c);
-  }
-}
-
-/* ==================== 两拍动画 ==================== */
-/* 第一拍:归因 —— 从左侧那个刚做的行动飞一条线到右侧新入场的情报,周围先不动。
-   停顿。
-   第二拍:后果 —— 整图重组,被串起来的先亮一下再归位。 */
-function doAction(actionId, pid) {
-  closePop();
-  if (anim) return;
-  const before = view.map;
-  const beforePos = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
-  const r = take(S, actionId);
-  if (!r.ok) { alert(r.why); return; }
-  recompute();
-
-  const newId = r.observationId;
-  const beforeIds = new Set([...before.nodes, ...before.findings, ...before.axioms].map((n) => n.id));
-  const fresh = [...view.map.nodes, ...view.map.findings, ...view.map.axioms]
-    .filter((n) => !beforeIds.has(n.id)).map((n) => n.id);
-
-  renderHeader(); renderSetup(); renderObject(); renderOutside();
-
-  /* 先按旧位置画一遍,让新节点从左侧飞入 */
-  const { w, h } = mapBox();
-  positions = beforePos;
-  const anchorScreen = placeScreenPoint(pid);
-  positions.set(newId, { x: Math.max(90, anchorScreen.x), y: Math.min(Math.max(50, anchorScreen.y), h - 60) });
-  /* 其他新生的(局部 Finding、公理)先藏在新情报附近 */
-  for (const id of fresh) if (id !== newId) {
-    const p = positions.get(newId);
-    positions.set(id, { x: p.x + 18, y: p.y + 18 });
-  }
-  renderMap();
-  flyLine(anchorScreen, positions.get(newId));
-  markFlash([newId]);
-
-  anim = true;
-  setTimeout(() => {                       /* 停顿 */
-    const from = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
-    layout(view.map);
-    const to = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
-    tween(from, to, 620, () => {
-      anim = null;
-      renderDeck();
-      snapshot(ACTION_BY_ID.get(actionId)?.name ?? actionId);
-      /* 被这条串起来的那些先亮一下 */
-      const touched = view.map.edges.filter((e) => e.from === newId || e.to === newId)
-        .flatMap((e) => [e.from, e.to]);
-      markFlash([...new Set([newId, ...touched, ...fresh])], 700);
-    });
-  }, 520);
-}
-function placeScreenPoint(pid) {
-  const box = $("#mapwrap").getBoundingClientRect();
-  let r;
-  const hot = document.querySelector(`[data-place="${pid}"]`);
-  if (hot) r = hot.getBoundingClientRect();
-  if (!r) return { x: 90, y: 90 };
-  return { x: -40, y: r.top + r.height / 2 - box.top, sx: r.left + r.width / 2 - box.left,
-           sy: r.top + r.height / 2 - box.top };
-}
-function flyLine(from, to) {
-  const svg = $("#map");
-  const p = el("path", { class: "fly",
-    d: `M${from.sx ?? 0},${from.sy ?? to.y} Q${(from.sx + to.x) / 2},${to.y - 40} ${to.x},${to.y}` });
-  svg.appendChild(p);
-  const len = 400;
-  p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
-  p.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 460, fill: "forwards" });
-  setTimeout(() => p.remove(), 1100);
-}
-function markFlash(ids, ms = 520) {
-  for (const id of ids) {
-    const n = document.querySelector(`[data-node="${cssEsc(id)}"]`);
-    if (!n) continue;
-    n.classList.add("flash");
-    setTimeout(() => n.classList.remove("flash"), ms);
-  }
-}
-const cssEsc = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/[.:|]/g, "\\$&");
-function hash(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; }
-function tween(from, to, ms, done) {
-  const t0 = performance.now();
-  const ease = (t) => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-  function frame(now) {
-    const k = Math.min(1, (now - t0) / ms), e = ease(k);
-    for (const [id, b] of to) {
-      const a = from.get(id) ?? b;
-      positions.set(id, { x: a.x + (b.x - a.x) * e, y: a.y + (b.y - a.y) * e });
-    }
-    renderMap();
-    if (k < 1) requestAnimationFrame(frame); else done && done();
-  }
-  requestAnimationFrame(frame);
-}
-
-/* ==================== 历史回放:独立浮层,不占主界面 ==================== */
-$("#bhist").addEventListener("click", () => {
-  const h = $("#hist");
-  h.style.display = "flex";
-  const r = $("#hr");
-  r.max = String(history.length - 1);
-  r.value = String(history.length - 1);
-  drawHistory(history.length - 1);
-});
-/* 开局委托卡。开局自动弹一次,之后随时可以从「委托」再看。
-   刻意不做「下次不再显示」—— 这一版正在验证的就是「玩家读完能不能说出要干什么」。 */
-$("#bbrief").addEventListener("click", () => { $("#brief").style.display = "flex"; });
-$("#bgo").addEventListener("click", () => { $("#brief").style.display = "none"; });
-$("#hclose").addEventListener("click", () => { $("#hist").style.display = "none"; });
-$("#hr").addEventListener("input", (e) => drawHistory(+e.target.value));
-function drawHistory(i) {
-  const h = history[i];
-  if (!h) return;
-  renderMap(h);
-  $("#hcap").textContent = h.step === 0
-    ? "开局:右侧还什么都没有"
-    : `第 ${h.step} 步 · ${h.actLabel} —— ${h.ro.name}`;
-  const box = $("#hdeck");
-  box.textContent = "";
-  for (const a of h.map.axioms) {
-    const d = document.createElement("div"); d.className = "ax"; d.textContent = a.line;
-    box.appendChild(d);
-  }
-  if (h.ds.clear) {
-    const d = document.createElement("div"); d.className = "clear"; d.textContent = h.ds.clearLine;
-    box.appendChild(d);
-  }
-  for (const it of h.ds.items) {
-    const c = document.createElement("div");
-    c.className = "card k-" + it.kind;
-    c.innerHTML = `<div class="kd">${esc(KIND_LABEL[it.kind] ?? it.kind)}</div>` +
-      `<h5>${esc(it.title)}</h5><p>${esc(it.body)}</p>`;
-    box.appendChild(c);
-  }
-}
-
-/* ==================== 其他 ==================== */
-$("#bstop").addEventListener("click", () => {
-  if (S.stopped) return;
-  S.stopped = true;
-  recompute(); renderAll(); snapshot("收手");
-});
-$("#breset").addEventListener("click", reset);
-window.addEventListener("resize", () => { if (!anim) { layout(view.map, { iters: 90 }); renderMap(); } });
-
-reset();
-$("#brief").style.display = "flex";
+$('confirm-stop').onclick=()=>{session.stopped=true;finalNote=$('final-note').value.trim();selection=null;notice='本局已经收手。判断、依据与剩余疑问都保留在地图中。';$('stop-dialog').close();render(false);};
+$('restart-button').onclick=()=>{if(session.log.length||session.stopped)$('restart-dialog').showModal();else restart();};
+function restart(){session=newSession(session.budget);selection=null;historyIndex=null;layout=null;liveLayoutBeforeHistory=null;liveFoldsBeforeHistory=null;folded.clear();foldPositions={};recentIds.clear();finalNote='';$('final-note').value='';zoom=1;notice='新的一局。从工作台任选一处开始。';render(true);}
+$('confirm-restart').onclick=()=>{$('restart-dialog').close();restart();};
+let resizeFrame;new ResizeObserver(()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>renderMap(true));}).observe($('map-scroll'));
+window.ATLAS_DEBUG={get session(){return session;},get graph(){return graph;},get layout(){return layout;},get stamp(){return STAMP;},get selection(){return selection;}};
+render();
 </script>
-</body>
 </html>

@@ -1,0 +1,32 @@
+{
+  "builtHtmlSha256": "28b6935e50f072d488fe9f8a5c63260716cee656081c434200cc6fc86d7d79fe",
+  "results": [
+    {
+      "name": "offline start; preserved 5 object / 10 external groups; neutral four judgments",
+      "status": "PASS"
+    },
+    {
+      "name": "keyboard opens original grouped popup; unavailable inspection is non-mutating",
+      "status": "PASS"
+    },
+    {
+      "name": "early Xray/image shared question; hover does not replace pinned selection; late context",
+      "status": "PASS"
+    },
+    {
+      "name": "archive attribution and corroboration split; evidence/road/gap/claim cross-highlights",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "output/playwright/fusion-v0/initial-1440.png",
+    "output/playwright/fusion-v0/pending-1440.png",
+    "output/playwright/fusion-v0/context-connected-1440.png",
+    "output/playwright/fusion-v0/archive-gaps-1440.png",
+    "output/playwright/fusion-v0/archive-confirmed-1440.png",
+    "output/playwright/fusion-v0/failure.png"
+  ],
+  "errors": [],
+  "status": "FAIL",
+  "failure": "locator.click: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.route-hit[data-id=\"archive:t2:object\"]').first()\u001b[22m\n\u001b[2m    - locator resolved to <path tabindex=\"0\" role=\"button\" data-kind=\"edge\" class=\"route-hit\" aria-label=\"关系：记录属于此碗\" data-id=\"archive:t2:object\" d=\"M 384.51 195.38 L 303.49 162.62 Q 297 160 297 153 L 297 82 Q 297 75 303.98 74.48 L 382.02 68.67\"></path>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button aria-pressed=\"true\" data-kind=\"evidence\" aria-label=\"整器形制与可见修补\" data-id=\"obs.current.whole\" class=\"node-control evidence known selected\">…</button> from <div id=\"node-controls\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button aria-pressed=\"true\" data-kind=\"evidence\" aria-label=\"整器形制与可见修补\" data-id=\"obs.current.whole\" class=\"node-control evidence known selected\">…</button> from <div id=\"node-controls\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    15 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <button aria-pressed=\"true\" data-kind=\"evidence\" aria-label=\"整器形制与可见修补\" data-id=\"obs.current.whole\" class=\"node-control evidence known selected\">…</button> from <div id=\"node-controls\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-map-fusion-v0\\browser-check.mjs:112:75\n    at async check (E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-map-fusion-v0\\browser-check.mjs:39:3)\n    at async file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-map-fusion-v0/browser-check.mjs:106:3"
+}

@@ -1,0 +1,74 @@
+{
+  "builtHtmlSha256": "8e37e2408404099d109feaa152b817e81ad6572974098394bd91a7825e511a3d",
+  "results": [
+    {
+      "name": "offline start; preserved 5 object / 10 external groups; neutral four judgments",
+      "status": "PASS"
+    },
+    {
+      "name": "keyboard opens original grouped popup; unavailable inspection is non-mutating",
+      "status": "PASS"
+    },
+    {
+      "name": "early Xray/image shared question; hover does not replace pinned selection; late context",
+      "status": "PASS"
+    },
+    {
+      "name": "archive attribution and corroboration split; evidence/road/gap/claim cross-highlights",
+      "status": "PASS"
+    },
+    {
+      "name": "original relation report remains selectable after endpoint compression",
+      "status": "PASS"
+    },
+    {
+      "name": "frontier continuation; repeat no duplicate; material readings do not falsely connect",
+      "status": "PASS"
+    },
+    {
+      "name": "16-step real UI route, all four judgments and immutable selection",
+      "status": "PASS"
+    },
+    {
+      "name": "history recovers exact map without spending; return-to-live retains terminal state",
+      "status": "PASS"
+    },
+    {
+      "name": "restart/stop during connection; reduced-motion reaches final state",
+      "status": "PASS"
+    },
+    {
+      "name": "all 22 real UI actions and rendered bounds at 1280",
+      "status": "PASS"
+    },
+    {
+      "name": "all 22 real UI actions and rendered bounds at 1440",
+      "status": "PASS"
+    },
+    {
+      "name": "all 22 real UI actions and rendered bounds at 1920",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "output/playwright/fusion-v0/initial-1440.png",
+    "output/playwright/fusion-v0/pending-1440.png",
+    "output/playwright/fusion-v0/context-connected-1440.png",
+    "output/playwright/fusion-v0/archive-gaps-1440.png",
+    "output/playwright/fusion-v0/archive-confirmed-1440.png",
+    "output/playwright/fusion-v0/g3-1440.png",
+    "output/playwright/fusion-v0/stopped-1440.png",
+    "output/playwright/fusion-v0/initial-1280.png",
+    "output/playwright/fusion-v0/middle-1280.png",
+    "output/playwright/fusion-v0/full-1280.png",
+    "output/playwright/fusion-v0/initial-1440.png",
+    "output/playwright/fusion-v0/middle-1440.png",
+    "output/playwright/fusion-v0/full-1440.png",
+    "output/playwright/fusion-v0/initial-1920.png",
+    "output/playwright/fusion-v0/middle-1920.png",
+    "output/playwright/fusion-v0/full-1920.png"
+  ],
+  "errors": [],
+  "status": "PASS",
+  "count": 12
+}

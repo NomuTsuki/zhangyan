@@ -1,0 +1,49 @@
+✔ frozen manifest sources match exact SHA-256 inputs (6.7641ms)
+✔ joint author state space contains exactly 324 unique states (0.6767ms)
+V3_AUTHOR_SCENARIOS {"g1-oriented":"G1","archive-candidate-early-local-value":"G1","archive-attribution-contested-not-promoted":"G1","g2-documented-stop":"G2","g2-documented-cross-time-or":"G2","g2-continue-no-progress":"G2","g2-alternate-physical":"G2","professional-evidence-early":"G2","g3-with-allowed-unknowns":"G3","g2-surface-bad-news-stable":"G2","g2-stability-bad-news-stable":"G2","g2-hard-counter-downgrade":"G1","g2-out-of-scope-counter-stable":"G2","g2-out-of-scope-factor-stable":"G2","g2-major-weakened-stable":"G2","g2-major-bounded-stable":"G2","g2-logical-counter-downgrade":"G1","g2-identity-hard-counter-downgrade":"G1","g2-insufficient-counter-unresolved":"G2","marginal-splice-rejected":"G1","single-test-answer-key-rejected":"NONE","near-complete-single-instrument-rejected":"G1","near-complete-single-glue-line-rejected":"G1","single-document-answer-key-rejected":"G1"}
+✔ golden oracle has no runtime dependency or mutation path to solver modules (0.804ms)
+✔ every declared legal order matches the runtime-separated 324-cell rational golden (2034.2697ms)
+✔ declared scenario matrix reaches or rejects the expected result (25.4553ms)
+✔ every declared legal order produces the same complete state snapshot (35.6033ms)
+✔ G2 can stop, then non-progress still spends attempts and returns to G2 (2.8626ms)
+✔ same dependency unit folds once while independent corroboration can move support (4.896ms)
+✔ professional evidence can be acquired early and contextualized without recount (1.9043ms)
+✔ surface-only bad news preserves the complete h marginal and does not break G2 (3.9629ms)
+✔ stability-only bad news preserves the complete h marginal and does not break G2 (3.4051ms)
+✔ capability-limited no-signal remains unresolved rather than absence-supported (1.1836ms)
+✔ capability-insufficient counterevidence cannot create absence support or block G2 (1.7494ms)
+✔ abstract scoped hard counterevidence downgrades G2 without erasing identity or G1 (1.0175ms)
+✔ a capable negative result outside the necessary scope only bounds the claim (0.9497ms)
+✔ an out-of-scope global factor is suppressed instead of silently downgrading G2 (2.1478ms)
+✔ weakens and bounds/refines remain nonblocking while logical refutation blocks (4.2ms)
+✔ direct identity counterevidence downgrades G2 without erasing the G1 frame (0.9976ms)
+✔ high identity and major marginals cannot splice a false G2 (1.0804ms)
+✔ archive relationship questions update without gating player action (3.9261ms)
+✔ every T2 and T3 archive relationship conflict overrides simultaneous positive evidence (6.0266ms)
+✔ a contradictory T1/T2/T3 chronology blocks G3 without erasing G2 (1.0753ms)
+✔ one advanced test is not an answer key (0.7685ms)
+✔ instrument, glue-line and document near-misses cannot supply omitted proof groups (2.6611ms)
+✔ major proof eligibility is bound to source group, coverage and distinct role slots (7.3788ms)
+✔ documented T2 accepts the declared cross-time OR without a current repair map (2.6192ms)
+✔ documented cross-time proof fails closed on source, coverage, role or fact defects (1.6012ms)
+✔ the documented OR does not relax the physical major route (0.9831ms)
+✔ an omnibus instrument event is rejected by action, method and fact-axis authority (0.4301ms)
+✔ G3 can establish while declared noncritical unknowns remain (1.1593ms)
+✔ G3 rejects every registered decision-critical unknown class (6.6476ms)
+✔ shared source or latent IDs cannot be hidden behind a second dependency unit (0.2598ms)
+✔ noncommuting axis constraints fail closed regardless of dependency-unit ID order (5.2708ms)
+✔ invalid priors, thresholds, factor weights and unknown IDs fail closed by reason (1.5245ms)
+✔ derived numeric overflow and invalid public posterior projections fail closed (1.4191ms)
+✔ nested action, proof-role and unknown policy schemas fail closed (0.356ms)
+✔ invalid counter relations, targets and negative fact lanes fail closed (0.9607ms)
+✔ declared scenario orders must be complete exact permutations (0.2111ms)
+✔ conflicting factors inside one dependency unit fail as MODEL_CONFLICT (0.2135ms)
+✔ scenario summary (24.6804ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2276.9109

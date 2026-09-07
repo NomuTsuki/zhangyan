@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>掌眼 V3 · 工作台与心智地图 呈现变体 v0</title>
+<link rel="icon" href="data:,">
+<title>掌眼 V3 · 主题背景与按需解释试玩 v1</title>
 <style>
   :root{
     --bg:#0d0d0f; --panel:#15151a; --panel2:#1b1b21; --line:#2a2a32;
@@ -55,8 +56,11 @@
   button.t:hover{border-color:var(--gold2)}
   .warnbar{
     flex:0 0 auto;background:#1a1512;border-bottom:1px solid #2e241b;
-    color:#a89272;padding:6px 16px;font-size:11.5px;letter-spacing:.02em
+    color:#a89272;padding:3px 16px;font-size:10.5px;letter-spacing:.02em
   }
+  .warnbar details{display:inline-block}
+  .warnbar summary{cursor:pointer;color:#b59a72;list-style-position:inside}
+  .warnbar .experiment-detail{display:block;padding:3px 0 2px 15px;color:var(--dim)}
 
   /* ---------- 三区 ---------- */
   main{flex:1;display:flex;min-height:0}
@@ -78,6 +82,7 @@
   .hot circle.hit{fill:transparent}
   .hot .dot{fill:var(--panel2);stroke:var(--gold2);stroke-width:1.2}
   .hot:hover .dot,.hot.open .dot{fill:var(--gold);stroke:var(--gold)}
+  .hot.focused .dot{fill:#2c261a;stroke:var(--gold);stroke-width:2.2}
   .hot text{fill:var(--dim);font-size:10.5px}
   .hot:hover text,.hot.open text{fill:var(--ink)}
   .hot .meta{fill:var(--gold2);font-size:8.8px;letter-spacing:.02em}
@@ -85,6 +90,7 @@
   .hot:focus-visible .dot{fill:var(--gold);stroke:#fff;stroke-width:2}
   .hot:focus-visible text{fill:var(--ink)}
   .hot.spent .dot{fill:var(--dim2);stroke:var(--dim2)}
+  .hot.spent.focused .dot{fill:#2c261a;stroke:var(--gold);stroke-width:2.2}
   .bowl{fill:none;stroke:#33313a;stroke-width:1.2}
   .bowlfill{fill:#131318}
 
@@ -98,6 +104,7 @@
   }
   .mrow:hover{background:var(--panel2);border-color:var(--line)}
   .mrow.open{background:var(--panel2);border-color:var(--gold2)}
+  .mrow.focused{background:#1d1a14;border-color:var(--gold2)}
   .mrow:focus-visible{outline:1px solid var(--gold2);outline-offset:-1px;background:var(--panel2)}
   .mrow .nm{flex:1;font-size:12.5px}
   .mrow .cs{color:var(--gold2);font-size:11px;white-space:nowrap}
@@ -111,11 +118,19 @@
     box-shadow:0 14px 40px rgba(0,0,0,.62)
   }
   #pop h4{margin:0 0 2px;font-size:13px;font-weight:600}
+  button.afocus{
+    appearance:none;background:none;border:0;color:var(--ink);font:inherit;font-weight:600;
+    padding:0;cursor:pointer;text-align:left
+  }
+  button.afocus:hover,button.afocus:focus-visible{color:var(--gold);outline:none}
   #pop .cap{color:var(--dim2);font-size:10.5px;letter-spacing:.06em;
     border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:9px}
+  #pop .action-card{border-left:2px solid transparent;padding-left:7px}
+  #pop .action-card.focused{border-left-color:var(--gold)}
   #pop .ask{color:var(--gold);font-size:12px;margin-bottom:7px}
+  #pop .why-pack{margin-top:8px}
   #pop .why{color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:7px}
-  #pop .long{color:var(--dim);font-size:11.5px;margin-top:6px;display:none;
+  #pop .long{color:var(--dim);font-size:11.5px;margin-top:6px;
     border-top:1px dashed var(--line);padding-top:6px}
   #pop .foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
   #pop .cost{color:var(--gold2);font-size:11.5px}
@@ -135,25 +150,48 @@
   #mapwrap{flex:1;position:relative;min-height:0}
   #map{display:block;width:100%;height:100%}
   .edge{stroke-linecap:round;fill:none}
-  .e-latent{stroke:#5d5a52;stroke-width:1.1}
   .e-prereq{stroke:#4a5560;stroke-width:1;stroke-dasharray:1 3}
   .e-caught{stroke:var(--caught);stroke-width:1.3}
   .e-supports{stroke:#3d4a38;stroke-width:1}
   .edge.lit{stroke:var(--gold);stroke-width:2}
+  .edge.dim{opacity:.045}
+  .edge.active{opacity:1;stroke-width:2.4}
   .nd text{font-size:10.5px;fill:var(--dim)}
   .nd.on text{fill:var(--ink)}
   .n-obs{fill:#1a222a;stroke:var(--obs);stroke-width:1.3}
   .n-obs.susp{stroke:var(--dim2);stroke-dasharray:2 2;fill:#17171b}
   .n-obs.neg{stroke:var(--warn);stroke-dasharray:2 2}
   .n-obs.caught{stroke:var(--caught)}
-  .n-find{fill:#241c14;stroke:var(--find);stroke-width:1.4}
   .n-ax{fill:#1a2118;stroke:var(--axiom);stroke-width:1.4}
   .nd{cursor:pointer}
-  .nd.flash circle,.nd.flash polygon,.nd.flash rect{stroke:var(--gold);stroke-width:2.4}
+  .node-hit{fill:transparent;stroke:none;pointer-events:all}
+  .nd.dim{opacity:.13}
+  .nd.related .n-obs,.nd.related .n-ax{stroke-width:1.9}
+  .nd.selected .n-obs,.nd.selected .n-ax{stroke:var(--gold);stroke-width:2.4}
+  .nd.flash .n-obs,.nd.flash .n-ax{stroke:var(--gold);stroke-width:2.4}
+  .topic-bg{pointer-events:none}
+  .topic-envelope{fill:rgba(111,159,191,.028);stroke:#26333c;stroke-width:1;stroke-dasharray:4 7}
+  .topic-bg.dim{opacity:.18}
+  .topic-bg.related .topic-envelope{stroke:#4f6652;fill:rgba(88,116,79,.045)}
+  .topic-bg.selected .topic-envelope{stroke:var(--gold2);fill:rgba(217,177,102,.04)}
+  .topic-label{outline:none;cursor:pointer}
+  .topic-label rect{fill:#0c1013;stroke:#33424c;stroke-width:1}
+  .topic-label text{fill:#617580;font-size:9.5px;letter-spacing:.03em;pointer-events:none}
+  .topic-label:hover rect,.topic-label:focus-visible rect{fill:#151d22;stroke:#5c7482}
+  .topic-label:hover text,.topic-label:focus-visible text{fill:#8ca4b1}
+  .topic-label.dim{opacity:.22}
+  .topic-label.related rect{stroke:#4f6652}
+  .topic-label.selected rect{stroke:var(--gold2)}
+  .topic-label.selected text{fill:var(--gold2)}
   .fly{stroke:var(--gold);stroke-width:1.6;fill:none;stroke-dasharray:5 4}
   #mapempty{
     position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     color:var(--dim2);font-size:12.5px;text-align:center;padding:0 60px;line-height:2
+  }
+  #mapfocus{
+    position:absolute;left:12px;top:10px;z-index:8;display:none;max-width:360px;
+    color:var(--gold);font-size:11px;background:rgba(21,21,26,.9);border:1px solid var(--gold2);
+    border-radius:999px;padding:3px 10px;pointer-events:none
   }
   #tip{
     position:absolute;z-index:30;max-width:250px;background:#191920;border:1px solid var(--line);
@@ -163,24 +201,69 @@
   #tip b{color:var(--ink);display:block;margin-bottom:3px;font-size:12.5px}
   .lgd{
     position:absolute;left:12px;bottom:10px;color:var(--dim2);font-size:10.5px;
-    display:flex;gap:14px;flex-wrap:wrap;max-width:70%
+    max-width:76%
   }
+  .lgd details{background:rgba(13,13,15,.88);border:1px solid transparent;border-radius:3px;padding:2px 6px}
+  .lgd details[open]{border-color:var(--line);padding-bottom:5px}
+  .lgd summary{cursor:pointer;color:var(--dim);font-size:10.5px}
+  .legend-items{display:flex;gap:12px;flex-wrap:wrap;margin-top:5px}
   .lgd i{font-style:normal;display:inline-flex;align-items:center;gap:5px}
+  .topic-key{width:16px;height:9px;border:1px dashed #425866;border-radius:3px;display:inline-block}
   .sw{width:16px;height:0;border-top-width:2px;border-top-style:solid;display:inline-block}
   /* 图注里的箭头,紧跟在线段样本后面,标明这一种边是有方向的 */
   .swa{margin-left:-4px;margin-right:1px;font-size:11px;line-height:1;color:var(--dim2)}
 
   /* ---------- 右:决策面 ---------- */
+  #qrail{flex:0 0 auto;border-bottom:1px solid var(--line);padding:8px 10px 9px;background:#121217}
+  .qrail-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .qrail-head span{color:var(--dim2);font-size:10px;letter-spacing:.12em}
+  .qclear{background:none;border:0;color:var(--dim);font:inherit;font-size:10.5px;cursor:pointer;padding:0}
+  .qclear:hover{color:var(--ink)}
+  .qitems{display:grid;grid-template-columns:1fr;gap:3px}
+  .qbtn{
+    display:flex;align-items:center;gap:7px;width:100%;padding:4px 7px;background:transparent;
+    color:var(--dim);border:1px solid transparent;border-radius:3px;font:inherit;font-size:11.5px;
+    text-align:left;cursor:pointer
+  }
+  .qbtn:hover{background:var(--panel2);color:var(--ink)}
+  .qbtn.active{background:#201b12;border-color:var(--gold2);color:var(--ink)}
+  .qbtn.related{border-color:#3b372d;color:#aaa395;background:#181712}
+  .qbtn.related::after{content:"牵连";margin-left:auto;color:var(--dim2);font-size:9px;letter-spacing:.08em}
+  .qfacet-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:5px 0 0 7px}
+  .qfacet{
+    display:flex;justify-content:space-between;gap:4px;padding:3px 6px;background:var(--panel2);
+    color:var(--dim);border:1px solid var(--line);border-radius:3px;font:inherit;font-size:10.5px;
+    cursor:pointer
+  }
+  .qfacet.active{border-color:var(--gold);color:var(--ink);background:#241e13}
+  .qfacet.done .qs{color:var(--axiom)}
+  .qfacet.progress .qs{color:var(--gold)}
+  .qfacet.blocked .qs{color:var(--warn)}
+  .qs{color:var(--dim2);white-space:nowrap}
+  .qfinal{margin:6px 7px 0;color:var(--dim2);font-size:10px;line-height:1.45}
+  .focusline{margin-top:6px;color:var(--dim);font-size:10.5px;line-height:1.45}
+  .focusline b{color:var(--gold);font-weight:500}
   #deckbody{flex:1;overflow:auto;padding:2px 12px 14px}
   .ax{
     color:var(--axiom);font-size:11.5px;padding:4px 8px;border-left:2px solid var(--axiom);
     background:#151a14;margin:4px 0;border-radius:0 3px 3px 0
   }
+  .ax.dim{opacity:.16}
+  .ax.focused{box-shadow:0 0 0 1px rgba(104,143,73,.2)}
   .card{
-    border:1px solid var(--line);border-radius:4px;padding:9px 10px;margin:9px 0;
+    border:1px solid var(--line);border-radius:4px;padding:0;margin:9px 0;
     background:var(--panel2)
   }
+  .card.dim{opacity:.16}
+  .card.focused{border-color:var(--gold2);box-shadow:0 0 0 1px rgba(217,177,102,.08)}
+  .card-toggle{display:block;width:100%;background:transparent;border:0;color:inherit;text-align:left;
+    padding:8px 9px;cursor:pointer;font:inherit}
+  .card-toggle:hover,.card-toggle:focus-visible{background:#202028;outline:1px solid var(--gold2);outline-offset:-1px}
   .card .kd{font-size:10px;letter-spacing:.14em;color:var(--dim2);margin-bottom:3px}
+  .card-summary{display:flex;align-items:flex-start;gap:7px}
+  .card-summary h5{flex:1}
+  .means-count{flex:0 0 auto;color:var(--gold2);font-size:10.5px;white-space:nowrap}
+  .card-detail{padding:0 9px 9px;border-top:1px solid rgba(42,42,50,.65)}
   .card.k-suspended{border-left:2px solid var(--dim2)}
   .card.k-negative{border-left:2px solid var(--warn)}
   .card.k-onemore{border-left:2px solid var(--gold)}
@@ -193,7 +276,7 @@
   .means .hd{color:var(--dim2);font-size:10.5px;letter-spacing:.1em;margin-bottom:4px}
   .mean{
     display:flex;align-items:baseline;gap:7px;padding:3px 6px;border-radius:3px;cursor:pointer;
-    border:1px solid transparent
+    border:1px solid transparent;background:transparent;color:inherit;font:inherit;width:100%;text-align:left
   }
   .mean:hover{background:#20202a;border-color:var(--line)}
   .mean .nm{flex:1;font-size:12px}
@@ -216,6 +299,12 @@
   #brief p.q{color:var(--gold2)}
   #brief ul{margin:0 0 13px;padding-left:19px}
   #brief li{font-size:12.5px;line-height:1.9;color:var(--dim);margin-bottom:3px}
+  #brief .brief-core{margin-bottom:10px}
+  #brief details{border-top:1px solid var(--line);padding:8px 0 0;margin-top:8px}
+  #brief summary{cursor:pointer;color:var(--dim);font-size:12.5px}
+  #brief details[open] summary{color:var(--gold2);margin-bottom:6px}
+  #brief .brief-detail{padding:0 2px 1px 16px}
+  #brief .brief-detail p,#brief .brief-detail li{font-size:12px;line-height:1.75;color:var(--dim)}
   #brief .go2{margin-top:6px;padding:8px 20px;font-size:13px;cursor:pointer;
     background:var(--gold);color:#14140f;border:0;border-radius:4px;font-weight:600}
 
@@ -239,7 +328,7 @@
 <body>
 <div id="app">
   <header>
-    <div class="brand"><b>掌眼 V3</b><span>工作台 ／ 心智地图 呈现变体 v0</span></div>
+    <div class="brand"><b>掌眼 V3</b><span>工作台 ／ 主题背景与按需解释试玩 v1</span></div>
     <div class="readout" id="ro"></div>
     <div class="meters" id="mt"></div>
     <div class="setup" id="su">
@@ -270,6 +359,7 @@
       <div class="zt">已知与推理 <em>—— 你查到的东西,以及它们之间怎么串起来</em></div>
       <div id="mapwrap">
         <svg id="map"></svg>
+        <div id="mapfocus"></div>
         <div id="mapempty"></div>
         <div class="lgd" id="lgd"></div>
         <div id="tip"></div>
@@ -277,6 +367,7 @@
     </div>
     <div class="col" id="deck">
       <div class="zt">现在该判断什么 <em>—— 手上悬着、等你决定下一步的东西</em></div>
+      <div id="qrail"></div>
       <div id="deckbody"></div>
     </div>
   </main>
@@ -284,25 +375,35 @@
 
 <div id="pop" role="dialog" aria-label="这个位置可用的具体手段" aria-hidden="true" tabindex="-1"></div>
 
-<div id="brief">
+<div id="brief" role="dialog" aria-modal="true" aria-labelledby="brief-title" aria-hidden="true">
   <div class="bx">
-    <h3>这一趟是受人委托</h3>
+    <h3 id="brief-title">这一趟是受人委托</h3>
     <div class="sub">开局说明 · 随时可以从右上角「委托」再看一遍</div>
-    <p>你是个替人看东西的鉴定人。今天的委托人正准备接手这只碗,钱还没付。
-      他不问你「真的还是假的」——他问的是:<b>这东西究竟经历过什么,我该不该接。</b></p>
-    <p class="q">你要交回去的,是一份说得出根据的判断:你查到了什么、据此能说到哪一步、
-      以及哪些地方你还不敢说。</p>
-    <p>手上这只碗的疑点是:<b>它像是被大改过</b>。要把这件事说实,有两条路 ——
-      一条靠翻纸面记录,一条靠查实物本身。两条都能走通,也可以混着走;
-      走哪条取决于你的步数花在哪边。</p>
-    <ul>
-      <li>左边先列的是<b>可以下手的位置和路子,不是具体动作</b>。点开一处,才会看到这里能用的具体手段;上半对着碗本身看,下半查档案、送化验、比真品。</li>
-      <li>每用一个手段<b>占 1 步</b>,步数是你唯一会用完的东西。花不花钱另算,只记账,不设上限。</li>
-      <li>中间那张图是<b>你查到的东西和它们之间的关系</b>,系统会自动替你连线,不额外收费。</li>
-      <li>右边告诉你<b>现在有哪些东西悬着</b>,等你决定下一步。它不会替你排先后。</li>
-      <li>什么时候够了由你说 —— 按「收手」交差。左上那行会告诉你,以现在手上的东西你能说到什么程度。</li>
+    <p>你受人委托,替一位准备接手这只碗的人先看明白。</p>
+    <p class="q">你要回答的是:<b>它经历过什么,该不该接?</b> 判断要说得出根据,也要说明哪些地方还不敢说。</p>
+    <ul class="brief-core">
+      <li>每用一个手段<b>占 1 步</b>;钱只记账,不限制你调查。</li>
+      <li>觉得证据已经够了,就按右上角<b>「收手」</b>,由你亲自结束调查。</li>
     </ul>
-    <p>有些情报刚买回来是读不出结论的,得等另一样东西到手才变得有用。这是常态,不是你买错了。</p>
+    <details>
+      <summary>这三栏怎么配合</summary>
+      <div class="brief-detail">
+        <p>手上这只碗的疑点是:<b>它像是被大改过</b>。要把这件事说实,有两条路 ——
+          一条靠翻纸面记录,一条靠查实物本身。两条都能走通,也可以混着走;
+          走哪条取决于你的步数花在哪边。</p>
+        <ul>
+          <li>左边先列的是<b>可以下手的位置和路子,不是具体动作</b>。点开一处,才会看到这里能用的具体手段;上半对着碗本身看,下半查档案、送化验、比真品。</li>
+          <li>中间那张图是<b>你查到的东西和它们之间的关系</b>,系统会自动替你连线,不额外收费。</li>
+          <li>右边列着<b>五件可以穿插着查的事</b>。点左边一处,中间和右边会一起只亮相关内容;它不会替你排先后。</li>
+        </ul>
+      </div>
+    </details>
+    <details>
+      <summary>为什么有些情报暂时没用</summary>
+      <div class="brief-detail">
+        <p>有些情报刚买回来是读不出结论的,得等另一样东西到手才变得有用。这是常态,不是你买错了。</p>
+      </div>
+    </details>
     <button class="go2" id="bgo">接了这活</button>
   </div>
 </div>
@@ -328,7 +429,10 @@ const STAMP = {
     "CASE": "7F078BC68394B9238783080EE72E6DEC2CE514EA962829668A4443041805AA05",
     "SEMANTICS": "397EAB3305DCE9EE5BF7E996B4C4E0C1CA081FF29BE0C2F54F6B5524CC85D833",
     "SESSION": "83D1DD707F9A4ACCFEB162C299387DFE3BEB6A720045C8E09A22939FDD0B1351",
-    "PROJECTION": "813364B256C5FE987BC95BFCF18BA05711DDF98276BBC9D284D3AAEEAA06417F"
+    "PROJECTION": "6DBD20E637345B77826CCBC911E337D92E1C59907DE3617497B05E5E5725C1A5",
+    "PARAMS": "3318359108A459422EE0D250A7947D07B7106E8FC5953641763AB7EA057AD358",
+    "LAYOUT": "F18F07FC37795DB648F6AA817AE09625BCA053AE9D3283A0A1D7F358F02D20F5",
+    "FOCUS": "4D2326EF27093310135BF46DA51FD4FC2A038A4F7BD65B92242DC15AAD22301B"
   },
   "exports": {
     "FIXTURES": 13,
@@ -336,7 +440,10 @@ const STAMP = {
     "CASE": 5,
     "SEMANTICS": 6,
     "SESSION": 10,
-    "PROJECTION": 14
+    "PROJECTION": 16,
+    "PARAMS": 2,
+    "LAYOUT": 9,
+    "FOCUS": 16
   }
 };
 /* ==== FIXTURES ==== */
@@ -4740,12 +4847,12 @@ return { BUDGET_MIN, BUDGET_MAX, BUDGET_DEFAULT, clampBudget, newSession, setBud
 const PROJECTION = (() => {
 /* 心智地图与决策面的投影层。
    DEC-032 的结构不在冻结求解器的模型里,所以这一层在它外面,把求解器输出翻译成
-   「观察 → 逻辑边 → 局部 Finding → 公理」。冻结文件一个字节都不改。
+   「观察 → 议题归类／逻辑边 → 已查实结论」。冻结文件一个字节都不改。
 
    拓扑(每一层都能在冻结数据里指出出处):
      观察节点     = solved.evidence.observationIds        —— 玩家花机会挣来的
-     逻辑边       = 四种既有关系,见下 EDGE_KINDS         —— 系统免费自动生成
-     局部 Finding = 同一潜变量上聚起 ≥2 条观察时自动成形  —— 系统免费自动生成
+     逻辑边       = 前置／接住／支持三种可追踪关系          —— 系统免费自动生成
+     议题归类     = 同一潜变量上聚起 ≥2 条已取得内容        —— 只作分组,不是结论
      公理         = 已成立且无争议的主张,钉住不动         —— 从决策面离场,留在全图
      G            不进地图,只作一行读数(DEC-032 第十节)
 
@@ -4858,12 +4965,34 @@ const ARCHIVE_GROUP_LABEL = { t2: "事故那一组记录", t3: "后期处理那�
    上下左右猜哪头是前提,猜反了就去点点不了的东西,然后当成 bug。
    句子也照方向写,不再用「悬空／被接住」这种他明说想象不出画面的说法。 */
 const EDGE_KINDS = {
-  latent: "两头讲的是同一件事",
   prereq: "箭尾那条先到手,箭头那条才拿得到",
   caught: "箭尾这条后来到手,才让箭头那条有了意义",
 };
-/* 哪些边有方向。latent 是对称关系,画箭头反而会让玩家以为有先后。 */
+/* 地图上的关系都有方向。共享潜变量只作议题归类,不再渲染成边。 */
 const EDGE_DIRECTED = new Set(["prereq", "caught", "supports"]);
+
+/* 议题标题刻意短于原有 latent 说明。它只回答「这些内容在谈哪件事」,
+   不替玩家判断内容是否可用、相容,更不冒充系统已经推出的结论。 */
+const TOPIC_LABEL = {
+  "latent.current-craft": "制作方式",
+  "latent.repair-map": "修补位置",
+  "latent.surface-map": "表面处理",
+  "latent.region-map": "关键处材料",
+  "latent.object-match": "是不是同一只",
+  "latent.accident-event": "事故记录",
+  "latent.archive-t2-object-relation": "事故记录与这只碗",
+  "latent.archive-t2-event-relation": "事故记录与实物",
+  "latent.pre-accident-reading": "出事前的样子",
+  "latent.documented-cross-time": "前后发生的变化",
+  "latent.treatment-scope": "后期处理范围",
+  "latent.archive-t3-object-relation": "后期记录与这只碗",
+  "latent.archive-t3-event-relation": "后期记录与实物",
+  "latent.condition-session": "现在是否稳妥",
+  "latent.event-chain": "经手来路",
+};
+
+const TOPIC_SUMMARY =
+  "这些内容在回答同一个问题；有的可能暂时不能当证据,也可能彼此矛盾。这里是归类,不是结论。";
 
 /* ================= 心智地图 ================= */
 function mentalMap(solved) {
@@ -4894,26 +5023,28 @@ function mentalMap(solved) {
     };
   });
 
-  /* --- 局部 Finding:同一潜变量上聚起 ≥2 条观察时自动成形 --- */
+  /* --- 议题:同一潜变量上聚起 ≥2 条已取得内容时显现 ---
+     suspended／negative 仍是玩家已经取得的内容。旧 Finding 排除 suspended 是因为
+     它假装在做推论；议题只做归类,所以必须如实把这些内容也收进来,节点本身的状态不变。 */
   const byLatent = new Map();
   for (const n of nodes) {
-    if (n.state === "suspended") continue; /* 悬空的还没接上,不算进 Finding */
     for (const L of n.latents) {
       if (!byLatent.has(L)) byLatent.set(L, []);
       byLatent.get(L).push(n.id);
     }
   }
-  const findings = [];
+  const topics = [];
   for (const [L, members] of byLatent) {
     if (members.length < 2) continue;
     const sem = LATENT_SEMANTICS[L];
-    findings.push({
-      type: "finding", id: "F:" + L, latentId: L,
-      short: sem?.name ?? L, gist: sem?.meaning ?? "",
-      members: [...members].sort(),
+    topics.push({
+      type: "topic", id: "T:" + L, latentId: L,
+      short: TOPIC_LABEL[L] ?? sem?.name ?? "相关内容",
+      summary: TOPIC_SUMMARY,
+      memberIds: [...new Set(members)].sort(),
     });
   }
-  findings.sort((a, b) => a.id.localeCompare(b.id));
+  topics.sort((a, b) => a.id.localeCompare(b.id));
 
   /* --- 逻辑边 --- */
   const edges = [];
@@ -4925,13 +5056,7 @@ function mentalMap(solved) {
     edges.push({ from, to, kind, note });
   };
 
-  /* 1. latent:观察 → 它所属的局部 Finding */
-  for (const f of findings) {
-    for (const m of f.members) push(m, f.id, "latent", f.short);
-  }
-  /* 潜变量上只有一条观察时不连边 —— 玩家还没有那个 Finding,图上就不该有它。 */
-
-  /* 2. prereq:B 的获取前置由 A 的事实满足 */
+  /* 1. prereq:B 的获取前置由 A 的事实满足 */
   const factWitnesses = solved.coverage.factWitnesses ?? {};
   for (const id of obsIds) {
     const ev = EVENT_BY_OBS.get(id);
@@ -4944,7 +5069,7 @@ function mentalMap(solved) {
     }
   }
 
-  /* 3. caught:谁把悬空的那条接住了 */
+  /* 2. caught:谁把悬空的那条接住了 */
   const caw = solved.coverage.contextActivationWitnesses ?? {};
   for (const [obsId, info] of Object.entries(caw)) {
     if (!has.has(obsId)) continue;
@@ -4979,7 +5104,7 @@ function mentalMap(solved) {
     for (const m of ax.supports) if (has.has(m)) push(m, ax.id, "supports", ax.short);
   }
 
-  return { nodes, findings, axioms, edges, components: components(nodes, findings, axioms, edges) };
+  return { nodes, topics, axioms, edges, components: components(nodes, topics, axioms, edges) };
 }
 
 /* 哪些观察在支撑某个主张:proofWitnesses 给槽位 → 事实,factWitnesses 给事实 → 观察。
@@ -4995,12 +5120,44 @@ function claimSupporters(solved, claimId) {
   return [...out].sort();
 }
 
+/* 决策面仍沿用旧 Finding 时代的语义连通口径:只有非 suspended 的同议题内容
+   达到两条时才互相接通。视觉议题可以诚实收纳 suspended／negative,但不能借此
+   偷偷改变右侧「孤立小簇」的规则与稳定 ID。 */
+function decisionTopicMembers(topic, nodeById) {
+  return topic.memberIds.filter((id) => nodeById.has(id) && nodeById.get(id).state !== "suspended");
+}
+
+function legacyComponentMeta(component, topics, nodeById) {
+  const members = new Set(component);
+  const legacyMarkers = topics
+    .filter((topic) => {
+      const active = decisionTopicMembers(topic, nodeById);
+      return active.length >= 2 && active.every((id) => members.has(id));
+    })
+    /* 仅用于保持旧 decisionSurface 的岛屿 ID／排序；不是图节点,不进入 nodes／edges。 */
+    .map((topic) => "F:" + topic.latentId);
+  const legacyIds = [...component, ...legacyMarkers].sort();
+  return { first: legacyIds[0] ?? "", size: legacyIds.length };
+}
+
 /* 连通分量。用来找 DEC-032 决策面第四类「孤立小簇」。 */
-function components(nodes, findings, axioms, edges) {
-  const ids = [...nodes.map((n) => n.id), ...findings.map((f) => f.id), ...axioms.map((a) => a.id)];
+function components(nodes, topics, axioms, edges) {
+  const ids = [...nodes.map((n) => n.id), ...axioms.map((a) => a.id)];
+  const nodeById = new Map(nodes.map((n) => [n.id, n]));
   const adj = new Map(ids.map((i) => [i, []]));
   for (const e of edges) {
     if (adj.has(e.from) && adj.has(e.to)) { adj.get(e.from).push(e.to); adj.get(e.to).push(e.from); }
+  }
+  /* 议题不是节点也没有可见边。这里只用旧规则认可的成员做 union,
+     让视觉归类变宽时不连带改变判题。 */
+  for (const topic of topics) {
+    const members = decisionTopicMembers(topic, nodeById);
+    if (members.length < 2) continue;
+    const pivot = members[0];
+    for (const member of members.slice(1)) {
+      adj.get(pivot).push(member);
+      adj.get(member).push(pivot);
+    }
   }
   const seen = new Set(); const comps = [];
   for (const i of ids) {
@@ -5013,7 +5170,11 @@ function components(nodes, findings, axioms, edges) {
     }
     comps.push(comp.sort());
   }
-  comps.sort((a, b) => b.length - a.length || a[0].localeCompare(b[0]));
+  comps.sort((a, b) => {
+    const aa = legacyComponentMeta(a, topics, nodeById);
+    const bb = legacyComponentMeta(b, topics, nodeById);
+    return bb.size - aa.size || aa.first.localeCompare(bb.first);
+  });
   return comps;
 }
 
@@ -5198,7 +5359,7 @@ function decisionSurface(solved, workbenchRows) {
     const suspended = new Set([...solved.evidence.inactiveObservationIds]);
     if (obsMembers.every((x) => suspended.has(x))) continue; /* 已在第一类里说过 */
     items.push({
-      kind: "island", id: "I:" + comp[0],
+      kind: "island", id: "I:" + legacyComponentMeta(comp, map.topics, nodeById).first,
       title: obsMembers.map((x) => nodeById.get(x).short).join("、") + " 还是一座孤岛",
       body: comp.length === 1
         ? "这条自己站得住,但还没有和别的东西发生关系。也可能它本来就相对独立 —— 离散不是缺陷。"
@@ -5225,7 +5386,7 @@ function decisionSurface(solved, workbenchRows) {
     : null;
 
   return { items, clear, clearLine, axioms: map.axioms, axiomLines, map,
-           mainComponentSize: main?.length ?? 0 };
+           mainComponentSize: main ? legacyComponentMeta(main, map.topics, nodeById).size : 0 };
 }
 
 /* 某槽位要哪些事实 → 哪些手段产出这些事实。
@@ -5321,7 +5482,1959 @@ function readout(solved, session) {
   };
 }
 
-return { OBS_LABEL, CLAIM_LABEL, CLAIM_NOT_ON_MAP, SLOT_LABEL, ARCHIVE_REL_LABEL, ARCHIVE_REL_STATE, ARCHIVE_GROUP_LABEL, EDGE_KINDS, EDGE_DIRECTED, mentalMap, claimSupporters, decisionSurface, SLOT_FACTS, readout };
+return { OBS_LABEL, CLAIM_LABEL, CLAIM_NOT_ON_MAP, SLOT_LABEL, ARCHIVE_REL_LABEL, ARCHIVE_REL_STATE, ARCHIVE_GROUP_LABEL, EDGE_KINDS, EDGE_DIRECTED, TOPIC_LABEL, TOPIC_SUMMARY, mentalMap, claimSupporters, decisionSurface, SLOT_FACTS, readout };
+})();
+
+/* ==== PARAMS ==== */
+const PARAMS = (() => {
+/*
+ * Experimental defaults for layout-probe-v1 only.
+ *
+ * These values are deliberately collected in one place. They are not product
+ * defaults and may be changed or discarded after visual comparison.
+ */
+const EXPERIMENTAL_PARAMS = Object.freeze({
+  canvas: Object.freeze({ width: 1400, height: 920, margin: 24 }),
+  labels: Object.freeze({
+    chineseGlyphWidth: 11.6,
+    latinGlyphWidth: 6.4,
+    lineHeight: 14,
+    obsWrap: 12,
+    findingWrap: 15,
+    axiomWrap: 18,
+    horizontalPadding: 14,
+    collisionPadding: 10,
+    roundingSafety: 0.5,
+  }),
+  solve: Object.freeze({
+    forceIterations: 520,
+    collisionPasses: 180,
+    crossingPassesPerStep: 2,
+    localStepSizes: Object.freeze([64, 40, 24, 14, 8]),
+    edgeLabelRepairPasses: 28,
+    edgeLabelRepairSteps: Object.freeze([26, 42, 64]),
+    maximumForceStep: 18,
+    finalMaximumForceStep: 4,
+  }),
+  springs: Object.freeze({
+    latent: Object.freeze({ ideal: 156, strength: 0.078 }),
+    caught: Object.freeze({ ideal: 164, strength: 0.084 }),
+    prereq: Object.freeze({ ideal: 188, strength: 0.054 }),
+    supports: Object.freeze({
+      ideal: 142,
+      strength: 0.150,
+      longThreshold: 225,
+      longStrength: 0.120,
+      degreeFloor: 0.42,
+    }),
+  }),
+  spacing: Object.freeze({
+    repulsion: 41000,
+    overlapPush: 0.52,
+    centreGravity: 0.0014,
+  }),
+  stability: Object.freeze({
+    newNodeMobility: 1,
+    changedNodeMobility: 0.78,
+    neighbourMobility: 0.50,
+    remoteNodeMobility: 0.22,
+    changedAnchor: 0.004,
+    neighbourAnchor: 0.012,
+    remoteAnchor: 0.030,
+    movementMetricThreshold: 12,
+  }),
+  objective: Object.freeze({
+    crossingPenalty: 7200,
+    shallowCrossingPenalty: 3000,
+    edgeLabelPenalty: 11000,
+    overlapPenalty: 24000,
+    boundaryPenalty: 24000,
+    stabilityPenaltyScale: 0.20,
+    unrelatedCrowdingDistance: 88,
+    unrelatedCrowdingPenalty: 0.55,
+  }),
+});
+
+const CANVAS = EXPERIMENTAL_PARAMS.canvas;
+
+return { EXPERIMENTAL_PARAMS, CANVAS };
+})();
+
+/* ==== LAYOUT ==== */
+const LAYOUT = (() => {
+/* Deterministic, conclusion-attracted constellation layout for this probe. */
+const { EXPERIMENTAL_PARAMS } = PARAMS;
+
+const P = EXPERIMENTAL_PARAMS;
+
+const CANVAS = P.canvas;
+
+const EDGE_KINDS = new Set(["latent", "prereq", "caught", "supports"]);
+const DIRECTED_KINDS = new Set(["prereq", "caught", "supports"]);
+
+/*
+ * The large-scale shape is a dependency constellation, not a timeline.  These
+ * values describe invisible semantic bands; nodes remain free to move inside
+ * each band and no band is rendered by the UI.
+ */
+const HIERARCHY = Object.freeze({
+  rankGap: 116,
+  bandSlack: 16,
+  bandExtent: 48,
+  minimumDirectedDrop: 48,
+  rankForce: 0.090,
+  topicForce: 0.030,
+  topicIdeal: 104,
+  oldAnchorScale: 0.12,
+  minimumOldMobility: 0.58,
+  orderingSweeps: 10,
+});
+
+function allNodes(graph) {
+  /* Topics are semantic group labels, not graph vertices.  Keeping them out of
+     the position set is what prevents the old yellow hub-and-spoke geometry
+     from reappearing under a different name. */
+  return [...(graph.nodes ?? []), ...(graph.axioms ?? [])];
+}
+
+/*
+ * The workbench's first animation beat temporarily stages newly-created nodes
+ * beside the clicked action. Only ids that existed in the previous graph may
+ * become soft anchors for the second-beat solve.
+ */
+function previousPositionsForGraph(previousPositions = {}, previousGraph = null) {
+  if (!previousGraph) return {};
+  const previousIds = new Set(allNodes(previousGraph).map((node) => node.id));
+  return Object.fromEntries(
+    Object.entries(previousPositions).filter(([id]) => previousIds.has(id)),
+  );
+}
+
+function edgeKey(edge) {
+  return `${edge.kind}:${edge.from}>${edge.to}`;
+}
+
+function hash32(value) {
+  let hash = 2166136261;
+  for (const character of String(value)) {
+    hash ^= character.codePointAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function hashAngle(value) {
+  return (hash32(value) / 0xffffffff) * Math.PI * 2;
+}
+
+function estimatedTextWidth(text) {
+  let width = 0;
+  for (const character of String(text)) {
+    width += character.codePointAt(0) > 255
+      ? P.labels.chineseGlyphWidth
+      : P.labels.latinGlyphWidth;
+  }
+  return width;
+}
+
+function wrapLabel(node) {
+  const limit = node.type === "obs"
+    ? P.labels.obsWrap
+    : node.type === "finding"
+      ? P.labels.findingWrap
+      : P.labels.axiomWrap;
+  const characters = [...String(node.short)];
+  const lines = [];
+  for (let index = 0; index < characters.length; index += limit) {
+    lines.push(characters.slice(index, index + limit).join(""));
+  }
+  return lines.length ? lines : [""];
+}
+
+function nodeFootprint(node) {
+  const labelLines = wrapLabel(node);
+  const labelWidth = Math.max(...labelLines.map(estimatedTextWidth), 28);
+  const labelY = -18 - (labelLines.length - 1) * P.labels.lineHeight;
+  const top = labelY - 11;
+  const bottom = node.type === "finding" ? 13 : 12;
+  const width = Math.max(
+    node.type === "axiom" ? 30 : 28,
+    labelWidth + P.labels.horizontalPadding,
+  );
+  const height = bottom - top + P.labels.collisionPadding;
+  return {
+    width,
+    height,
+    boxOffsetX: 0,
+    boxOffsetY: (top + bottom) / 2,
+    labelLines,
+    labelY,
+  };
+}
+
+function collisionCenter(point) {
+  return {
+    x: point.x + (point.boxOffsetX ?? 0),
+    y: point.y + (point.boxOffsetY ?? 0),
+  };
+}
+
+function bounds(point, padding = 0) {
+  const center = collisionCenter(point);
+  return {
+    left: center.x - point.width / 2 - padding,
+    right: center.x + point.width / 2 + padding,
+    top: center.y - point.height / 2 - padding,
+    bottom: center.y + point.height / 2 + padding,
+  };
+}
+
+function rectanglesOverlap(a, b, padding = P.labels.collisionPadding) {
+  const aa = bounds(a, padding / 2);
+  const bb = bounds(b, padding / 2);
+  return !(aa.right <= bb.left || bb.right <= aa.left || aa.bottom <= bb.top || bb.bottom <= aa.top);
+}
+
+function clonePositions(input = {}) {
+  return new Map(Object.entries(input).map(([id, point]) => [id, { ...point }]));
+}
+
+function clampPoint(point, width, height) {
+  const box = bounds(point);
+  if (box.left < P.canvas.margin) point.x += P.canvas.margin - box.left;
+  if (box.right > width - P.canvas.margin) point.x -= box.right - (width - P.canvas.margin);
+  if (box.top < P.canvas.margin) point.y += P.canvas.margin - box.top;
+  if (box.bottom > height - P.canvas.margin) point.y -= box.bottom - (height - P.canvas.margin);
+}
+
+function sortedGraph(graph) {
+  return {
+    nodes: allNodes(graph).slice().sort((a, b) => a.id.localeCompare(b.id)),
+    edges: graph.edges.slice().sort((a, b) => edgeKey(a).localeCompare(edgeKey(b))),
+  };
+}
+
+function adjacencyFor(nodes, edges) {
+  const adjacency = new Map(nodes.map((node) => [node.id, new Set()]));
+  for (const edge of edges) {
+    adjacency.get(edge.from)?.add(edge.to);
+    adjacency.get(edge.to)?.add(edge.from);
+  }
+  return adjacency;
+}
+
+function supportDegrees(edges) {
+  const degrees = new Map();
+  for (const edge of edges) {
+    if (edge.kind !== "supports") continue;
+    degrees.set(edge.from, (degrees.get(edge.from) ?? 0) + 1);
+    degrees.set(edge.to, (degrees.get(edge.to) ?? 0) + 1);
+  }
+  return degrees;
+}
+
+function supportScale(edge, degrees) {
+  /* A conclusion with many supporters is exactly the place where weakening
+     every spring creates the objectionable long spokes.  Each visible support
+     therefore keeps full strength; conclusion placement is balanced by the
+     rank and non-overlap constraints instead. */
+  return 1;
+}
+
+function median(values) {
+  if (!values.length) return 0;
+  const sorted = values.slice().sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+function validDirectedEdges(nodes, edges) {
+  const ids = new Set(nodes.map((node) => node.id));
+  return edges.filter((edge) => DIRECTED_KINDS.has(edge.kind)
+    && ids.has(edge.from) && ids.has(edge.to));
+}
+
+/* Tarjan condensation keeps future cyclic evidence models safe without
+   pretending that an arbitrary member of a cycle comes first. */
+function stronglyConnectedComponents(nodes, edges) {
+  const outgoing = new Map(nodes.map((node) => [node.id, []]));
+  for (const edge of edges) outgoing.get(edge.from)?.push(edge.to);
+  for (const neighbours of outgoing.values()) neighbours.sort();
+  let nextIndex = 0;
+  const index = new Map();
+  const low = new Map();
+  const stack = [];
+  const onStack = new Set();
+  const components = [];
+
+  const visit = (id) => {
+    index.set(id, nextIndex);
+    low.set(id, nextIndex);
+    nextIndex += 1;
+    stack.push(id);
+    onStack.add(id);
+    for (const target of outgoing.get(id) ?? []) {
+      if (!index.has(target)) {
+        visit(target);
+        low.set(id, Math.min(low.get(id), low.get(target)));
+      } else if (onStack.has(target)) {
+        low.set(id, Math.min(low.get(id), index.get(target)));
+      }
+    }
+    if (low.get(id) !== index.get(id)) return;
+    const component = [];
+    while (stack.length) {
+      const member = stack.pop();
+      onStack.delete(member);
+      component.push(member);
+      if (member === id) break;
+    }
+    components.push(component.sort());
+  };
+  for (const node of nodes) if (!index.has(node.id)) visit(node.id);
+  return components.sort((a, b) => a[0].localeCompare(b[0]));
+}
+
+function semanticRanks(nodes, edges) {
+  const directed = validDirectedEdges(nodes, edges);
+  const components = stronglyConnectedComponents(nodes, directed);
+  const componentOf = new Map();
+  components.forEach((component, index) => {
+    for (const id of component) componentOf.set(id, index);
+  });
+  const outgoing = new Map(components.map((_, index) => [index, new Set()]));
+  const incoming = new Map(components.map((_, index) => [index, new Set()]));
+  const indegree = new Map(components.map((_, index) => [index, 0]));
+  for (const edge of directed) {
+    const from = componentOf.get(edge.from);
+    const to = componentOf.get(edge.to);
+    if (from === to || outgoing.get(from).has(to)) continue;
+    outgoing.get(from).add(to);
+    incoming.get(to).add(from);
+    indegree.set(to, indegree.get(to) + 1);
+  }
+  const queue = [...indegree.entries()].filter(([, degree]) => degree === 0)
+    .map(([id]) => id).sort((a, b) => components[a][0].localeCompare(components[b][0]));
+  const topological = [];
+  for (let cursor = 0; cursor < queue.length; cursor += 1) {
+    const from = queue[cursor];
+    topological.push(from);
+    const targets = [...outgoing.get(from)].sort((a, b) => components[a][0].localeCompare(components[b][0]));
+    for (const to of targets) {
+      indegree.set(to, indegree.get(to) - 1);
+      if (indegree.get(to) === 0) queue.push(to);
+    }
+  }
+
+  /* Work backwards from conclusions.  Every item is placed at the latest
+     feasible level: a direct supporter sits one level above its conclusion,
+     while a prerequisite moves upward only as far as the longest remaining
+     dependency path requires.  This minimizes the long support spokes that a
+     source-first rank creates, without turning discovery order into geometry. */
+  const remainingDepth = new Map(components.map((_, index) => [index, 0]));
+  for (const from of topological.slice().reverse()) {
+    for (const to of outgoing.get(from)) {
+      remainingDepth.set(from, Math.max(remainingDepth.get(from), remainingDepth.get(to) + 1));
+    }
+  }
+  const maxDepth = Math.max(0, ...remainingDepth.values());
+  const rank = new Map(nodes.map((node) => {
+    const component = componentOf.get(node.id);
+    return [node.id, maxDepth - (remainingDepth.get(component) ?? 0)];
+  }));
+  const isolated = new Set();
+  components.forEach((component, index) => {
+    if (!outgoing.get(index).size && !incoming.get(index).size) {
+      for (const id of component) isolated.add(id);
+    }
+  });
+  return { rank, directed, maxRank: maxDepth, isolated };
+}
+
+function permutations(values) {
+  if (values.length < 2) return [values.slice()];
+  const output = [];
+  values.forEach((value, index) => {
+    const rest = [...values.slice(0, index), ...values.slice(index + 1)];
+    for (const tail of permutations(rest)) output.push([value, ...tail]);
+  });
+  return output;
+}
+
+/* Conclusions are few (four in the full probe), so exhaustive seriation is
+   both cheap and deterministic.  Shared direct supporters want adjacent sinks;
+   previous x order is only a tie-breaker, never a hard pin. */
+function seriateVisibleSinks(nodes, edges, previousPositions) {
+  const sinks = nodes.filter((node) => node.type === "axiom").map((node) => node.id).sort();
+  if (sinks.length > 7) return sinks;
+  const supporters = new Map(sinks.map((id) => [id, new Set()]));
+  for (const edge of edges) if (edge.kind === "supports" && supporters.has(edge.to)) {
+    supporters.get(edge.to).add(edge.from);
+  }
+  const previousOrder = sinks.filter((id) => previousPositions[id])
+    .sort((a, b) => previousPositions[a].x - previousPositions[b].x);
+  const oldIndex = new Map(previousOrder.map((id, index) => [id, index]));
+  let best = null;
+  for (const order of permutations(sinks)) {
+    const at = new Map(order.map((id, index) => [id, index]));
+    let affinityCost = 0;
+    for (let left = 0; left < sinks.length; left += 1) {
+      for (let right = left + 1; right < sinks.length; right += 1) {
+        let shared = 0;
+        for (const id of supporters.get(sinks[left])) if (supporters.get(sinks[right]).has(id)) shared += 1;
+        affinityCost += shared * Math.abs(at.get(sinks[left]) - at.get(sinks[right]));
+      }
+    }
+    let stabilityCost = 0;
+    for (const id of previousOrder) stabilityCost += Math.abs(at.get(id) - oldIndex.get(id));
+    const lexical = order.join("|");
+    const candidate = { order, affinityCost, stabilityCost, lexical };
+    if (!best
+      || candidate.affinityCost < best.affinityCost
+      || (candidate.affinityCost === best.affinityCost && candidate.stabilityCost < best.stabilityCost)
+      || (candidate.affinityCost === best.affinityCost && candidate.stabilityCost === best.stabilityCost
+        && candidate.lexical < best.lexical)) best = candidate;
+  }
+  return best?.order ?? sinks;
+}
+
+function reachableSinks(nodes, directed, sinkIds) {
+  const sinks = new Set(sinkIds);
+  const outgoing = new Map(nodes.map((node) => [node.id, []]));
+  for (const edge of directed) outgoing.get(edge.from)?.push(edge.to);
+  const memo = new Map();
+  const visit = (id, active = new Set()) => {
+    if (memo.has(id)) return memo.get(id);
+    if (active.has(id)) return new Set();
+    const nextActive = new Set(active).add(id);
+    const result = new Set(sinks.has(id) ? [id] : []);
+    for (const target of outgoing.get(id) ?? []) for (const sink of visit(target, nextActive)) result.add(sink);
+    memo.set(id, result);
+    return result;
+  };
+  for (const node of nodes) visit(node.id);
+  return memo;
+}
+
+function topicPairs(graph, nodeIds) {
+  const output = [];
+  for (const topic of graph.topics ?? []) {
+    const members = (topic.memberIds ?? []).filter((id) => nodeIds.has(id)).sort();
+    for (let left = 0; left < members.length; left += 1) {
+      for (let right = left + 1; right < members.length; right += 1) {
+        output.push([members[left], members[right], topic.id]);
+      }
+    }
+  }
+  return output;
+}
+
+function hierarchyModel(graph, nodes, edges, previousPositions, width, height) {
+  const ranked = semanticRanks(nodes, edges);
+  const { rank, directed, maxRank, isolated } = ranked;
+  const ids = new Set(nodes.map((node) => node.id));
+  const topics = topicPairs(graph, ids);
+  for (const id of isolated) {
+    const relatedRanks = topics
+      .filter(([left, right]) => left === id || right === id)
+      .map(([left, right]) => left === id ? right : left)
+      .filter((other) => !isolated.has(other))
+      .map((other) => rank.get(other));
+    rank.set(id, relatedRanks.length ? Math.round(median(relatedRanks)) : Math.max(0, maxRank - 1));
+  }
+  const sinkOrder = seriateVisibleSinks(nodes, directed, previousPositions);
+  const sinkX = new Map();
+  const left = Math.max(P.canvas.margin + 90, width * 0.26);
+  const right = Math.min(width - P.canvas.margin - 90, width * 0.74);
+  sinkOrder.forEach((id, index) => {
+    const fraction = sinkOrder.length < 2 ? 0.5 : index / (sinkOrder.length - 1);
+    sinkX.set(id, left + (right - left) * fraction);
+  });
+  const reachable = reachableSinks(nodes, directed, sinkOrder);
+  const directSinks = new Map(nodes.map((node) => [node.id, []]));
+  for (const edge of directed) if (edge.kind === "supports" && sinkX.has(edge.to)) {
+    directSinks.get(edge.from)?.push(edge.to);
+  }
+  const centreY = height / 2 + 34;
+  const span = maxRank * HIERARCHY.rankGap;
+  const firstY = centreY - span / 2;
+  const targetY = new Map(nodes.map((node) => [node.id, firstY + rank.get(node.id) * HIERARCHY.rankGap]));
+  const targetX = new Map();
+  for (const node of nodes) {
+    if (sinkX.has(node.id)) {
+      targetX.set(node.id, sinkX.get(node.id));
+      continue;
+    }
+    const targets = directSinks.get(node.id)?.length
+      ? directSinks.get(node.id)
+      : [...(reachable.get(node.id) ?? [])];
+    targetX.set(node.id, targets.length
+      ? median(targets.map((id) => sinkX.get(id)))
+      : width * (0.22 + (hash32(`${node.id}:column`) % 5600) / 10000));
+  }
+
+  /* Barycentric sweeps use only visible directed adjacency plus topic
+     membership.  They alter order inside a semantic band, never the band. */
+  const neighbours = new Map(nodes.map((node) => [node.id, new Set()]));
+  for (const edge of directed) {
+    neighbours.get(edge.from)?.add(edge.to);
+    neighbours.get(edge.to)?.add(edge.from);
+  }
+  for (const [a, b] of topics) {
+    neighbours.get(a)?.add(b);
+    neighbours.get(b)?.add(a);
+  }
+  const ranks = new Map();
+  for (const node of nodes) {
+    const value = rank.get(node.id);
+    if (!ranks.has(value)) ranks.set(value, []);
+    ranks.get(value).push(node.id);
+  }
+  for (const members of ranks.values()) members.sort((a, b) => targetX.get(a) - targetX.get(b) || a.localeCompare(b));
+  for (let sweep = 0; sweep < HIERARCHY.orderingSweeps; sweep += 1) {
+    const order = sweep % 2 === 0
+      ? [...ranks.keys()].sort((a, b) => a - b)
+      : [...ranks.keys()].sort((a, b) => b - a);
+    for (const value of order) {
+      const members = ranks.get(value);
+      const oldIndex = new Map(members.map((id, index) => [id, index]));
+      const bars = new Map();
+      for (const id of members) {
+        const values = [...neighbours.get(id)].map((other) => targetX.get(other)).filter(Number.isFinite);
+        bars.set(id, values.length ? median(values) : targetX.get(id));
+      }
+      members.sort((a, b) => {
+        return bars.get(a) - bars.get(b) || oldIndex.get(a) - oldIndex.get(b) || a.localeCompare(b);
+      });
+      members.forEach((id, index) => {
+        if (sinkX.has(id)) return;
+        const orderNudge = (index - (members.length - 1) / 2) * 2.5;
+        targetX.set(id, targetX.get(id) * 0.70 + bars.get(id) * 0.30 + orderNudge);
+      });
+    }
+  }
+  return { rank, maxRank, directed, targetX, targetY, topics };
+}
+
+function changedNeighbourhood(nodes, edges, previousGraph, newIds) {
+  const changed = new Set(newIds);
+  const oldEdges = new Set((previousGraph?.edges ?? []).map(edgeKey));
+  const currentEdges = new Set(edges.map(edgeKey));
+  for (const edge of edges) {
+    if (oldEdges.has(edgeKey(edge))) continue;
+    changed.add(edge.from);
+    changed.add(edge.to);
+  }
+  for (const edge of previousGraph?.edges ?? []) {
+    if (currentEdges.has(edgeKey(edge))) continue;
+    changed.add(edge.from);
+    changed.add(edge.to);
+  }
+  const adjacency = adjacencyFor(nodes, edges);
+  const neighbours = new Set();
+  for (const id of changed) {
+    for (const neighbour of adjacency.get(id) ?? []) {
+      if (!changed.has(neighbour)) neighbours.add(neighbour);
+    }
+  }
+  return { changed, neighbours, adjacency };
+}
+
+function seedPoint(node, positions, edges, width, height) {
+  const neighbours = [];
+  const supportTargets = [];
+  for (const edge of edges) {
+    let other = null;
+    if (edge.from === node.id) other = edge.to;
+    else if (edge.to === node.id) other = edge.from;
+    if (!other || !positions.has(other)) continue;
+    const point = positions.get(other);
+    neighbours.push(point);
+    if (edge.kind === "supports") supportTargets.push(point);
+  }
+  const preferred = supportTargets.length ? supportTargets : neighbours;
+  const angle = hashAngle(node.id);
+  if (preferred.length) {
+    const center = preferred.reduce(
+      (sum, point) => ({ x: sum.x + point.x, y: sum.y + point.y }),
+      { x: 0, y: 0 },
+    );
+    center.x /= preferred.length;
+    center.y /= preferred.length;
+    const radius = P.springs.supports.ideal * (supportTargets.length ? 0.58 : 0.72);
+    return { x: center.x + Math.cos(angle) * radius, y: center.y + Math.sin(angle) * radius };
+  }
+  const radius = Math.min(width, height) * (0.12 + (hash32(`${node.id}:radius`) % 100) / 500);
+  return {
+    x: width / 2 + Math.cos(angle) * radius,
+    y: height / 2 + Math.sin(angle) * radius,
+  };
+}
+
+function rankedSeedPoint(node, model, width, height) {
+  const angle = hashAngle(`${node.id}:rank-seed`);
+  const xJitter = Math.cos(angle) * 54;
+  const yJitter = Math.sin(angle) * HIERARCHY.bandSlack;
+  return {
+    x: Math.max(P.canvas.margin, Math.min(width - P.canvas.margin,
+      (model.targetX.get(node.id) ?? width / 2) + xJitter)),
+    y: Math.max(P.canvas.margin, Math.min(height - P.canvas.margin,
+      (model.targetY.get(node.id) ?? height / 2) + yJitter)),
+  };
+}
+
+function addForce(forceX, forceY, id, x, y) {
+  forceX.set(id, forceX.get(id) + x);
+  forceY.set(id, forceY.get(id) + y);
+}
+
+function projectDirectedConstraints(model, positions, mobility, width, height) {
+  for (let pass = 0; pass < Math.max(2, model.maxRank + 1); pass += 1) {
+    let changed = false;
+    for (const edge of model.directed) {
+      const from = positions.get(edge.from);
+      const to = positions.get(edge.to);
+      if (!from || !to) continue;
+      const missing = HIERARCHY.minimumDirectedDrop - (to.y - from.y);
+      if (missing <= 0) continue;
+      changed = true;
+      const fromMobility = Math.max(0.1, mobility.get(edge.from) ?? 1);
+      const toMobility = Math.max(0.1, mobility.get(edge.to) ?? 1);
+      const total = fromMobility + toMobility;
+      from.y -= missing * (fromMobility / total);
+      to.y += missing * (toMobility / total);
+      clampPoint(from, width, height);
+      clampPoint(to, width, height);
+    }
+    if (!changed) break;
+  }
+}
+
+function directedViolationCount(model, positions) {
+  let violations = 0;
+  for (const edge of model.directed) {
+    const from = positions.get(edge.from);
+    const to = positions.get(edge.to);
+    if (from && to && to.y - from.y < HIERARCHY.minimumDirectedDrop - 0.01) violations += 1;
+  }
+  return violations;
+}
+
+function projectRankBands(model, positions, width, height) {
+  for (const [id, target] of model.targetY) {
+    const point = positions.get(id);
+    if (!point) continue;
+    point.y = Math.max(target - HIERARCHY.bandExtent,
+      Math.min(target + HIERARCHY.bandExtent, point.y));
+    clampPoint(point, width, height);
+  }
+}
+
+function rankBandViolationCount(model, positions) {
+  let violations = 0;
+  for (const [id, target] of model.targetY) {
+    const point = positions.get(id);
+    if (point && Math.abs(point.y - target) > HIERARCHY.bandExtent + 0.01) violations += 1;
+  }
+  return violations;
+}
+
+function settleConstraints(nodes, model, positions, mobility, width, height) {
+  for (let pass = 0; pass < 8; pass += 1) {
+    projectRankBands(model, positions, width, height);
+    projectDirectedConstraints(model, positions, mobility, width, height);
+    resolveCollisions(nodes, positions, mobility, width, height);
+  }
+  projectRankBands(model, positions, width, height);
+  projectDirectedConstraints(model, positions, mobility, width, height);
+}
+
+/* A dense semantic rank may contain more labels than fit on one horizontal
+   line.  The free collision solver used to solve that by throwing members far
+   above or below their logical band, which made direct evidence look several
+   steps away from its conclusion.  Pack each rank into the minimum number of
+   unpainted sub-rows instead.  These are collision rows, not gameplay lanes:
+   they have no labels and never use acquisition order. */
+function packRankBands(nodes, model, positions, width, height) {
+  const margin = P.canvas.margin;
+  const usableWidth = Math.max(1, width - margin * 2);
+  const gap = Math.max(12, P.labels.collisionPadding + 4);
+  const byRank = new Map();
+  for (const node of nodes) {
+    const rank = model.rank.get(node.id) ?? 0;
+    if (!byRank.has(rank)) byRank.set(rank, []);
+    byRank.get(rank).push(node);
+  }
+
+  for (const [rank, members] of byRank) {
+    members.sort((left, right) => {
+      const leftTarget = model.targetX.get(left.id) ?? positions.get(left.id)?.x ?? width / 2;
+      const rightTarget = model.targetX.get(right.id) ?? positions.get(right.id)?.x ?? width / 2;
+      return leftTarget - rightTarget || left.id.localeCompare(right.id);
+    });
+    const requiredWidth = members.reduce((sum, node) => sum + positions.get(node.id).width, 0)
+      + gap * Math.max(0, members.length - 1);
+    const rowCount = Math.max(1, Math.min(3, Math.ceil(requiredWidth / usableWidth)));
+    const rows = Array.from({ length: rowCount }, () => []);
+    members.forEach((node, index) => rows[index % rowCount].push(node));
+    const packedWidth = (row) => row.reduce((sum, node) => sum + positions.get(node.id).width, 0)
+      + gap * Math.max(0, row.length - 1);
+    for (let pass = 0; pass < members.length * 2; pass += 1) {
+      const widths = rows.map(packedWidth);
+      const heavy = widths.indexOf(Math.max(...widths));
+      const light = widths.indexOf(Math.min(...widths));
+      if (widths[heavy] <= usableWidth || heavy === light || rows[heavy].length < 2) break;
+      let bestIndex = -1;
+      let bestMaximum = widths[heavy];
+      rows[heavy].forEach((node, index) => {
+        const nodeWidth = positions.get(node.id).width;
+        const nextHeavy = widths[heavy] - nodeWidth - gap;
+        const nextLight = widths[light] + nodeWidth + (rows[light].length ? gap : 0);
+        const nextMaximum = Math.max(nextHeavy, nextLight);
+        if (nextMaximum < bestMaximum) { bestMaximum = nextMaximum; bestIndex = index; }
+      });
+      if (bestIndex < 0) break;
+      rows[light].push(rows[heavy].splice(bestIndex, 1)[0]);
+    }
+    for (const row of rows) row.sort((left, right) =>
+      (model.targetX.get(left.id) ?? 0) - (model.targetX.get(right.id) ?? 0) || left.id.localeCompare(right.id));
+    const rowStep = rowCount === 1 ? 0 : 78;
+    const rankY = model.targetY.get(members[0]?.id) ?? height / 2;
+
+    rows.forEach((row, rowIndex) => {
+      if (!row.length) return;
+      const desiredY = rankY + (rowIndex - (rowCount - 1) / 2) * rowStep;
+      let cursor = margin;
+      for (const node of row) {
+        const point = positions.get(node.id);
+        const desiredX = model.targetX.get(node.id) ?? point.x;
+        const half = point.width / 2;
+        point.x = Math.max(desiredX, cursor + half);
+        cursor = point.x + half + gap;
+        point.y = desiredY;
+      }
+      cursor = width - margin;
+      for (const node of row.slice().reverse()) {
+        const point = positions.get(node.id);
+        const half = point.width / 2;
+        point.x = Math.min(point.x, cursor - half);
+        cursor = point.x - half - gap;
+      }
+      cursor = margin;
+      for (const node of row) {
+        const point = positions.get(node.id);
+        const half = point.width / 2;
+        point.x = Math.max(point.x, cursor + half);
+        cursor = point.x + half + gap;
+      }
+      for (const node of row) clampPoint(positions.get(node.id), width, height);
+    });
+  }
+  projectDirectedConstraints(model, positions, new Map(nodes.map((node) => [node.id, 1])), width, height);
+}
+
+function settlePackedGeometry(graph, nodes, model, positions, width, height) {
+  const mobility = new Map(nodes.map((node) => [node.id, 1]));
+  for (let pass = 0; pass < 12; pass += 1) {
+    resolveCollisions(nodes, positions, mobility, width, height);
+    projectDirectedConstraints(model, positions, mobility, width, height);
+    const geometry = collectGeometry(graph, Object.fromEntries(positions));
+    if (geometry.overlaps === 0 && directedViolationCount(model, positions) === 0) break;
+  }
+}
+
+function segmentOrientation(a, b, c) {
+  return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+}
+
+function properSegmentsCross(a, b, c, d) {
+  const abC = segmentOrientation(a, b, c);
+  const abD = segmentOrientation(a, b, d);
+  const cdA = segmentOrientation(c, d, a);
+  const cdB = segmentOrientation(c, d, b);
+  return ((abC > 0 && abD < 0) || (abC < 0 && abD > 0))
+    && ((cdA > 0 && cdB < 0) || (cdA < 0 && cdB > 0));
+}
+
+function crossingAngle(a, b, c, d) {
+  const first = { x: b.x - a.x, y: b.y - a.y };
+  const second = { x: d.x - c.x, y: d.y - c.y };
+  const denominator = Math.hypot(first.x, first.y) * Math.hypot(second.x, second.y) || 1;
+  const cosine = Math.max(-1, Math.min(1, Math.abs((first.x * second.x + first.y * second.y) / denominator)));
+  return Math.acos(cosine);
+}
+
+function segmentIntersectsBox(a, b, box) {
+  if ((a.x >= box.left && a.x <= box.right && a.y >= box.top && a.y <= box.bottom)
+    || (b.x >= box.left && b.x <= box.right && b.y >= box.top && b.y <= box.bottom)) return true;
+  const topLeft = { x: box.left, y: box.top };
+  const topRight = { x: box.right, y: box.top };
+  const bottomLeft = { x: box.left, y: box.bottom };
+  const bottomRight = { x: box.right, y: box.bottom };
+  return properSegmentsCross(a, b, topLeft, topRight)
+    || properSegmentsCross(a, b, topRight, bottomRight)
+    || properSegmentsCross(a, b, bottomRight, bottomLeft)
+    || properSegmentsCross(a, b, bottomLeft, topLeft);
+}
+
+function crossingWeight(first, second) {
+  if (first.kind === "supports" && second.kind === "supports") return 0.72;
+  if (first.kind === "supports" || second.kind === "supports") return 1;
+  return 1.28;
+}
+
+function collectGeometry(graph, positions) {
+  const edges = graph.edges.filter((edge) => positions[edge.from] && positions[edge.to]);
+  let crossings = 0;
+  let weightedCrossings = 0;
+  let shallowCrossings = 0;
+  const crossingPairs = [];
+  for (let left = 0; left < edges.length; left += 1) {
+    for (let right = left + 1; right < edges.length; right += 1) {
+      const first = edges[left];
+      const second = edges[right];
+      if (first.from === second.from || first.from === second.to
+        || first.to === second.from || first.to === second.to) continue;
+      const a = positions[first.from];
+      const b = positions[first.to];
+      const c = positions[second.from];
+      const d = positions[second.to];
+      if (!properSegmentsCross(a, b, c, d)) continue;
+      crossings += 1;
+      crossingPairs.push([edgeKey(first), edgeKey(second)]);
+      const weight = crossingWeight(first, second);
+      weightedCrossings += weight;
+      const angle = crossingAngle(a, b, c, d);
+      if (angle < Math.PI / 4) shallowCrossings += (Math.PI / 4 - angle) / (Math.PI / 4);
+    }
+  }
+
+  const nodes = allNodes(graph);
+  let edgeLabelIntersections = 0;
+  const edgeLabelPairs = [];
+  for (const edge of edges) {
+    const from = positions[edge.from];
+    const to = positions[edge.to];
+    for (const node of nodes) {
+      if (node.id === edge.from || node.id === edge.to) continue;
+      const point = positions[node.id];
+      if (point && segmentIntersectsBox(from, to, bounds(point, 2))) {
+        edgeLabelIntersections += 1;
+        edgeLabelPairs.push([edgeKey(edge), node.id]);
+      }
+    }
+  }
+
+  let overlaps = 0;
+  for (let left = 0; left < nodes.length; left += 1) {
+    for (let right = left + 1; right < nodes.length; right += 1) {
+      if (rectanglesOverlap(positions[nodes[left].id], positions[nodes[right].id])) overlaps += 1;
+    }
+  }
+  return {
+    crossings,
+    weightedCrossings,
+    shallowCrossings,
+    edgeLabelIntersections,
+    overlaps,
+    crossingPairs,
+    edgeLabelPairs,
+  };
+}
+
+function layoutDiagnostics(graph, positions) {
+  return collectGeometry(graph, positions);
+}
+
+function percentile(values, fraction) {
+  if (!values.length) return 0;
+  const sorted = values.slice().sort((a, b) => a - b);
+  const index = Math.min(sorted.length - 1, Math.floor((sorted.length - 1) * fraction));
+  return sorted[index];
+}
+
+function layoutMetrics(graph, positions, previousPositions = null) {
+  const supportLengths = graph.edges
+    .filter((edge) => edge.kind === "supports" && positions[edge.from] && positions[edge.to])
+    .map((edge) => Math.hypot(
+      positions[edge.to].x - positions[edge.from].x,
+      positions[edge.to].y - positions[edge.from].y,
+    ));
+  const geometry = collectGeometry(graph, positions);
+  const movement = [];
+  if (previousPositions) {
+    for (const [id, before] of Object.entries(previousPositions)) {
+      const after = positions[id];
+      if (after) movement.push(Math.hypot(after.x - before.x, after.y - before.y));
+    }
+  }
+  const mean = (values) => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+  return {
+    support: {
+      count: supportLengths.length,
+      mean: Number(mean(supportLengths).toFixed(1)),
+      median: Number(percentile(supportLengths, 0.5).toFixed(1)),
+      max: Number(Math.max(0, ...supportLengths).toFixed(1)),
+    },
+    crossings: geometry.crossings,
+    weightedCrossings: Number(geometry.weightedCrossings.toFixed(2)),
+    shallowCrossings: Number(geometry.shallowCrossings.toFixed(2)),
+    edgeLabelIntersections: geometry.edgeLabelIntersections,
+    overlaps: geometry.overlaps,
+    movement: {
+      common: movement.length,
+      mean: Number(mean(movement).toFixed(1)),
+      median: Number(percentile(movement, 0.5).toFixed(1)),
+      max: Number(Math.max(0, ...movement).toFixed(1)),
+      overThreshold: movement.filter((value) => value > P.stability.movementMetricThreshold).length,
+    },
+  };
+}
+
+function stressScore(graph, positions, anchors, anchorStrength) {
+  const degrees = supportDegrees(graph.edges);
+  let score = 0;
+  for (const edge of graph.edges) {
+    const from = positions[edge.from];
+    const to = positions[edge.to];
+    if (!from || !to) continue;
+    const config = P.springs[edge.kind];
+    const distance = Math.hypot(to.x - from.x, to.y - from.y);
+    const delta = distance - config.ideal;
+    score += delta * delta * config.strength * supportScale(edge, degrees);
+    if (edge.kind === "supports" && distance > config.longThreshold) {
+      const long = distance - config.longThreshold;
+      score += long * long * config.longStrength;
+    }
+  }
+  const nodes = allNodes(graph);
+  for (let left = 0; left < nodes.length; left += 1) {
+    for (let right = left + 1; right < nodes.length; right += 1) {
+      const a = positions[nodes[left].id];
+      const b = positions[nodes[right].id];
+      const distance = Math.hypot(a.x - b.x, a.y - b.y);
+      if (distance < P.objective.unrelatedCrowdingDistance) {
+        const deficit = P.objective.unrelatedCrowdingDistance - distance;
+        score += deficit * deficit * P.objective.unrelatedCrowdingPenalty;
+      }
+    }
+  }
+  for (const [id, anchor] of anchors) {
+    const point = positions[id];
+    if (!point) continue;
+    const distanceSquared = (point.x - anchor.x) ** 2 + (point.y - anchor.y) ** 2;
+    score += distanceSquared * (anchorStrength.get(id) ?? 0) * P.objective.stabilityPenaltyScale;
+  }
+  const geometry = collectGeometry(graph, positions);
+  score += geometry.weightedCrossings * P.objective.crossingPenalty;
+  score += geometry.shallowCrossings * P.objective.shallowCrossingPenalty;
+  score += geometry.edgeLabelIntersections * P.objective.edgeLabelPenalty;
+  score += geometry.overlaps * P.objective.overlapPenalty;
+  return score;
+}
+
+function resolveCollisions(nodes, positions, mobility, width, height) {
+  for (let pass = 0; pass < P.solve.collisionPasses; pass += 1) {
+    let collisions = 0;
+    for (let left = 0; left < nodes.length; left += 1) {
+      for (let right = left + 1; right < nodes.length; right += 1) {
+        const a = positions.get(nodes[left].id);
+        const b = positions.get(nodes[right].id);
+        const ac = collisionCenter(a);
+        const bc = collisionCenter(b);
+        const collisionGap = P.labels.collisionPadding + P.labels.roundingSafety;
+        const overlapX = (a.width + b.width) / 2 + collisionGap - Math.abs(ac.x - bc.x);
+        const overlapY = (a.height + b.height) / 2 + collisionGap - Math.abs(ac.y - bc.y);
+        if (overlapX <= 0 || overlapY <= 0) continue;
+        collisions += 1;
+        const aMobility = Math.max(0.08, mobility.get(nodes[left].id) ?? 1);
+        const bMobility = Math.max(0.08, mobility.get(nodes[right].id) ?? 1);
+        const total = aMobility + bMobility;
+        if (overlapX < overlapY) {
+          const direction = ac.x <= bc.x ? -1 : 1;
+          a.x += direction * overlapX * (aMobility / total);
+          b.x -= direction * overlapX * (bMobility / total);
+        } else {
+          const direction = ac.y <= bc.y ? -1 : 1;
+          a.y += direction * overlapY * (aMobility / total);
+          b.y -= direction * overlapY * (bMobility / total);
+        }
+        clampPoint(a, width, height);
+        clampPoint(b, width, height);
+      }
+    }
+    if (!collisions) break;
+  }
+}
+
+function positionsObject(nodes, positions) {
+  const output = {};
+  for (const node of nodes) {
+    const point = positions.get(node.id);
+    output[node.id] = {
+      ...point,
+      x: Number(point.x.toFixed(2)),
+      y: Number(point.y.toFixed(2)),
+      role: node.type,
+    };
+  }
+  return output;
+}
+
+function criticalCrossings(graph, geometry) {
+  const edgeByKey = new Map(graph.edges.map((edge) => [edgeKey(edge), edge]));
+  return geometry.crossingPairs.filter(([left, right]) => {
+    const a = edgeByKey.get(left);
+    const b = edgeByKey.get(right);
+    return a && b && (a.kind === "prereq" || a.kind === "caught"
+      || b.kind === "prereq" || b.kind === "caught");
+  }).length;
+}
+
+function geometryQuality(graph, positions, anchors, anchorStrength) {
+  const object = Object.fromEntries(positions);
+  const geometry = collectGeometry(graph, object);
+  const supportLengths = graph.edges.filter((edge) => edge.kind === "supports")
+    .map((edge) => {
+      const from = object[edge.from];
+      const to = object[edge.to];
+      return from && to ? Math.hypot(to.x - from.x, to.y - from.y) : 0;
+    });
+  return {
+    tuple: [
+      geometry.overlaps,
+      geometry.edgeLabelIntersections,
+      supportLengths.reduce((sum, value) => sum + value, 0),
+      Math.max(0, ...supportLengths),
+      criticalCrossings(graph, geometry),
+      geometry.crossings,
+      stressScore(graph, object, anchors, anchorStrength),
+    ],
+    geometry,
+  };
+}
+
+function tupleLess(left, right) {
+  for (let index = 0; index < Math.min(left.length, right.length); index += 1) {
+    if (left[index] !== right[index]) return left[index] < right[index];
+  }
+  return left.length < right.length;
+}
+
+/* The continuous solver cannot pass two labelled nodes through one another,
+   so it gets trapped in a bad left/right order.  Adjacent transposition is the
+   small-graph Sugiyama step that lets it cross that barrier deliberately. */
+function refineRankOrder(graph, nodes, model, positions, anchors, anchorStrength, width, height) {
+  let best = geometryQuality(graph, positions, anchors, anchorStrength);
+  const ranks = [...new Set(nodes.map((node) => model.rank.get(node.id)))].sort((a, b) => a - b);
+  for (let pass = 0; pass < 40; pass += 1) {
+    let bestMove = null;
+    for (const rank of ranks) {
+      const ordered = nodes.filter((node) => model.rank.get(node.id) === rank)
+        .sort((a, b) => positions.get(a.id).x - positions.get(b.id).x || a.id.localeCompare(b.id));
+      for (let leftIndex = 0; leftIndex < ordered.length; leftIndex += 1) {
+        for (let rightIndex = leftIndex + 1; rightIndex < ordered.length; rightIndex += 1) {
+          const left = positions.get(ordered[leftIndex].id);
+          const right = positions.get(ordered[rightIndex].id);
+          const leftX = left.x;
+          const rightX = right.x;
+          left.x = rightX;
+          right.x = leftX;
+          clampPoint(left, width, height);
+          clampPoint(right, width, height);
+          const candidate = geometryQuality(graph, positions, anchors, anchorStrength);
+          left.x = leftX;
+          right.x = rightX;
+          const threshold = bestMove?.quality ?? best;
+          if (tupleLess(candidate.tuple, threshold.tuple)) {
+            bestMove = {
+              leftId: ordered[leftIndex].id,
+              rightId: ordered[rightIndex].id,
+              leftX,
+              rightX,
+              quality: candidate,
+            };
+          }
+        }
+      }
+    }
+    if (!bestMove) break;
+    positions.get(bestMove.leftId).x = bestMove.rightX;
+    positions.get(bestMove.rightId).x = bestMove.leftX;
+    best = bestMove.quality;
+  }
+}
+
+function refineCrossings(graph, nodes, positions, mobility, anchors, anchorStrength, width, height) {
+  const directions = [
+    [1, 0], [-1, 0], [0, 1], [0, -1],
+    [0.7071, 0.7071], [0.7071, -0.7071], [-0.7071, 0.7071], [-0.7071, -0.7071],
+  ];
+  for (const step of P.solve.localStepSizes) {
+    for (let pass = 0; pass < P.solve.crossingPassesPerStep; pass += 1) {
+      let anyImprovement = false;
+      for (const node of nodes) {
+        const point = positions.get(node.id);
+        const start = { x: point.x, y: point.y };
+        let best = start;
+        let bestQuality = geometryQuality(graph, positions, anchors, anchorStrength);
+        for (const [dx, dy] of directions) {
+          point.x = start.x + dx * step * (0.55 + 0.45 * mobility.get(node.id));
+          point.y = start.y + dy * step * (0.55 + 0.45 * mobility.get(node.id));
+          clampPoint(point, width, height);
+          const candidate = geometryQuality(graph, positions, anchors, anchorStrength);
+          if (tupleLess(candidate.tuple, bestQuality.tuple)) {
+            bestQuality = candidate;
+            best = { x: point.x, y: point.y };
+          }
+        }
+        point.x = best.x;
+        point.y = best.y;
+        if (best.x !== start.x || best.y !== start.y) anyImprovement = true;
+      }
+      resolveCollisions(nodes, positions, mobility, width, height);
+      if (!anyImprovement) break;
+    }
+  }
+}
+
+function rigidAlignToPrevious(nodes, positions, previousPositions, width, height) {
+  const common = nodes.filter((node) => previousPositions[node.id]);
+  if (common.length < 2) return;
+  const currentCenter = common.reduce(
+    (sum, node) => ({ x: sum.x + positions.get(node.id).x, y: sum.y + positions.get(node.id).y }),
+    { x: 0, y: 0 },
+  );
+  const previousCenter = common.reduce(
+    (sum, node) => ({ x: sum.x + previousPositions[node.id].x, y: sum.y + previousPositions[node.id].y }),
+    { x: 0, y: 0 },
+  );
+  currentCenter.x /= common.length;
+  currentCenter.y /= common.length;
+  previousCenter.x /= common.length;
+  previousCenter.y /= common.length;
+  const alignmentX = previousCenter.x - currentCenter.x;
+  const alignmentY = previousCenter.y - currentCenter.y;
+  for (const node of nodes) {
+    const point = positions.get(node.id);
+    point.x += alignmentX;
+    point.y += alignmentY;
+  }
+
+  let left = Infinity;
+  let right = -Infinity;
+  let top = Infinity;
+  let bottom = -Infinity;
+  for (const node of nodes) {
+    const box = bounds(positions.get(node.id));
+    left = Math.min(left, box.left);
+    right = Math.max(right, box.right);
+    top = Math.min(top, box.top);
+    bottom = Math.max(bottom, box.bottom);
+  }
+  let shiftX = 0;
+  let shiftY = 0;
+  if (left < P.canvas.margin) shiftX = P.canvas.margin - left;
+  if (right + shiftX > width - P.canvas.margin) shiftX -= right + shiftX - (width - P.canvas.margin);
+  if (top < P.canvas.margin) shiftY = P.canvas.margin - top;
+  if (bottom + shiftY > height - P.canvas.margin) shiftY -= bottom + shiftY - (height - P.canvas.margin);
+  for (const node of nodes) {
+    const point = positions.get(node.id);
+    point.x += shiftX;
+    point.y += shiftY;
+  }
+}
+
+function repairEdgeLabelIntersections(graph, nodes, model, positions, anchors, anchorStrength, width, height) {
+  const edgeByKey = new Map(graph.edges.map((edge) => [edgeKey(edge), edge]));
+  const repairOrigin = new Map([...positions].map(([id, point]) => [id, { x: point.x, y: point.y }]));
+  const maximumRepairDisplacement = 168;
+  const supportProfile = (object) => {
+    const lengths = graph.edges
+      .filter((edge) => edge.kind === "supports" && object[edge.from] && object[edge.to])
+      .map((edge) => Math.hypot(
+        object[edge.to].x - object[edge.from].x,
+        object[edge.to].y - object[edge.from].y,
+      ));
+    return {
+      total: lengths.reduce((sum, length) => sum + length, 0),
+      max: Math.max(0, ...lengths),
+    };
+  };
+  const referenceSupport = supportProfile(Object.fromEntries(positions));
+  for (let pass = 0; pass < P.solve.edgeLabelRepairPasses; pass += 1) {
+    const startObject = Object.fromEntries(positions);
+    const startGeometry = collectGeometry(graph, startObject);
+    if (!startGeometry.edgeLabelPairs.length) break;
+    let best = null;
+    for (const [problemEdgeKey, obstacleId] of startGeometry.edgeLabelPairs) {
+      const edge = edgeByKey.get(problemEdgeKey);
+      const from = positions.get(edge.from);
+      const to = positions.get(edge.to);
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const distance = Math.hypot(dx, dy) || 1;
+      const directions = [
+        { x: -dy / distance, y: dx / distance },
+        { x: 1, y: 0 },
+        { x: 0, y: 1 },
+      ];
+      for (const id of [obstacleId, edge.from, edge.to]) {
+        const point = positions.get(id);
+        const origin = { x: point.x, y: point.y };
+        for (const vector of directions) {
+          for (const step of [...P.solve.edgeLabelRepairSteps, 88, 112]) {
+            for (const direction of [-1, 1]) {
+              point.x = origin.x + vector.x * step * direction;
+              point.y = origin.y + vector.y * step * direction;
+              clampPoint(point, width, height);
+              const firstPosition = repairOrigin.get(id);
+              if (firstPosition && Math.hypot(
+                point.x - firstPosition.x,
+                point.y - firstPosition.y,
+              ) > maximumRepairDisplacement) continue;
+              const candidateObject = Object.fromEntries(positions);
+              const geometry = collectGeometry(graph, candidateObject);
+              if (geometry.overlaps > 0 || directedViolationCount(model, positions) > 0) continue;
+              const candidateSupport = supportProfile(candidateObject);
+              if (candidateSupport.total > referenceSupport.total * 1.05
+                || candidateSupport.max > referenceSupport.max * 1.08) continue;
+              const candidate = {
+                id,
+                x: point.x,
+                y: point.y,
+                geometry,
+                score: stressScore(graph, candidateObject, anchors, anchorStrength),
+              };
+              const better = !best
+                || candidate.geometry.edgeLabelIntersections < best.geometry.edgeLabelIntersections
+                || (candidate.geometry.edgeLabelIntersections === best.geometry.edgeLabelIntersections
+                  && candidate.geometry.crossings < best.geometry.crossings)
+                || (candidate.geometry.edgeLabelIntersections === best.geometry.edgeLabelIntersections
+                  && candidate.geometry.crossings === best.geometry.crossings
+                  && candidate.score < best.score);
+              if (better) best = candidate;
+            }
+          }
+        }
+        point.x = origin.x;
+        point.y = origin.y;
+      }
+    }
+    if (!best || best.geometry.edgeLabelIntersections >= startGeometry.edgeLabelIntersections) break;
+    const point = positions.get(best.id);
+    point.x = best.x;
+    point.y = best.y;
+  }
+}
+
+function constellationLayoutStep(
+  graph,
+  previousPositions = {},
+  previousGraph = null,
+  { width = CANVAS.width, height = CANVAS.height } = {},
+) {
+  const { nodes, edges } = sortedGraph(graph);
+  const layoutGraph = { ...graph, edges };
+  const model = hierarchyModel(layoutGraph, nodes, edges, previousPositions, width, height);
+  const ids = new Set(nodes.map((node) => node.id));
+  const positions = clonePositions(previousPositions);
+  for (const id of [...positions.keys()]) if (!ids.has(id)) positions.delete(id);
+  const previousIds = new Set(Object.keys(previousPositions));
+  const newIds = new Set(nodes.filter((node) => !previousIds.has(node.id)).map((node) => node.id));
+  const currentEdgeKeys = new Set(edges.map(edgeKey));
+  const sameGraph = previousGraph
+    && allNodes(previousGraph).length === nodes.length
+    && allNodes(previousGraph).every((node) => ids.has(node.id))
+    && previousGraph.edges.length === edges.length
+    && previousGraph.edges.every((edge) => currentEdgeKeys.has(edgeKey(edge)));
+  for (const node of nodes) {
+    const footprint = nodeFootprint(node);
+    const ranked = rankedSeedPoint(node, model, width, height);
+    if (!positions.has(node.id)) {
+      positions.set(node.id, { ...ranked, ...footprint });
+    } else {
+      const point = positions.get(node.id);
+      if (!sameGraph) {
+        point.x = point.x * 0.16 + ranked.x * 0.84;
+        point.y = point.y * 0.16 + ranked.y * 0.84;
+      }
+      Object.assign(point, footprint);
+    }
+    clampPoint(positions.get(node.id), width, height);
+  }
+
+  if (sameGraph) {
+    const stable = positionsObject(nodes, positions);
+    return {
+      positions: stable,
+      newNodeIds: [],
+      changedNodeIds: [],
+      neighbourNodeIds: [],
+      usedEdgeKeys: edges.map(edgeKey),
+      metrics: layoutMetrics(layoutGraph, stable, previousPositions),
+    };
+  }
+
+  const { changed, neighbours } = changedNeighbourhood(nodes, edges, previousGraph, newIds);
+  const mobility = new Map();
+  const anchorStrength = new Map();
+  for (const node of nodes) {
+    if (newIds.has(node.id)) {
+      mobility.set(node.id, P.stability.newNodeMobility);
+      anchorStrength.set(node.id, 0);
+    } else if (changed.has(node.id)) {
+      mobility.set(node.id, Math.max(HIERARCHY.minimumOldMobility, P.stability.changedNodeMobility));
+      anchorStrength.set(node.id, P.stability.changedAnchor * HIERARCHY.oldAnchorScale);
+    } else if (neighbours.has(node.id)) {
+      mobility.set(node.id, Math.max(HIERARCHY.minimumOldMobility, P.stability.neighbourMobility));
+      anchorStrength.set(node.id, P.stability.neighbourAnchor * HIERARCHY.oldAnchorScale);
+    } else {
+      mobility.set(node.id, Math.max(HIERARCHY.minimumOldMobility, P.stability.remoteNodeMobility));
+      anchorStrength.set(node.id, P.stability.remoteAnchor * HIERARCHY.oldAnchorScale);
+    }
+  }
+  const anchors = new Map(
+    nodes
+      .filter((node) => previousIds.has(node.id))
+      .map((node) => [node.id, { x: previousPositions[node.id].x, y: previousPositions[node.id].y }]),
+  );
+  const degrees = supportDegrees(edges);
+
+  for (let iteration = 0; iteration < P.solve.forceIterations; iteration += 1) {
+    const progress = iteration / P.solve.forceIterations;
+    const temperature = 0.06 + 0.94 * (1 - progress);
+    const maxForceStep = P.solve.finalMaximumForceStep
+      + (P.solve.maximumForceStep - P.solve.finalMaximumForceStep) * (1 - progress);
+    const forceX = new Map(nodes.map((node) => [node.id, 0]));
+    const forceY = new Map(nodes.map((node) => [node.id, 0]));
+
+    for (let left = 0; left < nodes.length; left += 1) {
+      for (let right = left + 1; right < nodes.length; right += 1) {
+        const aNode = nodes[left];
+        const bNode = nodes[right];
+        const a = positions.get(aNode.id);
+        const b = positions.get(bNode.id);
+        const ac = collisionCenter(a);
+        const bc = collisionCenter(b);
+        let dx = ac.x - bc.x;
+        let dy = ac.y - bc.y;
+        let distanceSquared = dx * dx + dy * dy;
+        if (distanceSquared < 1) {
+          const angle = hashAngle(`${aNode.id}:${bNode.id}`);
+          dx = Math.cos(angle);
+          dy = Math.sin(angle);
+          distanceSquared = 1;
+        }
+        const distance = Math.sqrt(distanceSquared);
+        const magnitude = (P.spacing.repulsion * 0.52) / distanceSquared;
+        addForce(forceX, forceY, aNode.id, (dx / distance) * magnitude, (dy / distance) * magnitude);
+        addForce(forceX, forceY, bNode.id, -(dx / distance) * magnitude, -(dy / distance) * magnitude);
+
+        const overlapX = (a.width + b.width) / 2 + P.labels.collisionPadding - Math.abs(dx);
+        const overlapY = (a.height + b.height) / 2 + P.labels.collisionPadding - Math.abs(dy);
+        if (overlapX > 0 && overlapY > 0) {
+          if (overlapX < overlapY) {
+            const direction = dx <= 0 ? -1 : 1;
+            const push = overlapX * P.spacing.overlapPush;
+            addForce(forceX, forceY, aNode.id, direction * push, 0);
+            addForce(forceX, forceY, bNode.id, -direction * push, 0);
+          } else {
+            const direction = dy <= 0 ? -1 : 1;
+            const push = overlapY * P.spacing.overlapPush;
+            addForce(forceX, forceY, aNode.id, 0, direction * push);
+            addForce(forceX, forceY, bNode.id, 0, -direction * push);
+          }
+        }
+      }
+    }
+
+    for (const edge of edges) {
+      const from = positions.get(edge.from);
+      const to = positions.get(edge.to);
+      const config = P.springs[edge.kind];
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const distance = Math.hypot(dx, dy) || 1;
+      let magnitude = (distance - config.ideal) * config.strength * supportScale(edge, degrees);
+      if (edge.kind === "supports" && distance > config.longThreshold) {
+        magnitude += (distance - config.longThreshold) * config.longStrength;
+      }
+      addForce(forceX, forceY, edge.from, (dx / distance) * magnitude, (dy / distance) * magnitude);
+      addForce(forceX, forceY, edge.to, -(dx / distance) * magnitude, -(dy / distance) * magnitude);
+    }
+
+    for (const node of nodes) {
+      const point = positions.get(node.id);
+      addForce(
+        forceX,
+        forceY,
+        node.id,
+        (model.targetX.get(node.id) - point.x) * HIERARCHY.rankForce * 0.34,
+        (model.targetY.get(node.id) - point.y) * HIERARCHY.rankForce,
+      );
+    }
+
+    for (const [leftId, rightId] of model.topics) {
+      const left = positions.get(leftId);
+      const right = positions.get(rightId);
+      if (!left || !right) continue;
+      const dx = right.x - left.x;
+      const dy = right.y - left.y;
+      const distance = Math.hypot(dx, dy) || 1;
+      const magnitude = (distance - HIERARCHY.topicIdeal) * HIERARCHY.topicForce;
+      addForce(forceX, forceY, leftId, (dx / distance) * magnitude, (dy / distance) * magnitude);
+      addForce(forceX, forceY, rightId, -(dx / distance) * magnitude, -(dy / distance) * magnitude);
+    }
+
+    for (const node of nodes) {
+      const point = positions.get(node.id);
+      const anchor = anchors.get(node.id);
+      if (anchor) {
+        addForce(
+          forceX,
+          forceY,
+          node.id,
+          (anchor.x - point.x) * anchorStrength.get(node.id),
+          (anchor.y - point.y) * anchorStrength.get(node.id),
+        );
+      }
+      addForce(forceX, forceY, node.id, (width / 2 - point.x) * P.spacing.centreGravity, (height / 2 - point.y) * P.spacing.centreGravity);
+      const moveX = Math.max(-maxForceStep, Math.min(maxForceStep, forceX.get(node.id)));
+      const moveY = Math.max(-maxForceStep, Math.min(maxForceStep, forceY.get(node.id)));
+      point.x += moveX * temperature * mobility.get(node.id);
+      point.y += moveY * temperature * mobility.get(node.id);
+      clampPoint(point, width, height);
+    }
+    projectDirectedConstraints(model, positions, mobility, width, height);
+  }
+
+  settleConstraints(nodes, model, positions, mobility, width, height);
+  refineRankOrder(layoutGraph, nodes, model, positions, anchors, anchorStrength, width, height);
+  refineCrossings(layoutGraph, nodes, positions, mobility, anchors, anchorStrength, width, height);
+  settleConstraints(nodes, model, positions, mobility, width, height);
+  refineRankOrder(layoutGraph, nodes, model, positions, anchors, anchorStrength, width, height);
+  packRankBands(nodes, model, positions, width, height);
+  settlePackedGeometry(layoutGraph, nodes, model, positions, width, height);
+  repairEdgeLabelIntersections(
+    layoutGraph, nodes, model, positions, anchors, anchorStrength, width, height,
+  );
+  const output = positionsObject(nodes, positions);
+  return {
+    positions: output,
+    newNodeIds: [...newIds].sort(),
+    changedNodeIds: [...changed].sort(),
+    neighbourNodeIds: [...neighbours].sort(),
+    usedEdgeKeys: edges.map(edgeKey),
+    metrics: layoutMetrics(layoutGraph, output, previousPositions),
+  };
+}
+
+function assertSupportedEdgeKinds(graph) {
+  const unknown = graph.edges.filter((edge) => !EDGE_KINDS.has(edge.kind));
+  if (unknown.length) throw new Error(`未知关系类型：${unknown.map(edgeKey).join(", ")}`);
+}
+
+return { CANVAS, previousPositionsForGraph, wrapLabel, nodeFootprint, rectanglesOverlap, layoutDiagnostics, layoutMetrics, constellationLayoutStep, assertSupportedEdgeKinds };
+})();
+
+/* ==== FOCUS ==== */
+const FOCUS = (() => {
+/*
+  Experimental player-facing focus model.
+
+  This file only projects the existing action / solver state into five short
+  player questions.  It does not decide action availability, proof, stage, or
+  outcome.  In particular, a Q5 facet being "resolved" is a presentation of
+  the frozen coverage facts, not a second G3 rule.
+*/
+
+const { ACTIONS } = CASE;
+const { SLOT_FACTS } = PROJECTION;
+
+const freezeList = (values) => Object.freeze([...values]);
+
+const QUESTIONS = Object.freeze([
+  Object.freeze({ id: "Q1", label: "它大概是什么？" }),
+  Object.freeze({ id: "Q2", label: "这些证据说的是同一只吗？" }),
+  Object.freeze({ id: "Q3", label: "它是不是被大修过？" }),
+  Object.freeze({ id: "Q4", label: "它先后经历了什么？" }),
+  Object.freeze({ id: "Q5", label: "接手还要看哪些方面？" }),
+]);
+
+const Q5_FACETS = Object.freeze([
+  Object.freeze({
+    id: "material",
+    questionId: "Q5",
+    label: "关键处由什么构成？",
+    actionIds: freezeList([
+      "A.ANALYZE.MATERIAL.SUBSTRATE",
+      "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+    ]),
+    requiredFacts: freezeList(SLOT_FACTS.coherentDecisionProfile.keyMaterial),
+    clueObservationIds: freezeList([
+      "obs.key-material.substrate-readings",
+      "obs.key-material.layer-sequence",
+    ]),
+  }),
+  Object.freeze({
+    id: "surface",
+    questionId: "Q5",
+    label: "表面改过多少？",
+    actionIds: freezeList([
+      "A.INSPECT.WINDOWS",
+      "A.SYNTHESIZE.SURFACE_REGIONS",
+      "A.SCREEN.UV",
+    ]),
+    requiredFacts: freezeList(SLOT_FACTS.coherentDecisionProfile.surface),
+    clueObservationIds: freezeList([
+      "obs.surface.point-layering",
+      "obs.surface.resolved",
+      "obs.surface.no-signal.unresolved",
+    ]),
+  }),
+  Object.freeze({
+    id: "stability",
+    questionId: "Q5",
+    label: "现在稳不稳？",
+    actionIds: freezeList([
+      "A.ASSESS.TREATED_AND_UNTREATED",
+    ]),
+    requiredFacts: freezeList(SLOT_FACTS.coherentDecisionProfile.stability),
+    clueObservationIds: freezeList([
+      "obs.stability.resolved",
+    ]),
+  }),
+  Object.freeze({
+    id: "documentation",
+    questionId: "Q5",
+    label: "来路边界清楚吗？",
+    actionIds: freezeList([
+      "A.TRACE.PROVENANCE_CHAIN",
+    ]),
+    requiredFacts: freezeList(SLOT_FACTS.coherentDecisionProfile.documentation),
+    clueObservationIds: freezeList([
+      "obs.documentation.resolved",
+    ]),
+  }),
+]);
+
+const RAW_ACTION_FOCUS = {
+  "A.OBSERVE.WHOLE": {
+    primaryQuestionIds: ["Q1", "Q3"],
+    observationIds: ["obs.current.whole"],
+  },
+  "A.OBSERVE.BASE": {
+    primaryQuestionIds: ["Q1"],
+    relatedQuestionIds: ["Q2"],
+    observationIds: ["obs.current.base"],
+  },
+  "A.OBSERVE.REGION_DECOR": {
+    primaryQuestionIds: ["Q3"],
+    observationIds: ["obs.appearance.restore"],
+  },
+  "A.COMPARE.CORPUS": {
+    primaryQuestionIds: ["Q1"],
+    observationIds: ["obs.corpus.identity"],
+  },
+  "A.COMPARE.CORPUS.RECHECK": {
+    primaryQuestionIds: ["Q1"],
+    observationIds: ["obs.corpus.identity.repeat"],
+  },
+  "A.VERIFY.OBJECT_CONTINUITY": {
+    primaryQuestionIds: ["Q2"],
+    relatedQuestionIds: ["Q1", "Q3", "Q4", "Q5"],
+    observationIds: ["obs.object.continuity"],
+  },
+  "A.IMAGE.XRAY": {
+    primaryQuestionIds: ["Q3"],
+    observationIds: ["obs.structure.xray.early"],
+  },
+  "A.SCREEN.UV": {
+    primaryQuestionIds: ["Q5"],
+    facetId: "surface",
+    observationIds: ["obs.surface.no-signal.unresolved"],
+  },
+  "A.RESEARCH.ACCIDENT": {
+    primaryQuestionIds: ["Q3", "Q4"],
+    observationIds: ["obs.accident.major"],
+  },
+  "A.RELATE.ARCHIVE.T2_TO_OBJECT": {
+    primaryQuestionIds: ["Q2"],
+    relatedQuestionIds: ["Q3", "Q4"],
+    observationIds: ["obs.archive.t2.object-attribution"],
+  },
+  "A.CORROBORATE.ARCHIVE.T2_CURRENT": {
+    primaryQuestionIds: ["Q3", "Q4"],
+    observationIds: ["obs.archive.t2.current-corroboration"],
+  },
+  "A.LOCATE.HISTORIC_IMAGE": {
+    primaryQuestionIds: ["Q4"],
+    observationIds: ["obs.phase.t1"],
+  },
+  "A.MAP.REGION_CONTINUITY": {
+    primaryQuestionIds: ["Q3"],
+    relatedQuestionIds: ["Q4"],
+    observationIds: [
+      "obs.structure.major.documented-cross-time",
+      "obs.structure.major.cross-time",
+    ],
+  },
+  "A.RESEARCH.LATE_TREATMENT": {
+    primaryQuestionIds: ["Q4"],
+    observationIds: ["obs.phase.t3"],
+  },
+  "A.RELATE.ARCHIVE.T3_TO_OBJECT": {
+    primaryQuestionIds: ["Q2", "Q4"],
+    observationIds: ["obs.archive.t3.object-attribution"],
+  },
+  "A.CORROBORATE.ARCHIVE.T3_CURRENT": {
+    primaryQuestionIds: ["Q4"],
+    observationIds: ["obs.archive.t3.current-corroboration"],
+  },
+  "A.ANALYZE.MATERIAL.SUBSTRATE": {
+    primaryQuestionIds: ["Q5"],
+    facetId: "material",
+    observationIds: ["obs.key-material.substrate-readings"],
+  },
+  "A.INSPECT.MATERIAL.LAYER_SEQUENCE": {
+    primaryQuestionIds: ["Q5"],
+    facetId: "material",
+    observationIds: ["obs.key-material.layer-sequence"],
+  },
+  "A.INSPECT.WINDOWS": {
+    primaryQuestionIds: ["Q5"],
+    facetId: "surface",
+    observationIds: ["obs.surface.point-layering"],
+  },
+  "A.SYNTHESIZE.SURFACE_REGIONS": {
+    primaryQuestionIds: ["Q5"],
+    facetId: "surface",
+    observationIds: ["obs.surface.resolved"],
+  },
+  "A.ASSESS.TREATED_AND_UNTREATED": {
+    primaryQuestionIds: ["Q5"],
+    facetId: "stability",
+    observationIds: ["obs.stability.resolved"],
+  },
+  "A.TRACE.PROVENANCE_CHAIN": {
+    primaryQuestionIds: ["Q5"],
+    relatedQuestionIds: ["Q2"],
+    facetId: "documentation",
+    observationIds: ["obs.documentation.resolved"],
+  },
+};
+
+const ACTION_FOCUS = Object.freeze(Object.fromEntries(
+  Object.entries(RAW_ACTION_FOCUS).map(([actionId, value]) => [
+    actionId,
+    Object.freeze({
+      primaryQuestionIds: freezeList(value.primaryQuestionIds),
+      relatedQuestionIds: freezeList(value.relatedQuestionIds ?? []),
+      questionIds: freezeList([...(value.primaryQuestionIds ?? []), ...(value.relatedQuestionIds ?? [])]),
+      facetId: value.facetId ?? null,
+      observationIds: freezeList(value.observationIds),
+    }),
+  ]),
+));
+
+const ACTION_BY_ID = new Map(ACTIONS.map((action) => [action.id, action]));
+const QUESTION_ORDER = new Map(QUESTIONS.map((question, index) => [question.id, index]));
+const FACET_BY_ID = new Map(Q5_FACETS.map((facet) => [facet.id, facet]));
+
+const placeGroups = new Map();
+for (const action of ACTIONS) {
+  if (!placeGroups.has(action.place)) placeGroups.set(action.place, []);
+  placeGroups.get(action.place).push(action.id);
+}
+
+const PLACE_FOCUS = Object.freeze(Object.fromEntries(
+  [...placeGroups.entries()].map(([placeId, actionIds]) => [placeId, freezeList(actionIds)]),
+));
+
+const unique = (values) => [...new Set(values)];
+
+function makeFocus(actionIds, source = "actions", extra = {}) {
+  const validActionIds = unique(actionIds).filter((id) => ACTION_FOCUS[id]);
+  const primaryQuestionIds = unique(validActionIds.flatMap((id) => ACTION_FOCUS[id].primaryQuestionIds))
+    .sort((a, b) => QUESTION_ORDER.get(a) - QUESTION_ORDER.get(b));
+  const relatedQuestionIds = unique(validActionIds.flatMap((id) => ACTION_FOCUS[id].relatedQuestionIds))
+    .filter((id) => !primaryQuestionIds.includes(id))
+    .sort((a, b) => QUESTION_ORDER.get(a) - QUESTION_ORDER.get(b));
+  const questionIds = unique([...primaryQuestionIds, ...relatedQuestionIds])
+    .sort((a, b) => QUESTION_ORDER.get(a) - QUESTION_ORDER.get(b));
+  const facetIds = unique(validActionIds.map((id) => ACTION_FOCUS[id].facetId).filter(Boolean));
+  const observationIds = unique(validActionIds.flatMap((id) => ACTION_FOCUS[id].observationIds));
+  const placeIds = unique(validActionIds.map((id) => ACTION_BY_ID.get(id)?.place).filter(Boolean));
+  return Object.freeze({
+    source,
+    actionId: validActionIds.length === 1 ? validActionIds[0] : null,
+    actionIds: freezeList(validActionIds),
+    primaryQuestionIds: freezeList(primaryQuestionIds),
+    relatedQuestionIds: freezeList(relatedQuestionIds),
+    questionIds: freezeList(questionIds),
+    facetId: facetIds.length === 1 ? facetIds[0] : null,
+    observationIds: freezeList(observationIds),
+    placeIds: freezeList(placeIds),
+    ...extra,
+  });
+}
+
+function focusForAction(actionId, observationId = null) {
+  if (!ACTION_FOCUS[actionId]) return null;
+  const extra = {};
+  if (actionId === "A.MAP.REGION_CONTINUITY" && observationId) {
+    const documented = observationId === "obs.structure.major.documented-cross-time";
+    extra.primaryQuestionIds = freezeList(["Q3"]);
+    extra.relatedQuestionIds = freezeList(documented ? ["Q4"] : []);
+    extra.questionIds = freezeList(documented ? ["Q3", "Q4"] : ["Q3"]);
+  }
+  if (observationId && ACTION_FOCUS[actionId].observationIds.includes(observationId)) {
+    extra.observationIds = freezeList([observationId]);
+  }
+  return makeFocus([actionId], "action", extra);
+}
+
+function focusForActions(actionIds = []) {
+  return makeFocus(actionIds, "actions");
+}
+
+function focusForPlace(placeId) {
+  const actionIds = PLACE_FOCUS[placeId];
+  return actionIds ? makeFocus(actionIds, "place", { placeId }) : null;
+}
+
+function focusForQuestion(questionId) {
+  if (!QUESTION_ORDER.has(questionId)) return null;
+  return Object.freeze({
+    source: "question",
+    actionId: null,
+    actionIds: freezeList([]),
+    primaryQuestionIds: freezeList([questionId]),
+    relatedQuestionIds: freezeList([]),
+    questionIds: freezeList([questionId]),
+    facetId: null,
+    observationIds: freezeList([]),
+    placeIds: freezeList([]),
+  });
+}
+
+function focusForFacet(facetId) {
+  const facet = FACET_BY_ID.get(facetId);
+  if (!facet) return null;
+  return Object.freeze({
+    source: "facet",
+    actionId: null,
+    actionIds: freezeList([]),
+    primaryQuestionIds: freezeList([facet.questionId]),
+    relatedQuestionIds: freezeList([]),
+    questionIds: freezeList([facet.questionId]),
+    facetId,
+    observationIds: freezeList(facet.clueObservationIds),
+    placeIds: freezeList(unique(facet.actionIds.map((id) => ACTION_BY_ID.get(id)?.place).filter(Boolean))),
+  });
+}
+
+const Q5_STATE_LABEL = Object.freeze({
+  unseen: "未查",
+  clue: "已有线索",
+  resolved: "已覆盖",
+  blocked: "暂时查不了",
+});
+
+const asSet = (value) => value instanceof Set ? value : new Set(value ?? []);
+
+function q5FacetStates(solved, workbenchRows = []) {
+  const facts = asSet(solved?.coverage?.facts);
+  const observationIds = asSet(solved?.evidence?.observationIds);
+  const rows = new Map((workbenchRows ?? []).map((row) => [row?.action?.id, row]));
+
+  return Q5_FACETS.map((facet) => {
+    const resolved = facet.requiredFacts.every((fact) => facts.has(fact));
+    const hasClue = facet.requiredFacts.some((fact) => facts.has(fact))
+      || facet.clueObservationIds.some((id) => observationIds.has(id))
+      || facet.actionIds.some((id) => rows.get(id)?.done === true);
+    const incompleteRows = facet.actionIds
+      .map((id) => rows.get(id))
+      .filter((row) => row && row.done !== true);
+    const waitsForPrerequisite = !hasClue
+      && incompleteRows.length > 0
+      && incompleteRows.every((row) => row.usable === false);
+    const state = resolved ? "resolved" : hasClue ? "clue" : waitsForPrerequisite ? "blocked" : "unseen";
+
+    return Object.freeze({
+      id: facet.id,
+      questionId: facet.questionId,
+      label: facet.label,
+      actionIds: facet.actionIds,
+      state,
+      stateLabel: Q5_STATE_LABEL[state],
+    });
+  });
+}
+
+function actionMatchesFocus(actionId, focus) {
+  const actionFocus = ACTION_FOCUS[actionId];
+  if (!actionFocus || !focus) return false;
+  const exactActions = focus.actionIds?.length
+    ? focus.actionIds
+    : focus.actionId ? [focus.actionId] : [];
+  if (exactActions.length) return exactActions.includes(actionId);
+  if (focus.facetId) return actionFocus.facetId === focus.facetId;
+  return (focus.questionIds ?? []).some((id) => actionFocus.questionIds.includes(id));
+}
+
+function graphBody(graph) {
+  return graph?.map?.nodes ? graph.map : graph ?? {};
+}
+
+function graphNodes(graph) {
+  const body = graphBody(graph);
+  return [
+    ...(body.nodes ?? []),
+    ...(body.axioms ?? []),
+  ];
+}
+
+const CLAIM_QUESTIONS = Object.freeze({
+  g1: freezeList(["Q1"]),
+  identity: freezeList(["Q1", "Q2"]),
+  majorReassembly: freezeList(["Q3"]),
+  appearanceRestore: freezeList(["Q3"]),
+  g2: freezeList(["Q1", "Q2", "Q3"]),
+  threePhase: freezeList(["Q4"]),
+  coreResolved: freezeList(["Q5"]),
+  coherentDecisionProfile: freezeList(["Q1", "Q2", "Q3", "Q4", "Q5"]),
+  g3: freezeList(["Q1", "Q2", "Q3", "Q4", "Q5"]),
+});
+
+function claimIdOf(value) {
+  if (value?.claimId) return value.claimId;
+  const id = typeof value?.id === "string" ? value.id : "";
+  if (id.startsWith("C:") || id.startsWith("AX:")) {
+    return id.slice(id.indexOf(":") + 1).split(":")[0];
+  }
+  return null;
+}
+
+function claimMatchesFocus(value, focus) {
+  const claimId = claimIdOf(value);
+  const questionIds = CLAIM_QUESTIONS[claimId] ?? [];
+  const focusedQuestions = focus?.primaryQuestionIds?.length
+    ? focus.primaryQuestionIds
+    : focus?.questionIds ?? [];
+  return questionIds.some((id) => focusedQuestions.includes(id));
+}
+
+function focusSeedNodeIds(body, focus) {
+  const nodes = graphNodes(body);
+  const ids = new Set();
+  const focusObservations = asSet(focus?.observationIds);
+  const exactActions = focus?.actionIds?.length || focus?.actionId;
+
+  for (const node of nodes) {
+    if (node.actionId && actionMatchesFocus(node.actionId, focus)) ids.add(node.id);
+    if (focusObservations.has(node.id)) ids.add(node.id);
+    if (!exactActions && claimMatchesFocus(node, focus)) ids.add(node.id);
+  }
+  return ids;
+}
+
+function focusForTopic(topicId, graph) {
+  const body = graphBody(graph);
+  const topic = typeof topicId === "string"
+    ? (body.topics ?? []).find((candidate) => candidate.id === topicId)
+    : topicId;
+  if (!topic?.id || !Array.isArray(topic.memberIds)) return null;
+  const members = new Set(topic.memberIds);
+  const actionIds = (body.nodes ?? [])
+    .filter((node) => members.has(node.id) && node.actionId)
+    .map((node) => node.actionId);
+  return makeFocus(actionIds, "topic", {
+    topicId: topic.id,
+    observationIds: freezeList(topic.memberIds),
+  });
+}
+
+function relatedTopicIds(graph, focus) {
+  const body = graphBody(graph);
+  const seeds = focusSeedNodeIds(body, focus);
+  const ids = new Set();
+  if (focus?.topicId) ids.add(focus.topicId);
+  for (const topic of body.topics ?? []) {
+    if (topic.memberIds.some((id) => seeds.has(id))) ids.add(topic.id);
+  }
+  return ids;
+}
+
+function relatedNodeIds(graph, focus) {
+  const body = graphBody(graph);
+  const nodes = graphNodes(body);
+  const knownIds = new Set(nodes.map((node) => node.id));
+  const ids = focusSeedNodeIds(body, focus);
+
+  // One hop shows why the selected evidence matters without turning a precise
+  // action click into a highlight of the whole long-term question.  Topic
+  // membership is also one hop, but topics are grouping metadata rather than
+  // graph nodes.  Both expansions read the original seed snapshot so a bridge
+  // observation cannot fan the focus into a second topic or a second edge.
+  const seeds = new Set(ids);
+  for (const topic of body.topics ?? []) {
+    if (!topic.memberIds.some((id) => seeds.has(id))) continue;
+    for (const id of topic.memberIds) if (knownIds.has(id)) ids.add(id);
+  }
+  for (const edge of body.edges ?? []) {
+    if (seeds.has(edge.from) || seeds.has(edge.to)) {
+      if (knownIds.has(edge.from)) ids.add(edge.from);
+      if (knownIds.has(edge.to)) ids.add(edge.to);
+    }
+  }
+  return ids;
+}
+
+function collectReferences(value, refs, seen = new WeakSet()) {
+  if (typeof value === "string") {
+    if (ACTION_FOCUS[value]) refs.actionIds.add(value);
+    if (value.startsWith("obs.")) refs.observationIds.add(value);
+    return;
+  }
+  if (!value || typeof value !== "object" || seen.has(value)) return;
+  seen.add(value);
+  if (Array.isArray(value)) {
+    for (const entry of value) collectReferences(entry, refs, seen);
+    return;
+  }
+  for (const [key, entry] of Object.entries(value)) {
+    if (key === "body" || key === "title" || key === "why" || key === "line") continue;
+    collectReferences(entry, refs, seen);
+  }
+}
+
+function decisionItemMatches(item, focus) {
+  if (!item || !focus) return false;
+  const refs = { actionIds: new Set(), observationIds: new Set() };
+  collectReferences(item, refs);
+  const id = typeof item.id === "string" ? item.id : "";
+  for (const observationId of focus.observationIds ?? []) {
+    if (id === observationId || id.endsWith(`:${observationId}`)) refs.observationIds.add(observationId);
+  }
+
+  const exactActions = focus.actionIds?.length
+    ? focus.actionIds
+    : focus.actionId ? [focus.actionId] : [];
+  if (exactActions.length) {
+    if (exactActions.some((id) => refs.actionIds.has(id))) return true;
+    if ((focus.observationIds ?? []).some((id) => refs.observationIds.has(id))) return true;
+    return claimMatchesFocus(item, focus);
+  }
+
+  if ([...refs.actionIds].some((id) => actionMatchesFocus(id, focus))) return true;
+  const focusObservations = asSet(focus.observationIds);
+  if ([...refs.observationIds].some((id) => focusObservations.has(id))) return true;
+  return claimMatchesFocus(item, focus);
+}
+
+return { QUESTIONS, Q5_FACETS, ACTION_FOCUS, PLACE_FOCUS, focusForAction, focusForActions, focusForPlace, focusForQuestion, focusForFacet, Q5_STATE_LABEL, q5FacetStates, actionMatchesFocus, focusForTopic, relatedTopicIds, relatedNodeIds, decisionItemMatches };
 })();
 
 /* ==================== 以下是呈现层。规则一律来自上面内联的冻结求解器。 ==================== */
@@ -5330,6 +7443,9 @@ const { newSession, take, solve, workbench, setBudget,
         BUDGET_MIN, BUDGET_MAX, BUDGET_DEFAULT } = SESSION;
 const { mentalMap, decisionSurface, readout, EDGE_KINDS, EDGE_DIRECTED } = PROJECTION;
 const { ACTION_SEMANTICS } = SEMANTICS;
+const { QUESTIONS, Q5_FACETS, ACTION_FOCUS, focusForAction, focusForActions,
+         focusForPlace, q5FacetStates, relatedNodeIds, decisionItemMatches,
+         actionMatchesFocus, focusForTopic, relatedTopicIds } = FOCUS;
 
 const $ = (s) => document.querySelector(s);
 const el = (t, a = {}, kids = []) => {
@@ -5385,15 +7501,26 @@ for (const a of ACTIONS) {
 }
 
 /* ---------- 状态 ---------- */
-let S, wbRows, view, history, positions, pinned, anim;
+let S, wbRows, view, history, positions, layoutGraph, layoutViewport, focusedNodeId, focusState, anim;
+let transitionToken = 0;
+let pendingActionLabel = null;
 /* 重开沿用上次设定的点数 —— 调完难度再开一局是常见动作,不该每次回到默认 */
 let chosenBudget = BUDGET_DEFAULT;
+function cancelTransition({ discardPending = true } = {}) {
+  transitionToken += 1;
+  anim = null;
+  if (discardPending) pendingActionLabel = null;
+}
 function reset() {
+  cancelTransition();
+  closePop();
   S = newSession(chosenBudget);
   history = [];
   positions = new Map();
-  pinned = new Set();
-  anim = null;
+  layoutGraph = null;
+  layoutViewport = null;
+  focusedNodeId = null;
+  focusState = null;
   recompute();
   snapshot(null);
   renderAll();
@@ -5416,73 +7543,184 @@ function snapshot(actLabel) {
   });
 }
 
-/* ==================== 力导向布局 ==================== */
-/* 公理钉住不动(DEC-032 第十二节);需要自由重排的只剩活跃区。 */
+/* ---------- 三栏共用的玩家问题聚焦 ---------- */
+function questionById(questionId) {
+  return QUESTIONS.find((question) => question.id === questionId) ?? null;
+}
+function facetById(facetId) {
+  return Q5_FACETS.find((facet) => facet.id === facetId) ?? null;
+}
+function focusLabel(focus) {
+  if (!focus) return "";
+  if (focus.label) return focus.label;
+  if (focus.facetId) return facetById(focus.facetId)?.label ?? focus.facetId;
+  if (focus.actionId) return ACTION_BY_ID.get(focus.actionId)?.name ?? focus.actionId;
+  return (focus.questionIds ?? []).map((id) => questionById(id)?.label ?? id).join("／");
+}
+function focusWithLabel(focus, label) {
+  return focus ? { ...focus, label } : null;
+}
+function latestObservationForAction(actionId) {
+  return [...S.log].reverse().find((entry) => entry.actionId === actionId)?.observationId ?? null;
+}
+function setSharedFocus(next) {
+  focusState = next;
+  focusedNodeId = null;
+  syncLeftFocus();
+  syncPopupFocus();
+  renderQuestionRail();
+  renderMap();
+  renderDeck();
+  refreshPopAnchor(focusState?.actionId);
+}
+function clearSharedFocus() {
+  setSharedFocus(null);
+}
+function setActionFocus(actionId) {
+  const action = ACTION_BY_ID.get(actionId);
+  setSharedFocus(focusWithLabel(
+    focusForAction(actionId, latestObservationForAction(actionId)),
+    action?.name ?? actionId,
+  ));
+}
+function setPlaceFocus(placeId) {
+  const placeFocus = focusForPlace(placeId);
+  setSharedFocus(focusWithLabel(placeFocus, PLACE_LABEL.get(placeId) ?? placeId));
+}
+function setQuestionFocus(questionId, facetId = null) {
+  const match = { questionIds: [questionId], facetId };
+  const actionIds = ACTIONS.filter((action) => actionMatchesFocus(action.id, match)).map((action) => action.id);
+  const combined = focusForActions(actionIds);
+  const label = facetId
+    ? `${questionById(questionId)?.label ?? questionId}／${facetById(facetId)?.label ?? facetId}`
+    : questionById(questionId)?.label ?? questionId;
+  setSharedFocus(focusWithLabel({
+    ...combined,
+    primaryQuestionIds: [questionId],
+    relatedQuestionIds: [],
+    questionIds: [questionId],
+    facetId,
+    actionId: null,
+  }, label));
+}
+function syncLeftFocus() {
+  const activePlaces = new Set();
+  if (focusState) {
+    for (const action of ACTIONS) {
+      if (actionMatchesFocus(action.id, focusState)) activePlaces.add(action.place);
+    }
+  }
+  document.querySelectorAll("#bench [data-place]").forEach((node) => {
+    node.classList.toggle("focused", activePlaces.has(node.dataset.place));
+  });
+}
+function syncPopupFocus() {
+  document.querySelectorAll("#pop [data-action-card]").forEach((card) => {
+    const active = focusState?.actionId === card.dataset.actionCard;
+    card.classList.toggle("focused", active);
+    const button = card.querySelector("[data-focus-action]");
+    if (button) button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+}
+function refreshPopAnchor(actionId) {
+  if (openPlace == null || popAnchor?.isConnected || !actionId) return;
+  popAnchor = [...document.querySelectorAll("#deckbody [data-act]")]
+    .find((node) => node.dataset.act === actionId)
+    ?? document.querySelector(`[data-place="${openPlace}"]`)
+    ?? popAnchor;
+}
+function renderQuestionRail() {
+  const box = $("#qrail");
+  box.textContent = "";
+  const head = document.createElement("div");
+  head.className = "qrail-head";
+  head.innerHTML = `<span>这五件事可以穿插着查</span><button class="qclear" type="button">看全部</button>`;
+  head.querySelector("button").addEventListener("click", clearSharedFocus);
+  box.appendChild(head);
+
+  const items = document.createElement("div");
+  items.className = "qitems";
+  for (const question of QUESTIONS) {
+    const button = document.createElement("button");
+    const primaryIds = focusState?.primaryQuestionIds ?? focusState?.questionIds ?? [];
+    const relatedIds = focusState?.relatedQuestionIds ?? [];
+    const active = primaryIds.includes(question.id);
+    const related = !active && relatedIds.includes(question.id);
+    button.type = "button";
+    button.className = "qbtn" + (active ? " active" : related ? " related" : "");
+    button.dataset.question = question.id;
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    if (related) button.title = "这一步会牵动这里，但不是直接回答";
+    button.innerHTML = `<span>${esc(question.label)}</span>`;
+    button.addEventListener("click", () => {
+      const onlyThis = focusState?.questionIds?.length === 1
+        && focusState.questionIds[0] === question.id && !focusState.facetId;
+      if (onlyThis) clearSharedFocus(); else setQuestionFocus(question.id);
+    });
+    items.appendChild(button);
+    if (question.id === "Q5") {
+      const facets = document.createElement("div");
+      facets.className = "qfacet-grid";
+      for (const state of q5FacetStates(view.solved, wbRows)) {
+        const facetButton = document.createElement("button");
+        const facetActive = focusState?.facetId === state.id;
+        const shortFacet = { material: "材料", surface: "表面", stability: "稳定", documentation: "来路" }[state.id] ?? state.label;
+        const classByState = { resolved: "done", clue: "progress", blocked: "blocked", unseen: "" };
+        facetButton.type = "button";
+        facetButton.className = `qfacet ${classByState[state.state] ?? ""}${facetActive ? " active" : ""}`;
+        facetButton.dataset.facet = state.id;
+        facetButton.setAttribute("aria-pressed", facetActive ? "true" : "false");
+        facetButton.title = state.label;
+        facetButton.setAttribute("aria-label", `${state.label} ${state.stateLabel}`);
+        facetButton.innerHTML = `<span>${esc(shortFacet)}</span><span class="qs">${esc(state.stateLabel)}</span>`;
+        facetButton.addEventListener("click", () => {
+          if (facetActive) clearSharedFocus(); else setQuestionFocus("Q5", state.id);
+        });
+        facets.appendChild(facetButton);
+      }
+      items.appendChild(facets);
+    }
+  }
+  box.appendChild(items);
+  const finalQuestion = document.createElement("div");
+  finalQuestion.className = "qfinal";
+  finalQuestion.textContent = "最后由你决定：现在够不够我下判断？";
+  box.appendChild(finalQuestion);
+  const line = document.createElement("div");
+  line.className = "focusline";
+  line.innerHTML = focusState
+    ? `正在看：<b>${esc(focusLabel(focusState))}</b>`
+    : "点左侧一处，中间和右边会一起只亮相关内容。";
+  box.appendChild(line);
+}
+
+/* ==================== 结论牵引自由星座布局 ==================== */
+/*
+  仍是一张自由节点图,没有泳道或时间轴。四类关系全部参与坐标求解;
+  supports 使用短目标距离和超长尾惩罚,同时显式惩罚交叉、穿标签与标签互压。
+  旧节点只有软锚,不会因为出现得早而永久钉死。参数均来自 PARAMS.Experimental。
+*/
 function mapBox() {
   const w = $("#mapwrap").clientWidth, h = $("#mapwrap").clientHeight;
   return { w, h };
 }
-function layout(graph, { iters = 260 } = {}) {
+function layout(graph) {
   const { w, h } = mapBox();
-  const nodes = [...graph.nodes, ...graph.findings, ...graph.axioms];
-  const ids = new Set(nodes.map((n) => n.id));
-  for (const id of [...positions.keys()]) if (!ids.has(id)) positions.delete(id);
-
-  /* 新节点先落在中心附近(带确定性抖动,便于复现) */
-  let seed = nodes.length * 7919;
-  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
-  for (const n of nodes) {
-    if (!positions.has(n.id)) {
-      positions.set(n.id, { x: w / 2 + (rnd() - .5) * 140, y: h / 2 + (rnd() - .5) * 140 });
-    }
-  }
-  const adj = graph.edges.filter((e) => positions.has(e.from) && positions.has(e.to));
-  /* 目标边长按画布面积与节点数取,否则节点少时整团缩在中心、画布大半空着 */
-  const K = Math.max(96, Math.min(190, Math.sqrt((w - 150) * (h - 110) / Math.max(3, nodes.length)) * 0.82));
-  const R = K * K * 2.6;             /* 斥力随边长同步放大 */
-  for (let it = 0; it < iters; it++) {
-    const t = 1 - it / iters;
-    const fx = new Map(nodes.map((n) => [n.id, 0]));
-    const fy = new Map(nodes.map((n) => [n.id, 0]));
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = positions.get(nodes[i].id), b = positions.get(nodes[j].id);
-        let dx = a.x - b.x, dy = a.y - b.y;
-        let d2 = dx * dx + dy * dy;
-        if (d2 < 1) { dx = (rnd() - .5); dy = (rnd() - .5); d2 = 1; }
-        const f = R / d2;
-        const d = Math.sqrt(d2);
-        fx.set(nodes[i].id, fx.get(nodes[i].id) + (dx / d) * f);
-        fy.set(nodes[i].id, fy.get(nodes[i].id) + (dy / d) * f);
-        fx.set(nodes[j].id, fx.get(nodes[j].id) - (dx / d) * f);
-        fy.set(nodes[j].id, fy.get(nodes[j].id) - (dy / d) * f);
-      }
-    }
-    for (const e of adj) {
-      const a = positions.get(e.from), b = positions.get(e.to);
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const d = Math.hypot(dx, dy) || 1;
-      const f = (d - K) * 0.055;
-      fx.set(e.from, fx.get(e.from) + (dx / d) * f);
-      fy.set(e.from, fy.get(e.from) + (dy / d) * f);
-      fx.set(e.to, fx.get(e.to) - (dx / d) * f);
-      fy.set(e.to, fy.get(e.to) - (dy / d) * f);
-    }
-    for (const n of nodes) {
-      const p = positions.get(n.id);
-      /* 公理钉住:一旦定案,位置不再参与重排 */
-      if (pinned.has(n.id)) continue;
-      p.x += Math.max(-20, Math.min(20, fx.get(n.id))) * t;
-      p.y += Math.max(-20, Math.min(20, fy.get(n.id))) * t;
-      /* 极轻的向心,只防飘走,不把图拉成一团 */
-      p.x += (w / 2 - p.x) * 0.0022;
-      p.y += (h / 2 - p.y) * 0.0022;
-      p.x = Math.max(84, Math.min(w - 84, p.x));
-      p.y = Math.max(44, Math.min(h - 52, p.y));
-    }
-  }
-  /* 新定案的公理落位后钉住 */
-  for (const a of graph.axioms) pinned.add(a.id);
+  const staged = Object.fromEntries(
+    [...positions].map(([id, point]) => [id, { ...point }]),
+  );
+  const previous = LAYOUT.previousPositionsForGraph(staged, layoutGraph);
+  const viewportChanged = layoutViewport
+    && (Math.abs(layoutViewport.w - w) > 1 || Math.abs(layoutViewport.h - h) > 1);
+  const solved = LAYOUT.constellationLayoutStep(
+    graph,
+    previous,
+    viewportChanged ? null : layoutGraph,
+    { width: w, height: h },
+  );
+  positions = new Map(Object.entries(solved.positions).map(([id, point]) => [id, { ...point }]));
+  layoutGraph = graph;
+  layoutViewport = { w, h };
 }
 
 /* ==================== 渲染 ==================== */
@@ -5491,9 +7729,11 @@ function renderAll() {
   renderSetup();
   renderObject();
   renderOutside();
+  renderQuestionRail();
   layout(view.map);
   renderMap();
   renderDeck();
+  syncLeftFocus();
 }
 
 function renderHeader() {
@@ -5511,11 +7751,12 @@ function renderHeader() {
     `<div>还剩 <b>${S.budget - S.log.length}</b> 步 / 共 ${S.budget} 步　·　` +
       `已花 ${billLine(ro.billed)}</div>` +
     `<div>${r.map((x) => esc(x.name) + " " + (x.open ? "已通" : "未通")).join("　·　")}</div>`;
-  $("#wb").textContent =
-    "呈现变体,不是产品,也不是美术方向。规则全部来自冻结求解器(" +
+  const experimentDetail =
+    "这是独立试玩切片,不是产品或美术定案。规则来自冻结求解器(" +
     Object.keys(STAMP.sha).length + " 个模块已内联,构建于 " + STAMP.builtAt + ")。" +
-    "步数是唯一约束,每个手段都占一步;钱本阶段只记账、不设预算,局末告知。" +
-    "系统不给动作排序,也不预测全部后果。只做电脑浏览器尺寸。";
+    "步数是唯一约束;钱只记账。系统不替动作排序,也不预测全部后果。";
+  $("#wb").innerHTML = `<details><summary>实验入口 · 规则未变 · 仅桌面浏览器</summary>` +
+    `<span class="experiment-detail">${esc(experimentDetail)}</span></details>`;
 }
 
 /* 账单只报构成,不报总数 —— 档位是序数,把它们相加等于凭空断言中档是低档的两倍。
@@ -5655,18 +7896,23 @@ let openPlace = null;
 let popAnchor = null;
 function closePop({ restoreFocus = false } = {}) {
   const anchor = popAnchor;
-  $("#pop").style.display = "none";
-  $("#pop").setAttribute("aria-hidden", "true");
+  const pop = $("#pop");
+  /* 先把焦点送回入口,再把弹层从可访问树隐藏。否则浏览器会留下
+     “aria-hidden 里仍有焦点”的状态,键盘用户也会丢失当前位置。 */
+  if ((restoreFocus || pop.contains(document.activeElement))
+      && anchor?.isConnected && typeof anchor.focus === "function") anchor.focus();
+  pop.style.display = "none";
+  pop.setAttribute("aria-hidden", "true");
   openPlace = null;
   popAnchor = null;
   document.querySelectorAll(".hot.open,.mrow.open").forEach((n) => {
     n.classList.remove("open");
     n.setAttribute("aria-expanded", "false");
   });
-  if (restoreFocus && anchor?.isConnected && typeof anchor.focus === "function") anchor.focus();
 }
-function openPop(pid, anchorEl, { focusFirst = false } = {}) {
+function openPop(pid, anchorEl, { focusFirst = false, actionId = null } = {}) {
   if (openPlace === pid) return closePop({ restoreFocus: focusFirst });
+  const anchorRect = anchorEl.getBoundingClientRect();
   closePop();
   openPlace = pid;
   popAnchor = anchorEl;
@@ -5675,6 +7921,17 @@ function openPop(pid, anchorEl, { focusFirst = false } = {}) {
      aria-expanded;不要给普通说明行凭空加一个永不复位的可展开状态。 */
   if (anchorEl.hasAttribute("aria-expanded")) anchorEl.setAttribute("aria-expanded", "true");
   const acts = BY_PLACE.get(pid) ?? [];
+  const nextFocus = actionId
+    ? focusForAction(actionId, latestObservationForAction(actionId))
+    : focusForPlace(pid);
+  focusState = focusWithLabel(nextFocus,
+    actionId ? ACTION_BY_ID.get(actionId)?.name ?? actionId : PLACE_LABEL.get(pid) ?? pid);
+  focusedNodeId = null;
+  syncLeftFocus();
+  renderQuestionRail();
+  renderMap();
+  renderDeck();
+  refreshPopAnchor(actionId);
   const pop = $("#pop");
   pop.textContent = "";
   const cap = document.createElement("div");
@@ -5684,24 +7941,35 @@ function openPop(pid, anchorEl, { focusFirst = false } = {}) {
   acts.forEach((a, i) => {
     const row = wbRows.find((r) => r.action.id === a.id);
     const sem = ACTION_SEMANTICS[a.id] ?? {};
+    const whyId = `action-why-${i}`;
     const wrap = document.createElement("div");
+    wrap.className = "action-card" + (focusState?.actionId === a.id ? " focused" : "");
+    wrap.dataset.actionCard = a.id;
     wrap.innerHTML =
-      `<h4>${esc(a.name)}</h4>` +
+      `<h4><button class="afocus" type="button" data-focus-action aria-pressed="${focusState?.actionId === a.id ? "true" : "false"}">${esc(a.name)}</button></h4>` +
       `<div class="ask">${esc(a.ask)}</div>` +
-      `<div class="why">${esc(sem.whyShort ?? "")}</div>` +
-      `<div class="long" data-long>${esc(sem.whyLong ?? "")}</div>` +
+      `<div class="why-pack" id="${whyId}" data-why-pack hidden>` +
+        `<div class="why">${esc(sem.whyShort ?? "")}</div>` +
+        `<div class="long">${esc(sem.whyLong ?? "")}</div>` +
+      `</div>` +
       (row?.usable ? "" : `<div class="no">${esc(row?.why ?? (S.stopped ? "本局已经收手" : "现在不能做"))}</div>`) +
       /* 两种货币必须在同一行分得开:旧写法只说「费用 免费」,盲测者据此以为这一步
          什么都不耗,而它照样占掉一步 —— 而步数是唯一的硬约束。 */
       `<div class="foot"><span class="cost">占 1 步 · ` +
         `${a.cost === 0 ? "不花钱" : "花钱 " + esc(COST_LABEL[a.cost])}` +
         `${row?.done ? " · 已经做过" : ""}</span>` +
-        `<span class="acts"><button class="lk" data-more>为什么要紧</button>` +
+        `<span class="acts"><button class="lk" data-more aria-expanded="false" aria-controls="${whyId}">为什么要紧</button>` +
         `<button class="go" ${row?.usable && row?.affordable ? "" : "disabled"} data-run>做这一步</button>` +
         `</span></div>`;
+    wrap.querySelector("[data-focus-action]").addEventListener("click", () => setActionFocus(a.id));
     wrap.querySelector("[data-more]").addEventListener("click", () => {
-      const L = wrap.querySelector("[data-long]");
-      L.style.display = L.style.display === "block" ? "none" : "block";
+      setActionFocus(a.id);
+      const button = wrap.querySelector("[data-more]");
+      const pack = wrap.querySelector("[data-why-pack]");
+      const opening = pack.hidden;
+      pack.hidden = !opening;
+      button.setAttribute("aria-expanded", opening ? "true" : "false");
+      button.textContent = opening ? "收起说明" : "为什么要紧";
     });
     const go = wrap.querySelector("[data-run]");
     if (!go.disabled) go.addEventListener("click", () => doAction(a.id, pid));
@@ -5711,7 +7979,7 @@ function openPop(pid, anchorEl, { focusFirst = false } = {}) {
     }
   });
   /* 定位:贴着左栏右边缘 */
-  const r = anchorEl.getBoundingClientRect();
+  const r = anchorRect;
   pop.style.display = "block";
   pop.setAttribute("aria-hidden", "false");
   const top = Math.min(Math.max(8, r.top - 10), window.innerHeight - pop.offsetHeight - 12);
@@ -5739,9 +8007,6 @@ function nodeShape(n) {
       : n.state === "negative" ? " neg" : n.state === "caught" ? " caught" : "");
     return el("circle", { class: cls, r: 7, cx: 0, cy: 0 });
   }
-  if (n.type === "finding") {
-    return el("polygon", { class: "n-find", points: "0,-10 9,-5 9,5 0,10 -9,5 -9,-5" });
-  }
   return el("rect", { class: "n-ax", x: -9, y: -7, width: 18, height: 14, rx: 2 });
 }
 /* 三种有方向的边各要一个同色箭头。marker 不能继承 stroke,所以逐色定义。 */
@@ -5764,6 +8029,99 @@ function pullBack(fx, fy, tx, ty, d) {
   const len = Math.hypot(vx, vy) || 1;
   return { x: tx - (vx / len) * d, y: ty - (vy / len) * d };
 }
+function topicEnvelope(topic, pos, w, h) {
+  const points = (topic.memberIds ?? []).map((id) => pos.get(id)).filter(Boolean);
+  if (!points.length) return null;
+  let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+  for (const point of points) {
+    const cx = point.x + (point.boxOffsetX ?? 0);
+    const cy = point.y + (point.boxOffsetY ?? 0);
+    const halfW = Math.max(18, (point.width ?? 72) / 2);
+    const halfH = Math.max(18, (point.height ?? 42) / 2);
+    left = Math.min(left, cx - halfW);
+    right = Math.max(right, cx + halfW);
+    top = Math.min(top, cy - halfH);
+    bottom = Math.max(bottom, cy + halfH);
+  }
+  const padX = 22, padY = 18;
+  const x = Math.max(8, left - padX);
+  const y = Math.max(8, top - padY);
+  const x2 = Math.min(w - 8, right + padX);
+  const y2 = Math.min(h - 8, bottom + padY);
+  return { x, y, width: Math.max(46, x2 - x), height: Math.max(38, y2 - y), count: points.length };
+}
+function showTopicTip(topic, envelope) {
+  const t = $("#tip");
+  t.innerHTML = `<b>${esc(`相关：${topic.short} · ${envelope.count}条`)}</b>` +
+    `${esc(topic.summary ?? "同一问题，不等于结论。")}`;
+  const box = $("#mapwrap").getBoundingClientRect();
+  t.style.display = "block";
+  t.style.left = Math.min(envelope.x + 12, box.width - 262) + "px";
+  t.style.top = Math.min(envelope.y + 24, box.height - 90) + "px";
+}
+function renderTopicBackgrounds(svg, graph, pos, w, h, relatedTopics, target) {
+  const layer = el("g", { class: "topic-layer" });
+  const controls = el("g", { class: "topic-controls" });
+  for (const topic of graph.topics ?? []) {
+    const envelope = topicEnvelope(topic, pos, w, h);
+    if (!envelope) continue;
+    const selected = !target && focusState?.topicId === topic.id;
+    const related = !target && relatedTopics?.has(topic.id);
+    const dim = !target && relatedTopics && !related;
+    const label = `相关：${topic.short} · ${envelope.count}条`;
+    const hint = `${label}。同一问题，不等于结论。`;
+    const stateClass = selected ? " selected" : related ? " related" : dim ? " dim" : "";
+    const group = el("g", {
+      class: "topic-bg" + stateClass,
+      "data-topic": topic.id,
+      "aria-hidden": "true",
+    });
+    group.appendChild(el("rect", {
+      class: "topic-envelope", x: envelope.x, y: envelope.y,
+      width: envelope.width, height: envelope.height, rx: 12,
+    }));
+    layer.appendChild(group);
+
+    const labelWidth = Math.min(envelope.width - 12, Math.max(88, [...label].length * 9.5 + 14));
+    const control = el("g", {
+      class: "topic-label" + stateClass,
+      "data-topic-control": topic.id,
+      "aria-label": hint,
+      ...(target
+        ? { role: "img" }
+        : { role: "button", tabindex: "0", "aria-pressed": selected ? "true" : "false" }),
+    });
+    control.appendChild(el("title", {}, [txt(hint)]));
+    control.appendChild(el("rect", {
+      x: envelope.x + 5, y: envelope.y + 3,
+      width: labelWidth, height: 18, rx: 4,
+    }));
+    const labelNode = el("text", { x: envelope.x + 12, y: envelope.y + 15 });
+    labelNode.appendChild(txt(label));
+    control.appendChild(labelNode);
+    if (!target) {
+      const activate = () => {
+        if (focusState?.topicId === topic.id) return clearSharedFocus();
+        const next = focusForTopic(topic.id, graph);
+        if (next) setSharedFocus(focusWithLabel(next, label));
+      };
+      control.addEventListener("mouseenter", () => showTopicTip(topic, envelope));
+      control.addEventListener("mouseleave", () => { $("#tip").style.display = "none"; });
+      control.addEventListener("focus", () => showTopicTip(topic, envelope));
+      control.addEventListener("blur", () => { $("#tip").style.display = "none"; });
+      control.addEventListener("click", (event) => { event.stopPropagation(); activate(); });
+      control.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        event.stopPropagation();
+        activate();
+      });
+    }
+    controls.appendChild(control);
+  }
+  svg.appendChild(layer);
+  return controls;
+}
 function renderMap(target) {
   const svg = target ? $("#hsvg") : $("#map");
   const g = target ? target : view.map;
@@ -5772,75 +8130,134 @@ function renderMap(target) {
   svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
   svg.textContent = "";
   const graph = target ? target.map : g;
+  const sharedNodeIds = !target && focusState ? relatedNodeIds(graph, focusState) : null;
+  const sharedTopicIds = !target && focusState ? relatedTopicIds(graph, focusState) : null;
 
   const empty = graph.nodes.length === 0;
   if (!target) {
+    const focusChip = $("#mapfocus");
+    focusChip.style.display = focusState ? "block" : "none";
+    focusChip.textContent = focusState
+      ? `正在看：${focusLabel(focusState)}${sharedNodeIds?.size ? "" : " · 还没有相关已知"}`
+      : "";
     $("#mapempty").style.display = empty ? "flex" : "none";
     $("#mapempty").textContent = empty
-      ? "右边现在是空的。这不是隐藏 —— 你还没有任何情报,所以这里没有任何位置。先从左边那只碗看起:看它不花钱,但每一个手段都占掉一步。"
+      ? "还没有情报。先从左边那只碗选择一处。"
       : "";
     $("#lgd").innerHTML = empty ? "" : legendHTML();
   }
   if (empty) return;
 
   svg.appendChild(arrowDefs());
+  /* topics 只是对现有节点的背景归类,先画包络,不进入节点或边的布局。 */
+  const topicControls = renderTopicBackgrounds(svg, graph, pos, w, h, sharedTopicIds, target);
+  const visibleIds = new Set([...graph.nodes, ...graph.axioms].map((node) => node.id));
   const layer = el("g");
   for (const e of graph.edges) {
+    if (!visibleIds.has(e.from) || !visibleIds.has(e.to)) continue;
     const a = pos.get(e.from), b = pos.get(e.to);
     if (!a || !b) continue;
-    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const cx = mx - dy * 0.09, cy = my + dx * 0.09;
     const dir = EDGE_DIRECTED.has(e.kind);
-    /* 有方向的边要把终点从节点圆心往回缩,否则箭头压在节点底下看不见。
-       缩的方向沿控制点→终点的切线,曲线才不会在末端拐一下。 */
-    const end = dir ? pullBack(cx, cy, b.x, b.y, 14) : b;
+    const end = dir ? pullBack(a.x, a.y, b.x, b.y, 14) : b;
+    const incident = !target && focusedNodeId && (e.from === focusedNodeId || e.to === focusedNodeId);
+    const shared = !target && sharedNodeIds?.has(e.from) && sharedNodeIds.has(e.to);
+    const focusClass = target ? ""
+      : focusedNodeId ? (incident ? " active" : " dim")
+        : sharedNodeIds ? (shared ? " active" : " dim") : "";
     layer.appendChild(el("path", {
-      class: "edge e-" + e.kind, d: `M${a.x},${a.y} Q${cx},${cy} ${end.x},${end.y}`,
+      class: "edge e-" + e.kind + focusClass, d: `M${a.x},${a.y} L${end.x},${end.y}`,
       "data-edge": e.kind + "|" + e.from + "|" + e.to,
       ...(dir ? { "marker-end": `url(#ar-${e.kind})` } : {}),
     }));
   }
   svg.appendChild(layer);
 
-  const all = [...graph.nodes, ...graph.findings, ...graph.axioms];
+  const all = [...graph.nodes, ...graph.axioms];
   for (const n of all) {
     const p = pos.get(n.id);
     if (!p) continue;
-    const gg = el("g", { class: "nd" + (n.type !== "obs" ? " on" : ""), transform: `translate(${p.x},${p.y})`,
-      "data-node": n.id });
+    const connected = !focusedNodeId || focusedNodeId === n.id
+      || graph.edges.some((edge) => (edge.from === focusedNodeId && edge.to === n.id)
+        || (edge.to === focusedNodeId && edge.from === n.id));
+    const directlySelected = focusState?.actionId && n.actionId === focusState.actionId;
+    const focusClass = target ? ""
+      : focusedNodeId === n.id ? " selected"
+        : focusedNodeId ? (connected ? "" : " dim")
+          : sharedNodeIds ? (directlySelected ? " selected" : sharedNodeIds.has(n.id) ? " related" : " dim") : "";
+    const nodeAttrs = { class: "nd" + (n.type !== "obs" ? " on" : "") + focusClass,
+      transform: `translate(${p.x},${p.y})`, "data-node": n.id };
+    if (!target) Object.assign(nodeAttrs, {
+      role: "button", tabindex: "0", "aria-label": `${n.short}，点击聚焦直接关系`,
+      "aria-pressed": focusedNodeId === n.id ? "true" : "false",
+    });
+    const gg = el("g", nodeAttrs);
+    if (!target) gg.appendChild(el("circle", { class: "node-hit", cx: 0, cy: 0, r: 22 }));
     gg.appendChild(nodeShape(n));
-    /* 标签按 id 的稳定哈希分到上下两侧。用哈希而不是用坐标,是为了动画过程中不跳动。 */
-    const r0 = n.type === "finding" ? 15 : 12;
-    const below = hash(n.id) % 2 === 1;
-    const t = el("text", { x: 0, y: below ? r0 + 9 : -r0, "text-anchor": "middle" });
-    t.appendChild(txt(n.short));
+    /* 可见文字与布局碰撞盒共用同一套换行,避免“点不撞、字却撞”。 */
+    const lines = p.labelLines ?? LAYOUT.wrapLabel(n);
+    const t = el("text", { x: 0, y: p.labelY ?? (-18 - (lines.length - 1) * 14), "text-anchor": "middle" });
+    lines.forEach((line, index) => {
+      const span = el("tspan", { x: 0, dy: index === 0 ? 0 : 14 });
+      span.appendChild(txt(line));
+      t.appendChild(span);
+    });
     gg.appendChild(t);
     if (!target) {
       gg.addEventListener("mouseenter", (ev) => showTip(n, ev));
       gg.addEventListener("mouseleave", () => { $("#tip").style.display = "none"; });
+      const toggleFocus = () => {
+        const clearing = focusedNodeId === n.id;
+        focusedNodeId = clearing ? null : n.id;
+        focusState = clearing || !n.actionId
+          ? null
+          : focusWithLabel(focusForAction(n.actionId, n.id), n.short);
+        syncLeftFocus();
+        renderQuestionRail();
+        renderMap();
+        renderDeck();
+      };
+      gg.addEventListener("click", (event) => {
+        event.stopPropagation();
+        toggleFocus();
+      });
+      gg.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        event.stopPropagation();
+        toggleFocus();
+      });
     }
     svg.appendChild(gg);
   }
+  /* 主题只是背景，但它的文字标签必须在节点之上拥有一个小而确定的点击面。
+     整块包络不拦截节点；点击标签才聚焦主题。 */
+  svg.appendChild(topicControls);
 }
+$("#map").addEventListener("click", () => {
+  if (!focusedNodeId && !focusState) return;
+  focusedNodeId = null;
+  focusState = null;
+  syncLeftFocus();
+  renderQuestionRail();
+  renderMap();
+  renderDeck();
+});
 function legendHTML() {
   const sw = (c, d) => `<span class="sw" style="border-top-color:${c};border-top-style:${d}"></span>`;
   const ar = `<span class="swa">▸</span>`;
-  return [
-    `<i>${sw("#5d5a52", "solid")}${esc(EDGE_KINDS.latent)}</i>`,
+  const items = [
+    `<i><span class="topic-key"></span>相关主题：同一问题，不等于结论</i>`,
     `<i>${sw("#4a5560", "dashed")}${ar}${esc(EDGE_KINDS.prereq)}</i>`,
     `<i>${sw("#a97fc2", "solid")}${ar}${esc(EDGE_KINDS.caught)}</i>`,
     `<i>${sw("#3d4a38", "solid")}${ar}这条情报支持箭头指的那条已查实的结论</i>`,
     `<i><span style="color:var(--obs)">●</span> 你查到的一条情报</i>`,
-    `<i><span style="color:var(--find)">⬣</span> 这几条说的是同一件事(系统自动连的,不花钱)</i>`,
     `<i><span style="color:var(--axiom)">▬</span> 已经查实的结论</i>`,
   ].join("");
+  return `<details><summary>怎么看连线？</summary><div class="legend-items">${items}</div></details>`;
 }
 function showTip(n, ev) {
   const t = $("#tip");
-  const extra = n.type === "finding"
-    ? `<div style="color:var(--find);margin-top:4px">这一条是系统自动连出来的,没花你的钱</div>` : "";
-  t.innerHTML = `<b>${esc(n.short)}</b>${esc(n.gist ?? "")}${extra}`;
+  t.innerHTML = `<b>${esc(n.short)}</b>${esc(n.gist ?? "")}`;
   const box = $("#mapwrap").getBoundingClientRect();
   t.style.display = "block";
   t.style.left = Math.min(ev.clientX - box.left + 14, box.width - 262) + "px";
@@ -5853,12 +8270,61 @@ const KIND_LABEL = {
   onemore: "只差一块就合拢", gap: "已经动起来,还缺几块",
   conflict: "对不上,互相打架", island: "还没和别的东西接上",
 };
+let disclosureSerial = 0;
+function decisionCardElement(it, {
+  matchesFocus = false,
+  showMeans = true,
+  historic = false,
+  autoExpand = false,
+} = {}) {
+  const c = document.createElement("div");
+  const means = it.means ?? [];
+  const availableMeans = means.filter((m) => m.usable !== false).length;
+  const expanded = !historic && autoExpand;
+  const detailId = `${historic ? "history" : "decision"}-detail-${++disclosureSerial}`;
+  c.className = "card k-" + it.kind
+    + (!historic && focusState ? (matchesFocus ? " focused" : " dim") : "");
+  c.dataset.card = it.id;
+  let detail = `<div class="card-detail" id="${detailId}"${expanded ? "" : " hidden"}>` +
+    `<p>${esc(it.body)}</p>`;
+  if (showMeans && means.length) {
+    detail += `<div class="means"><div class="hd">可用手段(不分先后)</div>` +
+      means.map((m) => `<button type="button" class="mean${m.usable === false ? " blocked" : ""}" data-act="${esc(m.actionId)}">` +
+        `<span class="nm">${esc(m.name)}</span><span class="cs">${esc(m.costLabel)}` +
+        `${m.usable === false ? " · 暂不可用" : ""}${m.done ? " · 做过" : ""}</span></button>`).join("") +
+      `</div>`;
+  }
+  detail += `</div>`;
+  c.innerHTML = `<button type="button" class="card-toggle" aria-expanded="${expanded ? "true" : "false"}" aria-controls="${detailId}">` +
+      `<div class="kd">${esc(KIND_LABEL[it.kind] ?? it.kind)}</div>` +
+      `<div class="card-summary"><h5>${esc(it.title)}</h5>` +
+      `<span class="means-count">可用 ${availableMeans} 个</span></div>` +
+    `</button>${detail}`;
+  const toggle = c.querySelector(".card-toggle");
+  const body = c.querySelector(".card-detail");
+  toggle.addEventListener("click", () => {
+    const opening = body.hidden;
+    body.hidden = !opening;
+    toggle.setAttribute("aria-expanded", opening ? "true" : "false");
+  });
+  if (showMeans) {
+    c.querySelectorAll("[data-act]").forEach((node) => {
+      node.addEventListener("click", (ev) => {
+        const action = ACTION_BY_ID.get(node.dataset.act);
+        if (action) openPop(action.place, node, { actionId: action.id, focusFirst: ev.detail === 0 });
+      });
+    });
+  }
+  return c;
+}
 function renderDeck() {
   const box = $("#deckbody");
   box.textContent = "";
   for (const a of view.map.axioms) {
     const d = document.createElement("div");
-    d.className = "ax"; d.textContent = a.line;
+    const matchesFocus = !focusState || decisionItemMatches(a, focusState);
+    d.className = "ax" + (focusState ? (matchesFocus ? " focused" : " dim") : "");
+    d.textContent = a.line;
     box.appendChild(d);
   }
   if (view.ds.clear) {
@@ -5867,26 +8333,14 @@ function renderDeck() {
     box.appendChild(d);
     return;
   }
+  let expandedOne = false;
   for (const it of view.ds.items) {
-    const c = document.createElement("div");
-    c.className = "card k-" + it.kind;
-    let html = `<div class="kd">${esc(KIND_LABEL[it.kind] ?? it.kind)}</div>` +
-      `<h5>${esc(it.title)}</h5><p>${esc(it.body)}</p>`;
-    if (it.means.length) {
-      html += `<div class="means"><div class="hd">行里通常靠这些手段(不分先后)</div>` +
-        it.means.map((m) => `<div class="mean${m.usable === false ? " blocked" : ""}" data-act="${esc(m.actionId)}">` +
-          `<span class="nm">${esc(m.name)}</span><span class="cs">${esc(m.costLabel)}` +
-          `${m.usable === false ? " · 暂不可用" : ""}${m.done ? " · 做过" : ""}</span></div>`).join("") +
-        `</div>`;
-    }
-    c.innerHTML = html;
-    c.querySelectorAll("[data-act]").forEach((n) => {
-      n.addEventListener("click", () => {
-        const a = ACTION_BY_ID.get(n.dataset.act);
-        if (a) openPop(a.place, n);
-      });
-    });
-    box.appendChild(c);
+    const matchesFocus = !focusState || decisionItemMatches(it, focusState);
+    /* 地点、主题和长期问题往往会命中多张卡；全展开会把一次联动变成上千字。
+       宽范围只高亮。只有精确动作聚焦会替玩家展开第一张相关卡,其余仍按需查看。 */
+    const autoExpand = !expandedOne && !!focusState?.actionId && matchesFocus;
+    if (autoExpand) expandedOne = true;
+    box.appendChild(decisionCardElement(it, { matchesFocus, showMeans: true, autoExpand }));
   }
 }
 
@@ -5901,21 +8355,43 @@ function doAction(actionId, pid) {
   const beforePos = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
   const r = take(S, actionId);
   if (!r.ok) { alert(r.why); return; }
+  const actionToken = ++transitionToken;
+  const actionLabel = ACTION_BY_ID.get(actionId)?.name ?? actionId;
+  pendingActionLabel = actionLabel;
   recompute();
+  focusState = focusWithLabel(
+    focusForAction(actionId, r.observationId),
+    ACTION_BY_ID.get(actionId)?.name ?? actionId,
+  );
+  focusedNodeId = null;
 
   const newId = r.observationId;
-  const beforeIds = new Set([...before.nodes, ...before.findings, ...before.axioms].map((n) => n.id));
-  const fresh = [...view.map.nodes, ...view.map.findings, ...view.map.axioms]
+  const beforeIds = new Set([...before.nodes, ...before.axioms].map((n) => n.id));
+  const fresh = [...view.map.nodes, ...view.map.axioms]
     .filter((n) => !beforeIds.has(n.id)).map((n) => n.id);
 
-  renderHeader(); renderSetup(); renderObject(); renderOutside();
+  renderHeader(); renderSetup(); renderObject(); renderOutside(); renderQuestionRail(); syncLeftFocus();
+
+  /* 重复手段会记账、占一步,但不会生成第二份同名情报。旧动画仍把它当新节点
+     拖到左侧入口,随后 sameGraph 快路径又忠实保留了那个假位置。重复结果只闪一下
+     已有节点,地图几何保持不动。 */
+  if (beforeIds.has(r.observationId) && fresh.length === 0) {
+    positions = beforePos;
+    layout(view.map);
+    renderMap();
+    renderDeck();
+    snapshot(actionLabel);
+    pendingActionLabel = null;
+    markFlash([r.observationId], 700);
+    return;
+  }
 
   /* 先按旧位置画一遍,让新节点从左侧飞入 */
   const { w, h } = mapBox();
   positions = beforePos;
   const anchorScreen = placeScreenPoint(pid);
   positions.set(newId, { x: Math.max(90, anchorScreen.x), y: Math.min(Math.max(50, anchorScreen.y), h - 60) });
-  /* 其他新生的(局部 Finding、公理)先藏在新情报附近 */
+  /* 其他新生的已查实结论先藏在新情报附近;topic 只是背景,没有自己的坐标。 */
   for (const id of fresh) if (id !== newId) {
     const p = positions.get(newId);
     positions.set(id, { x: p.x + 18, y: p.y + 18 });
@@ -5926,18 +8402,21 @@ function doAction(actionId, pid) {
 
   anim = true;
   setTimeout(() => {                       /* 停顿 */
+    if (actionToken !== transitionToken) return;
     const from = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
     layout(view.map);
     const to = new Map([...positions].map(([k, v]) => [k, { x: v.x, y: v.y }]));
     tween(from, to, 620, () => {
+      if (actionToken !== transitionToken) return;
       anim = null;
       renderDeck();
-      snapshot(ACTION_BY_ID.get(actionId)?.name ?? actionId);
+      snapshot(actionLabel);
+      pendingActionLabel = null;
       /* 被这条串起来的那些先亮一下 */
       const touched = view.map.edges.filter((e) => e.from === newId || e.to === newId)
         .flatMap((e) => [e.from, e.to]);
       markFlash([...new Set([newId, ...touched, ...fresh])], 700);
-    });
+    }, actionToken);
   }, 520);
 }
 function placeScreenPoint(pid) {
@@ -5969,10 +8448,11 @@ function markFlash(ids, ms = 520) {
 }
 const cssEsc = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/[.:|]/g, "\\$&");
 function hash(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; }
-function tween(from, to, ms, done) {
+function tween(from, to, ms, done, token = transitionToken) {
   const t0 = performance.now();
   const ease = (t) => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   function frame(now) {
+    if (token !== transitionToken) return;
     const k = Math.min(1, (now - t0) / ms), e = ease(k);
     for (const [id, b] of to) {
       const a = from.get(id) ?? b;
@@ -5995,8 +8475,43 @@ $("#bhist").addEventListener("click", () => {
 });
 /* 开局委托卡。开局自动弹一次,之后随时可以从「委托」再看。
    刻意不做「下次不再显示」—— 这一版正在验证的就是「玩家读完能不能说出要干什么」。 */
-$("#bbrief").addEventListener("click", () => { $("#brief").style.display = "flex"; });
-$("#bgo").addEventListener("click", () => { $("#brief").style.display = "none"; });
+let briefReturnFocus = null;
+function showBrief({ initial = false } = {}) {
+  const brief = $("#brief");
+  briefReturnFocus = initial ? $("#bbrief") : document.activeElement;
+  $("#app").inert = true;
+  brief.style.display = "flex";
+  brief.setAttribute("aria-hidden", "false");
+  requestAnimationFrame(() => $("#bgo").focus());
+}
+function hideBrief() {
+  const brief = $("#brief");
+  brief.style.display = "none";
+  brief.setAttribute("aria-hidden", "true");
+  $("#app").inert = false;
+  const target = briefReturnFocus?.isConnected ? briefReturnFocus : $("#bbrief");
+  briefReturnFocus = null;
+  target?.focus();
+}
+$("#bbrief").addEventListener("click", () => showBrief());
+$("#bgo").addEventListener("click", hideBrief);
+$("#brief").addEventListener("keydown", (event) => {
+  if (event.key !== "Tab") return;
+  const brief = $("#brief");
+  const focusable = [...brief.querySelectorAll("summary, button")]
+    .filter((node) => !node.disabled && node.getClientRects().length > 0);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const active = document.activeElement;
+  if (event.shiftKey && (active === first || !brief.contains(active))) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && (active === last || !brief.contains(active))) {
+    event.preventDefault();
+    first.focus();
+  }
+});
 $("#hclose").addEventListener("click", () => { $("#hist").style.display = "none"; });
 $("#hr").addEventListener("input", (e) => drawHistory(+e.target.value));
 function drawHistory(i) {
@@ -6017,17 +8532,24 @@ function drawHistory(i) {
     box.appendChild(d);
   }
   for (const it of h.ds.items) {
-    const c = document.createElement("div");
-    c.className = "card k-" + it.kind;
-    c.innerHTML = `<div class="kd">${esc(KIND_LABEL[it.kind] ?? it.kind)}</div>` +
-      `<h5>${esc(it.title)}</h5><p>${esc(it.body)}</p>`;
-    box.appendChild(c);
+    box.appendChild(decisionCardElement(it, { historic: true, showMeans: false }));
   }
 }
 
 /* ==================== 其他 ==================== */
 $("#bstop").addEventListener("click", () => {
   if (S.stopped) return;
+  /* 收手若撞上两拍动画，先把已经付出且已经写进状态的那一步结清，
+     再记“收手”。这样历史里不会凭空吞掉刚做的动作。 */
+  if (anim && pendingActionLabel) {
+    const actionLabel = pendingActionLabel;
+    cancelTransition();
+    layout(view.map);
+    renderAll();
+    snapshot(actionLabel);
+  } else {
+    cancelTransition();
+  }
   S.stopped = true;
   recompute(); renderAll(); snapshot("收手");
 });
@@ -6035,7 +8557,7 @@ $("#breset").addEventListener("click", reset);
 window.addEventListener("resize", () => { if (!anim) { layout(view.map, { iters: 90 }); renderMap(); } });
 
 reset();
-$("#brief").style.display = "flex";
+showBrief({ initial: true });
 </script>
 </body>
 </html>

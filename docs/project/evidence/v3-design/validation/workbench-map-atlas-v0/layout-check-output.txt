@@ -1,0 +1,35 @@
+PASS empty obtained graph creates no planned nodes
+PASS long real-world titles retain legible two-line display
+PASS disconnected islands are independent without synthetic root or edges
+PASS bridge connects remembered islands without moving old nodes
+PASS new relationship between existing nodes leaves their geometry intact
+PASS repeat rendering is deterministic and records every old-node movement
+PASS multiple evidence paths converge without imposing universal finding tier
+METRIC cold width=790 nodes=35 edges=36 canvasHeight=1654
+PASS 35-node cold graph at 790px has no intersecting nodes or blocked roads
+METRIC incremental width=790 canvasHeight=1654 maxOldMovement=0
+PASS 35-node incremental graph at 790px preserves every previous location
+METRIC cold width=950 nodes=35 edges=36 canvasHeight=1631
+PASS 35-node cold graph at 950px has no intersecting nodes or blocked roads
+METRIC incremental width=950 canvasHeight=1631 maxOldMovement=0
+PASS 35-node incremental graph at 950px preserves every previous location
+METRIC cold width=1450 nodes=35 edges=36 canvasHeight=960
+PASS 35-node cold graph at 1450px has no intersecting nodes or blocked roads
+METRIC incremental width=1450 canvasHeight=832 maxOldMovement=0
+PASS 35-node incremental graph at 1450px preserves every previous location
+METRIC resize maxMovement=1726.92 relocated=16
+PASS desktop resize reports necessary moves and keeps all labels in bounds
+PASS caller graph and previous layout remain unchanged
+METRIC real cold width=790 nodes=21 edges=25 canvasHeight=1145 boxAreaRatio=0.39 meanRoad=330.4 maxRoad=654.65
+PASS real 22-action obtained graph at 790px has no intersecting nodes or blocked roads
+METRIC real incremental width=790 canvasHeight=1156 maxOldMovement=0 boxAreaRatio=0.39 meanRoad=346.12 maxRoad=858.8
+PASS real investigation at 790px retains old-node location through all 22 actions
+METRIC real cold width=950 nodes=21 edges=25 canvasHeight=1014 boxAreaRatio=0.37 meanRoad=330.4 maxRoad=654.65
+PASS real 22-action obtained graph at 950px has no intersecting nodes or blocked roads
+METRIC real incremental width=950 canvasHeight=975 maxOldMovement=0 boxAreaRatio=0.38 meanRoad=395.22 maxRoad=761.96
+PASS real investigation at 950px retains old-node location through all 22 actions
+METRIC real cold width=1450 nodes=21 edges=25 canvasHeight=680 boxAreaRatio=0.36 meanRoad=345.46 maxRoad=659.79
+PASS real 22-action obtained graph at 1450px has no intersecting nodes or blocked roads
+METRIC real incremental width=1450 canvasHeight=697 maxOldMovement=0 boxAreaRatio=0.35 meanRoad=415.8 maxRoad=973.33
+PASS real investigation at 1450px retains old-node location through all 22 actions
+RESULT 21/21 checks passed; browser readability and human experience remain unverified.

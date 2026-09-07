@@ -1,0 +1,77 @@
+{
+  "capturedAt": "2026-09-07T04:06:19.484Z",
+  "builtHtmlSha256": "8e37e2408404099d109feaa152b817e81ad6572974098394bd91a7825e511a3d",
+  "beforeAtlasSha256": "12052ba9e743c6a47ffa76c6b77ad12705f09f4c37d2b95a8579eef1ee079ea4",
+  "assets": [
+    {
+      "file": "2026-09-07-after-fusion-pending-1440-2x.png",
+      "bytes": 323601,
+      "sha256": "54a809a165faedf1b7dc4e860c8713c3cbdfbfeb14a142f331618c1959a762bb",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-07-before-atlas-pending-1440-2x.png",
+      "bytes": 249375,
+      "sha256": "8c86558407a92acb8ed7bbf466f476253c9801f56f10573be367fc047aa59164",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-07-context-connected-1440-2x.png",
+      "bytes": 363511,
+      "sha256": "36d9a48e11352420836e527c1a1c3150aa119b7f225054e6b89493622a1cc2d8",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-07-fusion-hero-g3-1920-2x.png",
+      "bytes": 489258,
+      "sha256": "aaed3fe14953d6f416fcaa04bf4212978de1d8e2c9ec73ddfcb52b6a7e43dc55",
+      "width": 3840,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-07-old-materials-gain-meaning.webm",
+      "bytes": 1457579,
+      "sha256": "a571b600726762bb9979a24911ca931546922e5a7527285fa4682ea9681c4dd9"
+    }
+  ],
+  "video": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "vp8",
+        "width": 1440,
+        "height": 1000
+      }
+    ],
+    "format": {
+      "duration": "19.080000"
+    }
+  },
+  "beforeAfterActions": [
+    "A.IMAGE.XRAY",
+    "A.LOCATE.HISTORIC_IMAGE"
+  ],
+  "clipActions": [
+    "A.IMAGE.XRAY",
+    "A.LOCATE.HISTORIC_IMAGE",
+    "A.OBSERVE.BASE",
+    "A.VERIFY.OBJECT_CONTINUITY"
+  ],
+  "screenshots": {
+    "viewportPair": [
+      1440,
+      1000
+    ],
+    "hero": [
+      1920,
+      1000
+    ],
+    "deviceScaleFactor": 2
+  },
+  "errors": [],
+  "humanVerified": false,
+  "captureRecovery": "Four screenshots were retained; video alone was captured after installing the missing Playwright FFmpeg dependency."
+}

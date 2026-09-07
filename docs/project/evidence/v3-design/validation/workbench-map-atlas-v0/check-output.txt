@@ -1,0 +1,4 @@
+PASS protected prior entries and frozen author files: 69
+PASS embedded build fingerprints: template + 7 modules
+PASS standalone inline script syntax and desktop-only shell
+PASS UTF-8, conflict markers and trailing whitespace: 16 files

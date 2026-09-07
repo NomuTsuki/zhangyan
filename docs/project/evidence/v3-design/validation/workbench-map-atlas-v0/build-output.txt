@@ -1,0 +1,3 @@
+Built prototype.html; source modules: 7
+Template SHA256: b9ee827e3df00bc86a6f209d06157c123fcefc8ba23962b4c4ea9bce7ba29f83
+Output bytes: 251353

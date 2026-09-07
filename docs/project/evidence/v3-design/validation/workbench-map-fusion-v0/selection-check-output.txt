@@ -1,0 +1,15 @@
+PASS Empty or stale selection has no focus and no future information
+PASS Four judgment summaries are neutral and read actual claims, including identity before G1
+PASS Unavailable corpus selection references acquired prerequisites without inventing result
+PASS One-hop graph focus does not flood a second edge, source family, or distant claim
+PASS Evidence and place selection reverse-link exact acquisition action and bowl location
+PASS Pending readings share a known gap; all candidate methods survive their usability
+PASS Relation roads preserve attribution and corroboration sources separately
+PASS Relation report acquired before endpoints remains independently selectable
+PASS Established claim follows complete graph witnesses, including hidden relation sources
+PASS Sixteen-action result supplies all four claims and coherent profile traces real foundations
+PASS All 22 actions and all present selection kinds preserve state and acquired-only references
+PASS Frozen counterevidence scenarios preserve contested/refuted overview and usable selection
+
+12/12 selection checks passed. review required: new presentation tests.
+Not verified here: rendered focus styles, keyboard interaction, or human understanding.

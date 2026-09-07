@@ -1,0 +1,45 @@
+PASS empty obtained graph creates neither future nodes nor question placeholders
+PASS shared pending question never creates a relation between its anchors
+PASS two-ended gap leaves a visible discontinuity without moving remembered nodes
+PASS an acquired continuation occupies the retired frontier cell
+PASS same-ID strengthened relation reuses geometry and refreshes semantics
+PASS resize retains remembered coordinates and gives the canvas a scrollable extent
+PASS caller graph and previous layout remain immutable
+PASS joint conditions meet at a junction and alternative routes use separate junctions
+METRIC early-material-then-context width=618 height=680 nodes=4 frontiers=1 maxOldMovement=0
+PASS early-material-then-context at 618px avoids all node/question/visible-road collisions
+METRIC independent-archive-relations width=618 height=680 nodes=3 frontiers=2 maxOldMovement=0
+PASS independent-archive-relations at 618px avoids all node/question/visible-road collisions
+METRIC report-before-endpoints width=618 height=680 nodes=3 frontiers=2 maxOldMovement=0
+PASS report-before-endpoints at 618px avoids all node/question/visible-road collisions
+METRIC sixteen-action-route width=618 height=1209 nodes=16 frontiers=0 maxOldMovement=0
+PASS sixteen-action-route at 618px avoids all node/question/visible-road collisions
+METRIC point-to-regional-range width=618 height=680 nodes=2 frontiers=0 maxOldMovement=0
+PASS point-to-regional-range at 618px avoids all node/question/visible-road collisions
+METRIC all-twenty-two-actions width=618 height=1499 nodes=21 frontiers=0 maxOldMovement=0
+PASS all-twenty-two-actions at 618px avoids all node/question/visible-road collisions
+METRIC early-material-then-context width=778 height=680 nodes=4 frontiers=1 maxOldMovement=0
+PASS early-material-then-context at 778px avoids all node/question/visible-road collisions
+METRIC independent-archive-relations width=778 height=680 nodes=3 frontiers=2 maxOldMovement=0
+PASS independent-archive-relations at 778px avoids all node/question/visible-road collisions
+METRIC report-before-endpoints width=778 height=680 nodes=3 frontiers=2 maxOldMovement=0
+PASS report-before-endpoints at 778px avoids all node/question/visible-road collisions
+METRIC sixteen-action-route width=778 height=1020 nodes=16 frontiers=0 maxOldMovement=0
+PASS sixteen-action-route at 778px avoids all node/question/visible-road collisions
+METRIC point-to-regional-range width=778 height=680 nodes=2 frontiers=0 maxOldMovement=0
+PASS point-to-regional-range at 778px avoids all node/question/visible-road collisions
+METRIC all-twenty-two-actions width=778 height=1100 nodes=21 frontiers=0 maxOldMovement=0
+PASS all-twenty-two-actions at 778px avoids all node/question/visible-road collisions
+METRIC early-material-then-context width=1258 height=680 nodes=4 frontiers=1 maxOldMovement=0
+PASS early-material-then-context at 1258px avoids all node/question/visible-road collisions
+METRIC independent-archive-relations width=1258 height=680 nodes=3 frontiers=2 maxOldMovement=0
+PASS independent-archive-relations at 1258px avoids all node/question/visible-road collisions
+METRIC report-before-endpoints width=1258 height=680 nodes=3 frontiers=2 maxOldMovement=0
+PASS report-before-endpoints at 1258px avoids all node/question/visible-road collisions
+METRIC sixteen-action-route width=1258 height=680 nodes=16 frontiers=0 maxOldMovement=0
+PASS sixteen-action-route at 1258px avoids all node/question/visible-road collisions
+METRIC point-to-regional-range width=1258 height=680 nodes=2 frontiers=0 maxOldMovement=0
+PASS point-to-regional-range at 1258px avoids all node/question/visible-road collisions
+METRIC all-twenty-two-actions width=1258 height=758 nodes=21 frontiers=0 maxOldMovement=0
+PASS all-twenty-two-actions at 1258px avoids all node/question/visible-road collisions
+RESULT 26/26 checks passed; rendered readability and human experience remain unverified.

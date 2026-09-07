@@ -1,0 +1,36 @@
+{
+  "builtHtmlSha256": "28b6935e50f072d488fe9f8a5c63260716cee656081c434200cc6fc86d7d79fe",
+  "results": [
+    {
+      "name": "offline start; preserved 5 object / 10 external groups; neutral four judgments",
+      "status": "PASS"
+    },
+    {
+      "name": "keyboard opens original grouped popup; unavailable inspection is non-mutating",
+      "status": "PASS"
+    },
+    {
+      "name": "early Xray/image shared question; hover does not replace pinned selection; late context",
+      "status": "PASS"
+    },
+    {
+      "name": "archive attribution and corroboration split; evidence/road/gap/claim cross-highlights",
+      "status": "PASS"
+    },
+    {
+      "name": "original relation report remains selectable after endpoint compression",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "output/playwright/fusion-v0/initial-1440.png",
+    "output/playwright/fusion-v0/pending-1440.png",
+    "output/playwright/fusion-v0/context-connected-1440.png",
+    "output/playwright/fusion-v0/archive-gaps-1440.png",
+    "output/playwright/fusion-v0/archive-confirmed-1440.png",
+    "output/playwright/fusion-v0/failure.png"
+  ],
+  "errors": [],
+  "status": "FAIL",
+  "failure": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /没有新增/. Input:\n\n'把开过的小窗连成片：信息已保留。'\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-map-fusion-v0/browser-check.mjs:142:12\n    at async check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-map-fusion-v0/browser-check.mjs:56:3)\n    at async file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-map-fusion-v0/browser-check.mjs:134:3"
+}

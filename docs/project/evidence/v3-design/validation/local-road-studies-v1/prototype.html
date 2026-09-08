@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>掌眼 · 两段推理道路</title>
+<link rel="icon" href="data:,">
+<style>
+:root{color-scheme:dark;--bg:#14191a;--panel:#1c2223;--line:#394243;--text:#e7e7de;--muted:#a7b1ac;--green:#b5c595;--yellow:#d4b36d;--red:#d3a497}
+*{box-sizing:border-box}body{margin:0;min-width:1200px;background:var(--bg);color:var(--text);font:15px/1.6 "Microsoft YaHei","PingFang SC",sans-serif}button,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled{cursor:default;color:#8f9994}button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--text);outline-offset:4px}main{max-width:1496px;margin:auto;padding:26px 32px 22px}header{display:flex;align-items:center;justify-content:space-between;gap:24px}.eyebrow{font-size:12px;color:var(--muted);letter-spacing:.08em}h1{margin:4px 0;font-size:27px;font-weight:500}p{margin:0}.intro{font-size:14px;color:var(--muted)}.reset{background:transparent;border:1px solid var(--line);padding:8px 17px;border-radius:3px}.reset:hover{border-color:var(--muted)}nav{display:flex;gap:8px;margin:24px 0 18px;border-bottom:1px solid var(--line);padding-bottom:12px}nav button{padding:10px 18px;background:none;border:1px solid transparent;border-radius:3px}nav button[aria-pressed=true]{background:var(--panel);border-color:#7b886d;color:var(--green)}nav button:hover{background:var(--panel)}.workspace{display:grid;grid-template-columns:254px minmax(0,1fr);gap:24px}aside{border-right:1px solid var(--line);padding-right:24px}.section-label{font-size:12px;color:var(--muted);margin-bottom:12px}.action{width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:12px 14px;margin-bottom:10px;min-height:83px}.action strong{display:block;font-weight:500;font-size:16px}.action small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.action:not(:disabled):hover{border-color:var(--green)}.action.acquired{border-color:#617052}.action.acquired small{color:var(--green)}.action:disabled:not(.acquired){background:transparent}.note{font-size:12px;color:var(--muted);margin:8px 0 15px}.preset{border-left:2px solid var(--line);padding:1px 0 1px 12px;margin-bottom:20px;font-size:13px;color:var(--muted)}.preset strong{display:block;color:var(--text);font-weight:400;margin:4px 0}details{font-size:12px;color:var(--muted);margin-top:15px}summary{cursor:pointer}label{display:block;margin-top:12px}select{display:block;width:100%;margin-top:5px;background:var(--bg);border:1px solid var(--line);padding:7px 5px;font-size:12px}.map-heading{display:flex;align-items:baseline;justify-content:space-between;gap:15px}.map-heading h2{font-size:18px;font-weight:400;margin:0}.map-heading span{font-size:12px;color:var(--muted)}.notice{min-height:51px;margin:9px 0 0;padding-bottom:12px;font-size:14px;color:var(--green)}.board{position:relative;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}svg{display:block;width:100%;height:auto}svg text{font-family:"Microsoft YaHei","PingFang SC",sans-serif;fill:var(--text);pointer-events:none}.card{fill:var(--panel);stroke:var(--line);stroke-width:1.2}.known-result{fill:#1c251e;stroke:#718360}.node{cursor:pointer}.node:hover .card,.node:focus .card,.node.selected .card{stroke:var(--text);stroke-width:2}.node:focus{outline:none}.caption{font-size:12px;fill:var(--muted)}.title{font-size:18px}.sub{font-size:14px;fill:#c0c8c1}.edge-label{font-size:13px;fill:var(--muted)}.question{font-size:15px;fill:var(--yellow)}.success{fill:var(--green)}.conflict{fill:var(--red)}.road{fill:none;stroke:var(--green);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}.pending{stroke:var(--yellow);stroke-dasharray:6 7;stroke-width:1.7}.disputed{stroke:var(--red);stroke-dasharray:5 7}.new-road{animation:connect .55s ease-out both}.new-node{animation:arrive .5s ease-out both}@keyframes connect{from{opacity:.1;stroke-width:4}to{opacity:1;stroke-width:2}}@keyframes arrive{from{opacity:0}to{opacity:1}}@media(prefers-reduced-motion:reduce){.new-road,.new-node{animation:none}}.legend{display:flex;gap:24px;font-size:12px;color:var(--muted);margin:13px 0}.legend span{display:inline-flex;align-items:center;gap:8px}.legend i{display:block;width:24px;border-top:2px solid var(--green)}.legend i.dash{border-top-style:dashed;border-color:var(--yellow)}.lower{display:grid;grid-template-columns:1.05fr 1fr;gap:24px;margin-top:12px}.lower h3{font-size:12px;font-weight:400;color:var(--muted);margin:0 0 7px}.detail{font-size:13px;min-height:60px}.history{margin:0;padding-left:20px;font-size:12px;color:var(--muted);min-height:60px}.footnote{font-size:12px;color:var(--muted);border-top:1px solid var(--line);margin-top:18px;padding-top:12px}.clear{border:0;background:none;color:var(--muted);font-size:12px;padding:0;text-decoration:underline;margin-top:6px}.clear:disabled{visibility:hidden}[hidden]{display:none!important}
+</style>
+<style>.node:hover .road,.node:focus .road,.node.selected .road{stroke-width:3.5}.road-hit{fill:none;stroke:transparent;stroke-width:70;pointer-events:stroke}</style>
+</head>
+<body><main>
+<header><div><p class="eyebrow">掌眼 / 局部可点击示意 · 2026.09.08</p><h1>两段推理道路</h1><p class="intro">材料留在原处，新的关系让道路继续延伸。</p></div><button id="reset" class="reset">重来这一例</button></header>
+<nav aria-label="选择局部示意"><button id="tab-photo" aria-pressed="true">01　旧照片接入历史</button><button id="tab-compare" aria-pressed="false">02　差异何时成为变化</button></nav>
+<div class="workspace">
+<aside>
+  <div id="photo-controls"><p class="section-label">取得材料 · 先后任选</p>
+    <button class="action" id="take-photo"><strong>找一张旧照片</strong><small>照片中的内容到手就能看</small></button>
+    <button class="action" id="take-current"><strong>观察现器对应特征</strong><small>记录瑕疵、磨耗等可比部位</small></button>
+    <button class="action" id="take-xray"><strong>拍这只碗的 X 射线</strong><small>独立看看当前内部结构</small></button>
+  </div>
+  <div id="compare-controls" hidden><p class="section-label">这一例预先给定两份材料</p><div class="preset"><strong>较早的区域记录</strong><strong>当前的区域记录</strong>时点明确；能否比较、是否有差异，由下方演示报告说明。</div>
+    <button class="action" id="compare"><strong>演示区域比较</strong><small>先看两份记录之间有什么差异</small></button>
+  </div>
+  <button class="action" id="verify"><strong>演示对象核验</strong><small id="verify-hint">需要旧照片和现器对应特征</small></button>
+  <p class="note">核验与比较使用明确的演示结果；真实照片、特征值与区域对照素材尚未制作。</p>
+  <details id="outcomes"><summary>换一种报告结果</summary>
+    <label>对象核验<select id="match-outcome"><option value="match">对应相符，支持同一只</option><option value="uncertain">看不清，暂无法确认</option><option value="different">特征不符，不能归属</option></select></label>
+    <label id="comparison-label" hidden>区域比较<select id="comparison-outcome"><option value="difference">区域可比，有明确差异</option><option value="same">区域可比，未见可确认差异</option><option value="incomparable">看不清或层面不同，不能比较</option></select></label>
+    <p class="note">已取得的报告会保留。要换结果，重来这一例。</p>
+  </details>
+</aside>
+<section>
+  <div class="map-heading"><h2 id="map-title">照片里的是这只碗吗？</h2><span>点材料或报告可回查</span></div>
+  <p class="notice" id="notice" role="status" aria-live="polite"></p>
+  <div class="board"><svg id="graph" viewBox="0 0 1000 540" role="group" aria-label="已知内容与它们之间的关系"></svg></div>
+  <div class="legend"><span><i></i>已经成立的关系</span><span><i class="dash"></i>还待核实的关系</span></div>
+  <div class="lower"><div><h3>选中内容</h3><p class="detail" id="detail">取得材料后，可以点它回看内容与来源。</p><button class="clear" id="clear" disabled>取消选择</button></div><div><h3>本例记录</h3><ol id="history" class="history"></ol></div></div>
+</section>
+</div>
+<p class="footnote">独立讨论稿：仅演示这两段关系，不计算整局费用与阶段。核验一张照片不等于核实全部档案；旧外观照片也不能用来断言当时没有内部接缝。</p>
+</main>
+<script>
+// Experimental presentation studies. This module deliberately has no solver imports.
+const MATCH_OUTCOMES = new Set(['match', 'uncertain', 'different']);
+const COMPARISON_OUTCOMES = new Set(['difference', 'same', 'incomparable']);
+const MATERIAL_ACTIONS = {
+  TAKE_PHOTO: 'photo',
+  TAKE_CURRENT: 'current',
+  TAKE_XRAY: 'xray',
+};
+
+function initial(mode = 'photo') {
+  const selectedMode = mode === 'compare' ? 'compare' : 'photo';
+  const suppliedMaterials = selectedMode === 'compare';
+  return {
+    mode: selectedMode,
+    materials: { photo: suppliedMaterials, current: suppliedMaterials, xray: false },
+    match: null,
+    comparison: null,
+    log: [],
+  };
+}
+
+function derive(state) {
+  const hasBothMaterials = state.materials.photo && state.materials.current;
+  const matched = state.match?.outcome === 'match';
+  return {
+    canVerify: hasBothMaterials && state.match === null,
+    canCompare: state.mode === 'compare' && hasBothMaterials && state.comparison === null,
+    historicalRepair: state.mode === 'photo' && state.materials.photo && matched,
+    temporalChange: state.mode === 'compare' && matched && state.comparison?.outcome === 'difference',
+    canTakePhoto: !state.materials.photo,
+    canTakeCurrent: !state.materials.current,
+    canTakeXray: !state.materials.xray,
+  };
+}
+
+function reduce(state, action) {
+  if (action?.type === 'RESET') return initial(state.mode);
+
+  const material = MATERIAL_ACTIONS[action?.type];
+  if (material && Object.hasOwn(MATERIAL_ACTIONS, action.type)) {
+    if (state.materials[material]) return state;
+    const event = { type: action.type, order: state.log.length + 1 };
+    return {
+      ...state,
+      materials: { ...state.materials, [material]: true },
+      log: [...state.log, event],
+    };
+  }
+
+  const available = derive(state);
+  if (action?.type === 'VERIFY' && available.canVerify && MATCH_OUTCOMES.has(action.outcome)) {
+    const event = { type: 'VERIFY', outcome: action.outcome, order: state.log.length + 1 };
+    return {
+      ...state,
+      match: { outcome: event.outcome, order: event.order },
+      log: [...state.log, event],
+    };
+  }
+
+  if (action?.type === 'COMPARE' && available.canCompare && COMPARISON_OUTCOMES.has(action.outcome)) {
+    const event = { type: 'COMPARE', outcome: action.outcome, order: state.log.length + 1 };
+    return {
+      ...state,
+      comparison: { outcome: event.outcome, order: event.order },
+      log: [...state.log, event],
+    };
+  }
+
+  return state;
+}
+
+const StudyLogic = Object.freeze({ initial, reduce, derive });
+
+</script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let mode='photo', selected=null;
+  const states={photo:StudyLogic.initial('photo'),compare:StudyLogic.initial('compare')};
+  const choices={photo:{match:'match',comparison:'difference'},compare:{match:'match',comparison:'difference'}};
+  const introductions={photo:'可以先取得照片、观察现器，也可以独立做 X 射线。',compare:'两份材料已经在手。可以先比较区域，也可以先核验对象。'};
+  const notices={...introductions};
+  const details={};
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const text=(x,y,value,cls='title',anchor='start')=>`<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor}">${esc(value)}</text>`;
+  const road=(id,d,kind='',arrow=false)=>`<path id="${id}" class="road ${kind}" d="${d}" ${arrow?'marker-end="url(#arrow)"':''}/>`;
+  function card(id,x,y,w,h,caption,lines,sub,detail,result=false,fresh=false){
+    details[id]=detail;
+    return `<g id="${id}" class="node ${selected===id?'selected':''} ${fresh?'new-node':''}" tabindex="0" role="button" aria-pressed="${selected===id}" aria-label="${esc(lines.join('，'))}" data-node="${id}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" class="card ${result?'known-result':''}"/>${text(x+20,y+24,caption,'caption')}${lines.map((v,i)=>text(x+20,y+55+i*26,v)).join('')}${sub?text(x+20,y+h-17,sub,'sub'):''}</g>`;
+  }
+  const step=(s,type)=>s.log.find(e=>e.type===type)?.order;
+  function photoGraph(s,d,fresh){
+    let g='';
+    if(s.materials.xray)g+=card('xray',26,25,342,112,`第 ${step(s,'TAKE_XRAY')} 次取得 · 当前观察`,['成像范围内可见隐藏接合'],'尚不为这些接合断代','今日成像直接来自眼前器物。这里只呈现覆盖内当前结构的候选回报；未制作具体射线素材。照片核验不会重新取得这份观察。');
+    if(s.materials.photo)g+=card('photo',26,210,290,118,`第 ${step(s,'TAKE_PHOTO')} 次取得 · 旧照片`,['19 世纪末的照片'],'可见足部瑕疵与旧锔痕','来源：既有作者设定中的19世纪末室内照片。照片中的旧锔痕从取得时就可读；归入本器历史还需这张照片的对象核验。具体图像尚未制作。');
+    if(s.materials.current)g+=card('current',684,210,290,118,`第 ${step(s,'TAKE_CURRENT')} 次取得 · 现器观察`,['已观察的对应特征'],'瑕疵、磨耗等可比记录','来自眼前器物已观察的对应部位。核验应使用实际具备的多个稳定特征；这里不伪造特征值，也不把一个相似特征当成身份保证。');
+    if(s.materials.photo&&s.materials.current){
+      const relationStart=g.length;
+      if(s.match?.outcome==='match'){
+        g+=road('identity-road','M316 263H684',fresh?'new-road':'');
+        g+=text(500,244,'核验相符：支持同一只碗','edge-label success','middle');
+        g+=text(500,290,`第 ${s.match.order} 次 · 核验报告`,'caption','middle');
+      }else{
+        const bad=s.match?.outcome==='different';
+        g+=road('identity-gap-left','M316 263H458',bad?'disputed':'pending')+road('identity-gap-right','M542 263H684',bad?'disputed':'pending');
+        g+=text(500,241,bad?'特征不符，不能归为同一只':s.match?'看不清，仍不能确认':'是否同一只？尚待逐项核对',bad?'question conflict':'question','middle');
+        g+=text(500,296,s.match?`第 ${s.match.order} 次核验报告保留`:'两端都有了，关系还没核实','caption','middle');
+      }
+      if(s.match){
+        const id='photo-match-report';
+        details[id]=`第 ${s.match.order} 次取得的对象核验报告（演示）：${s.match.outcome==='match'?'对应特征相符，支持照片与现器为同一只':s.match.outcome==='uncertain'?'对应点看不清，暂不能确认同一只':'对应特征不符，不能把照片归于本器'}。核对的是这张旧照片与已观察的现器特征；它不替其他档案作归属证明。具体配对特征值尚未制作。`;
+        g=g.slice(0,relationStart)+`<g id="${id}" class="node ${selected===id?'selected':''}" tabindex="0" role="button" aria-label="回查照片与现器的核验报告" aria-pressed="${selected===id}" data-node="${id}"><path class="road-hit" d="M316 263H684"/>`+g.slice(relationStart)+'</g>';
+      }
+    }else if(s.materials.photo){
+      g+=road('photo-frontier','M316 263H464','pending')+text(490,257,'照片里是眼前这只碗吗？','question');
+    }else if(s.materials.current){
+      g+=road('current-frontier','M684 263H540','pending')+text(520,256,'有可以核对的旧照片吗？','question','end');
+    }
+    if(d.historicalRepair){
+      g+=road('history-road','M171 328V420Q171 452 203 452H335',fresh?'new-road':'',true);
+      g+=card('photo-history',348,402,445,113,'旧照片新接通的历史用途',['至迟在照片拍摄时','这只碗已经过锔修'],'','照片中的可见旧锔痕，加上有效拍摄时点与本照片的归属核验，支持这一限定表述。它不说明今天所有内部接合都形成于当时，也不直接建立重大重组或整局阶段。',true,fresh);
+    }
+    if(!s.materials.photo&&!s.materials.current&&!s.materials.xray)g+=text(500,251,'已经取得的内容会留在这里。','sub','middle')+text(500,285,'从左侧任选一份材料开始。','caption','middle');
+    return g;
+  }
+  function comparisonGraph(s,d,fresh){
+    let g=text(26,36,'两个时点的区域记录已经在手；下方留下实际取得的演示报告。','caption');
+    if(s.comparison){
+      const c=s.comparison.outcome;
+      const lines=c==='difference'?['两份记录的可比区域','存在明确差异']:c==='same'?['区域可比','未见可确认差异']:['遮挡或观察层面不同','无法比较这个区域'];
+      g+=card('comparison-report',26,125,363,131,`第 ${s.comparison.order} 次取得 · 比较报告`,lines,'','预置历史记录与当前记录的比较结果演示。差异只属于可比范围；归属未定时不能称为同一器物的历史变化。没有具体照片或差异素材，结果不冒充已实现的真实调查。');
+    }
+    if(s.match){
+      const lines=s.match.outcome==='match'?['对应特征相符','支持为同一只碗']:s.match.outcome==='uncertain'?['对应点看不清','暂不能确认同一对象']:['对应特征不符','不能把历史记录归于本器'];
+      g+=card('attribution-report',611,125,363,131,`第 ${s.match.order} 次取得 · 归属报告`,lines,'','这份结果只核验本例指定的历史记录和当前对象，不核验全部档案。时点在本例中预先明确。结果选项是条件演示，具体比对特征值尚未制作。');
+    }
+    if(d.temporalChange){
+      g+=road('difference-support','M207 256V310Q207 330 235 330H465Q500 330 500 363',fresh?'new-road':'');
+      g+=road('attribution-support','M793 256V310Q793 330 765 330H535Q500 330 500 363',fresh?'new-road':'');
+      g+=text(282,314,'已有差异依据','edge-label')+text(613,314,'已确认对象归属','edge-label');
+      g+=road('change-road','M500 363V401',fresh?'new-road':'',true);
+      g+=card('temporal-change',268,414,464,108,'两份原报告共同支持',['这只碗在两个时点之间','发生了该范围内的变化'],'','只有差异报告明确区域可比且确有差异、历史材料归属本器、时点明确时，才支持本器变化。先取得哪份报告不影响这一用途；两份原报告的取得次序与内容保持不变。',true,fresh);
+    }else if(!s.comparison&&!s.match){
+      g+=text(500,228,'先比较，或先核验，都可以。','sub','middle')+text(500,264,'报告取得后才出现，不预填结果。','caption','middle');
+    }else if(s.match&&s.match.outcome!=='match'){
+      g+=text(500,363,'历史记录尚不能归于本器。','question','middle')+text(500,394,'已有差异也不能据此称为这只碗的变化。','caption','middle');
+    }else if(s.comparison&&s.comparison.outcome!=='difference'){
+      g+=text(500,363,s.comparison.outcome==='same'?'本次未见可确认差异，不生成变化结论。':'这个区域无法比较；不能据此说它没有变化。','question','middle');
+    }else if(s.comparison){
+      g+=road('difference-frontier','M207 256V315Q207 342 235 342H457','pending')+text(482,336,'差异能归到这只碗的历史吗？','question');
+    }else{
+      g+=road('attribution-frontier','M793 256V315Q793 342 765 342H565','pending')+text(541,336,'两份记录之间有可确认的差异吗？','question','end');
+    }
+    return g;
+  }
+  const logText=e=>({TAKE_PHOTO:'取得旧照片',TAKE_CURRENT:'取得现器对应特征',TAKE_XRAY:'取得今日 X 射线',VERIFY:{match:'核验报告：支持同一只',uncertain:'核验报告：暂不能确认',different:'核验报告：特征不符'}[e.outcome],COMPARE:{difference:'比较报告：可比范围存在差异',same:'比较报告：未见可确认差异',incomparable:'比较报告：该区域不能比较'}[e.outcome]})[e.type];
+  function render(fresh=false){
+    const s=states[mode],d=StudyLogic.derive(s),isPhoto=mode==='photo';
+    for(const k of Object.keys(details))delete details[k];
+    $('tab-photo').setAttribute('aria-pressed',String(isPhoto));$('tab-compare').setAttribute('aria-pressed',String(!isPhoto));
+    $('photo-controls').hidden=!isPhoto;$('compare-controls').hidden=isPhoto;$('comparison-label').hidden=isPhoto;
+    $('map-title').textContent=isPhoto?'照片里的是这只碗吗？':'两份记录的差异，能说明什么？';
+    $('match-outcome').value=choices[mode].match;$('comparison-outcome').value=choices[mode].comparison;
+    $('match-outcome').disabled=Boolean(s.match);$('comparison-outcome').disabled=Boolean(s.comparison);
+    for(const [id,key] of [['take-photo','photo'],['take-current','current'],['take-xray','xray']]){
+      $(id).disabled=s.materials[key];$(id).classList.toggle('acquired',s.materials[key]);
+    }
+    $('verify').disabled=!d.canVerify;$('verify').classList.toggle('acquired',Boolean(s.match));
+    $('verify-hint').textContent=s.match?'报告已保留，可点图中内容回查':d.canVerify?'材料都在手，查看核验报告':!s.materials.photo&&!s.materials.current?'需要旧照片和现器对应特征':!s.materials.photo?'还没有可供核对的旧照片':'还缺现器的对应特征记录';
+    $('compare').disabled=!d.canCompare;$('compare').classList.toggle('acquired',Boolean(s.comparison));
+    $('notice').textContent=notices[mode];
+    $('graph').innerHTML='<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9" fill="none" stroke="#b5c595" stroke-width="1.5"/></marker></defs>'+(isPhoto?photoGraph(s,d,fresh):comparisonGraph(s,d,fresh));
+    $('detail').textContent=selected&&details[selected]?details[selected]:'点材料或报告，可以回查它的内容、来源和能支持的范围。';
+    $('clear').disabled=!selected;
+    $('history').innerHTML=s.log.map(e=>`<li value="${e.order}">${esc(logText(e))}</li>`).join('')||'<li>尚未执行；两例分别记录，切换不会清空。</li>';
+  }
+  function dispatch(action){
+    const before=states[mode],old=StudyLogic.derive(before);
+    states[mode]=StudyLogic.reduce(before,action);
+    const s=states[mode],d=StudyLogic.derive(s);
+    if(action.type==='RESET'){selected=null;choices[mode]={match:'match',comparison:'difference'};notices[mode]=introductions[mode];$('outcomes').open=false;}
+    else if(s.log.length===before.log.length)return;
+    else if(action.type==='TAKE_PHOTO')notices[mode]='旧照片到手了，照片中的锔痕现在就能看见。尚未确认拍的是这只碗。';
+    else if(action.type==='TAKE_CURRENT')notices[mode]=s.materials.photo?'两份对应材料都有了，可以核验；同时拥有它们还不等于已经相符。':'现器特征已经记录。以后取得照片，可以拿来对照。';
+    else if(action.type==='TAKE_XRAY')notices[mode]='当前结构观察已经取得，不需要等待旧照片核验。';
+    else if(action.type==='VERIFY'){
+      if(s.match.outcome!=='match')notices[mode]='核验没有支持同一对象。材料和报告保留，历史道路不接通。';
+      else if(mode==='photo')notices[mode]='照片与现器核验相符。原照片里的旧锔痕，现在可以接入这只碗的历史。';
+      else if(d.temporalChange)notices[mode]=`对象归属已确认。第 ${s.comparison.order} 次取得的差异报告，现在接入这只碗的历史。`;
+      else if(!s.comparison)notices[mode]='已确认同一对象；区域比较报告还未取得。';
+      else if(s.comparison.outcome==='same')notices[mode]='归属已确认；已有比较报告未见可确认差异，不生成变化结论。';
+      else notices[mode]='归属已确认；已有报告说明该区域无法比较，不生成变化结论。';
+    }
+    else notices[mode]=s.comparison.outcome==='difference'?(d.temporalChange?'比较发现可确认差异。已有的对象核验，让它成为本器的跨时点变化依据。':'先得到两份记录之间的差异；还不能称为这只碗的历史变化。'):s.comparison.outcome==='same'?'可以比较，但本次未见可确认差异。报告保留，不生成变化结论。':'这个区域无法比较。报告保留，这不等于它没有变化。';
+    const focused=document.activeElement?.id;
+    render((!old.historicalRepair&&d.historicalRepair)||(!old.temporalChange&&d.temporalChange));
+    if(focused&&$(focused)?.disabled)$('reset').focus({preventScroll:true});
+  }
+  for(const [id,type] of [['take-photo','TAKE_PHOTO'],['take-current','TAKE_CURRENT'],['take-xray','TAKE_XRAY']])$(id).onclick=()=>dispatch({type});
+  $('verify').onclick=()=>dispatch({type:'VERIFY',outcome:choices[mode].match});
+  $('compare').onclick=()=>dispatch({type:'COMPARE',outcome:choices[mode].comparison});
+  $('reset').onclick=()=>dispatch({type:'RESET'});
+  $('match-outcome').onchange=e=>{choices[mode].match=e.target.value;};
+  $('comparison-outcome').onchange=e=>{choices[mode].comparison=e.target.value;};
+  for(const m of ['photo','compare'])$('tab-'+m).onclick=()=>{mode=m;selected=null;$('outcomes').open=false;render();};
+  const select=id=>{selected=selected===id?null:id;render();};
+  $('graph').onclick=e=>{const node=e.target.closest('[data-node]');select(node?.dataset.node||null);};
+  $('graph').onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.node){e.preventDefault();const id=e.target.dataset.node;select(id);$(id)?.focus({preventScroll:true});}};
+  $('clear').onclick=()=>{selected=null;render();};
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('outcomes').open)$('outcomes').open=false;else{selected=null;render();}}});
+  window.studySnapshot=()=>structuredClone({mode,states,derived:StudyLogic.derive(states[mode]),selected});
+  render();
+})();
+</script>
+</body></html>

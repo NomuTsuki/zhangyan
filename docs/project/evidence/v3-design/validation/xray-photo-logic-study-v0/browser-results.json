@@ -1,0 +1,53 @@
+{
+  "verifiedAt": "2026-09-07T07:22:00.453Z",
+  "htmlSha256": "50bb2aecd9230581e2b51ede76a0442c6812450a9ecc09c80304cad06cd76183",
+  "checks": [
+    "Empty start has no obtained nodes and cannot verify an absent photo",
+    "Photo-first plus match supports the past without X-ray",
+    "Taking X-ray later keeps keyboard focus and adds independent current information",
+    "Removing simulated match restores gap without removing or moving acquired material",
+    "X-ray is usable immediately; acquired photo waits at its own missing AND input",
+    "Matching fills the missing input and connects output"
+  ],
+  "geometry": [
+    {
+      "width": 1280,
+      "mode": "pending",
+      "outside": [],
+      "pageOverflow": false
+    },
+    {
+      "width": 1280,
+      "mode": "connected",
+      "outside": [],
+      "pageOverflow": false
+    },
+    {
+      "width": 1440,
+      "mode": "pending",
+      "outside": [],
+      "pageOverflow": false
+    },
+    {
+      "width": 1440,
+      "mode": "connected",
+      "outside": [],
+      "pageOverflow": false
+    },
+    {
+      "width": 1920,
+      "mode": "pending",
+      "outside": [],
+      "pageOverflow": false
+    },
+    {
+      "width": 1920,
+      "mode": "connected",
+      "outside": [],
+      "pageOverflow": false
+    }
+  ],
+  "pageErrors": [],
+  "source": "Implementer-controlled Playwright UI interactions with local HTML",
+  "humanVerified": false
+}

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>掌眼 · 旧照片缺哪一项？</title>
+<style>
+:root{color-scheme:dark;--bg:#14191a;--panel:#1c2223;--line:#394243;--text:#e7e7de;--muted:#a3adaa;--green:#b5c595;--yellow:#d4b36d}
+*{box-sizing:border-box}body{margin:0;min-width:1240px;background:var(--bg);color:var(--text);font-family:"Microsoft YaHei","PingFang SC",sans-serif;font-size:15px;line-height:1.6}button{font:inherit;color:inherit;cursor:pointer}button:focus-visible{outline:2px solid #f4f0df;outline-offset:5px}button:disabled{cursor:default}main{max-width:1360px;margin:0 auto;padding:28px 40px 24px}header{display:flex;justify-content:space-between;align-items:center;gap:24px}.eyebrow{font-size:12px;letter-spacing:.09em;color:var(--muted)}h1{font-size:27px;line-height:1.4;margin:8px 0 5px;font-weight:500}p{margin:0}.intro{color:var(--muted);font-size:14px}.reset{background:none;border:1px solid var(--line);padding:7px 16px;border-radius:3px}.inputs{margin-top:24px;display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:12px}.input{position:relative;padding:14px 20px;background:var(--panel);border:1px solid var(--line);border-radius:4px;min-height:94px;text-align:left}.input small{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.input strong{font-size:17px;font-weight:500}.input .state{position:absolute;right:16px;top:16px;font-size:11px;color:var(--muted)}.input:not(:disabled):hover{border-color:#85908b;background:#242c2d}.input.acquired{border-color:#768263}.input.acquired .state{color:var(--green)}.input:disabled:not(.acquired){color:#8d9693;background:#181e1f}.input:disabled:not(.acquired) small{color:#8d9693}.demo-note{font-size:12px;color:var(--muted);margin:9px 1px 0}.notice{min-height:28px;margin:21px 0 8px;font-size:14px;color:var(--text)}.board{position:relative;border-top:1px solid var(--line);border-bottom:1px solid var(--line);min-height:500px}.board svg{display:block;width:100%;height:auto;overflow:visible}.board .empty{position:absolute;inset:0;display:grid;align-content:center;justify-content:center;gap:6px;text-align:center;pointer-events:none;color:var(--muted)}.empty strong{font-weight:400;color:var(--text);font-size:18px}.empty[hidden]{display:none}svg text{font-family:"Microsoft YaHei","PingFang SC",sans-serif;fill:var(--text)}.card{fill:#1c2223;stroke:var(--line);stroke-width:1}.result{fill:#1c231e;stroke:#63754e}.pending-result{fill:none;stroke:none}.condition-missing{fill:none;stroke:var(--yellow);stroke-width:1.5;stroke-dasharray:7 6}.condition-ready{fill:#20271f;stroke:var(--green);stroke-width:1.2}.caption{font-size:12px;fill:var(--muted);letter-spacing:.04em}.title{font-size:19px;font-weight:500}.sub{font-size:14px;fill:#bec6c1}.missing-text{fill:var(--yellow)}.waiting-text{fill:#9da8a0}.road{fill:none;stroke:var(--green);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.missing-road{stroke:var(--yellow);stroke-dasharray:7 7;stroke-width:1.6}.joint{fill:var(--bg);stroke:var(--green);stroke-width:1.6}.joint-label{font-size:13px;fill:var(--green)}.edge-label{font-size:13px;fill:var(--muted)}.source-mark{fill:none;stroke:#aab5ae;stroke-width:1.2}.guide{margin-top:15px;display:flex;justify-content:space-between;align-items:flex-start;gap:35px;font-size:13px;color:var(--muted)}.key{display:flex;gap:20px;white-space:nowrap}.key span{display:inline-flex;align-items:center;gap:7px}.key .solid{width:25px;border-top:2px solid var(--green)}.key .dash{width:25px;border-top:2px dashed var(--yellow)}.guide strong{font-weight:400;color:var(--text)}details{margin-top:18px;font-size:12px;color:var(--muted)}summary{cursor:pointer;width:fit-content}dl{display:flex;gap:28px;margin:10px 0 0;flex-wrap:wrap}dl div{display:flex;gap:7px}dt,dd{margin:0}dd{color:var(--text)}.smallprint{font-size:11px;margin-top:14px;color:#939c98}.lane-label{font-size:12px;fill:#9eaaa2;letter-spacing:.1em}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div><p class="eyebrow">掌眼 / 局部逻辑示意 · 可丢弃讨论稿</p><h1>旧照片有了，还缺哪一项？</h1><p class="intro">先取得材料，再看它能说明什么。两种资料可以任选先后。</p></div>
+    <button class="reset" id="reset">重来</button>
+  </header>
+  <section class="inputs" aria-label="取得材料与演示核验">
+    <button class="input" id="take-xray"><small>看现在</small><strong>拍这只碗的 X 射线</strong><span class="state" id="xray-state">未取得</span></button>
+    <button class="input" id="take-photo"><small>找过去</small><strong>找一张旧照片</strong><span class="state" id="photo-state">未取得</span></button>
+    <button class="input" id="verify" aria-describedby="demo-note"><small id="verify-hint">先有照片，才有东西可核对</small><strong id="verify-label">演示核验：是同一只</strong><span class="state" id="verify-state">未核验</span></button>
+  </section>
+  <p class="demo-note" id="demo-note">核验暂用演示结果；具体照片与比对特征尚未制作。</p>
+  <p class="notice" id="notice" role="status" aria-live="polite">先点“拍 X 射线”或“找旧照片”。</p>
+  <section class="board" aria-label="材料、共同条件与判断">
+    <svg id="graph" viewBox="0 0 1160 510" role="img" aria-labelledby="graph-title graph-desc"></svg>
+    <div class="empty" id="empty"><strong>已取得的材料会留在这里。</strong><span>需要共同条件的判断，会在缺项处断开。</span></div>
+  </section>
+  <div class="guide"><p>可以先取得两份材料，再演示核验；也可以先找照片。<br><strong>看接通前后：旧照片没有重新取得，补上的是下面那项核验。</strong></p><div class="key" aria-label="道路图例"><span><i class="solid"></i>已有支持</span><span><i class="dash"></i>尚缺条件</span></div></div>
+  <details><summary>查看这一小段的条件</summary><dl id="conditions"></dl><p class="smallprint">这页只演示资料来源与共同条件，不产生“重大重组”等更远判断，也不沿用整局费用与步数。</p></details>
+</main>
+<script id="logic">
+// Throwaway logic study. No imports, persistence, frozen solver or production integration.
+// These candidate rules differ from the frozen X-ray interpretation gate.
+const StudyLogic = (() => {
+  const initial = () => ({xray:false, photo:false, same:false});
+  function reduce(state, action) {
+    if(action==='RESET') return initial();
+    if(action==='TAKE_XRAY') return {...state,xray:true};
+    if(action==='TAKE_PHOTO') return {...state,photo:true};
+    if(action==='TOGGLE_MATCH' && state.photo) return {...state,same:!state.same};
+    return {...state};
+  }
+  const derive = state => ({now:state.xray,past:state.photo && state.same,missingMatch:state.photo && !state.same});
+  return Object.freeze({initial,reduce,derive});
+})();
+</script>
+<script>
+(()=>{
+  const $=id=>document.getElementById(id);
+  let state=StudyLogic.initial();
+  const svgText=(x,y,text,cls='title')=>'<text x="'+x+'" y="'+y+'" class="'+cls+'">'+text+'</text>';
+  function render(){
+    const d=StudyLogic.derive(state);
+    $('take-xray').disabled=state.xray;$('take-photo').disabled=state.photo;$('verify').disabled=!state.photo;
+    $('take-xray').classList.toggle('acquired',state.xray);$('take-photo').classList.toggle('acquired',state.photo);$('verify').classList.toggle('acquired',state.same);
+    $('xray-state').textContent=state.xray?'已取得':'未取得';$('photo-state').textContent=state.photo?'已取得':'未取得';$('verify-state').textContent=state.same?'已核验':'未核验';
+    $('verify-label').textContent=state.same?'撤回核验结果（演示）':'演示核验：是同一只';
+    $('verify-hint').textContent=!state.photo?'先有照片，才有东西可核对':state.same?'切回未核验状态，比较缺口':'核对旧照片与眼前这只碗';
+    $('verify').setAttribute('aria-pressed',String(state.same));
+    $('empty').hidden=state.xray||state.photo;
+    let svg='<title id="graph-title">已取得材料与共同条件</title><desc id="graph-desc">'+(state.xray?'今天拍的 X 射线直接记录这只碗的当前结构。':'尚未取得 X 射线。')+(state.photo?(d.past?'旧照片与同一对象核验共同支持过去状态。':'旧照片已经取得，尚缺是否同一只碗的核验。'):'尚未取得旧照片。')+'</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9" fill="none" stroke="#b5c595" stroke-width="1.4"/></marker></defs>';
+    if(state.xray){
+      svg+='<g id="xray-lane">'+svgText(34,27,'现在','lane-label')+'<rect class="card" x="34" y="43" width="292" height="125" rx="4"/>'+svgText(56,70,'已取得的材料','caption')+svgText(56,102,'今天拍的 X 射线')+svgText(56,137,'拍的是眼前这只碗','sub')+'<path id="now-road" class="road" d="M326 106H775" marker-end="url(#arrow)"/>'+svgText(501,91,'直接记录','edge-label')+'<rect id="now-result" class="result" x="788" y="43" width="335" height="125" rx="4"/>'+svgText(810,70,'现在可以使用','caption')+svgText(810,102,'这只碗现在的内部结构')+svgText(810,137,'不用等待旧照片的核验','sub')+'</g>';
+    }
+    if(state.photo){
+      svg+='<g id="photo-lane">'+svgText(34,219,'过去','lane-label')+'<rect id="photo-node" class="card" x="34" y="235" width="292" height="125" rx="4"/>'+svgText(56,262,'已取得的材料','caption')+svgText(56,294,'找到的旧照片')+svgText(56,329,'照片里有一只碗','sub')+'<path id="photo-input" class="road" d="M326 298H594"/>'+svgText(411,282,'已有这份材料','edge-label')+'<path id="match-input" class="road'+(d.missingMatch?' missing-road':'')+'" d="M506 399V355Q506 342 519 342H617V321"/>'+'<path id="and-gate" class="joint" d="M617 275L640 298L617 321L594 298Z"/><text x="617" y="303" text-anchor="middle" class="joint-label">AND</text>'+svgText(654,343,'两项都需要','edge-label');
+      svg+='<g id="match-condition"><rect class="'+(state.same?'condition-ready':'condition-missing')+'" x="354" y="400" width="304" height="90" rx="4"/>'+svgText(376,427,state.same?'补上的核验结果':'缺这一项',state.same?'caption':'caption missing-text')+svgText(376,461,state.same?'照片里的是这只碗':'还没核实是不是同一只',state.same?'title':'title missing-text')+'</g>';
+      if(d.past){
+        svg+='<path id="past-road" class="road" d="M640 298H775" marker-end="url(#arrow)"/><rect id="past-result" class="result" x="788" y="235" width="335" height="125" rx="4"/>'+svgText(810,262,'两项共同支持','caption')+svgText(810,295,'照片中的样子')+svgText(810,322,'可以算作这只碗的过去');
+      } else {
+        svg+='<path id="blocked-output" class="road missing-road" d="M640 298H690"/>'+svgText(810,270,'这只碗过去的样子','title waiting-text')+svgText(810,303,'还不能确认','sub waiting-text')+svgText(810,332,'先要知道照片里是不是它','caption');
+      }
+      svg+='</g>';
+    }
+    $('graph').innerHTML=svg;
+    $('conditions').innerHTML=[['X 射线',state.xray?'已取得':'未取得'],['旧照片',state.photo?'已取得':'未取得'],['同一对象核验',state.same?'已确认':'未确认'],['现在的信息',d.now?'可使用':'尚无材料'],['这只碗的过去',d.past?'可用旧照片参照':'尚未确认']].map(([name,value])=>'<div><dt>'+name+'：</dt><dd>'+value+'</dd></div>').join('');
+  }
+  function dispatch(action){
+    const before=state;state=StudyLogic.reduce(state,action);render();
+    $('notice').textContent=action==='RESET'?'重新开始，两种资料可以任选先后。':action==='TAKE_XRAY'?'取得了今天拍的片子。它直接来自眼前这只碗。':action==='TAKE_PHOTO'?'旧照片已经在手；还没核实照片里是不是这只碗。':state.same?'补上了“是同一只”的核验。旧照片现在可以用来参照这只碗的过去。':before.same?'核验结果已撤回，缺口重新出现；两份材料仍保留。':'先取得旧照片，才有东西可核对。';
+  }
+  $('take-xray').onclick=()=>{dispatch('TAKE_XRAY');(state.photo?$('verify'):$('take-photo')).focus({preventScroll:true});};
+  $('take-photo').onclick=()=>{dispatch('TAKE_PHOTO');$('verify').focus({preventScroll:true});};
+  $('verify').onclick=()=>dispatch('TOGGLE_MATCH');$('reset').onclick=()=>dispatch('RESET');
+  window.studySnapshot=()=>structuredClone({state,derived:StudyLogic.derive(state)});
+  render();
+})();
+</script>
+</body>
+</html>

@@ -2,9 +2,9 @@
 
 > 保存 V3 相对稳定的方向性判断。它是当前最优参考，不是不可质疑的命令。
 
-最后复查：2026-09-07（融合版开局理解未通过；用户要求小步修正图形与局部前置，旧版本保留）
+最后复查：2026-09-08（用户认可两例，批准提交后更新融合版；沿用原有图形，不采用示意矩形卡片）
 
-当前工作入口为[第一小步：X 射线与旧照片](evidence/v3-design/2026-09-07-xray-photo-local-logic-candidate.md)。[融合版](evidence/v3-design/validation/workbench-map-fusion-v0/README.md)已可运行，但用户实际进行开局调查后无法理解，见[真人反馈](evidence/v3-design/validation/workbench-map-fusion-v0/PLAYTEST-RESULT-2026-09-07.md)。用户同意把图形与 X 射线的对象连续性前置一起重审，并要求局部方案可懂后再扩整图。只提出独立候选，冻结规则与旧原型保留；[高保真方向](evidence/v3-design/2026-09-06-v3-hifi-direction-and-next-slice.md)继续保留，实施后置。排程以[当前状态](02-CURRENT-STATE.md)和[下一步](03-NEXT-ACTIONS.md)为准。
+当前工作入口为[两段推理道路 · 可点击示意](evidence/v3-design/validation/local-road-studies-v1/README.md)。2026-09-08 用户要求从[局部修订提案](evidence/v3-design/2026-09-07-xray-photo-local-revision-proposal-v1.md)挑几个做成可点击示意，认可后再更新低保真地图布局逻辑。已实现照片接入历史、差异与归属汇合两例；模型与浏览器限定检查通过，待用户实际评价。冻结规则与旧原型保留，[高保真方向](evidence/v3-design/2026-09-06-v3-hifi-direction-and-next-slice.md)继续保留，实施后置。
 
 ## 项目目的
 

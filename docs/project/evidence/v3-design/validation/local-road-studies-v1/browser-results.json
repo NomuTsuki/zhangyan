@@ -1,0 +1,119 @@
+{
+  "sha256": "ba41a4f58c5195a76615f83c10bfe341854839a641f2e878e36fd478dea7a783",
+  "checks": [
+    "Photo gate, independent X-ray, stable source geometry, report click/keyboard and selection purity",
+    "Comparison-first and attribution-first converge; original reports retain order and geometry",
+    "No difference, incomparable, uncertain identity and mismatched identity keep reports without historical outputs",
+    "Examples retain independent state; reset during connection leaves no delayed result",
+    "Three desktop widths and reduced-motion final state"
+  ],
+  "viewports": [
+    {
+      "label": "photo-initial",
+      "width": 1280,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "photo-pending",
+      "width": 1280,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "photo-connected",
+      "width": 1280,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "comparison-pending",
+      "width": 1280,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "comparison-connected",
+      "width": 1280,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "photo-initial",
+      "width": 1440,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "photo-pending",
+      "width": 1440,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "photo-connected",
+      "width": 1440,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "comparison-pending",
+      "width": 1440,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "comparison-connected",
+      "width": 1440,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "photo-initial",
+      "width": 1920,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "photo-pending",
+      "width": 1920,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "photo-connected",
+      "width": 1920,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "comparison-pending",
+      "width": 1920,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    },
+    {
+      "label": "comparison-connected",
+      "width": 1920,
+      "pageOverflow": false,
+      "textOutsideNodes": 0,
+      "overlaps": 0
+    }
+  ],
+  "pageErrors": [],
+  "scope": "Local candidate only. No human experience or full-game validation."
+}

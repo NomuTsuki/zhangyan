@@ -1,0 +1,67 @@
+{
+  "builtHtmlSha256": "c7c34550645c89427bc72d4dd38f9a63f9ec53bbdbb8ff78ab539460e34dcf7a",
+  "results": [
+    {
+      "name": "preserved 5+10 entries, four neutral judgments and fixed sidebar widths",
+      "status": "PASS"
+    },
+    {
+      "name": "Xray directly available; actual photo/base gap; attribution closes the same road",
+      "status": "PASS"
+    },
+    {
+      "name": "comparison uses an explicit material basis; original report gains historical use without reacquisition",
+      "status": "PASS"
+    },
+    {
+      "name": "archive report, attribution and source history remain separate from photo verification",
+      "status": "PASS"
+    },
+    {
+      "name": "all selection kinds and keyboard restore without session mutation or layout shift",
+      "status": "PASS"
+    },
+    {
+      "name": "surface frontier extends; material and layer readings do not falsely prove one another",
+      "status": "PASS"
+    },
+    {
+      "name": "rendered initial, mid and 16-step map at 1280px",
+      "status": "PASS"
+    },
+    {
+      "name": "rendered initial, mid and 16-step map at 1440px",
+      "status": "PASS"
+    },
+    {
+      "name": "rendered initial, mid and 16-step map at 1920px",
+      "status": "PASS"
+    },
+    {
+      "name": "all 22 actions through the UI; explicit bases and exhausted-budget recovery",
+      "status": "PASS"
+    },
+    {
+      "name": "reduced motion, stop and restart cancel transient state; budget remains user controlled",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "output/playwright/fusion-local-2026-09-08/photo-gap-1440.png",
+    "output/playwright/fusion-local-2026-09-08/photo-connected-1440.png",
+    "output/playwright/fusion-local-2026-09-08/photo-report-before-attribution-1440.png",
+    "output/playwright/fusion-local-2026-09-08/photo-report-connected-1440.png",
+    "output/playwright/fusion-local-2026-09-08/archive-report-connected-1440.png",
+    "output/playwright/fusion-local-2026-09-08/initial-1280.png",
+    "output/playwright/fusion-local-2026-09-08/mid-1280.png",
+    "output/playwright/fusion-local-2026-09-08/full-1280.png",
+    "output/playwright/fusion-local-2026-09-08/initial-1440.png",
+    "output/playwright/fusion-local-2026-09-08/mid-1440.png",
+    "output/playwright/fusion-local-2026-09-08/full-1440.png",
+    "output/playwright/fusion-local-2026-09-08/initial-1920.png",
+    "output/playwright/fusion-local-2026-09-08/mid-1920.png",
+    "output/playwright/fusion-local-2026-09-08/full-1920.png",
+    "output/playwright/fusion-local-2026-09-08/all-actions-1440.png"
+  ],
+  "errors": []
+}

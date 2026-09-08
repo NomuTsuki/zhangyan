@@ -1,0 +1,19 @@
+{
+  "baseline": "14f9bee",
+  "trackedFilesChecked": 102,
+  "paths": [
+    "AGENTS.md",
+    "docs/project/evidence/v3-design/validation/workbench-map-v0",
+    "docs/project/evidence/v3-design/validation/workbench-map-atlas-v0",
+    "docs/project/evidence/v3-design/validation/workbench-map-focus-v1",
+    "docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0",
+    "docs/project/evidence/v3-design/validation/knowledge-map-slice-v0",
+    "docs/project/evidence/v3-design/validation/workbench-map-fusion-v0/graph-check.mjs",
+    "docs/project/evidence/v3-design/validation/workbench-map-fusion-v0/selection-check.mjs",
+    "docs/project/evidence/v3-design/validation/workbench-map-fusion-v0/layout-check.mjs",
+    "docs/project/evidence/v3-design/validation/workbench-map-fusion-v0/browser-check.mjs"
+  ],
+  "changedFiles": [],
+  "result": "PASS",
+  "scope": "No changes to these tracked files relative to authorized checkpoint; this does not claim identical fusion behavior."
+}

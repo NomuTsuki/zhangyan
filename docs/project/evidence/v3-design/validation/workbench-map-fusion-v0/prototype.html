@@ -10,7 +10,7 @@
 header{height:86px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:12px 18px}.brand{width:190px;flex:none}.brand p{font-size:11px;color:var(--muted)}.status{flex:1;min-width:180px}.status strong{font-size:15px;color:var(--green)}.status p{font-size:12px;color:var(--muted)}.top-controls{display:flex;gap:8px;align-items:center;flex:none}.budget-label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}.budget-label input{width:48px}.top-controls button{padding:6px 9px;font-size:12px}.experiment{position:absolute;z-index:15;top:86px;left:0;right:0;background:#1d201c;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted);padding:3px 16px}.experiment p{padding:7px 0;max-width:1100px}
 .workspace{display:grid;grid-template-columns:306px minmax(0,1fr) 356px;height:calc(100vh - 111px);min-height:650px;margin-top:25px}.bench{background:var(--panel);border-right:1px solid var(--line);overflow:auto}.zone-title{font-size:12px;color:var(--muted);padding:12px 14px;border-bottom:1px solid #292f32}.zone-title em{font-style:normal;font-size:10px}.object{height:268px;width:100%;display:block}.bowl{fill:none;stroke:#495052;stroke-width:1.3}.hot{cursor:pointer}.hot .hit{fill:transparent}.hot .dot{fill:var(--panel);stroke:var(--gold);stroke-width:1.3}.hot text{fill:var(--muted);font-size:11px}.hot .meta{fill:var(--gold);font-size:9px}.hot.related .dot{stroke:var(--blue);stroke-width:2}.hot.selected .dot{fill:var(--gold);stroke:var(--gold);stroke-width:2.5}.hot.selected text,.hot:hover text{fill:var(--ink)}.hot.spent:not(.selected) .dot{fill:#5a615b;stroke:#777e71}.outside{padding:2px 12px 20px}.group-label{font-size:11px;color:var(--muted);margin:13px 0 4px}.place-row{display:flex;align-items:baseline;justify-content:space-between;width:100%;padding:6px 5px;border-color:transparent;margin:2px 0}.place-row .meta{font-size:10px;color:var(--gold);white-space:nowrap;margin-left:5px}.place-row.related{border-color:#496570}.place-row.selected{background:#302c23;border-color:var(--gold)}.place-row.spent .name{color:#9ba498}
 .map-column{min-width:0;display:flex;flex-direction:column;position:relative}.map-head{padding:13px 18px 7px;display:flex;justify-content:space-between;gap:10px;align-items:center}.map-head .small{font-size:11px}.map-tools{display:flex;align-items:center;gap:4px}.map-tools button{font-size:12px;padding:3px 7px;white-space:nowrap}#zoom-value{font-size:11px;width:34px;text-align:center}.notice{font-size:12px;color:var(--blue);min-height:40px;padding:5px 18px 9px;border-bottom:1px solid #293135}.map-scroll{flex:1;min-height:0;overflow:auto;position:relative;scrollbar-color:#566063 #191f22}.map-canvas{position:relative;min-height:100%}#map-svg{display:block;overflow:visible}#node-controls{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none}.node-control{position:absolute;pointer-events:auto;padding:0;background:transparent;border:1px solid transparent;line-height:20px}.node-control:hover{background:#1c272ba0}.node-control.claim{border-color:#354039;color:var(--green)}.node-control.pending{color:var(--gold)}.node-control.contested{color:var(--red)}.node-control.selected{border-color:var(--gold);background:#2a292180}.node-control.related{border-color:#526e7880}.node-control.faded{opacity:.65}.node-glyph{position:absolute;left:calc(50% - 6px);top:13px;width:12px;height:12px;border:1.6px solid currentColor;border-radius:50%;background:var(--bg)}.claim .node-glyph{border-radius:2px;background:#354132}.pending .node-glyph{border-style:dashed}.node-title{position:absolute;left:4px;right:4px;top:35px;font-size:13px;text-align:center;line-height:20px}.node-state{position:absolute;bottom:2px;left:4px;right:4px;text-align:center;font-size:10px;line-height:14px;color:var(--gold)}.frontier-control{color:var(--gold);border-color:transparent}.frontier-control .node-glyph{width:10px;height:10px;border-style:dashed;border-width:1.3px;left:calc(50% - 5px)}.frontier-control .node-title{font-size:12px;line-height:18px}.frontier-control.conflict{color:var(--red)}.frontier-control.boundary{color:#a9aaa0}.route{fill:none;stroke:#7f9aa8;stroke-width:1.3;opacity:.78}.route.context{stroke:#baaacf}.route.support{stroke:#a3b18c}.route.conflict{stroke:var(--red);stroke-dasharray:5 4}.route.frontier{stroke:var(--gold);stroke-dasharray:4 5;stroke-width:1.1;opacity:.65}.route.frontier.conflict{stroke:var(--red)}.route.frontier.boundary{stroke:#a5a596}.route.selected{stroke-width:2.4;opacity:1}.route.dimmed{opacity:.42}.route-hit{stroke:transparent;stroke-width:14;fill:none;cursor:pointer}.route-hit:focus-visible{stroke:#bfd8e35c;outline:none}.route-label{font-size:10px;fill:var(--gold);paint-order:stroke;stroke:var(--bg);stroke-width:4;pointer-events:none}.route.connecting{stroke-dasharray:var(--route-length);stroke-dashoffset:var(--route-length);animation:connect .65s ease-out forwards}.node-control.activated .node-glyph{animation:activate .75s ease-out}.junction{fill:var(--bg);stroke:var(--green);stroke-width:1.4}.empty-map{position:absolute;top:28%;left:10%;right:10%;text-align:center;color:var(--muted);pointer-events:none}.empty-map strong{display:block;color:var(--ink);font-weight:500;margin-bottom:8px}.map-footer{padding:9px 14px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted);gap:8px}.legend-detail{padding:12px 16px;font-size:12px;color:var(--muted);border-top:1px solid var(--line)}.legend-detail p+p{margin-top:5px}
-.right{border-left:1px solid var(--line);background:#14191c;display:flex;flex-direction:column;min-height:0}.judgment-overview{padding:14px 16px 12px;border-bottom:1px solid var(--line)}.judgment-overview h2{margin-bottom:9px}.judgment-row{display:flex;justify-content:space-between;gap:9px;width:100%;padding:5px 6px;margin:2px 0;border-color:transparent;font-size:12px}.judgment-row .state{font-size:11px;color:var(--muted)}.judgment-row.established .state{color:var(--green)}.judgment-row.contested .state{color:var(--red)}.judgment-row.related{border-color:#4f676f}.judgment-row.selected{border-color:var(--gold);background:#302b21}.detail-scroll{overflow:auto;flex:1;padding:16px;min-height:0}.detail-title{font-size:16px;line-height:1.55;margin:4px 0 10px}.detail-copy{font-size:13px;color:#c7ccca}.detail-button{display:block;width:100%;padding:8px;margin:5px 0;font-size:12px;border-color:#333f43}.detail-button strong{display:block;color:var(--blue);font-weight:500}.question-button{color:var(--gold)}.method{padding:12px 0;border-top:1px solid var(--line)}.method:first-child{border-top:0}.method.focused{padding-left:10px;border-left:2px solid var(--gold)}.method h3{font-size:13px}.method-title{font-weight:600;border:0;padding:0}.method .cost{font-size:11px;color:var(--gold);margin:5px 0}.method p{font-size:12px;color:var(--muted)}.method details{font-size:12px;margin:8px 0}.method details p{margin-top:7px}.method .execute{font-size:12px;margin-top:10px}.reason{font-size:12px;color:#c4ab8b;margin-top:9px}.facet-row{font-size:12px;display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)}.source-note{padding:12px;border-left:2px solid var(--blue);font-size:12px;color:var(--muted);margin:10px 0}
+.right{border-left:1px solid var(--line);background:#14191c;display:flex;flex-direction:column;min-height:0}.judgment-overview{padding:14px 16px 12px;border-bottom:1px solid var(--line)}.judgment-overview h2{margin-bottom:9px}.judgment-row{display:flex;justify-content:space-between;gap:9px;width:100%;padding:5px 6px;margin:2px 0;border-color:transparent;font-size:12px}.judgment-row .state{font-size:11px;color:var(--muted)}.judgment-row.established .state{color:var(--green)}.judgment-row.contested .state{color:var(--red)}.judgment-row.related{border-color:#4f676f}.judgment-row.selected{border-color:var(--gold);background:#302b21}.detail-scroll{overflow:auto;flex:1;padding:16px;min-height:0}.detail-title{font-size:16px;line-height:1.55;margin:4px 0 10px}.detail-copy{font-size:13px;color:#c7ccca}.detail-button{display:block;width:100%;padding:8px;margin:5px 0;font-size:12px;border-color:#333f43}.detail-button strong{display:block;color:var(--blue);font-weight:500}.question-button{color:var(--gold)}.method{padding:12px 0;border-top:1px solid var(--line)}.method:first-child{border-top:0}.method.focused{padding-left:10px;border-left:2px solid var(--gold)}.method h3{font-size:13px}.method-title{font-weight:600;border:0;padding:0}.method .cost{font-size:11px;color:var(--gold);margin:5px 0}.method p{font-size:12px;color:var(--muted)}.method details{font-size:12px;margin:8px 0}.method details p{margin-top:7px}.method .execute{font-size:12px;margin-top:10px}.basis-option{margin-top:10px;padding-top:8px;border-top:1px solid var(--line)}.reason{font-size:12px;color:#c4ab8b;margin-top:9px}.facet-row{font-size:12px;display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)}.source-note{padding:12px;border-left:2px solid var(--blue);font-size:12px;color:var(--muted);margin:10px 0}
 #action-pop{position:fixed;z-index:30;width:314px;max-height:70vh;overflow:auto;padding:14px;background:#1b2024;border:1px solid #66716b;border-radius:5px;box-shadow:0 14px 48px #0009}.pop-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:8px}.pop-heading button{padding:2px 7px}#hover-tip{position:fixed;max-width:290px;padding:7px 10px;border:1px solid #526069;background:#20292e;color:var(--ink);font-size:12px;z-index:50;pointer-events:none}
 dialog{background:#1a2023;color:var(--ink);border:1px solid #66736a;border-radius:7px;width:550px;max-height:85vh;padding:24px}dialog::backdrop{background:#0009}dialog h2{margin-bottom:16px}dialog p{font-size:13px;color:#c8cecc}dialog .modal-heading{display:flex;align-items:baseline;justify-content:space-between}dialog .modal-heading button{font-size:12px}dialog .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}dialog textarea{width:100%;resize:vertical;margin-top:8px}#history-list{max-height:50vh;overflow:auto}.history-step{display:block;width:100%;font-size:12px;margin:5px 0}.history-step.current{border-color:var(--gold)}
 .pending .node-glyph{border-style:solid;background:#54482d}.pending .node-glyph::after{content:"";position:absolute;inset:3px;background:var(--gold);border-radius:50%}
@@ -20,10 +20,10 @@ dialog{background:#1a2023;color:var(--ink);border:1px solid #66736a;border-radiu
 </head>
 <body>
 <header><div class="brand"><h1>掌眼</h1><p>调查与推理道路 · 融合试玩</p></div><div class="status"><strong id="stage-title"></strong><p id="resource-status"></p></div><div class="top-controls"><label class="budget-label">开局步数 <input id="budget" type="number" min="12" max="22" value="22" aria-label="开局调查步数"></label><button id="stop-button" class="primary">收手</button><button id="brief-button">查看委托</button><button id="history-button">调查记录</button><button id="restart-button">重开</button></div></header>
-<details class="experiment"><summary>Experimental · 桌面低保真融合版</summary><p>沿用现有 22 个调查手段、作者规则与计费。验证的是已知关系、缺口与联动，不代表真人体验通过。没有加入手动连线或三维器物。</p></details>
+<details class="experiment"><summary>Experimental · 桌面低保真融合版</summary><p>保留 22 个调查手段、计费与原求解器。本版已接入局部修订：核验需要实际两端材料，当前 X 射线直接可用，比较报告在归属核验后用于历史判断。新增解释关系不单独计为证据。桌面低保真，尚待真人评价。</p></details>
 <main class="workspace">
 <aside class="bench" aria-label="器物内外的调查手段"><div class="zone-title">这只碗 <em>—— 先点位置，再选具体手段</em></div><svg id="object" class="object" viewBox="0 0 306 268" aria-label="碗上的五个调查部位"></svg><div class="zone-title">碗以外的路子 <em>—— 先点一行，再选具体手段</em></div><div class="outside" id="outside"></div></aside>
-<section class="map-column" aria-label="已知与推理"><div class="map-head"><div><h2>已知与推理</h2><p class="small" id="map-count"></p></div><div class="map-tools"><button id="clear-selection">取消选择</button><button id="zoom-out" aria-label="缩小地图">−</button><span id="zoom-value">100%</span><button id="zoom-in" aria-label="放大地图">＋</button></div></div><div id="notice" class="notice" aria-live="polite"></div><div id="map-scroll" class="map-scroll"><div id="map-canvas" class="map-canvas"><svg id="map-svg" aria-label="本局已知信息与道路"></svg><div id="node-controls"></div></div><div class="empty-map" id="empty-map"><strong>这只碗的经历，还没有开始显露。</strong><span>在左侧任选一处调查。取得的信息会留在这里。</span></div></div><div class="map-footer"><span>○ 信息　□ 判断　◌ 尚未接通</span><button id="legend-button" class="quiet" aria-expanded="false">怎样读道路？</button></div><div class="legend-detail" id="legend" hidden><p>连续的道路：已有依据的关系。点道路，可回查它为什么成立。</p><p>断开的短路：从已知中提出的疑问。它不是一份已经拿到的证据。</p><p>意义未定：材料已经在手，解释条件还未补上。条件到手后，旧信息会接通。</p><p>同一汇流口内的依据需要共同在场；不同入路可以各自构成证明。选择道路可看清条件。</p></div></section>
+<section class="map-column" aria-label="已知与推理"><div class="map-head"><div><h2>已知与推理</h2><p class="small" id="map-count"></p></div><div class="map-tools"><button id="clear-selection">取消选择</button><button id="zoom-out" aria-label="缩小地图">−</button><span id="zoom-value">100%</span><button id="zoom-in" aria-label="放大地图">＋</button></div></div><div id="notice" class="notice" aria-live="polite"></div><div id="map-scroll" class="map-scroll"><div id="map-canvas" class="map-canvas"><svg id="map-svg" aria-label="本局已知信息与道路"></svg><div id="node-controls"></div></div><div class="empty-map" id="empty-map"><strong>这只碗的经历，还没有开始显露。</strong><span>在左侧任选一处调查。取得的信息会留在这里。</span></div></div><div class="map-footer"><span>○ 信息　□ 判断　◌ 尚未接通</span><button id="legend-button" class="quiet" aria-expanded="false">怎样读道路？</button></div><div class="legend-detail" id="legend" hidden><p>连续的道路：已有依据的关系。点道路，可回查它为什么成立。</p><p>断开的短路：从已知中提出的疑问。它不是一份已经拿到的证据。</p><p>材料上的观察会先保留。核验接通后，原有材料可以说明这只碗的历史；无需再取得一次。</p><p>同一汇流口内的依据需要共同在场；不同入路可以各自构成证明。选择道路可看清条件。</p></div></section>
 <aside class="right"><div id="overview" class="judgment-overview"></div><div id="details" class="detail-scroll" tabindex="-1" aria-label="选中内容详情"></div></aside>
 </main>
 <div id="action-pop" role="dialog" aria-label="这个位置可用的具体手段" tabindex="-1" hidden></div><div id="hover-tip" role="tooltip" hidden></div>
@@ -33,8 +33,8 @@ dialog{background:#1a2023;color:var(--ink);border:1px solid #66736a;border-radiu
 <dialog id="history-dialog"><div class="modal-heading"><h2>调查记录</h2><button data-close="history-dialog">关闭</button></div><p class="small">回看不改变当前局，也不花步数。</p><div id="history-list"></div><div class="modal-actions"><button id="return-live">回到本局</button></div></dialog>
 <script>
 const STAMP = {
-  "builtAt": "2026-09-07T03:54:12.332Z",
-  "templateSha256": "ca4349b016669c2f89c29847de06289b8460fbdac4ef93de09f62fce880ab198",
+  "builtAt": "2026-09-08T06:54:15.515Z",
+  "templateSha256": "3197583fb5b028437521b548d36a603ed122e6d65be1ddf943668473cd17a1f4",
   "modules": [
     {
       "ns": "M2",
@@ -47,54 +47,74 @@ const STAMP = {
       "sha256": "e217caf56a9961ea7c46151e1ca6b0546a6c408ccc8ecddb21e4b9da66ee72d1"
     },
     {
-      "ns": "M4",
+      "ns": "M5",
       "path": "../knowledge-map-slice-v0/case.mjs",
       "sha256": "7f078bc68394b9238783080ee72e6dec2ce514ea962829668a4443041805aa05"
     },
     {
-      "ns": "M1",
+      "ns": "M4",
       "path": "../workbench-map-v0/session.mjs",
       "sha256": "83d1dd707f9a4accfeb162c299387dfe3beb6a720045c8e09a22939fdd0b1351"
     },
     {
-      "ns": "M5",
+      "ns": "M6",
+      "path": "local-case.mjs",
+      "sha256": "bcd3544579fb4dd2a8f7b3edc3871031649bea30294717cb1cf10464eaee4cb4"
+    },
+    {
+      "ns": "M1",
+      "path": "local-session.mjs",
+      "sha256": "d4d1b7f3bbdfa674915ca9d04ea0cdc6e2c09e06712798769eb13b709c4d6af7"
+    },
+    {
+      "ns": "M8",
       "path": "../evidence-semantics-v0/semantics.mjs",
       "sha256": "397eab3305dce9ee5bf7e996b4c4e0c1ca081ff29be0c2f54f6b5524cc85d833"
     },
     {
       "ns": "M7",
+      "path": "local-semantics.mjs",
+      "sha256": "ef0a5548f35282ad86ca02a719bd07dfb00fae00c6be7c2f5f00a8f5ad3a4338"
+    },
+    {
+      "ns": "M10",
       "path": "../workbench-map-atlas-v0/graph.mjs",
       "sha256": "171507d84bafedebadab8e4e96875134823459f65b93fa6e3ce3cceb49c37634"
     },
     {
-      "ns": "M6",
-      "path": "graph.mjs",
-      "sha256": "747e8dac0a083abc705882a112e233566f72c108d549f0203145778e98f0ff24"
-    },
-    {
-      "ns": "M8",
-      "path": "layout.mjs",
-      "sha256": "2d5e4d4772d2b3752fb0327b9312582dc62f8d7d2370909cc47d5f1ce46f481d"
-    },
-    {
       "ns": "M11",
+      "path": "local-projection.mjs",
+      "sha256": "aac0de2d49f9cda9c6aa21af5de751ae32720878dda878e89b6ac44763ad365b"
+    },
+    {
+      "ns": "M9",
+      "path": "graph.mjs",
+      "sha256": "d20d3d20b795c1ef26cc7f8970adf807b060c6c9183dc8d982288063c3837d1b"
+    },
+    {
+      "ns": "M12",
+      "path": "layout.mjs",
+      "sha256": "38f0676a817faa020c4fc94295a9e7c1b2671f645055706a0170d127fdc9c005"
+    },
+    {
+      "ns": "M15",
       "path": "../workbench-map-focus-v1/projection.mjs",
       "sha256": "6dbd20e637345b77826ccbc911e337d92e1c59907de3617497b05e5e5725c1a5"
     },
     {
-      "ns": "M10",
+      "ns": "M14",
       "path": "../workbench-map-focus-v1/focus.mjs",
       "sha256": "4d2326ef27093310135bf46da51fd4fc2a038a4f7bd65b92242dc15aad22301b"
     },
     {
-      "ns": "M9",
+      "ns": "M13",
       "path": "selection.mjs",
-      "sha256": "52a179dd582af3802cb3b805a9a79398c7941fa408687ecc6b765d50549d5510"
+      "sha256": "616ed0c4ea9be0d80de81acef0b9e3ecfc5b13b186f5da1326e227e31b95a840"
     },
     {
       "ns": "UI",
       "path": "ui.mjs",
-      "sha256": "055a4e003c55a576564e84ea5cb44403bca36c80c2d0049cefc8d23a436bb6a7"
+      "sha256": "fa13bafb0c83e949fc91c7ebb1ec16bdc4b7922111fc5c0409aca77b168840cc"
     }
   ]
 };
@@ -3591,7 +3611,7 @@ function projectPosterior(snapshot, axes) {
 return {AXES,AXIS_NAMES,ModelConflict,stableStringify,buildStateSpace,STATE_SPACE,assertLegalAcquisitionOrder,assertSessionCanAcceptEvidence,solveFixture,projectPosterior};
 })();
 
-const M4 = (() => {
+const M5 = (() => {
 /* 第一器物的玩家侧投影层 —— 可丢弃切片专用。
  *
  * 边界(硬):
@@ -3855,7 +3875,7 @@ function playerView(solved) {
 return {COST_LABEL,ACTIONS,ACTION_BY_ID,availability,playerView};
 })();
 
-const M1 = (() => {
+const M4 = (() => {
 /* 一局的状态机。只读冻结求解器与夹具,复用切片的动作投影 case.mjs。
 
    为什么这里又有一份而不是 import 切片的 harness.mjs:
@@ -3865,7 +3885,7 @@ const M1 = (() => {
    两份若出现分歧,以本文件为准,切片那份不再跟随。 */
 const { events, thresholds, expectedProfile, claimScopeRequirements, actionContracts, proofRoleContracts, unknownRegistry } = M2;
 const { solveFixture, assertLegalAcquisitionOrder } = M3;
-const { ACTION_BY_ID, availability } = M4;
+const { ACTION_BY_ID, availability } = M5;
 /* param slice.investigationBudget,见 docs/project/PARAMS.md
    开局前可调,范围 [BUDGET_MIN, BUDGET_MAX]。下界 12 是原先的固定值,来自冻结场景的
    路线长度反推;上界由 ceiling.mjs 从冻结拓扑跑出,等于"互异动作各做一次"的步数,
@@ -3973,7 +3993,260 @@ function take(s, actionId) {
 return {BUDGET_MIN,BUDGET_MAX,BUDGET_DEFAULT,clampBudget,newSession,setBudget,solve,factsOf,workbench,take};
 })();
 
-const M5 = (() => {
+const M6 = (() => {
+/* Experimental fusion-only case adaptation, 2026-09-08.
+ * The frozen case and solver remain unchanged. IDs, source provenance, factors,
+ * proof scopes, costs and dependency units are retained. Only the explicitly
+ * approved material / interpretation dependencies below differ from the old case.
+ */
+const { events: frozenEvents, actionContracts: frozenActionContracts, proofRoleContracts: frozenProofRoleContracts } = M2;
+const { ACTIONS: frozenActions, COST_LABEL, playerView } = M5;
+
+
+const COMPARISON_ACTION_ID = "A.MAP.REGION_CONTINUITY";
+const events = { ...frozenEvents,
+  xrayEarly: { ...frozenEvents.xrayEarly,
+    facts: [...frozenEvents.xrayEarly.facts, "currentStructureReadoutByRegion"],
+    contextualFacts: [], requiresContextFacts: [] },
+  identityContinuity: { ...frozenEvents.identityContinuity,
+    acquisitionRequires: [...frozenEvents.identityContinuity.acquisitionRequires, "t1ReadingAcquired"] },
+};
+
+const comparisonDefinitions = [
+  { id: "photo", label: "旧照片与现器的可比区域", eventKey: "repairContinuity",
+    method: "photo-cross-time", contextFact: "identityObjectContinuity",
+    requiredFacts: ["t1ReadingAcquired", "currentBody", "currentRepairMap", "xrayReadingsByRegionAcquired"],
+    materialObservationIds: ["obs.phase.t1", "obs.current.whole", "obs.structure.xray.early"],
+    scopeNote: "比较旧照片与现器可比的可见区域；X 射线记录当前结构，不能用照片未显示内部接缝来证明过去没有接缝。" },
+  { id: "archive", label: "事故记录与现器的对应区域", eventKey: "documentedCrossTime",
+    method: "archive-cross-time", contextFact: "t2ArchiveObjectAttribution",
+    requiredFacts: ["t2RecordGroupCoherent", "currentBody"],
+    materialObservationIds: ["obs.accident.major", "obs.current.whole"],
+    scopeNote: "比较事故记录与现器的对应区域；记录归属核实后，报告才用于本器事故的实物印证。" },
+];
+
+const actionContracts = { ...frozenActionContracts,
+  [COMPARISON_ACTION_ID]: { ...frozenActionContracts[COMPARISON_ACTION_ID],
+    methods: { ...frozenActionContracts[COMPARISON_ACTION_ID].methods } },
+};
+const proofRoleContracts = { ...frozenProofRoleContracts };
+const oldCrossTimeContract = frozenActionContracts[COMPARISON_ACTION_ID].methods["cross-time"];
+// The original roles are routed to the two explicit local methods. Keeping the
+// old method with those roles would be an invalid schema, not a third route.
+delete actionContracts[COMPARISON_ACTION_ID].methods["cross-time"];
+for (const definition of comparisonDefinitions) {
+  const old = frozenEvents[definition.eventKey];
+  events[definition.eventKey] = { ...old,
+    coverage: { ...old.coverage, method: definition.method },
+    facts: [], contextualFacts: [...old.facts],
+    requiresContextFacts: [definition.contextFact],
+    acquisitionRequires: [...definition.requiredFacts],
+  };
+  actionContracts[COMPARISON_ACTION_ID].methods[definition.method] = {
+    ...oldCrossTimeContract, allowedDirectFacts: [],
+    allowedContextualFacts: [...old.facts], requiredContextFacts: [definition.contextFact],
+    allowedProofRoles: [...old.proofRoles],
+  };
+  for (const role of old.proofRoles) {
+    proofRoleContracts[role] = { ...frozenProofRoleContracts[role], method: definition.method };
+  }
+}
+
+/* Bind UI materials to acquisition records while preserving distinct archival
+ * source IDs. These bindings describe this local case's use of the records;
+ * they do not assert source.archive.pre-accident, source.archive.image and
+ * source.archive.major-region-pre are the same document or photograph.
+ */
+const SOURCE_BINDINGS = {
+  photo: {
+    observationId: "obs.phase.t1", sourceIds: [...frozenEvents.t1.sourceIds],
+    use: "玩家取得的早期照片及其原始内容。", sameDocumentAsOtherBindings: false,
+  },
+  identityReference: {
+    observationId: "obs.object.continuity", sourceIds: [...frozenEvents.identityContinuity.sourceIds],
+    materialObservationIds: ["obs.phase.t1", "obs.current.base"],
+    use: "核验报告使用已取得照片和现器底足记录；报告内的档案参照来源保持单独可追溯。",
+    sameDocumentAsOtherBindings: false,
+  },
+  photoComparison: {
+    observationId: "obs.structure.major.cross-time", sourceIds: [...frozenEvents.repairContinuity.sourceIds],
+    materialObservationIds: [...comparisonDefinitions[0].materialObservationIds],
+    use: comparisonDefinitions[0].scopeNote, sameDocumentAsOtherBindings: false,
+  },
+  archiveComparison: {
+    observationId: "obs.structure.major.documented-cross-time", sourceIds: [...frozenEvents.documentedCrossTime.sourceIds],
+    materialObservationIds: [...comparisonDefinitions[1].materialObservationIds],
+    use: comparisonDefinitions[1].scopeNote, sameDocumentAsOtherBindings: false,
+  },
+};
+
+const factNames = {
+  currentBody: "现器整体观察", currentRepairMap: "现器可见修补记录",
+  baseManufacture: "现器底足观察", t1ReadingAcquired: "已经取得的旧照片",
+  xrayReadingsByRegionAcquired: "当前 X 射线读数", t2RecordGroupCoherent: "事故记录",
+  identityObjectContinuity: "照片与现器的对象核验",
+};
+
+const ACTIONS = frozenActions.map((action) => {
+  if (action.id === "A.VERIFY.OBJECT_CONTINUITY") return { ...action,
+    ask: "已取得照片中的特征，与眼前这只碗的底足记录是否相符？" };
+  if (action.id !== COMPARISON_ACTION_ID) return action;
+  return { ...action,
+    ask: "选定手中的两份材料，比较它们能共同显示的区域。",
+    needs: (facts) => comparisonOptions(facts).some((option) => option.usable),
+    needsWhy: "需要现器整体观察，以及旧照片与当前 X 射线读数，或一组事故记录，才能对照具体材料。",
+    // Ambiguous selection deliberately has no fallback. The caller must retain
+    // the player's basis instead of changing it when more evidence arrives.
+    outcome: (facts, options = {}) => {
+      const usable = comparisonOptions(facts).filter((option) => option.usable);
+      return (options.comparisonBasis
+        ? usable.find((option) => option.id === options.comparisonBasis)
+        : usable.length === 1 ? usable[0] : null)?.eventKey;
+    },
+  };
+});
+const ACTION_BY_ID = new Map(ACTIONS.map((action) => [action.id, action]));
+
+function actionsForFacts(missingFacts) {
+  return ACTIONS.filter((action) => action.id !== COMPARISON_ACTION_ID &&
+    missingFacts.some((fact) => (events[action.outcome(new Set())]?.facts ?? []).includes(fact)))
+    .map((action) => action.id);
+}
+
+// Always returns both choices so an unavailable alternative remains explainable.
+function comparisonOptions(facts) {
+  return comparisonDefinitions.map((definition) => {
+    const missingFacts = definition.requiredFacts.filter((fact) => !facts.has(fact));
+    return { ...definition, materialObservationIds: [...definition.materialObservationIds],
+      usable: !missingFacts.length, missingFacts,
+      why: missingFacts.length ? "还需要：" + missingFacts.map((fact) => factNames[fact]).join("、") : null,
+      needsActionIds: actionsForFacts(missingFacts),
+      interpreted: facts.has(definition.contextFact),
+    };
+  });
+}
+
+function availability(facts, doneActionIds) {
+  return ACTIONS.map((action) => {
+    if (action.id === COMPARISON_ACTION_ID) {
+      const options = comparisonOptions(facts);
+      const usable = options.some((option) => option.usable);
+      return { action, done: doneActionIds.includes(action.id), usable,
+        why: usable ? null : action.needsWhy,
+        needsActionIds: usable ? [] : [...new Set(options.flatMap((option) => option.needsActionIds))],
+        comparisonOptions: options, requiresBasis: options.filter((option) => option.usable).length > 1,
+      };
+    }
+    const event = events[action.outcome(facts)];
+    const missingFacts = event.acquisitionRequires.filter((fact) => !facts.has(fact));
+    const needsActionIds = actionsForFacts(missingFacts);
+    return { action, done: doneActionIds.includes(action.id), usable: !missingFacts.length,
+      why: missingFacts.length ? "这一步要用到：" + missingFacts.map((fact) => factNames[fact] ?? "前项调查的记录").join("、") : null,
+      needsActionIds,
+    };
+  });
+}
+
+return {COMPARISON_ACTION_ID,events,actionContracts,proofRoleContracts,SOURCE_BINDINGS,ACTIONS,ACTION_BY_ID,comparisonOptions,availability,COST_LABEL,playerView};
+})();
+
+const M1 = (() => {
+/* Fusion-local material and interpretation session. The shared frozen solver
+ * evaluates local contracts; no frozen implementation or numeric value changes.
+ */
+const { thresholds, expectedProfile, claimScopeRequirements, unknownRegistry } = M2;
+const { solveFixture, assertLegalAcquisitionOrder } = M3;
+const { BUDGET_MIN, BUDGET_MAX, BUDGET_DEFAULT, clampBudget, newSession, setBudget } = M4;
+const { ACTION_BY_ID, availability, events, actionContracts, proofRoleContracts, comparisonOptions, COMPARISON_ACTION_ID, SOURCE_BINDINGS } = M6;
+
+
+function liveFixture(acquired, playerChoice) {
+  return { id: "fusion-local-material-logic", thresholds, expectedProfile, claimScopeRequirements,
+    actionContracts, proofRoleContracts, unknownRegistry, playerChoice, events: acquired,
+    orders: [acquired.map((event) => event.observationId)], expected: {} };
+}
+
+function solve(session) {
+  return solveFixture(liveFixture(session.acquired, session.stopped ? "STOP" : "CONTINUE"), session.acquired);
+}
+function factsOf(session) {
+  return new Set(session.acquired.length ? solve(session).coverage.facts : []);
+}
+function workbench(session) {
+  return availability(factsOf(session), session.log.map((entry) => entry.actionId)).map((row) => ({
+    ...row, affordable: session.log.length < session.budget && !session.stopped,
+  }));
+}
+
+function take(session, actionId, options = {}) {
+  if (session.stopped) return { ok: false, why: "本局已经收手" };
+  if (session.log.length >= session.budget) return { ok: false, why: "行动点数已经用完" };
+  const action = ACTION_BY_ID.get(actionId);
+  if (!action) return { ok: false, why: `没有这个动作:${actionId}` };
+  const facts = factsOf(session);
+  const row = availability(facts, session.log.map((entry) => entry.actionId)).find((item) => item.action.id === actionId);
+  if (!row.usable) return { ok: false, why: row.why };
+  let comparison = null;
+  if (actionId === COMPARISON_ACTION_ID) {
+    const choices = comparisonOptions(facts);
+    const usable = choices.filter((choice) => choice.usable);
+    if (options.comparisonBasis) {
+      comparison = choices.find((choice) => choice.id === options.comparisonBasis);
+      if (!comparison?.usable) return { ok: false, why: comparison?.why ?? "没有这种比较材料", comparisonOptions: choices };
+    } else if (usable.length === 1) comparison = usable[0];
+    else return { ok: false, why: "请先选择这次要比较的材料。", requiresBasis: true, comparisonOptions: choices };
+  }
+  const eventKey = comparison?.eventKey ?? action.outcome(facts);
+  const event = events[eventKey];
+  const acquired = [...session.acquired, event];
+  try { assertLegalAcquisitionOrder(acquired); }
+  catch (error) { return { ok: false, why: `顺序非法:${error.message}` }; }
+  const before = solve(session);
+  // Validate before committing so a contract error cannot half-charge an action.
+  const after = solveFixture(liveFixture(acquired, "CONTINUE"), acquired);
+  const materialObservationIds = comparison ? [...comparison.materialObservationIds]
+    : actionId === "A.VERIFY.OBJECT_CONTINUITY" ? [...SOURCE_BINDINGS.identityReference.materialObservationIds] : [];
+  const entry = { actionId, eventKey, observationId: event.observationId, cost: action.cost,
+    materialObservationIds, ...(comparison ? { comparisonBasis: comparison.id } : {}) };
+  session.acquired = acquired;
+  session.billed[action.cost] += 1;
+  session.log.push(entry);
+  const gainedFacts = after.coverage.facts.filter((fact) => !before.coverage.facts.includes(fact));
+  const repeated = before.evidence.observationIds.includes(event.observationId);
+  const newlyAcquired = !repeated;
+  const kind = repeated || gainedFacts.includes("repeatObservation") ? "repeat"
+    : after.evidence.unresolvedNegativeIds.includes(event.observationId) ? "negative"
+    : event.requiresContextFacts.some((fact) => !after.coverage.facts.includes(fact)) ? "suspended"
+    : gainedFacts.filter((fact) => fact !== "repeatObservation").length === 0 ? "deadend" : "progress";
+  return { ok: true, kind, gainedFacts, observationId: event.observationId, newlyAcquired,
+    comparisonBasis: comparison?.id ?? null, materialObservationIds,
+    stageMoved: before.stage !== after.stage, from: before.stage, to: after.stage, before, after };
+}
+
+// Replay stored choices, never resolve A13 again from a later session's facts.
+function replayLog(log, budget = BUDGET_DEFAULT, stopped = false) {
+  const session = newSession(budget);
+  for (const entry of log) {
+    const basis = entry.comparisonBasis;
+    if (entry.actionId === COMPARISON_ACTION_ID && !basis) {
+      throw new Error("Comparison history lacks its recorded material basis");
+    }
+    const result = take(session, entry.actionId, { comparisonBasis: basis });
+    if (!result.ok) throw new Error(`Cannot replay ${entry.actionId}: ${result.why}`);
+    const actual = session.log.at(-1);
+    if (entry.observationId && actual.observationId !== entry.observationId) throw new Error("Replay observation mismatch");
+    if (entry.materialObservationIds && JSON.stringify(entry.materialObservationIds) !== JSON.stringify(actual.materialObservationIds)) {
+      throw new Error("Replay material binding mismatch");
+    }
+  }
+  session.stopped = stopped;
+  return session;
+}
+
+return {solve,factsOf,workbench,take,replayLog,BUDGET_MIN,BUDGET_MAX,BUDGET_DEFAULT,clampBudget,newSession,setBudget};
+})();
+
+const M8 = (() => {
 /* 第一器物的情报语义文本 v0 —— 玩家侧可读层。
  *
  * 存在理由:2026-08-27 真人试玩的结论是「没玩明白」,八条问题里最根本的一条是
@@ -4489,12 +4762,47 @@ return {ACTION_SEMANTICS,LATENT_SEMANTICS,PROOF_ROLE_SEMANTICS,ROUTE_SEMANTICS,S
 })();
 
 const M7 = (() => {
+/* Copy only the four revised method explanations into this fusion entry. */
+const { ACTION_SEMANTICS: original, STAGE_SEMANTICS } = M8;
+
+const ACTION_SEMANTICS = {
+  ...original,
+  'A.VERIFY.OBJECT_CONTINUITY': {
+    doesWhat:'把已经取得的旧照片与现器底足等对应特征逐项核对。两份材料都在手后，才能执行这次核验。',
+    whyShort:'确认照片中的对象是否就是眼前这只碗。',
+    whyLong:'这次报告只处理本照片与现器的关系。照片中的旧锔痕从取得时就能看见；核验相符后，才可归入这只碗的早期历史。它不替其他事故记录或后期档案完成归属，也不决定今日X射线观察是否可用。',
+    gotWhat:'本照片与现器对应特征的核验报告。',
+  },
+  'A.IMAGE.XRAY': {
+    doesWhat:'多角度逐区成像，记录当前可读范围内的隐藏接合、填料候选与瓷片边界。',
+    whyShort:'先知道当前内部结构，再结合其他材料解释它的历史。',
+    whyLong:'成像直接来自眼前这只碗，当前结构不等待旧照片归属核验。观察只覆盖声明可读区域；没有读清的地方仍保留。成像本身不负责给全部接合断代、证明原片归属或补绘忠实度。',
+    gotWhat:'声明范围内的当前结构观察，取得后即可回查。',
+  },
+  'A.LOCATE.HISTORIC_IMAGE': {
+    doesWhat:'取得既有案例中的19世纪末旧照片，保留照片中可见的足部瑕疵与旧锔痕。',
+    whyShort:'照片内容先取得，再核实它与眼前这只碗的关系。',
+    whyLong:'照片中的内容不因归属未定而消失。与现器对应特征核验相符后，旧锔痕才成为本器早期修复的依据。旧外观照片不能证明未显示的内部接缝当时不存在；具体图片与对应特征值尚未制作。',
+    gotWhat:'一份旧照片及其可见内容，归属关系单独核实。',
+  },
+  'A.MAP.REGION_CONTINUITY': {
+    doesWhat:'明确选择已经在手的历史材料与现器记录，只比较它们能够共同说明的区域。',
+    whyShort:'先取得范围明确的比较报告，再依据归属解释本器历史。',
+    whyLong:'旧照片路线使用旧照、现器修补观察与当前成像；事故记录路线使用该记录与现器观察。报告可先于相应归属核验取得；归属成立后，原报告获得历史用途，不需要重新调查。两种材料都有时，明确选择本次使用哪一份。X射线只补当前结构，不填补旧照片不可见的内部范围。',
+    gotWhat:'指定材料与当前记录的区域比较报告；报告与本器历史用途分别保存。',
+  },
+};
+
+return {ACTION_SEMANTICS,STAGE_SEMANTICS};
+})();
+
+const M10 = (() => {
 /* Experimental player projection. Only acquired observations and public solver
  * output are read. A sourceIds entry is an observation ID, never a new evidence
  * weight. Statements are not promoted from nonempty proof slots. */
 const { events } = M2;
-const { ACTION_BY_ID } = M4;
-const { ACTION_SEMANTICS, STAGE_SEMANTICS } = M5;
+const { ACTION_BY_ID } = M5;
+const { ACTION_SEMANTICS, STAGE_SEMANTICS } = M8;
 const eventById = new Map(Object.values(events).map((e) => [e.observationId, e]));
 const unique = (xs) => [...new Set(xs.filter(Boolean))];
 const O = {
@@ -4765,14 +5073,149 @@ function buildGraph(solved, session) {
 return {buildGraph};
 })();
 
-const M6 = (() => {
+const M11 = (() => {
+/* Fusion-only presentation of the approved local relationships.
+ * Interpretations are views of existing solved facts, never ledger entries or
+ * additional claims, factors, votes, or acquisition actions. */
+const O = {
+  photo:'obs.phase.t1', base:'obs.current.base', whole:'obs.current.whole',
+  continuity:'obs.object.continuity', xray:'obs.structure.xray.early',
+  physical:'obs.structure.major.cross-time', documented:'obs.structure.major.documented-cross-time',
+  accident:'obs.accident.major', attribution:'obs.archive.t2.object-attribution',
+};
+const unique = values => [...new Set(values.filter(Boolean))];
+
+function projectLocalRelations(graph, solved, session) {
+  const facts = new Set(solved.coverage?.facts ?? []);
+  const observations = new Map(graph.observations.map(o => [o.id,o]));
+  const acquired = new Map((session?.acquired ?? []).map(e => [e.observationId,e]));
+  const has = id => observations.has(id);
+  const node = id => graph.nodes.find(n => n.id===id);
+  const patch = (id, value) => { if(node(id)) Object.assign(node(id),value); if(observations.has(id)) Object.assign(observations.get(id),value); };
+  const sources = ids => unique(ids).filter(has);
+  const explained = id => (acquired.get(id)?.requiresContextFacts ?? []).every(fact => facts.has(fact));
+  const photoReady = has(O.photo)&&has(O.continuity)&&has(O.base)&&facts.has('t1Established');
+  graph.localSupportGroups=[];
+  graph.proofRepresentatives={};
+  graph.questions=graph.questions.filter(q=>q.id!=='question:context');
+
+  patch(O.xray,{title:'当前内部的接合痕迹',state:'known',contextualized:false,interpretationState:'current',
+    summary:'今日多角度成像已经留下声明可读区域内的接合、填料候选与瓷片边界。它直接记录当前结构；历史照片核验不决定这份当前观察是否存在，也不替所有接合断代。'});
+  patch(O.photo,{title:'旧照片中的锔修痕迹',state:'known',contextualized:photoReady,
+    interpretationState:photoReady?'established':'awaiting-attribution',stateLabel:photoReady?'已接入本器历史':'',
+    summary:'19世纪末的旧照片中可见足部瑕疵与旧锔痕。照片的这些内容已经取得。'+(photoReady?'本照片与现器核验相符后，锔痕可以归入这只碗的早期历史。':'还需核对照片中的对象是否就是眼前这只碗。')+'具体图像与特征值尚未制作；此处沿用已设定的案例内容。'});
+  patch(O.continuity,{title:'旧照片与现器的核验报告',summary:'核验针对本例已取得的旧照片与现器对应特征。报告支持为同一对象；它不替事故记录、后期处理报告或其他历史材料完成归属。'});
+
+  // Remove the obsolete shared-context connections, keeping unrelated genuine
+  // context edges (e.g. manufacturing observations used by corpus comparison).
+  graph.edges=graph.edges.filter(e=>!(e.kind==='context'&&(
+    (e.from===O.continuity&&[O.photo,O.xray,O.physical,O.documented].includes(e.to))||
+    [O.physical,O.documented].includes(e.to))));
+
+  if(has(O.continuity)&&node(O.photo)&&node(O.base)) {
+    observations.get(O.continuity).nodeId=O.photo;
+    observations.get(O.continuity).representedAs='relation';
+    graph.nodes=graph.nodes.filter(n=>n.id!==O.continuity);
+    graph.edges=graph.edges.map(e=>({...e,from:e.from===O.continuity?O.photo:e.from,to:e.to===O.continuity?O.photo:e.to})).filter(e=>e.from!==e.to);
+  }
+  const addEdge=(id,from,to,label,kind,sourceIds,details,directed=true,extra={})=>{
+    if(!node(from)||!node(to)||from===to)return;
+    const edge={id,from,to,label,kind,sourceIds:sources(sourceIds),details,directed,...extra};
+    if(!edge.sourceIds.length)return;
+    const index=graph.edges.findIndex(e=>e.id===id);
+    if(index<0)graph.edges.push(edge);else graph.edges[index]=edge;
+  };
+  const addInterpretation=(id,title,summary,sourceIds,anchorIds)=>{
+    if(!sourceIds.every(has)||node(id))return;
+    graph.nodes.push({id,kind:'interpretation',state:'known',title,summary,sourceIds:sources(sourceIds),
+      group:'history',interpretationOnly:true,layoutAnchorIds:anchorIds.filter(id=>node(id)),stateLabel:'已有信息的新用途'});
+  };
+  const representProof=(edge,interpretationId)=>{
+    edge.from=interpretationId;
+    edge.sourceIds=sources([...edge.sourceIds,...node(interpretationId).sourceIds]);
+    const claim=node(edge.to);
+    if(claim?.kind==='claim')claim.sourceIds=sources([...(claim.sourceIds??[]),...edge.sourceIds]);
+  };
+
+  if(has(O.photo)&&has(O.continuity)&&node(O.base)) {
+    addEdge('photo:object',O.base,O.photo,'照片与现器的对应特征相符','attribution',
+      [O.photo,O.base,O.continuity],'这份核验报告支持指定旧照片与眼前器物为同一对象。照片和现器观察先取得，报告后来建立两端关系。点击原始依据可回查核验；不是照片与X射线互相证明。',false);
+  }else if(node(O.photo)){
+    const anchors=[O.photo,O.base].filter(id=>node(id));
+    graph.questions.push({id:'question:photo-object',kind:anchors.length===2?'gap':'stub',anchorIds:anchors,
+      title:'照片里是眼前这只碗吗？',
+      explanation:has(O.base)?'旧照片和现器对应特征都在手，尚未取得这张照片的归属核验。两份材料的存在不等于已经相符。':'照片内容已取得；先观察现器的对应特征，才有这次核验所需的另一端材料。',
+      actionIds:has(O.base)?['A.VERIFY.OBJECT_CONTINUITY']:['A.OBSERVE.BASE','A.VERIFY.OBJECT_CONTINUITY'],
+      sourceIds:sources([...anchors,has(O.physical)?O.physical:null]),
+      continuation:{nodeIds:[],edgeIds:['photo:object']}});
+  }
+  if(photoReady){
+    const id='interpretation:photo-repair';
+    addInterpretation(id,'照片拍摄时已留有锔修痕迹','至迟在这张19世纪末照片拍摄时，这只碗已经过锔修。这是既有早期状态事实的范围表述，不新增计分判断，不把今天所有内部接合都定为同一时期。',
+      [O.photo,O.continuity,O.base],[O.photo]);
+    addEdge('interpretation:photo-history',O.photo,id,'旧照片接入本器早期历史','support',[O.photo,O.continuity,O.base],
+      '照片中的旧锔痕、有效时点与本照片核验共同允许这一表述。照片没有重新取得，核验报告也没有变成另一份照片。');
+    for(const edge of graph.edges)if(edge.kind==='support'&&edge.from===O.photo&&edge.to==='claim:threePhase')representProof(edge,id);
+  }
+
+  for(const [id,basis,origin,attr,fact,interpretationId] of [
+    [O.physical,'photo',O.photo,O.continuity,'crossTimeMajorChange','interpretation:photo-change'],
+    [O.documented,'archive',O.accident,O.attribution,'t2EventPhysicalCorrespondence','interpretation:archive-change'],
+  ]){
+    if(!has(id))continue;
+    const active=explained(id)&&facts.has(fact);
+    const event=acquired.get(id);
+    const entry=session?.log?.find(item=>item.observationId===id);
+    const materialIds=sources(entry?.materialObservationIds??event?.materialObservationIds??(basis==='photo'?[O.photo,O.whole,O.xray]:[O.accident,O.whole]));
+    patch(id,{title:basis==='photo'?'旧照与现状的区域差异报告':'事故记录与现状的比较报告',state:'known',
+      contextualized:active,interpretationState:active?'established':'awaiting-attribution',
+      stateLabel:active?'已接入本器历史':'报告已取得 · 归属待核实',
+      summary:(basis==='photo'?'报告比较指定旧照的可见区域与当前修补记录，成像只补充当前结构定位。':'报告比较指定事故记录与当前修补记录。')+
+        (active?'相应的对象归属已确认，原报告现可用于本器历史。':'比较报告已经取得；对象归属还未确认，不能把记录间的差异直接说成本器经历的变化。')+
+        '适用范围仍限于原报告声明的可比区域。旧照片未显露的内部接缝不构成“不存在”的证据，具体对照素材尚未制作。',
+      materialObservationIds:materialIds,comparisonBasis:basis});
+    if(node(id))node(id).layoutAnchorIds=materialIds.filter(id=>node(id));
+    for(const materialId of materialIds){
+      const label=materialId===origin?'这份记录提供历史参照':materialId===O.xray?'成像补充当前结构定位':'现器观察提供当前参照';
+      addEdge(`comparison-material:${basis}:${materialId}`,materialId,id,label,'reference',[materialId,id],
+        '这条道路说明本报告使用了哪份已取得材料，不单独证明本器发生变化。报告的取得时间与原始来源保持可查。');
+    }
+    if(active&&has(attr)&&node(origin)&&node(id)){
+      const needed=sources([...materialIds,id,attr]);
+      addInterpretation(interpretationId,basis==='photo'?'此碗在两个时点间的区域变化':'事故处理与现物的对应',
+        basis==='photo'?'指定历史材料与当前区域的差异，在对象归属和时点明确后可归为本器的范围限定变化。完整重大重组判断仍使用原求解器的全部证明条件。':'事故记录已归属本器，原比较报告在声明范围内对所述处理提供现物印证。它不替后期记录作归属，也不改变原报告的取得次数。',needed,[id,origin]);
+      const differenceEdge=`interpretation:${basis}:difference`,attributionEdge=`interpretation:${basis}:attribution`;
+      addEdge(differenceEdge,id,interpretationId,basis==='photo'?'原比较报告提供范围内的差异':'比较报告提供处理与现物的对应','support',needed,
+        basis==='photo'?'差异报告与对应对象归属共同成立；报告可以先于归属取得。':'比较报告与事故记录归属共同支持现物印证；两份报告可以换序取得。');
+      addEdge(attributionEdge,origin,interpretationId,'已核实的归属提供本器历史用途','support',needed,
+        basis==='photo'?'这一入路使用旧照片与现器的原始核验报告；它不为X射线的当前观察提供有效性。':'这一入路使用事故记录自己的归属报告，不使用旧照片的核验代替。');
+      graph.localSupportGroups.push({id:`interpretation-group:${basis}`,targetId:interpretationId,kind:'all',
+        title:'比较报告与对应归属共同支持',sourceIds:needed,memberNodeIds:[id,origin],edgeIds:[differenceEdge,attributionEdge]});
+      graph.proofRepresentatives[id]=interpretationId;
+      for(const edge of graph.edges)if(edge.kind==='support'&&edge.from===id&&edge.to.startsWith('claim:'))representProof(edge,interpretationId);
+    }
+  }
+  // Old report IDs remain selectable even when rendered by a road.
+  refreshObservationEdges(graph);
+  return graph;
+}
+
+function refreshObservationEdges(graph){
+  for(const observation of graph.observations)observation.edgeIds=graph.edges.filter(edge=>edge.sourceIds?.includes(observation.id)).map(edge=>edge.id);
+}
+
+return {projectLocalRelations,refreshObservationEdges};
+})();
+
+const M9 = (() => {
 /* Experimental presentation projection. Atlas remains the observation/claim
  * authority; frontiers expose questions grounded in acquired observations.
  * continuation contains layout hints only: it must never create a fact node.
  * Support groups are complete ALL packages; an alternativeSet relates packages
  * by OR. Neither this metadata nor a single visual edge establishes a claim. */
-const { buildGraph: buildAtlasGraph } = M7;
-const { ACTION_BY_ID } = M4;
+const { buildGraph: buildAtlasGraph } = M10;
+const { ACTION_BY_ID, comparisonOptions } = M6;
+const { projectLocalRelations, refreshObservationEdges } = M11;
 const unique = (items) => [...new Set(items.filter(Boolean))];
 const O = {
   whole: "obs.current.whole", base: "obs.current.base", corpus: "obs.corpus.identity",
@@ -4800,7 +5243,7 @@ const NEXT = {
 };
 
 function buildGraph(solved, session) {
-  const graph = buildAtlasGraph(solved, session);
+  const graph = projectLocalRelations(buildAtlasGraph(solved, session), solved, session);
   const coverage = solved.coverage ?? {};
   const facts = new Set(coverage.facts ?? []);
   const acquired = new Set(graph.observations.map((observation) => observation.id));
@@ -4810,7 +5253,7 @@ function buildGraph(solved, session) {
     (coverage.proofRoleWitnesses?.[role] ?? []).map((witness) => witness.observationId))).filter((id) => acquired.has(id));
   const factIds = (...names) => unique(names.flatMap((name) =>
     (coverage.factWitnesses?.[name] ?? []).map((witness) => witness.observationId))).filter((id) => acquired.has(id));
-  const representative = (id) => obsById.get(id)?.nodeId ?? id;
+  const representative = (id) => graph.proofRepresentatives?.[id] ?? obsById.get(id)?.nodeId ?? id;
   const sourceIdsFor = (anchors) => unique(anchors.flatMap((id) => nodeById.get(id)?.sourceIds ?? [])).filter((id) => acquired.has(id));
   const frontiers = [];
   const add = (question) => {
@@ -4829,13 +5272,13 @@ function buildGraph(solved, session) {
   // catch-all by three independently meaningful relationship frontiers.
   for (const question of graph.questions) {
     if (/^question:archive:(t2|t3)$/.test(question.id)) continue;
-    const kind = question.id.startsWith("question:registered:") ? "boundary"
+    const kind = question.kind ?? (question.id.startsWith("question:registered:") ? "boundary"
       : question.id.startsWith("question:conflict:") ? "conflict"
-      : question.anchorIds.length > 1 ? "shared" : "stub";
+      : question.anchorIds.length > 1 ? "shared" : "stub");
     const archiveSource = /^question:archive:(t2|t3):source$/.exec(question.id);
-    const continuation = archiveSource ? { nodeIds: [ARCHIVES[archiveSource[1]].record], edgeIds: [] }
+    const continuation = question.continuation ?? (archiveSource ? { nodeIds: [ARCHIVES[archiveSource[1]].record], edgeIds: [] }
       : NEXT[question.id] ? { nodeIds: [...NEXT[question.id].nodeIds], edgeIds: [...NEXT[question.id].edgeIds] }
-      : { nodeIds: [], edgeIds: [] };
+      : { nodeIds: [], edgeIds: [] });
     if (question.id === "question:context") {
       continuation.edgeIds = question.anchorIds.map((id) => `context:${O.continuity}:${id}`);
     }
@@ -4847,11 +5290,8 @@ function buildGraph(solved, session) {
     const relation = coverage.archiveRelations?.[key] ?? {};
     const knownEndpoints = [archive.record, O.whole].filter((id) => nodeById.has(id));
     const nextCorr = [archive.corr];
-    const crossTime = ACTION_BY_ID.get("A.MAP.REGION_CONTINUITY");
-    // Once readable X-ray structure is present this action takes the physical
-    // branch. It must then disappear from the archive-correspondence methods.
-    if (key === "t2" && crossTime.outcome(facts) === "documentedCrossTime" && crossTime.needs(facts)) {
-      nextCorr.push(crossTime.id);
+    if (key === "t2" && comparisonOptions(facts).some(option=>option.id==='archive'&&option.usable)) {
+      nextCorr.push("A.MAP.REGION_CONTINUITY");
     }
     const relationships = [
       { suffix: "record", status: relation.recordCoherence,
@@ -4876,6 +5316,8 @@ function buildGraph(solved, session) {
     ];
     for (const relationQuestion of relationships) {
       if (relationQuestion.status === "established") continue;
+      const heldComparison=key==='t2'&&obsById.get(O.documented)?.interpretationState==='awaiting-attribution';
+      if(heldComparison&&relationQuestion.suffix==='corroboration')continue;
       const contested = relationQuestion.status === "contested";
       const conflictSources = contested ? factIds(relationQuestion.contestedFact) : [];
       add({
@@ -4883,8 +5325,8 @@ function buildGraph(solved, session) {
         kind: contested ? "conflict" : relationQuestion.anchorIds.length === 2 ? "gap" : "stub",
         anchorIds: [...relationQuestion.anchorIds, ...conflictSources.map(representative)],
         title: contested ? relationQuestion.contestedTitle : relationQuestion.title,
-        explanation: contested ? "已取得的核验对这一关系提出冲突。现有手段不能保证消除这项矛盾；保留双方依据，不替玩家选边。" : relationQuestion.explanation,
-        sourceIds: [...roleIds(...relationQuestion.roles.map((role) => archive.prefix + role)), ...conflictSources],
+        explanation: contested ? "已取得的核验对这一关系提出冲突。现有手段不能保证消除这项矛盾；保留双方依据，不替玩家选边。" : relationQuestion.explanation+(heldComparison&&relationQuestion.suffix==='attribution'?' 已取得的区域比较报告会保留，归属核实后才能用于本器事件印证，不需要重做原报告。':''),
+        sourceIds: [...roleIds(...relationQuestion.roles.map((role) => archive.prefix + role)), ...conflictSources,...(heldComparison?[O.documented]:[])],
         actionIds: contested ? [] : relationQuestion.actionIds,
         continuation: { nodeIds: [], edgeIds: relationQuestion.suffix === "record" ? [] : [`archive:${key}:object`] },
       });
@@ -4906,7 +5348,7 @@ function buildGraph(solved, session) {
     if (edge) edge.relations = record.relations.map((item) => ({ ...item, sourceIds: [...item.sourceIds] }));
   }
 
-  const supportGroups = [];
+  const supportGroups = [...(graph.localSupportGroups ?? [])];
   const addSupportGroup = (id, key, title, sourceIds, edgeIds, memberNodeIds) => {
     const targetId = `claim:${key}`;
     if (nodeById.get(targetId)?.state !== "established") return;
@@ -4960,6 +5402,7 @@ function buildGraph(solved, session) {
   graph.frontiers = frontiers;
   graph.questions = frontiers;
   graph.supportGroups = supportGroups;
+  refreshObservationEdges(graph);
   return graph;
 }
 
@@ -4981,7 +5424,11 @@ function diffGraphs(before, after) {
     addedNodeIds: after.nodes.filter((node) => !oldNodes.has(node.id)).map((node) => node.id),
     addedEdgeIds: after.edges.filter((edge) => !oldEdges.has(edge.id)).map((edge) => edge.id),
     changedEdgeIds: after.edges.filter((edge) => oldEdges.has(edge.id) && edgeContent(oldEdges.get(edge.id)) !== edgeContent(edge)).map((edge) => edge.id),
-    activatedNodeIds: after.nodes.filter((node) => oldNodes.get(node.id)?.state === "pending" && node.state !== "pending" && node.contextualized).map((node) => node.id),
+    activatedNodeIds: after.nodes.filter((node) => {
+      const old=oldNodes.get(node.id);
+      return old && ((old.state==='pending'&&node.state!=='pending'&&node.contextualized)||
+        (old.interpretationState==='awaiting-attribution'&&node.interpretationState==='established'));
+    }).map((node) => node.id),
     resolvedFrontierIds: (before?.frontiers ?? before?.questions ?? []).filter((frontier) => !remainingFrontiers.has(frontier.id)).map((frontier) => frontier.id),
   };
 }
@@ -4989,7 +5436,7 @@ function diffGraphs(before, after) {
 return {buildGraph,diffGraphs};
 })();
 
-const M8 = (() => {
+const M12 = (() => {
 /**
  * Experimental player-map geometry. Only the currently obtained graph is input.
  * Positions are centers; known nodes keep their coordinates. Questions reserve
@@ -5249,6 +5696,56 @@ function frontierPosition(frontier, position) {
     lines: splitTitle(frontier.title), titleLines: splitTitle(frontier.title) };
 }
 
+function polylineMidpoint(points) {
+  const lengths = points.slice(1).map((point, index) => distance(points[index], point));
+  let remaining = lengths.reduce((sum, length) => sum + length, 0) / 2;
+  for (let index = 0; index < lengths.length; index += 1) {
+    if (remaining <= lengths[index]) {
+      const fraction = lengths[index] ? remaining / lengths[index] : 0;
+      return { x: points[index].x + (points[index + 1].x - points[index].x) * fraction,
+        y: points[index].y + (points[index + 1].y - points[index].y) * fraction };
+    }
+    remaining -= lengths[index];
+  }
+  return points.at(-1);
+}
+
+// The question occupies the middle of an endpoint-to-endpoint route. Its
+// invisible label box may need to move beside that route when the two known
+// labels leave too little room. It never moves either known endpoint.
+function gapPreferredPosition(frontier, positions) {
+  const [fromId, toId] = frontier.anchorIds;
+  const from = positions[fromId], to = positions[toId];
+  const middle = polylineMidpoint(route({ x: from.anchorX, y: from.anchorY },
+    { x: to.anchorX, y: to.anchorY }, routeObstacles(positions, { from: fromId, to: toId })));
+  return { x: middle.x, y: middle.y + 32 };
+}
+
+function joinGapBranches(frontier, branches, edge) {
+  if (frontier.kind !== 'gap' || frontier.anchorIds.length !== 2) return null;
+  const source = branches.find(branch => branch.from === edge.from);
+  const target = branches.find(branch => branch.from === edge.to);
+  if (!source || !target) return null;
+  // Branch endpoints are already outside their glyphs. Keep those visible
+  // portions exactly and bridge only the old open middle.
+  return [...source.points, ...[...target.points].reverse()].map(point => ({ ...point }));
+}
+
+function continueRememberedRoad(memory, start, end, obstacles) {
+  const preferred = memory.points.map(point => ({ ...point }));
+  preferred[0] = start; preferred[preferred.length - 1] = end;
+  const points = [preferred[0]];
+  for (let index = 1; index < preferred.length; index += 1) {
+    // A newly obtained node may occupy a former question cell. Preserve every
+    // still-clear segment, but skip blocked intermediate waypoints and route
+    // the affected stretch around the new visible content.
+    if (index < preferred.length - 1 && obstacles.some(rectangle => interior(preferred[index], rectangle))) continue;
+    const section = route(points.at(-1), preferred[index], obstacles);
+    points.push(...section.slice(1));
+  }
+  return points.filter((point, index) => !index || distance(point, points[index - 1]) > 0.001);
+}
+
 /**
  * Known positions are spatial memory, including across viewport changes. The
  * canvas retains its previous width on narrowing; the caller scrolls it instead
@@ -5271,8 +5768,8 @@ function layoutGraph(graph, { width = 960, height = 680, previous = null } = {})
   const oldFrontierPositions = previous?.frontierPositions ?? {};
   const currentFrontierIds = new Set(frontiers.map(item => item.id));
   const supportGroups = (graph?.supportGroups ?? []).filter(group => knownIds.has(group.targetId));
-  const geometryKey = JSON.stringify([width, nodes.map(item => [item.id, item.title]), edges.map(item => [item.id, item.from, item.to]),
-    frontiers.map(item => [item.id, item.kind, item.title, item.anchorIds]), supportGroups]);
+  const geometryKey = JSON.stringify([width, nodes.map(item => [item.id, item.title, item.layoutAnchorIds]), edges.map(item => [item.id, item.from, item.to]),
+    frontiers.map(item => [item.id, item.kind, item.title, item.anchorIds, item.continuation]), supportGroups]);
   // Focus does not change geometry. Reuse paths for an unchanged spatial graph,
   // but replace edge metadata because a same-ID relationship may have matured.
   if (previous?.geometryKey === geometryKey) {
@@ -5284,6 +5781,10 @@ function layoutGraph(graph, { width = 960, height = 680, previous = null } = {})
   }
   const positions = {}, frontierPositions = {}, adjacency = new Map(nodes.map(node => [node.id, []]));
   for (const edge of edges) { adjacency.get(edge.from).push(edge.to); adjacency.get(edge.to).push(edge.from); }
+  // Placement anchors do not participate in proof, selection, or graph
+  // components. Only obtained node IDs can guide a new label's location.
+  const placementNeighbours = new Map(nodes.map(node => [node.id,
+    [...new Set([...adjacency.get(node.id), ...(node.layoutAnchorIds ?? []).filter(id => knownIds.has(id) && id !== node.id)])]]));
   const pending = [];
   for (const node of nodes) {
     const old = oldPositions[node.id];
@@ -5304,11 +5805,11 @@ function layoutGraph(graph, { width = 960, height = 680, previous = null } = {})
   while (pending.length) {
     let nextIndex = 0, mostPlaced = -1;
     for (let index = 0; index < pending.length; index += 1) {
-      const count = adjacency.get(pending[index].id).filter(id => positions[id]).length + (continuations.has(pending[index].id) ? 1000 : 0);
+      const count = placementNeighbours.get(pending[index].id).filter(id => positions[id]).length + (continuations.has(pending[index].id) ? 1000 : 0);
       if (count > mostPlaced) { mostPlaced = count; nextIndex = index; }
     }
     const [node] = pending.splice(nextIndex, 1);
-    positions[node.id] = choosePosition(node, { ...positions, ...reservations }, adjacency.get(node.id), edges, width, continuations.get(node.id));
+    positions[node.id] = choosePosition(node, { ...positions, ...reservations }, placementNeighbours.get(node.id), edges, width, continuations.get(node.id));
   }
   for (const frontier of frontiers) {
     const old = oldFrontierPositions[frontier.id];
@@ -5316,7 +5817,8 @@ function layoutGraph(graph, { width = 960, height = 680, previous = null } = {})
     const anchors = frontier.anchorIds.map(id => positions[id]);
     const midpoint = { x: anchors.reduce((sum, p) => sum + p.x, 0) / anchors.length,
       y: anchors.reduce((sum, p) => sum + p.y, 0) / anchors.length + (frontier.kind === 'gap' ? 0 : NODE_HEIGHT + GAP) };
-    const preferred = old ?? midpoint;
+    const preferred = old ?? (frontier.kind === 'gap' && frontier.anchorIds.length === 2
+      ? gapPreferredPosition(frontier, occupied) : midpoint);
     frontierPositions[frontier.id] = frontierPosition(frontier,
       choosePosition(frontier, occupied, frontier.anchorIds, edges, width, preferred));
   }
@@ -5337,6 +5839,18 @@ function layoutGraph(graph, { width = 960, height = 680, previous = null } = {})
     groupJunctions.set(group.id, id);
   }
   Object.assign(allPositions, junctionPositions);
+  const roadMemories = Object.fromEntries(Object.entries(previous?.roadMemories ?? {}).filter(([id, memory]) =>
+    edges.some(edge => edge.id === id && edge.from === memory.from && edge.to === memory.to)));
+  for (const frontier of oldQuestions) {
+    if (currentFrontierIds.has(frontier.id)) continue;
+    const branches = previous?.frontierRoutes?.[frontier.id] ?? [];
+    for (const id of frontier.continuation?.edgeIds ?? []) {
+      const edge = edges.find(item => item.id === id);
+      if (!edge || roadMemories[id]) continue;
+      const points = joinGapBranches(frontier, branches, edge);
+      if (points) roadMemories[id] = { from: edge.from, to: edge.to, frontierId: frontier.id, points };
+    }
+  }
   const entries = Object.entries(allPositions), movements = [], overlaps = [], routeNodeIntersections = [];
   for (let i = 0; i < entries.length; i += 1) {
     const [id, position] = entries[i], old = oldPositions[id];
@@ -5346,12 +5860,17 @@ function layoutGraph(graph, { width = 960, height = 680, previous = null } = {})
   const makeRoute = (edge, targetOffset = 0, routeTo = edge.to) => {
     const from = allPositions[edge.from], to = allPositions[routeTo];
     const obstacles = routeObstacles(allPositions, { from: edge.from, to: routeTo });
-    const points = insetRoad(route({ x: from.anchorX, y: from.anchorY }, { x: to.anchorX + targetOffset, y: to.anchorY }, obstacles));
+    const directPoints = insetRoad(route({ x: from.anchorX, y: from.anchorY }, { x: to.anchorX + targetOffset, y: to.anchorY }, obstacles));
+    const memory = routeTo === edge.to ? roadMemories[edge.semanticEdgeId ?? edge.id] : null;
+    // Remembered paths already include the visible glyph insets; do not inset
+    // them a second time. Their source/target coordinates stay stable.
+    const points = memory ? continueRememberedRoad(memory, memory.points[0], memory.points.at(-1), obstacles) : directPoints;
     for (let index = 1; index < points.length; index += 1) for (const rectangle of obstacles) {
       if (crossesRectangle(points[index - 1], points[index], rectangle)) routeNodeIntersections.push({ edge: edge.id, node: rectangle.id, segment: index - 1 });
     }
     const label = edgeLabel(points, allPositions);
-    return { ...edge, routeFrom: edge.from, routeTo, path: pathData(points), points, labelX: round(label.x), labelY: round(label.y) };
+    return { ...edge, routeFrom: edge.from, routeTo, ...(memory ? { gapFrontierId: memory.frontierId } : {}),
+      path: pathData(points), points, labelX: round(label.x), labelY: round(label.y) };
   };
   const routedEdges = edges.flatMap(edge => {
     const groups = supportGroups.filter(group => (group.edgeIds ?? []).includes(edge.id) && group.targetId === edge.to);
@@ -5381,10 +5900,10 @@ function layoutGraph(graph, { width = 960, height = 680, previous = null } = {})
     components.push(component);
   }
   return { positions, edges: routedEdges, routes: Object.fromEntries(routedEdges.map(edge => [edge.id, edge])),
-    frontiers, frontierPositions, frontierRoutes, junctionPositions, supportJunctions, geometryKey, width, height: Math.ceil(bottom), diagnostics: {
+    frontiers, frontierPositions, frontierRoutes, junctionPositions, supportJunctions, roadMemories, geometryKey, width, height: Math.ceil(bottom), diagnostics: {
       overlaps, routeNodeIntersections, movements, maxMovement: Math.max(0, ...movements.map(item => item.distance)), relocated: [],
       components, ignoredEdges: rawEdges.filter(edge => !edges.includes(edge)).map(edge => edge.id),
-      algorithm: 'experimental-stable-known-nodes-reserved-frontiers', nodeWidth: NODE_WIDTH, nodeHeight: NODE_HEIGHT,
+      algorithm: 'experimental-stable-known-nodes-continuing-roads', nodeWidth: NODE_WIDTH, nodeHeight: NODE_HEIGHT,
       nodeBoxAreaRatio: round(nodes.length * NODE_WIDTH * NODE_HEIGHT / (width * Math.ceil(bottom))),
       averageRoadLength: round(lengths.length ? lengths.reduce((sum, length) => sum + length, 0) / lengths.length : 0),
       maxRoadLength: round(Math.max(0, ...lengths)), roadEndpointInsets: { start: ROAD_START_INSET, end: ROAD_END_INSET },
@@ -5395,7 +5914,7 @@ function layoutGraph(graph, { width = 960, height = 680, previous = null } = {})
 return {splitTitle,pathData,layoutGraph};
 })();
 
-const M11 = (() => {
+const M15 = (() => {
 /* 心智地图与决策面的投影层。
    DEC-032 的结构不在冻结求解器的模型里,所以这一层在它外面,把求解器输出翻译成
    「观察 → 议题归类／逻辑边 → 已查实结论」。冻结文件一个字节都不改。
@@ -5409,8 +5928,8 @@ const M11 = (() => {
 
    这一层无测试覆盖,是 DEC-032「先加投影层试」那个岔口的代价。 */
 const { events, proofRoleContracts } = M2;
-const { ACTION_BY_ID, COST_LABEL } = M4;
-const { ACTION_SEMANTICS, LATENT_SEMANTICS, PROOF_ROLE_SEMANTICS, ROUTE_SEMANTICS, STAGE_SEMANTICS } = M5;
+const { ACTION_BY_ID, COST_LABEL } = M5;
+const { ACTION_SEMANTICS, LATENT_SEMANTICS, PROOF_ROLE_SEMANTICS, ROUTE_SEMANTICS, STAGE_SEMANTICS } = M8;
 /* ---------- 从夹具反查的索引(只读) ---------- */
 const EVENT_BY_OBS = new Map();
 for (const ev of Object.values(events)) EVENT_BY_OBS.set(ev.observationId, ev);
@@ -6035,7 +6554,7 @@ function readout(solved, session) {
 return {OBS_LABEL,CLAIM_LABEL,CLAIM_NOT_ON_MAP,SLOT_LABEL,ARCHIVE_REL_LABEL,ARCHIVE_REL_STATE,ARCHIVE_GROUP_LABEL,EDGE_KINDS,EDGE_DIRECTED,TOPIC_LABEL,TOPIC_SUMMARY,mentalMap,claimSupporters,decisionSurface,SLOT_FACTS,readout};
 })();
 
-const M10 = (() => {
+const M14 = (() => {
 /*
   Experimental player-facing focus model.
 
@@ -6045,8 +6564,8 @@ const M10 = (() => {
   the frozen coverage facts, not a second G3 rule.
 */
 
-const { ACTIONS } = M4;
-const { SLOT_FACTS } = M11;
+const { ACTIONS } = M5;
+const { SLOT_FACTS } = M15;
 const freezeList = (values) => Object.freeze([...values]);
 
 const QUESTIONS = Object.freeze([
@@ -6532,13 +7051,12 @@ function decisionItemMatches(item, focus) {
 return {QUESTIONS,Q5_FACETS,ACTION_FOCUS,PLACE_FOCUS,focusForAction,focusForActions,focusForPlace,focusForQuestion,focusForFacet,Q5_STATE_LABEL,q5FacetStates,actionMatchesFocus,focusForTopic,relatedTopicIds,relatedNodeIds,decisionItemMatches};
 })();
 
-const M9 = (() => {
+const M13 = (() => {
 /* Experimental shared selection. It projects acquired sources and real proof
  * witnesses, never changes session state, and never walks a graph recursively. */
-const { ACTIONS, ACTION_BY_ID } = M4;
-const { events } = M2;
-const { ACTION_FOCUS, q5FacetStates } = M10;
-const { claimSupporters } = M11;
+const { ACTIONS, ACTION_BY_ID, events } = M6;
+const { ACTION_FOCUS, q5FacetStates } = M14;
+const { claimSupporters } = M15;
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const list = (value) => value instanceof Set ? [...value] : value ?? [];
 const claimKey = (id = "") => id.startsWith("claim:") ? id.slice(6) : id;
@@ -6553,6 +7071,12 @@ const REQUIREMENTS = new Map(ACTIONS.map((action) => [action.id, unique(
   Object.values(events).filter((event) => event.acquisitionActionId === action.id)
     .flatMap((event) => [...(event.acquisitionRequires ?? []), ...(event.requiresContextFacts ?? [])]),
 )]));
+const LOCAL_ACTION_SOURCES={
+  'A.VERIFY.OBJECT_CONTINUITY':['obs.current.base','obs.phase.t1','obs.object.continuity'],
+  'A.IMAGE.XRAY':['obs.structure.xray.early','obs.current.whole'],
+  'A.LOCATE.HISTORIC_IMAGE':['obs.phase.t1','obs.current.base','obs.object.continuity'],
+  'A.MAP.REGION_CONTINUITY':['obs.phase.t1','obs.current.whole','obs.structure.xray.early','obs.accident.major','obs.structure.major.cross-time','obs.structure.major.documented-cross-time'],
+};
 
 function knownSources(solved, graph) {
   return new Set(list(solved?.evidence?.observationIds ?? (graph?.observations ?? []).map((o) => o.id)));
@@ -6636,11 +7160,13 @@ function resolveSelection(selection, graph, solved, session, workbenchRows = [])
   if (selection?.kind === "evidence") {
     const observation = byObservation.get(selection.id);
     const selectedNode = byNode.get(selection.id);
-    if (known.has(selection.id) && (observation || selectedNode?.kind === "evidence")) {
+    const interpretation=selectedNode?.kind==='interpretation'&&selectedNode.sourceIds?.length&&selectedNode.sourceIds.every(id=>known.has(id));
+    if (interpretation || (known.has(selection.id) && (observation || selectedNode?.kind === "evidence"))) {
       subject = observation ?? selectedNode;
       for (const id of selectedNode?.sourceIds ?? [selection.id]) knownSource(id);
       knownSource(selection.id);
-      for (const id of sourceIds) representSource(id, true);
+      if(interpretation)addNode(selectedNode.id,true);
+      for (const id of sourceIds) representSource(id, !interpretation);
       expandOneHop();
     }
   } else if (selection?.kind === "edge") {
@@ -6678,7 +7204,7 @@ function resolveSelection(selection, graph, solved, session, workbenchRows = [])
         : { id: selection.id, actionIds: selectedActions.map((action) => action.id) };
       for (const action of selectedActions) {
         actionIds.add(action.id); placeIds.add(action.place);
-        for (const id of ACTION_FOCUS[action.id]?.observationIds ?? []) knownSource(id);
+        for (const id of LOCAL_ACTION_SOURCES[action.id]??ACTION_FOCUS[action.id]?.observationIds??[]) knownSource(id);
         // Acquisition and interpretation conditions may point at already-held
         // evidence. Their future outputs never become visible node identities.
         for (const fact of REQUIREMENTS.get(action.id) ?? []) {
@@ -6732,11 +7258,11 @@ return {judgmentOverview,judgmentFacets,resolveSelection};
 
 const UI = (() => {
 const { newSession, solve, take, workbench, setBudget } = M1;
-const { ACTIONS, ACTION_BY_ID, COST_LABEL } = M4;
-const { ACTION_SEMANTICS, STAGE_SEMANTICS } = M5;
-const { buildGraph, diffGraphs } = M6;
-const { layoutGraph } = M8;
-const { resolveSelection, judgmentOverview, judgmentFacets } = M9;
+const { ACTIONS, ACTION_BY_ID, COST_LABEL } = M6;
+const { ACTION_SEMANTICS, STAGE_SEMANTICS } = M7;
+const { buildGraph, diffGraphs } = M9;
+const { layoutGraph } = M12;
+const { resolveSelection, judgmentOverview, judgmentFacets } = M13;
 function mount() {
   const $ = id => document.getElementById(id);
   const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
@@ -6804,12 +7330,17 @@ const PLACE_LABEL = new Map([
     const available = item.usable && item.affordable && historyIndex === null;
     const why = historyIndex !== null ? "正在回看历史，回到本局后再调查。" : session.stopped ? "本局已经收手。" :
       !item.affordable ? "本局调查机会已用完。" : item.why;
+    const controls=item.comparisonOptions ? '<p class="small">本次使用哪份历史材料：</p>'+item.comparisonOptions.map(option=>{
+      const enabled=available&&option.usable;
+      return '<div class="basis-option"><p>'+esc(option.label)+'</p>'+(option.why?'<p class="reason">'+esc(option.why)+'</p>':'')+
+        '<button class="execute'+(enabled?' primary':'')+'" data-take="'+esc(a.id)+'" data-basis="'+esc(option.id)+'"'+(enabled?'':' disabled')+'>'+esc(option.id==='photo'?'用旧照片比较':'用事故记录比较')+'</button></div>';
+    }).join('') : '<button class="execute' + (available ? " primary" : "") + '" data-take="' + esc(a.id) + '"' + (available ? "" : " disabled") + '>' + (item.done ? "再做一次" : "做这一步") + '</button>';
     return '<div class="method' + (selection?.kind === "action" && selection.id === a.id ? " focused" : "") + '" data-method="' + esc(a.id) + '">' +
       '<h3><button class="method-title"' + attrs("action", a.id) + '>' + esc(a.name) + '</button></h3>' +
       '<div class="cost">占 1 步 · ' + (a.cost === 0 ? "不花钱" : "费用 " + esc(COST_LABEL[a.cost])) + (item.done ? " · 本局做过" : "") + '</div>' +
       '<p>' + esc(a.ask) + '</p><details><summary>为什么要紧</summary><p>' + esc(sem.doesWhat || a.ask) + '</p><p>' + esc(sem.whyLong || sem.whyShort || "") + '</p></details>' +
       (why ? '<p class="reason">' + esc(why) + '</p>' : "") +
-      '<button class="execute' + (available ? " primary" : "") + '" data-take="' + esc(a.id) + '"' + (available ? "" : " disabled") + '>' + (item.done ? "再做一次" : "做这一步") + '</button></div>';
+      controls+'</div>';
   }
   function focusFor(sel = selection) { return resolveSelection(sel, graph, solved, viewSession, actionRows()); }
   function renderBench() {
@@ -6895,14 +7426,15 @@ const PLACE_LABEL = new Map([
       if (joint.path) { const trunk = pathElement(joint,"route support",false);trunk.setAttribute("marker-end","url(#arrow)");$("map-svg").append(trunk); }
       const diamond = document.createElementNS(svgNS,"path");
       diamond.setAttribute("d","M"+joint.x+" "+(joint.y-4)+"l4 4l-4 4l-4-4Z");diamond.setAttribute("class","junction");
-      diamond.dataset.kind="claim";diamond.dataset.id=joint.targetId;diamond.setAttribute("role","button");diamond.setAttribute("tabindex","0");diamond.setAttribute("aria-label",joint.title || "这些依据共同成立");$("map-svg").append(diamond);
+      diamond.dataset.kind=nodeById(joint.targetId)?.kind==='claim'?'claim':'evidence';diamond.dataset.id=joint.targetId;diamond.setAttribute("role","button");diamond.setAttribute("tabindex","0");diamond.setAttribute("aria-label",joint.title || "这些依据共同成立");$("map-svg").append(diamond);
     }
     $("node-controls").innerHTML = graph.nodes.map(node => {
       const p = layout.positions[node.id]; if (!p) return "";
       const lines = p.titleLines || p.lines || [node.title];
+      const stateLabel=node.stateLabel??stateText[node.state]??'';
       return '<button class="node-control ' + esc(node.kind) + ' ' + esc(node.state) + (transient && (transient.activatedNodeIds.includes(node.id) || transient.repeatedNodeIds?.includes(node.id)) ? " activated" : "") + '"' + attrs(selectionForNode(node).kind,node.id) +
-        ' aria-label="' + esc(node.title + (stateText[node.state] ? "，" + stateText[node.state] : "")) + '" style="left:' + (p.x-p.width/2) + 'px;top:' + (p.y-p.height/2) + 'px;width:' + p.width + 'px;height:' + p.height + 'px"><span class="node-glyph"></span><span class="node-title">' +
-        lines.map(esc).join("<br>") + '</span><span class="node-state">' + esc(stateText[node.state] || "") + '</span></button>';
+        ' aria-label="' + esc(node.title + (stateLabel ? "，" + stateLabel : "")) + '" style="left:' + (p.x-p.width/2) + 'px;top:' + (p.y-p.height/2) + 'px;width:' + p.width + 'px;height:' + p.height + 'px"><span class="node-glyph"></span><span class="node-title">' +
+        lines.map(esc).join("<br>") + '</span><span class="node-state">' + esc(stateLabel) + '</span></button>';
     }).join("") + (graph.frontiers || []).map(q => {
       const p = layout.frontierPositions?.[q.id]; if (!p) return "";
       return '<button class="node-control frontier-control ' + esc(q.kind) + '"' + attrs("gap",q.id) + ' aria-label="未接通：' + esc(q.title) + '" style="left:' + (p.x-p.width/2) + 'px;top:' + (p.y-p.height/2) + 'px;width:' + p.width + 'px;height:' + p.height + 'px"><span class="node-glyph"></span><span class="node-title">' + (p.titleLines || p.lines || [q.title]).map(esc).join("<br>") + '</span></button>';
@@ -6987,7 +7519,8 @@ const PLACE_LABEL = new Map([
     }
     const sourceIds = raw && !node ? [raw.id || raw.observationId] : node?.sourceIds || focus.sourceIds;
     const edges = graph.edges.filter(e => focus.edgeIds.includes(e.id));
-    box.innerHTML = '<div class="eyebrow">已得信息' + (node?.state && stateText[node.state] ? " / "+esc(stateText[node.state]) : "") + '</div><h3 class="detail-title">' + esc(node?.title || raw?.title || "原始记录") + '</h3><p class="detail-copy">' + esc(node?.summary || raw?.summary || "这份调查记录已保留，可以回查其关系和来源。") + '</p>' +
+    const statusLabel=node?.stateLabel??stateText[node?.state];
+    box.innerHTML = '<div class="eyebrow">'+(node?.kind==='interpretation'?'已有信息的历史用途':'已得信息') + (statusLabel ? " / "+esc(statusLabel) : "") + '</div><h3 class="detail-title">' + esc(node?.title || raw?.title || "原始记录") + '</h3><p class="detail-copy">' + esc(node?.summary || raw?.summary || "这份调查记录已保留，可以回查其关系和来源。") + '</p>' +
       (edges.length ? '<div class="section">与已有信息怎样相连</div>' + edges.map(e => '<button class="detail-button"' + attrs("edge",e.id) + '><strong>' + esc(e.label) + '</strong>' + esc(nodeById(e.from===node?.id?e.to:e.from)?.title) + '</button>').join("") : "") +
       '<div class="section">这里仍拿不准的地方</div>' + questionButtons(graph.frontiers.filter(q => focus.frontierIds.includes(q.id))) +
       '<div class="section">回查原始依据</div>' + sourceButtons(sourceIds);
@@ -7016,9 +7549,9 @@ const PLACE_LABEL = new Map([
     renderDetails();applyFocus();
     if (openPlace) popHTML();
   }
-  function execute(id) {
+  function execute(id, comparisonBasis) {
     if (historyIndex!==null) return;
-    const before=graph,result=take(session,id);
+    const before=graph,result=take(session,id,{comparisonBasis});
     if (!result.ok) { notice=result.why;$("notice").textContent=notice;return; }
     closePop();clearTimeout(animationTimer);
     solved=solve(session);graph=buildGraph(solved,session);transient=diffGraphs(before,graph);
@@ -7029,6 +7562,13 @@ const PLACE_LABEL = new Map([
     selection=target?selectionForNode(nodeById(target)):o?.edgeIds?.length?{kind:"edge",id:o.edgeIds[0]}:{kind:"evidence",id:result.observationId};
     const count=transient.addedEdgeIds.length+transient.changedEdgeIds.length;
     notice=ACTION_BY_ID.get(id).name+"："+(repeated || result.kind==="repeat"?"已有记录已回看，没有新增一份证据。":transient.activatedNodeIds.length?transient.activatedNodeIds.length+" 份旧信息获得了解释条件。":count?count+" 条关系接通或得到进一步印证。":"信息已保留。");
+    if(!repeated&&result.kind!=='repeat'){
+      if(id==='A.IMAGE.XRAY')notice='当前内部结构观察已取得，不用等待旧照片核验。';
+      else if(id==='A.LOCATE.HISTORIC_IMAGE')notice='旧照片中的锔修痕迹已记录；核验归属后，才接入这只碗的早期历史。';
+      else if(id==='A.VERIFY.OBJECT_CONTINUITY')notice='照片与现器的关系已核实。旧照片'+(transient.activatedNodeIds.includes('obs.structure.major.cross-time')?'和先前的比较报告':'')+'接入本器历史，原记录没有重新取得。';
+      else if(id==='A.MAP.REGION_CONTINUITY'&&result.kind==='suspended')notice='比较报告已取得；相应材料的归属尚未核实，暂不作为本器历史的证明。';
+      else if(id==='A.RELATE.ARCHIVE.T2_TO_OBJECT'&&transient.activatedNodeIds.includes('obs.structure.major.documented-cross-time'))notice='事故记录归属已核实；先前的比较报告现在可以用于本器事件印证。';
+    }
     showMethods=false;render(true,true);
     document.querySelector('.bench [data-kind="place"][data-id="' + CSS.escape(ACTION_BY_ID.get(id).place) + '"]')?.focus({preventScroll:true});
     animationTimer=setTimeout(()=>{transient=null;document.querySelectorAll(".connecting,.activated").forEach(el=>el.classList.remove("connecting","activated"));},900);
@@ -7055,7 +7595,7 @@ const PLACE_LABEL = new Map([
   document.addEventListener("click",event=>{
     const button=event.target.closest("button,[role=button]");
     if (button?.dataset.close) {$(button.dataset.close).close();return;}
-    if (button?.dataset.take) {execute(button.dataset.take);return;}
+    if (button?.dataset.take) {execute(button.dataset.take,button.dataset.basis);return;}
     if (button?.dataset.history!==undefined) {showHistory(Number(button.dataset.history));return;}
     if (button?.id==="close-pop"){closePop(true);return;}
     if (button?.id==="show-methods"){showMethods=!showMethods;renderDetails();return;}
@@ -7095,7 +7635,7 @@ const PLACE_LABEL = new Map([
   $("confirm-restart").onclick=restart;
   $("stop-button").onclick=()=>{closePop();$("stop-preview").innerHTML='<p>'+esc(STAGE_SEMANTICS[solved.stage]?.name || solved.stage)+'</p><p class="small">已调查 '+session.log.length+' 次 · '+esc(billText(session))+'</p><p class="small">当前 '+graph.frontiers.length+' 处疑问仍可保留。确认收手后可以回看，不再调查。</p>';$("stop-dialog").showModal();};
   $("confirm-stop").onclick=()=>{clearTimeout(animationTimer);transient=null;session.stopped=true;finalNote=$("final-note").value;selection=null;notice="本局已收手。判断、依据和未解之处均已保留。";$("stop-dialog").close();render(false,true);};
-  $("history-button").onclick=()=>{$("history-list").innerHTML='<button class="history-step" data-history="0">开局 · 尚无信息</button>'+session.log.map((step,i)=>'<button class="history-step'+(historyIndex===i+1?' current':'')+'" data-history="'+(i+1)+'">'+(i+1)+'. '+esc(ACTION_BY_ID.get(step.actionId).name)+'</button>').join("");$("history-dialog").showModal();};
+  $("history-button").onclick=()=>{$("history-list").innerHTML='<button class="history-step" data-history="0">开局 · 尚无信息</button>'+session.log.map((step,i)=>'<button class="history-step'+(historyIndex===i+1?' current':'')+'" data-history="'+(i+1)+'">'+(i+1)+'. '+esc(ACTION_BY_ID.get(step.actionId).name+(step.comparisonBasis?(step.comparisonBasis==='photo'?' · 旧照片':' · 事故记录'):''))+'</button>').join("");$("history-dialog").showModal();};
   $("return-live").onclick=returnLive;
   let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>render(true),150);});
   render(true,true);

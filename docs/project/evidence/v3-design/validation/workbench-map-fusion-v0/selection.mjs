@@ -1,7 +1,6 @@
 /* Experimental shared selection. It projects acquired sources and real proof
  * witnesses, never changes session state, and never walks a graph recursively. */
-import { ACTIONS, ACTION_BY_ID } from "../knowledge-map-slice-v0/case.mjs";
-import { events } from "../first-ceramic-author-scenarios-v0/fixtures.mjs";
+import { ACTIONS, ACTION_BY_ID, events } from "./local-case.mjs";
 import { ACTION_FOCUS, q5FacetStates } from "../workbench-map-focus-v1/focus.mjs";
 import { claimSupporters } from "../workbench-map-focus-v1/projection.mjs";
 
@@ -19,6 +18,12 @@ const REQUIREMENTS = new Map(ACTIONS.map((action) => [action.id, unique(
   Object.values(events).filter((event) => event.acquisitionActionId === action.id)
     .flatMap((event) => [...(event.acquisitionRequires ?? []), ...(event.requiresContextFacts ?? [])]),
 )]));
+const LOCAL_ACTION_SOURCES={
+  'A.VERIFY.OBJECT_CONTINUITY':['obs.current.base','obs.phase.t1','obs.object.continuity'],
+  'A.IMAGE.XRAY':['obs.structure.xray.early','obs.current.whole'],
+  'A.LOCATE.HISTORIC_IMAGE':['obs.phase.t1','obs.current.base','obs.object.continuity'],
+  'A.MAP.REGION_CONTINUITY':['obs.phase.t1','obs.current.whole','obs.structure.xray.early','obs.accident.major','obs.structure.major.cross-time','obs.structure.major.documented-cross-time'],
+};
 
 function knownSources(solved, graph) {
   return new Set(list(solved?.evidence?.observationIds ?? (graph?.observations ?? []).map((o) => o.id)));
@@ -102,11 +107,13 @@ export function resolveSelection(selection, graph, solved, session, workbenchRow
   if (selection?.kind === "evidence") {
     const observation = byObservation.get(selection.id);
     const selectedNode = byNode.get(selection.id);
-    if (known.has(selection.id) && (observation || selectedNode?.kind === "evidence")) {
+    const interpretation=selectedNode?.kind==='interpretation'&&selectedNode.sourceIds?.length&&selectedNode.sourceIds.every(id=>known.has(id));
+    if (interpretation || (known.has(selection.id) && (observation || selectedNode?.kind === "evidence"))) {
       subject = observation ?? selectedNode;
       for (const id of selectedNode?.sourceIds ?? [selection.id]) knownSource(id);
       knownSource(selection.id);
-      for (const id of sourceIds) representSource(id, true);
+      if(interpretation)addNode(selectedNode.id,true);
+      for (const id of sourceIds) representSource(id, !interpretation);
       expandOneHop();
     }
   } else if (selection?.kind === "edge") {
@@ -144,7 +151,7 @@ export function resolveSelection(selection, graph, solved, session, workbenchRow
         : { id: selection.id, actionIds: selectedActions.map((action) => action.id) };
       for (const action of selectedActions) {
         actionIds.add(action.id); placeIds.add(action.place);
-        for (const id of ACTION_FOCUS[action.id]?.observationIds ?? []) knownSource(id);
+        for (const id of LOCAL_ACTION_SOURCES[action.id]??ACTION_FOCUS[action.id]?.observationIds??[]) knownSource(id);
         // Acquisition and interpretation conditions may point at already-held
         // evidence. Their future outputs never become visible node identities.
         for (const fact of REQUIREMENTS.get(action.id) ?? []) {

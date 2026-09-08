@@ -1,6 +1,6 @@
 {
-  "builtAt": "2026-09-07T03:54:12.332Z",
-  "templateSha256": "ca4349b016669c2f89c29847de06289b8460fbdac4ef93de09f62fce880ab198",
+  "builtAt": "2026-09-08T06:54:15.515Z",
+  "templateSha256": "3197583fb5b028437521b548d36a603ed122e6d65be1ddf943668473cd17a1f4",
   "modules": [
     {
       "ns": "M2",
@@ -13,54 +13,74 @@
       "sha256": "e217caf56a9961ea7c46151e1ca6b0546a6c408ccc8ecddb21e4b9da66ee72d1"
     },
     {
-      "ns": "M4",
+      "ns": "M5",
       "path": "../knowledge-map-slice-v0/case.mjs",
       "sha256": "7f078bc68394b9238783080ee72e6dec2ce514ea962829668a4443041805aa05"
     },
     {
-      "ns": "M1",
+      "ns": "M4",
       "path": "../workbench-map-v0/session.mjs",
       "sha256": "83d1dd707f9a4accfeb162c299387dfe3beb6a720045c8e09a22939fdd0b1351"
     },
     {
-      "ns": "M5",
+      "ns": "M6",
+      "path": "local-case.mjs",
+      "sha256": "bcd3544579fb4dd2a8f7b3edc3871031649bea30294717cb1cf10464eaee4cb4"
+    },
+    {
+      "ns": "M1",
+      "path": "local-session.mjs",
+      "sha256": "d4d1b7f3bbdfa674915ca9d04ea0cdc6e2c09e06712798769eb13b709c4d6af7"
+    },
+    {
+      "ns": "M8",
       "path": "../evidence-semantics-v0/semantics.mjs",
       "sha256": "397eab3305dce9ee5bf7e996b4c4e0c1ca081ff29be0c2f54f6b5524cc85d833"
     },
     {
       "ns": "M7",
+      "path": "local-semantics.mjs",
+      "sha256": "ef0a5548f35282ad86ca02a719bd07dfb00fae00c6be7c2f5f00a8f5ad3a4338"
+    },
+    {
+      "ns": "M10",
       "path": "../workbench-map-atlas-v0/graph.mjs",
       "sha256": "171507d84bafedebadab8e4e96875134823459f65b93fa6e3ce3cceb49c37634"
     },
     {
-      "ns": "M6",
-      "path": "graph.mjs",
-      "sha256": "747e8dac0a083abc705882a112e233566f72c108d549f0203145778e98f0ff24"
-    },
-    {
-      "ns": "M8",
-      "path": "layout.mjs",
-      "sha256": "2d5e4d4772d2b3752fb0327b9312582dc62f8d7d2370909cc47d5f1ce46f481d"
-    },
-    {
       "ns": "M11",
+      "path": "local-projection.mjs",
+      "sha256": "aac0de2d49f9cda9c6aa21af5de751ae32720878dda878e89b6ac44763ad365b"
+    },
+    {
+      "ns": "M9",
+      "path": "graph.mjs",
+      "sha256": "d20d3d20b795c1ef26cc7f8970adf807b060c6c9183dc8d982288063c3837d1b"
+    },
+    {
+      "ns": "M12",
+      "path": "layout.mjs",
+      "sha256": "38f0676a817faa020c4fc94295a9e7c1b2671f645055706a0170d127fdc9c005"
+    },
+    {
+      "ns": "M15",
       "path": "../workbench-map-focus-v1/projection.mjs",
       "sha256": "6dbd20e637345b77826ccbc911e337d92e1c59907de3617497b05e5e5725c1a5"
     },
     {
-      "ns": "M10",
+      "ns": "M14",
       "path": "../workbench-map-focus-v1/focus.mjs",
       "sha256": "4d2326ef27093310135bf46da51fd4fc2a038a4f7bd65b92242dc15aad22301b"
     },
     {
-      "ns": "M9",
+      "ns": "M13",
       "path": "selection.mjs",
-      "sha256": "52a179dd582af3802cb3b805a9a79398c7941fa408687ecc6b765d50549d5510"
+      "sha256": "616ed0c4ea9be0d80de81acef0b9e3ecfc5b13b186f5da1326e227e31b95a840"
     },
     {
       "ns": "UI",
       "path": "ui.mjs",
-      "sha256": "055a4e003c55a576564e84ea5cb44403bca36c80c2d0049cefc8d23a436bb6a7"
+      "sha256": "fa13bafb0c83e949fc91c7ebb1ec16bdc4b7922111fc5c0409aca77b168840cc"
     }
   ]
 }

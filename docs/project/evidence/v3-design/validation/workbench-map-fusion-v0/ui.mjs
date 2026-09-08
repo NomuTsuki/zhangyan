@@ -1,6 +1,6 @@
-import { newSession, solve, take, workbench, setBudget } from "../workbench-map-v0/session.mjs";
-import { ACTIONS, ACTION_BY_ID, COST_LABEL } from "../knowledge-map-slice-v0/case.mjs";
-import { ACTION_SEMANTICS, STAGE_SEMANTICS } from "../evidence-semantics-v0/semantics.mjs";
+import { newSession, solve, take, workbench, setBudget } from "./local-session.mjs";
+import { ACTIONS, ACTION_BY_ID, COST_LABEL } from "./local-case.mjs";
+import { ACTION_SEMANTICS, STAGE_SEMANTICS } from "./local-semantics.mjs";
 import { buildGraph, diffGraphs } from "./graph.mjs";
 import { layoutGraph } from "./layout.mjs";
 import { resolveSelection, judgmentOverview, judgmentFacets } from "./selection.mjs";
@@ -72,12 +72,17 @@ const PLACE_LABEL = new Map([
     const available = item.usable && item.affordable && historyIndex === null;
     const why = historyIndex !== null ? "正在回看历史，回到本局后再调查。" : session.stopped ? "本局已经收手。" :
       !item.affordable ? "本局调查机会已用完。" : item.why;
+    const controls=item.comparisonOptions ? '<p class="small">本次使用哪份历史材料：</p>'+item.comparisonOptions.map(option=>{
+      const enabled=available&&option.usable;
+      return '<div class="basis-option"><p>'+esc(option.label)+'</p>'+(option.why?'<p class="reason">'+esc(option.why)+'</p>':'')+
+        '<button class="execute'+(enabled?' primary':'')+'" data-take="'+esc(a.id)+'" data-basis="'+esc(option.id)+'"'+(enabled?'':' disabled')+'>'+esc(option.id==='photo'?'用旧照片比较':'用事故记录比较')+'</button></div>';
+    }).join('') : '<button class="execute' + (available ? " primary" : "") + '" data-take="' + esc(a.id) + '"' + (available ? "" : " disabled") + '>' + (item.done ? "再做一次" : "做这一步") + '</button>';
     return '<div class="method' + (selection?.kind === "action" && selection.id === a.id ? " focused" : "") + '" data-method="' + esc(a.id) + '">' +
       '<h3><button class="method-title"' + attrs("action", a.id) + '>' + esc(a.name) + '</button></h3>' +
       '<div class="cost">占 1 步 · ' + (a.cost === 0 ? "不花钱" : "费用 " + esc(COST_LABEL[a.cost])) + (item.done ? " · 本局做过" : "") + '</div>' +
       '<p>' + esc(a.ask) + '</p><details><summary>为什么要紧</summary><p>' + esc(sem.doesWhat || a.ask) + '</p><p>' + esc(sem.whyLong || sem.whyShort || "") + '</p></details>' +
       (why ? '<p class="reason">' + esc(why) + '</p>' : "") +
-      '<button class="execute' + (available ? " primary" : "") + '" data-take="' + esc(a.id) + '"' + (available ? "" : " disabled") + '>' + (item.done ? "再做一次" : "做这一步") + '</button></div>';
+      controls+'</div>';
   }
   function focusFor(sel = selection) { return resolveSelection(sel, graph, solved, viewSession, actionRows()); }
   function renderBench() {
@@ -163,14 +168,15 @@ const PLACE_LABEL = new Map([
       if (joint.path) { const trunk = pathElement(joint,"route support",false);trunk.setAttribute("marker-end","url(#arrow)");$("map-svg").append(trunk); }
       const diamond = document.createElementNS(svgNS,"path");
       diamond.setAttribute("d","M"+joint.x+" "+(joint.y-4)+"l4 4l-4 4l-4-4Z");diamond.setAttribute("class","junction");
-      diamond.dataset.kind="claim";diamond.dataset.id=joint.targetId;diamond.setAttribute("role","button");diamond.setAttribute("tabindex","0");diamond.setAttribute("aria-label",joint.title || "这些依据共同成立");$("map-svg").append(diamond);
+      diamond.dataset.kind=nodeById(joint.targetId)?.kind==='claim'?'claim':'evidence';diamond.dataset.id=joint.targetId;diamond.setAttribute("role","button");diamond.setAttribute("tabindex","0");diamond.setAttribute("aria-label",joint.title || "这些依据共同成立");$("map-svg").append(diamond);
     }
     $("node-controls").innerHTML = graph.nodes.map(node => {
       const p = layout.positions[node.id]; if (!p) return "";
       const lines = p.titleLines || p.lines || [node.title];
+      const stateLabel=node.stateLabel??stateText[node.state]??'';
       return '<button class="node-control ' + esc(node.kind) + ' ' + esc(node.state) + (transient && (transient.activatedNodeIds.includes(node.id) || transient.repeatedNodeIds?.includes(node.id)) ? " activated" : "") + '"' + attrs(selectionForNode(node).kind,node.id) +
-        ' aria-label="' + esc(node.title + (stateText[node.state] ? "，" + stateText[node.state] : "")) + '" style="left:' + (p.x-p.width/2) + 'px;top:' + (p.y-p.height/2) + 'px;width:' + p.width + 'px;height:' + p.height + 'px"><span class="node-glyph"></span><span class="node-title">' +
-        lines.map(esc).join("<br>") + '</span><span class="node-state">' + esc(stateText[node.state] || "") + '</span></button>';
+        ' aria-label="' + esc(node.title + (stateLabel ? "，" + stateLabel : "")) + '" style="left:' + (p.x-p.width/2) + 'px;top:' + (p.y-p.height/2) + 'px;width:' + p.width + 'px;height:' + p.height + 'px"><span class="node-glyph"></span><span class="node-title">' +
+        lines.map(esc).join("<br>") + '</span><span class="node-state">' + esc(stateLabel) + '</span></button>';
     }).join("") + (graph.frontiers || []).map(q => {
       const p = layout.frontierPositions?.[q.id]; if (!p) return "";
       return '<button class="node-control frontier-control ' + esc(q.kind) + '"' + attrs("gap",q.id) + ' aria-label="未接通：' + esc(q.title) + '" style="left:' + (p.x-p.width/2) + 'px;top:' + (p.y-p.height/2) + 'px;width:' + p.width + 'px;height:' + p.height + 'px"><span class="node-glyph"></span><span class="node-title">' + (p.titleLines || p.lines || [q.title]).map(esc).join("<br>") + '</span></button>';
@@ -255,7 +261,8 @@ const PLACE_LABEL = new Map([
     }
     const sourceIds = raw && !node ? [raw.id || raw.observationId] : node?.sourceIds || focus.sourceIds;
     const edges = graph.edges.filter(e => focus.edgeIds.includes(e.id));
-    box.innerHTML = '<div class="eyebrow">已得信息' + (node?.state && stateText[node.state] ? " / "+esc(stateText[node.state]) : "") + '</div><h3 class="detail-title">' + esc(node?.title || raw?.title || "原始记录") + '</h3><p class="detail-copy">' + esc(node?.summary || raw?.summary || "这份调查记录已保留，可以回查其关系和来源。") + '</p>' +
+    const statusLabel=node?.stateLabel??stateText[node?.state];
+    box.innerHTML = '<div class="eyebrow">'+(node?.kind==='interpretation'?'已有信息的历史用途':'已得信息') + (statusLabel ? " / "+esc(statusLabel) : "") + '</div><h3 class="detail-title">' + esc(node?.title || raw?.title || "原始记录") + '</h3><p class="detail-copy">' + esc(node?.summary || raw?.summary || "这份调查记录已保留，可以回查其关系和来源。") + '</p>' +
       (edges.length ? '<div class="section">与已有信息怎样相连</div>' + edges.map(e => '<button class="detail-button"' + attrs("edge",e.id) + '><strong>' + esc(e.label) + '</strong>' + esc(nodeById(e.from===node?.id?e.to:e.from)?.title) + '</button>').join("") : "") +
       '<div class="section">这里仍拿不准的地方</div>' + questionButtons(graph.frontiers.filter(q => focus.frontierIds.includes(q.id))) +
       '<div class="section">回查原始依据</div>' + sourceButtons(sourceIds);
@@ -284,9 +291,9 @@ const PLACE_LABEL = new Map([
     renderDetails();applyFocus();
     if (openPlace) popHTML();
   }
-  function execute(id) {
+  function execute(id, comparisonBasis) {
     if (historyIndex!==null) return;
-    const before=graph,result=take(session,id);
+    const before=graph,result=take(session,id,{comparisonBasis});
     if (!result.ok) { notice=result.why;$("notice").textContent=notice;return; }
     closePop();clearTimeout(animationTimer);
     solved=solve(session);graph=buildGraph(solved,session);transient=diffGraphs(before,graph);
@@ -297,6 +304,13 @@ const PLACE_LABEL = new Map([
     selection=target?selectionForNode(nodeById(target)):o?.edgeIds?.length?{kind:"edge",id:o.edgeIds[0]}:{kind:"evidence",id:result.observationId};
     const count=transient.addedEdgeIds.length+transient.changedEdgeIds.length;
     notice=ACTION_BY_ID.get(id).name+"："+(repeated || result.kind==="repeat"?"已有记录已回看，没有新增一份证据。":transient.activatedNodeIds.length?transient.activatedNodeIds.length+" 份旧信息获得了解释条件。":count?count+" 条关系接通或得到进一步印证。":"信息已保留。");
+    if(!repeated&&result.kind!=='repeat'){
+      if(id==='A.IMAGE.XRAY')notice='当前内部结构观察已取得，不用等待旧照片核验。';
+      else if(id==='A.LOCATE.HISTORIC_IMAGE')notice='旧照片中的锔修痕迹已记录；核验归属后，才接入这只碗的早期历史。';
+      else if(id==='A.VERIFY.OBJECT_CONTINUITY')notice='照片与现器的关系已核实。旧照片'+(transient.activatedNodeIds.includes('obs.structure.major.cross-time')?'和先前的比较报告':'')+'接入本器历史，原记录没有重新取得。';
+      else if(id==='A.MAP.REGION_CONTINUITY'&&result.kind==='suspended')notice='比较报告已取得；相应材料的归属尚未核实，暂不作为本器历史的证明。';
+      else if(id==='A.RELATE.ARCHIVE.T2_TO_OBJECT'&&transient.activatedNodeIds.includes('obs.structure.major.documented-cross-time'))notice='事故记录归属已核实；先前的比较报告现在可以用于本器事件印证。';
+    }
     showMethods=false;render(true,true);
     document.querySelector('.bench [data-kind="place"][data-id="' + CSS.escape(ACTION_BY_ID.get(id).place) + '"]')?.focus({preventScroll:true});
     animationTimer=setTimeout(()=>{transient=null;document.querySelectorAll(".connecting,.activated").forEach(el=>el.classList.remove("connecting","activated"));},900);
@@ -323,7 +337,7 @@ const PLACE_LABEL = new Map([
   document.addEventListener("click",event=>{
     const button=event.target.closest("button,[role=button]");
     if (button?.dataset.close) {$(button.dataset.close).close();return;}
-    if (button?.dataset.take) {execute(button.dataset.take);return;}
+    if (button?.dataset.take) {execute(button.dataset.take,button.dataset.basis);return;}
     if (button?.dataset.history!==undefined) {showHistory(Number(button.dataset.history));return;}
     if (button?.id==="close-pop"){closePop(true);return;}
     if (button?.id==="show-methods"){showMethods=!showMethods;renderDetails();return;}
@@ -363,7 +377,7 @@ const PLACE_LABEL = new Map([
   $("confirm-restart").onclick=restart;
   $("stop-button").onclick=()=>{closePop();$("stop-preview").innerHTML='<p>'+esc(STAGE_SEMANTICS[solved.stage]?.name || solved.stage)+'</p><p class="small">已调查 '+session.log.length+' 次 · '+esc(billText(session))+'</p><p class="small">当前 '+graph.frontiers.length+' 处疑问仍可保留。确认收手后可以回看，不再调查。</p>';$("stop-dialog").showModal();};
   $("confirm-stop").onclick=()=>{clearTimeout(animationTimer);transient=null;session.stopped=true;finalNote=$("final-note").value;selection=null;notice="本局已收手。判断、依据和未解之处均已保留。";$("stop-dialog").close();render(false,true);};
-  $("history-button").onclick=()=>{$("history-list").innerHTML='<button class="history-step" data-history="0">开局 · 尚无信息</button>'+session.log.map((step,i)=>'<button class="history-step'+(historyIndex===i+1?' current':'')+'" data-history="'+(i+1)+'">'+(i+1)+'. '+esc(ACTION_BY_ID.get(step.actionId).name)+'</button>').join("");$("history-dialog").showModal();};
+  $("history-button").onclick=()=>{$("history-list").innerHTML='<button class="history-step" data-history="0">开局 · 尚无信息</button>'+session.log.map((step,i)=>'<button class="history-step'+(historyIndex===i+1?' current':'')+'" data-history="'+(i+1)+'">'+(i+1)+'. '+esc(ACTION_BY_ID.get(step.actionId).name+(step.comparisonBasis?(step.comparisonBasis==='photo'?' · 旧照片':' · 事故记录'):''))+'</button>').join("");$("history-dialog").showModal();};
   $("return-live").onclick=returnLive;
   let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>render(true),150);});
   render(true,true);

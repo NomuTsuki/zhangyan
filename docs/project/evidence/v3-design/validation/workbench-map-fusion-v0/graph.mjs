@@ -4,7 +4,8 @@
  * Support groups are complete ALL packages; an alternativeSet relates packages
  * by OR. Neither this metadata nor a single visual edge establishes a claim. */
 import { buildGraph as buildAtlasGraph } from "../workbench-map-atlas-v0/graph.mjs";
-import { ACTION_BY_ID } from "../knowledge-map-slice-v0/case.mjs";
+import { ACTION_BY_ID, comparisonOptions } from "./local-case.mjs";
+import { projectLocalRelations, refreshObservationEdges } from "./local-projection.mjs";
 
 const unique = (items) => [...new Set(items.filter(Boolean))];
 const O = {
@@ -33,7 +34,7 @@ const NEXT = {
 };
 
 export function buildGraph(solved, session) {
-  const graph = buildAtlasGraph(solved, session);
+  const graph = projectLocalRelations(buildAtlasGraph(solved, session), solved, session);
   const coverage = solved.coverage ?? {};
   const facts = new Set(coverage.facts ?? []);
   const acquired = new Set(graph.observations.map((observation) => observation.id));
@@ -43,7 +44,7 @@ export function buildGraph(solved, session) {
     (coverage.proofRoleWitnesses?.[role] ?? []).map((witness) => witness.observationId))).filter((id) => acquired.has(id));
   const factIds = (...names) => unique(names.flatMap((name) =>
     (coverage.factWitnesses?.[name] ?? []).map((witness) => witness.observationId))).filter((id) => acquired.has(id));
-  const representative = (id) => obsById.get(id)?.nodeId ?? id;
+  const representative = (id) => graph.proofRepresentatives?.[id] ?? obsById.get(id)?.nodeId ?? id;
   const sourceIdsFor = (anchors) => unique(anchors.flatMap((id) => nodeById.get(id)?.sourceIds ?? [])).filter((id) => acquired.has(id));
   const frontiers = [];
   const add = (question) => {
@@ -62,13 +63,13 @@ export function buildGraph(solved, session) {
   // catch-all by three independently meaningful relationship frontiers.
   for (const question of graph.questions) {
     if (/^question:archive:(t2|t3)$/.test(question.id)) continue;
-    const kind = question.id.startsWith("question:registered:") ? "boundary"
+    const kind = question.kind ?? (question.id.startsWith("question:registered:") ? "boundary"
       : question.id.startsWith("question:conflict:") ? "conflict"
-      : question.anchorIds.length > 1 ? "shared" : "stub";
+      : question.anchorIds.length > 1 ? "shared" : "stub");
     const archiveSource = /^question:archive:(t2|t3):source$/.exec(question.id);
-    const continuation = archiveSource ? { nodeIds: [ARCHIVES[archiveSource[1]].record], edgeIds: [] }
+    const continuation = question.continuation ?? (archiveSource ? { nodeIds: [ARCHIVES[archiveSource[1]].record], edgeIds: [] }
       : NEXT[question.id] ? { nodeIds: [...NEXT[question.id].nodeIds], edgeIds: [...NEXT[question.id].edgeIds] }
-      : { nodeIds: [], edgeIds: [] };
+      : { nodeIds: [], edgeIds: [] });
     if (question.id === "question:context") {
       continuation.edgeIds = question.anchorIds.map((id) => `context:${O.continuity}:${id}`);
     }
@@ -80,11 +81,8 @@ export function buildGraph(solved, session) {
     const relation = coverage.archiveRelations?.[key] ?? {};
     const knownEndpoints = [archive.record, O.whole].filter((id) => nodeById.has(id));
     const nextCorr = [archive.corr];
-    const crossTime = ACTION_BY_ID.get("A.MAP.REGION_CONTINUITY");
-    // Once readable X-ray structure is present this action takes the physical
-    // branch. It must then disappear from the archive-correspondence methods.
-    if (key === "t2" && crossTime.outcome(facts) === "documentedCrossTime" && crossTime.needs(facts)) {
-      nextCorr.push(crossTime.id);
+    if (key === "t2" && comparisonOptions(facts).some(option=>option.id==='archive'&&option.usable)) {
+      nextCorr.push("A.MAP.REGION_CONTINUITY");
     }
     const relationships = [
       { suffix: "record", status: relation.recordCoherence,
@@ -109,6 +107,8 @@ export function buildGraph(solved, session) {
     ];
     for (const relationQuestion of relationships) {
       if (relationQuestion.status === "established") continue;
+      const heldComparison=key==='t2'&&obsById.get(O.documented)?.interpretationState==='awaiting-attribution';
+      if(heldComparison&&relationQuestion.suffix==='corroboration')continue;
       const contested = relationQuestion.status === "contested";
       const conflictSources = contested ? factIds(relationQuestion.contestedFact) : [];
       add({
@@ -116,8 +116,8 @@ export function buildGraph(solved, session) {
         kind: contested ? "conflict" : relationQuestion.anchorIds.length === 2 ? "gap" : "stub",
         anchorIds: [...relationQuestion.anchorIds, ...conflictSources.map(representative)],
         title: contested ? relationQuestion.contestedTitle : relationQuestion.title,
-        explanation: contested ? "已取得的核验对这一关系提出冲突。现有手段不能保证消除这项矛盾；保留双方依据，不替玩家选边。" : relationQuestion.explanation,
-        sourceIds: [...roleIds(...relationQuestion.roles.map((role) => archive.prefix + role)), ...conflictSources],
+        explanation: contested ? "已取得的核验对这一关系提出冲突。现有手段不能保证消除这项矛盾；保留双方依据，不替玩家选边。" : relationQuestion.explanation+(heldComparison&&relationQuestion.suffix==='attribution'?' 已取得的区域比较报告会保留，归属核实后才能用于本器事件印证，不需要重做原报告。':''),
+        sourceIds: [...roleIds(...relationQuestion.roles.map((role) => archive.prefix + role)), ...conflictSources,...(heldComparison?[O.documented]:[])],
         actionIds: contested ? [] : relationQuestion.actionIds,
         continuation: { nodeIds: [], edgeIds: relationQuestion.suffix === "record" ? [] : [`archive:${key}:object`] },
       });
@@ -139,7 +139,7 @@ export function buildGraph(solved, session) {
     if (edge) edge.relations = record.relations.map((item) => ({ ...item, sourceIds: [...item.sourceIds] }));
   }
 
-  const supportGroups = [];
+  const supportGroups = [...(graph.localSupportGroups ?? [])];
   const addSupportGroup = (id, key, title, sourceIds, edgeIds, memberNodeIds) => {
     const targetId = `claim:${key}`;
     if (nodeById.get(targetId)?.state !== "established") return;
@@ -193,6 +193,7 @@ export function buildGraph(solved, session) {
   graph.frontiers = frontiers;
   graph.questions = frontiers;
   graph.supportGroups = supportGroups;
+  refreshObservationEdges(graph);
   return graph;
 }
 
@@ -214,7 +215,11 @@ export function diffGraphs(before, after) {
     addedNodeIds: after.nodes.filter((node) => !oldNodes.has(node.id)).map((node) => node.id),
     addedEdgeIds: after.edges.filter((edge) => !oldEdges.has(edge.id)).map((edge) => edge.id),
     changedEdgeIds: after.edges.filter((edge) => oldEdges.has(edge.id) && edgeContent(oldEdges.get(edge.id)) !== edgeContent(edge)).map((edge) => edge.id),
-    activatedNodeIds: after.nodes.filter((node) => oldNodes.get(node.id)?.state === "pending" && node.state !== "pending" && node.contextualized).map((node) => node.id),
+    activatedNodeIds: after.nodes.filter((node) => {
+      const old=oldNodes.get(node.id);
+      return old && ((old.state==='pending'&&node.state!=='pending'&&node.contextualized)||
+        (old.interpretationState==='awaiting-attribution'&&node.interpretationState==='established'));
+    }).map((node) => node.id),
     resolvedFrontierIds: (before?.frontiers ?? before?.questions ?? []).filter((frontier) => !remainingFrontiers.has(frontier.id)).map((frontier) => frontier.id),
   };
 }

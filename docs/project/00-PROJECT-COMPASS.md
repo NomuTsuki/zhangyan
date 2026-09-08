@@ -4,7 +4,7 @@
 
 最后复查：2026-09-08（用户认可两例，批准提交后更新融合版；沿用原有图形，不采用示意矩形卡片）
 
-当前工作入口为[两段推理道路 · 可点击示意](evidence/v3-design/validation/local-road-studies-v1/README.md)。2026-09-08 用户要求从[局部修订提案](evidence/v3-design/2026-09-07-xray-photo-local-revision-proposal-v1.md)挑几个做成可点击示意，认可后再更新低保真地图布局逻辑。已实现照片接入历史、差异与归属汇合两例；模型与浏览器限定检查通过，待用户实际评价。冻结规则与旧原型保留，[高保真方向](evidence/v3-design/2026-09-06-v3-hifi-direction-and-next-slice.md)继续保留，实施后置。
+当前工作入口为[修订后的融合版](evidence/v3-design/validation/workbench-map-fusion-v0/README.md)。2026-09-08 用户认可两例局部示意，批准先提交后接入；`14f9bee` 已保存检查点，当前成像、具体两端核验、旧材料的历史用途与原路接通已更新到融合版，沿用原图形。融合目录使用必要的本地条件适配，冻结文件与旧原型保留。机器／浏览器核验与限制见 [报告](evidence/v3-design/validation/workbench-map-fusion-v0/VERIFICATION-2026-09-08.md)，整图体验待用户反馈；[高保真方向](evidence/v3-design/2026-09-06-v3-hifi-direction-and-next-slice.md)继续保留，实施后置。
 
 ## 项目目的
 

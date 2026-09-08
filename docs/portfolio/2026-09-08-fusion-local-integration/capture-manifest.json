@@ -1,0 +1,20 @@
+{
+  "baselineCommit": "14f9bee",
+  "beforeHtmlSha256": "8e37e2408404099d109feaa152b817e81ad6572974098394bd91a7825e511a3d",
+  "afterHtmlSha256": "c7c34550645c89427bc72d4dd38f9a63f9ec53bbdbb8ff78ab539460e34dcf7a",
+  "viewportPair": {
+    "width": 1440,
+    "height": 1000,
+    "deviceScaleFactor": 2
+  },
+  "hero": {
+    "width": 1920,
+    "height": 1000,
+    "deviceScaleFactor": 2
+  },
+  "video": {
+    "width": 1440,
+    "height": 1000
+  },
+  "method": "Native Edge screenshots and real pointer actions; no image editing; baseline served from git blob without checkout changes."
+}

@@ -257,6 +257,56 @@ function frontierPosition(frontier, position) {
     lines: splitTitle(frontier.title), titleLines: splitTitle(frontier.title) };
 }
 
+function polylineMidpoint(points) {
+  const lengths = points.slice(1).map((point, index) => distance(points[index], point));
+  let remaining = lengths.reduce((sum, length) => sum + length, 0) / 2;
+  for (let index = 0; index < lengths.length; index += 1) {
+    if (remaining <= lengths[index]) {
+      const fraction = lengths[index] ? remaining / lengths[index] : 0;
+      return { x: points[index].x + (points[index + 1].x - points[index].x) * fraction,
+        y: points[index].y + (points[index + 1].y - points[index].y) * fraction };
+    }
+    remaining -= lengths[index];
+  }
+  return points.at(-1);
+}
+
+// The question occupies the middle of an endpoint-to-endpoint route. Its
+// invisible label box may need to move beside that route when the two known
+// labels leave too little room. It never moves either known endpoint.
+function gapPreferredPosition(frontier, positions) {
+  const [fromId, toId] = frontier.anchorIds;
+  const from = positions[fromId], to = positions[toId];
+  const middle = polylineMidpoint(route({ x: from.anchorX, y: from.anchorY },
+    { x: to.anchorX, y: to.anchorY }, routeObstacles(positions, { from: fromId, to: toId })));
+  return { x: middle.x, y: middle.y + 32 };
+}
+
+function joinGapBranches(frontier, branches, edge) {
+  if (frontier.kind !== 'gap' || frontier.anchorIds.length !== 2) return null;
+  const source = branches.find(branch => branch.from === edge.from);
+  const target = branches.find(branch => branch.from === edge.to);
+  if (!source || !target) return null;
+  // Branch endpoints are already outside their glyphs. Keep those visible
+  // portions exactly and bridge only the old open middle.
+  return [...source.points, ...[...target.points].reverse()].map(point => ({ ...point }));
+}
+
+function continueRememberedRoad(memory, start, end, obstacles) {
+  const preferred = memory.points.map(point => ({ ...point }));
+  preferred[0] = start; preferred[preferred.length - 1] = end;
+  const points = [preferred[0]];
+  for (let index = 1; index < preferred.length; index += 1) {
+    // A newly obtained node may occupy a former question cell. Preserve every
+    // still-clear segment, but skip blocked intermediate waypoints and route
+    // the affected stretch around the new visible content.
+    if (index < preferred.length - 1 && obstacles.some(rectangle => interior(preferred[index], rectangle))) continue;
+    const section = route(points.at(-1), preferred[index], obstacles);
+    points.push(...section.slice(1));
+  }
+  return points.filter((point, index) => !index || distance(point, points[index - 1]) > 0.001);
+}
+
 /**
  * Known positions are spatial memory, including across viewport changes. The
  * canvas retains its previous width on narrowing; the caller scrolls it instead
@@ -279,8 +329,8 @@ export function layoutGraph(graph, { width = 960, height = 680, previous = null 
   const oldFrontierPositions = previous?.frontierPositions ?? {};
   const currentFrontierIds = new Set(frontiers.map(item => item.id));
   const supportGroups = (graph?.supportGroups ?? []).filter(group => knownIds.has(group.targetId));
-  const geometryKey = JSON.stringify([width, nodes.map(item => [item.id, item.title]), edges.map(item => [item.id, item.from, item.to]),
-    frontiers.map(item => [item.id, item.kind, item.title, item.anchorIds]), supportGroups]);
+  const geometryKey = JSON.stringify([width, nodes.map(item => [item.id, item.title, item.layoutAnchorIds]), edges.map(item => [item.id, item.from, item.to]),
+    frontiers.map(item => [item.id, item.kind, item.title, item.anchorIds, item.continuation]), supportGroups]);
   // Focus does not change geometry. Reuse paths for an unchanged spatial graph,
   // but replace edge metadata because a same-ID relationship may have matured.
   if (previous?.geometryKey === geometryKey) {
@@ -292,6 +342,10 @@ export function layoutGraph(graph, { width = 960, height = 680, previous = null 
   }
   const positions = {}, frontierPositions = {}, adjacency = new Map(nodes.map(node => [node.id, []]));
   for (const edge of edges) { adjacency.get(edge.from).push(edge.to); adjacency.get(edge.to).push(edge.from); }
+  // Placement anchors do not participate in proof, selection, or graph
+  // components. Only obtained node IDs can guide a new label's location.
+  const placementNeighbours = new Map(nodes.map(node => [node.id,
+    [...new Set([...adjacency.get(node.id), ...(node.layoutAnchorIds ?? []).filter(id => knownIds.has(id) && id !== node.id)])]]));
   const pending = [];
   for (const node of nodes) {
     const old = oldPositions[node.id];
@@ -312,11 +366,11 @@ export function layoutGraph(graph, { width = 960, height = 680, previous = null 
   while (pending.length) {
     let nextIndex = 0, mostPlaced = -1;
     for (let index = 0; index < pending.length; index += 1) {
-      const count = adjacency.get(pending[index].id).filter(id => positions[id]).length + (continuations.has(pending[index].id) ? 1000 : 0);
+      const count = placementNeighbours.get(pending[index].id).filter(id => positions[id]).length + (continuations.has(pending[index].id) ? 1000 : 0);
       if (count > mostPlaced) { mostPlaced = count; nextIndex = index; }
     }
     const [node] = pending.splice(nextIndex, 1);
-    positions[node.id] = choosePosition(node, { ...positions, ...reservations }, adjacency.get(node.id), edges, width, continuations.get(node.id));
+    positions[node.id] = choosePosition(node, { ...positions, ...reservations }, placementNeighbours.get(node.id), edges, width, continuations.get(node.id));
   }
   for (const frontier of frontiers) {
     const old = oldFrontierPositions[frontier.id];
@@ -324,7 +378,8 @@ export function layoutGraph(graph, { width = 960, height = 680, previous = null 
     const anchors = frontier.anchorIds.map(id => positions[id]);
     const midpoint = { x: anchors.reduce((sum, p) => sum + p.x, 0) / anchors.length,
       y: anchors.reduce((sum, p) => sum + p.y, 0) / anchors.length + (frontier.kind === 'gap' ? 0 : NODE_HEIGHT + GAP) };
-    const preferred = old ?? midpoint;
+    const preferred = old ?? (frontier.kind === 'gap' && frontier.anchorIds.length === 2
+      ? gapPreferredPosition(frontier, occupied) : midpoint);
     frontierPositions[frontier.id] = frontierPosition(frontier,
       choosePosition(frontier, occupied, frontier.anchorIds, edges, width, preferred));
   }
@@ -345,6 +400,18 @@ export function layoutGraph(graph, { width = 960, height = 680, previous = null 
     groupJunctions.set(group.id, id);
   }
   Object.assign(allPositions, junctionPositions);
+  const roadMemories = Object.fromEntries(Object.entries(previous?.roadMemories ?? {}).filter(([id, memory]) =>
+    edges.some(edge => edge.id === id && edge.from === memory.from && edge.to === memory.to)));
+  for (const frontier of oldQuestions) {
+    if (currentFrontierIds.has(frontier.id)) continue;
+    const branches = previous?.frontierRoutes?.[frontier.id] ?? [];
+    for (const id of frontier.continuation?.edgeIds ?? []) {
+      const edge = edges.find(item => item.id === id);
+      if (!edge || roadMemories[id]) continue;
+      const points = joinGapBranches(frontier, branches, edge);
+      if (points) roadMemories[id] = { from: edge.from, to: edge.to, frontierId: frontier.id, points };
+    }
+  }
   const entries = Object.entries(allPositions), movements = [], overlaps = [], routeNodeIntersections = [];
   for (let i = 0; i < entries.length; i += 1) {
     const [id, position] = entries[i], old = oldPositions[id];
@@ -354,12 +421,17 @@ export function layoutGraph(graph, { width = 960, height = 680, previous = null 
   const makeRoute = (edge, targetOffset = 0, routeTo = edge.to) => {
     const from = allPositions[edge.from], to = allPositions[routeTo];
     const obstacles = routeObstacles(allPositions, { from: edge.from, to: routeTo });
-    const points = insetRoad(route({ x: from.anchorX, y: from.anchorY }, { x: to.anchorX + targetOffset, y: to.anchorY }, obstacles));
+    const directPoints = insetRoad(route({ x: from.anchorX, y: from.anchorY }, { x: to.anchorX + targetOffset, y: to.anchorY }, obstacles));
+    const memory = routeTo === edge.to ? roadMemories[edge.semanticEdgeId ?? edge.id] : null;
+    // Remembered paths already include the visible glyph insets; do not inset
+    // them a second time. Their source/target coordinates stay stable.
+    const points = memory ? continueRememberedRoad(memory, memory.points[0], memory.points.at(-1), obstacles) : directPoints;
     for (let index = 1; index < points.length; index += 1) for (const rectangle of obstacles) {
       if (crossesRectangle(points[index - 1], points[index], rectangle)) routeNodeIntersections.push({ edge: edge.id, node: rectangle.id, segment: index - 1 });
     }
     const label = edgeLabel(points, allPositions);
-    return { ...edge, routeFrom: edge.from, routeTo, path: pathData(points), points, labelX: round(label.x), labelY: round(label.y) };
+    return { ...edge, routeFrom: edge.from, routeTo, ...(memory ? { gapFrontierId: memory.frontierId } : {}),
+      path: pathData(points), points, labelX: round(label.x), labelY: round(label.y) };
   };
   const routedEdges = edges.flatMap(edge => {
     const groups = supportGroups.filter(group => (group.edgeIds ?? []).includes(edge.id) && group.targetId === edge.to);
@@ -389,10 +461,10 @@ export function layoutGraph(graph, { width = 960, height = 680, previous = null 
     components.push(component);
   }
   return { positions, edges: routedEdges, routes: Object.fromEntries(routedEdges.map(edge => [edge.id, edge])),
-    frontiers, frontierPositions, frontierRoutes, junctionPositions, supportJunctions, geometryKey, width, height: Math.ceil(bottom), diagnostics: {
+    frontiers, frontierPositions, frontierRoutes, junctionPositions, supportJunctions, roadMemories, geometryKey, width, height: Math.ceil(bottom), diagnostics: {
       overlaps, routeNodeIntersections, movements, maxMovement: Math.max(0, ...movements.map(item => item.distance)), relocated: [],
       components, ignoredEdges: rawEdges.filter(edge => !edges.includes(edge)).map(edge => edge.id),
-      algorithm: 'experimental-stable-known-nodes-reserved-frontiers', nodeWidth: NODE_WIDTH, nodeHeight: NODE_HEIGHT,
+      algorithm: 'experimental-stable-known-nodes-continuing-roads', nodeWidth: NODE_WIDTH, nodeHeight: NODE_HEIGHT,
       nodeBoxAreaRatio: round(nodes.length * NODE_WIDTH * NODE_HEIGHT / (width * Math.ceil(bottom))),
       averageRoadLength: round(lengths.length ? lengths.reduce((sum, length) => sum + length, 0) / lengths.length : 0),
       maxRoadLength: round(Math.max(0, ...lengths)), roadEndpointInsets: { start: ROAD_START_INSET, end: ROAD_END_INSET },

@@ -1,5 +1,17 @@
 # 掌眼：调查入口、推理道路与跨栏联动 · fusion v0
 
+## 2026-09-08 当前版本：修订的局部关系已接入
+
+用户批准后先以 `14f9bee` 保存页面、局部示意与过程资产，再将修订逻辑接入本目录。打开 [prototype.html](prototype.html) 可离线运行，当前本机预览为 [62591](http://127.0.0.1:62591)。接入后的文件尚未第二次提交，没有 push。
+
+X 射线直接提供当前结构信息；照片核验需要已取得的旧照与现器特征，并入两端之间的道路。旧材料获得历史用途时不重新取得。比较手段明确选择旧照／事故记录，比较与归属报告可换序取得，条件齐备后自动接通。保留原有圆点、判断、菱形与道路，不搬入示例的矩形卡片。
+
+地图逻辑入口是 [graph.mjs](graph.mjs) 与 [local-projection.mjs](local-projection.mjs)，几何排位和接续在 [layout.mjs](layout.mjs)，联动在 [selection.mjs](selection.mjs)，渲染与动作执行在 [ui.mjs](ui.mjs)。融合目录使用 [local-case.mjs](local-case.mjs) / [local-session.mjs](local-session.mjs) 适配必要条件，仍调用冻结求解器；不是只换画法，也不宣称所有旧顺序仍有效。
+
+当前用 `node build.mjs` 构建。新验证入口为 `local-session-check.mjs`、`relation-projection-check.mjs`、`road-layout-check.mjs`、`actual-layout-check.mjs`、`local-browser-check.mjs`；原图／选择检查中要求旧共享问号的失败保留。完整命令、结果与边界见 [09-08 报告](VERIFICATION-2026-09-08.md)。**review required，整图待用户评价**，可从 [这一小段](PLAYTEST-2026-09-08.md)开始。先前试玩失败不被覆盖。
+
+## 2026-09-07 历史实现与失败记录
+
 2026-09-07 · Experimental · 桌面低保真 · 已实现，**用户报告的开局理解路径未通过**。
 
 最新状态见[真人反馈](PLAYTEST-RESULT-2026-09-07.md)：用户先做 X 射线与早期影像后无法理解图形及说明。本版保留为失败对照；下一步是[一页局部逻辑候选](../../2026-09-07-xray-photo-local-logic-candidate.md)，先修正共同条件、缺口与输出的读法，并重审这处前置，再考虑扩展。下面机器核验记录保留，不代表真人理解通过。

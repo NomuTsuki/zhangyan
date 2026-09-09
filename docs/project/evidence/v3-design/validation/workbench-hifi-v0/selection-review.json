@@ -1,0 +1,5841 @@
+{
+  "generatedAt": "2026-09-09T04:15:00.486Z",
+  "reviewRequired": true,
+  "url": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+  "sha256": "1db7f0e46a467b0eebf34948d9a09d61333c2eb3869f1fbdffef20da03afcf64",
+  "checks": [
+    {
+      "name": "evidence selection has matching detail",
+      "pass": true,
+      "selection": {
+        "kind": "evidence",
+        "id": "obs.phase.t1"
+      }
+    },
+    {
+      "name": "hover does not replace locked detail",
+      "pass": true
+    },
+    {
+      "name": "second click clears selection",
+      "pass": true
+    },
+    {
+      "name": "road selection maps to exact relationship",
+      "pass": true,
+      "title": "照片与现器的对应特征相符"
+    },
+    {
+      "name": "gap selection shows actual question",
+      "pass": true,
+      "title": "结构从另一个时点到现在变了什么？"
+    },
+    {
+      "name": "claim selection retains verification source",
+      "pass": true,
+      "source": "obs.object.continuity"
+    },
+    {
+      "name": "junction selects joint proof group",
+      "pass": true,
+      "selection": {
+        "kind": "group",
+        "id": "proof-group:identity:continuity"
+      },
+      "sourceIds": [
+        "obs.current.whole",
+        "obs.current.base",
+        "obs.object.continuity"
+      ]
+    },
+    {
+      "name": "unperformed action reveals no future observation",
+      "pass": true,
+      "detail": "调查手段\n取消选择\n拿同期真品比一比\n\n这种做法放到同时代的真品里,算常见还是罕见?\n\n回看依据\n整器形制与可见修补\n↗\n底足制造痕迹\n↗\n占 1 次调查机会 · 低费用\n在器物一侧查看手段 →"
+    },
+    {
+      "name": "Escape closes methods before clearing locked selection",
+      "pass": true
+    },
+    {
+      "name": "blank map click clears selection",
+      "pass": true,
+      "point": {
+        "x": 585.65625,
+        "y": 232
+      }
+    },
+    {
+      "name": "all shared selections leave session immutable",
+      "pass": true,
+      "steps": 5
+    },
+    {
+      "name": "rendered road curves avoid rendered text rectangles",
+      "pass": true,
+      "intersections": [],
+      "actualDomMeasured": true
+    }
+  ],
+  "errors": [],
+  "limits": [
+    "Machine UI and DOM geometry verification, not human aesthetic or gameplay acceptance."
+  ],
+  "execution": {
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "reducedMotion": true,
+    "actions": [
+      "A.OBSERVE.WHOLE",
+      "A.OBSERVE.BASE",
+      "A.LOCATE.HISTORIC_IMAGE",
+      "A.VERIFY.OBJECT_CONTINUITY",
+      "A.IMAGE.XRAY"
+    ],
+    "stateInjection": false
+  },
+  "final": {
+    "session": {
+      "session": {
+        "acquired": [
+          {
+            "observationId": "obs.current.whole",
+            "sourceIds": [
+              "source.physical.current"
+            ],
+            "sharedLatentIds": [
+              "latent.current-craft",
+              "latent.repair-map"
+            ],
+            "dependencyUnitId": "dep.fact.current-whole",
+            "acquisitionActionId": "A.OBSERVE.WHOLE",
+            "coverage": {
+              "object": "OBJECT.FIRST",
+              "region": "whole-visible",
+              "method": "visual"
+            },
+            "facts": [
+              "currentBody",
+              "currentDecor",
+              "currentRepairMap",
+              "interventionObservation"
+            ],
+            "capabilityFacts": [],
+            "contextualFacts": [],
+            "proofRoles": [
+              "PROOF.CURRENT.NAMED_REPAIR_MAP"
+            ],
+            "requiresContextFacts": [],
+            "acquisitionRequires": []
+          },
+          {
+            "observationId": "obs.current.base",
+            "sourceIds": [
+              "source.physical.current"
+            ],
+            "sharedLatentIds": [
+              "latent.current-craft"
+            ],
+            "dependencyUnitId": "dep.fact.current-base",
+            "acquisitionActionId": "A.OBSERVE.BASE",
+            "coverage": {
+              "object": "OBJECT.FIRST",
+              "region": "base-and-inner",
+              "method": "visual"
+            },
+            "facts": [
+              "baseManufacture"
+            ],
+            "capabilityFacts": [],
+            "contextualFacts": [],
+            "proofRoles": [],
+            "requiresContextFacts": [],
+            "acquisitionRequires": []
+          },
+          {
+            "observationId": "obs.phase.t1",
+            "sourceIds": [
+              "source.archive.pre-accident"
+            ],
+            "sharedLatentIds": [
+              "latent.pre-accident-reading"
+            ],
+            "dependencyUnitId": "dep.phase.t1",
+            "acquisitionActionId": "A.LOCATE.HISTORIC_IMAGE",
+            "coverage": {
+              "object": "OBJECT.FIRST",
+              "region": "declared-time-anchor",
+              "method": "archive"
+            },
+            "facts": [
+              "t1ReadingAcquired"
+            ],
+            "capabilityFacts": [],
+            "contextualFacts": [
+              "t1Established"
+            ],
+            "proofRoles": [],
+            "requiresContextFacts": [
+              "identityObjectContinuity"
+            ],
+            "acquisitionRequires": [],
+            "factor": {
+              "id": "fixture.factor.repair.three-phase-source",
+              "affectsAxes": [
+                "RepairHistory"
+              ],
+              "weights": [
+                {
+                  "when": {
+                    "RepairHistory": "NO_MAJOR_REASSEMBLY"
+                  },
+                  "weight": 1
+                },
+                {
+                  "when": {
+                    "RepairHistory": "MAJOR_REASSEMBLY_NOT_THREE_PHASE"
+                  },
+                  "weight": 1
+                },
+                {
+                  "when": {
+                    "RepairHistory": "THREE_PHASE"
+                  },
+                  "weight": 5
+                }
+              ]
+            }
+          },
+          {
+            "observationId": "obs.object.continuity",
+            "sourceIds": [
+              "source.archive.image",
+              "source.physical.current"
+            ],
+            "sharedLatentIds": [
+              "latent.object-match"
+            ],
+            "dependencyUnitId": "dep.object.continuity",
+            "acquisitionActionId": "A.VERIFY.OBJECT_CONTINUITY",
+            "coverage": {
+              "object": "OBJECT.FIRST",
+              "region": "stable-anchors",
+              "method": "cross-time"
+            },
+            "facts": [
+              "directionHistoricCandidate",
+              "identityObjectContinuity"
+            ],
+            "capabilityFacts": [],
+            "contextualFacts": [],
+            "proofRoles": [],
+            "requiresContextFacts": [],
+            "acquisitionRequires": [
+              "baseManufacture",
+              "t1ReadingAcquired"
+            ],
+            "factor": {
+              "id": "fixture.factor.identity.old",
+              "affectsAxes": [
+                "Identity"
+              ],
+              "weights": [
+                {
+                  "when": {
+                    "Identity": "REPRODUCTION"
+                  },
+                  "weight": 1
+                },
+                {
+                  "when": {
+                    "Identity": "LATE18_EXPORT"
+                  },
+                  "weight": 25
+                }
+              ]
+            }
+          },
+          {
+            "observationId": "obs.structure.xray.early",
+            "sourceIds": [
+              "source.instrument.xray"
+            ],
+            "sharedLatentIds": [
+              "latent.repair-map"
+            ],
+            "dependencyUnitId": "dep.structure.major",
+            "acquisitionActionId": "A.IMAGE.XRAY",
+            "coverage": {
+              "object": "OBJECT.FIRST",
+              "region": "declared-major-scope-multi-view-readable",
+              "method": "xray"
+            },
+            "facts": [
+              "xrayReadingsByRegionAcquired",
+              "currentStructureReadoutByRegion"
+            ],
+            "capabilityFacts": [],
+            "contextualFacts": [],
+            "proofRoles": [
+              "PROOF.MAJOR.PHYSICAL.STRUCTURE_MAP"
+            ],
+            "requiresContextFacts": [],
+            "acquisitionRequires": [],
+            "factor": {
+              "id": "fixture.factor.repair.major",
+              "affectsAxes": [
+                "RepairHistory"
+              ],
+              "weights": [
+                {
+                  "when": {
+                    "RepairHistory": "NO_MAJOR_REASSEMBLY"
+                  },
+                  "weight": 1
+                },
+                {
+                  "when": {
+                    "RepairHistory": "MAJOR_REASSEMBLY_NOT_THREE_PHASE"
+                  },
+                  "weight": 25
+                },
+                {
+                  "when": {
+                    "RepairHistory": "THREE_PHASE"
+                  },
+                  "weight": 25
+                }
+              ]
+            }
+          }
+        ],
+        "log": [
+          {
+            "actionId": "A.OBSERVE.WHOLE",
+            "eventKey": "whole",
+            "observationId": "obs.current.whole",
+            "cost": 0,
+            "materialObservationIds": []
+          },
+          {
+            "actionId": "A.OBSERVE.BASE",
+            "eventKey": "base",
+            "observationId": "obs.current.base",
+            "cost": 0,
+            "materialObservationIds": []
+          },
+          {
+            "actionId": "A.LOCATE.HISTORIC_IMAGE",
+            "eventKey": "t1",
+            "observationId": "obs.phase.t1",
+            "cost": 1,
+            "materialObservationIds": []
+          },
+          {
+            "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+            "eventKey": "identityContinuity",
+            "observationId": "obs.object.continuity",
+            "cost": 2,
+            "materialObservationIds": [
+              "obs.phase.t1",
+              "obs.current.base"
+            ]
+          },
+          {
+            "actionId": "A.IMAGE.XRAY",
+            "eventKey": "xrayEarly",
+            "observationId": "obs.structure.xray.early",
+            "cost": 3,
+            "materialObservationIds": []
+          }
+        ],
+        "billed": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "stopped": false,
+        "budget": 22
+      },
+      "viewSession": {
+        "acquired": [
+          {
+            "observationId": "obs.current.whole",
+            "sourceIds": [
+              "source.physical.current"
+            ],
+            "sharedLatentIds": [
+              "latent.current-craft",
+              "latent.repair-map"
+            ],
+            "dependencyUnitId": "dep.fact.current-whole",
+            "acquisitionActionId": "A.OBSERVE.WHOLE",
+            "coverage": {
+              "object": "OBJECT.FIRST",
+              "region": "whole-visible",
+              "method": "visual"
+            },
+            "facts": [
+              "currentBody",
+              "currentDecor",
+              "currentRepairMap",
+              "interventionObservation"
+            ],
+            "capabilityFacts": [],
+            "contextualFacts": [],
+            "proofRoles": [
+              "PROOF.CURRENT.NAMED_REPAIR_MAP"
+            ],
+            "requiresContextFacts": [],
+            "acquisitionRequires": []
+          },
+          {
+            "observationId": "obs.current.base",
+            "sourceIds": [
+              "source.physical.current"
+            ],
+            "sharedLatentIds": [
+              "latent.current-craft"
+            ],
+            "dependencyUnitId": "dep.fact.current-base",
+            "acquisitionActionId": "A.OBSERVE.BASE",
+            "coverage": {
+              "object": "OBJECT.FIRST",
+              "region": "base-and-inner",
+              "method": "visual"
+            },
+            "facts": [
+              "baseManufacture"
+            ],
+            "capabilityFacts": [],
+            "contextualFacts": [],
+            "proofRoles": [],
+            "requiresContextFacts": [],
+            "acquisitionRequires": []
+          },
+          {
+            "observationId": "obs.phase.t1",
+            "sourceIds": [
+              "source.archive.pre-accident"
+            ],
+            "sharedLatentIds": [
+              "latent.pre-accident-reading"
+            ],
+            "dependencyUnitId": "dep.phase.t1",
+            "acquisitionActionId": "A.LOCATE.HISTORIC_IMAGE",
+            "coverage": {
+              "object": "OBJECT.FIRST",
+              "region": "declared-time-anchor",
+              "method": "archive"
+            },
+            "facts": [
+              "t1ReadingAcquired"
+            ],
+            "capabilityFacts": [],
+            "contextualFacts": [
+              "t1Established"
+            ],
+            "proofRoles": [],
+            "requiresContextFacts": [
+              "identityObjectContinuity"
+            ],
+            "acquisitionRequires": [],
+            "factor": {
+              "id": "fixture.factor.repair.three-phase-source",
+              "affectsAxes": [
+                "RepairHistory"
+              ],
+              "weights": [
+                {
+                  "when": {
+                    "RepairHistory": "NO_MAJOR_REASSEMBLY"
+                  },
+                  "weight": 1
+                },
+                {
+                  "when": {
+                    "RepairHistory": "MAJOR_REASSEMBLY_NOT_THREE_PHASE"
+                  },
+                  "weight": 1
+                },
+                {
+                  "when": {
+                    "RepairHistory": "THREE_PHASE"
+                  },
+                  "weight": 5
+                }
+              ]
+            }
+          },
+          {
+            "observationId": "obs.object.continuity",
+            "sourceIds": [
+              "source.archive.image",
+              "source.physical.current"
+            ],
+            "sharedLatentIds": [
+              "latent.object-match"
+            ],
+            "dependencyUnitId": "dep.object.continuity",
+            "acquisitionActionId": "A.VERIFY.OBJECT_CONTINUITY",
+            "coverage": {
+              "object": "OBJECT.FIRST",
+              "region": "stable-anchors",
+              "method": "cross-time"
+            },
+            "facts": [
+              "directionHistoricCandidate",
+              "identityObjectContinuity"
+            ],
+            "capabilityFacts": [],
+            "contextualFacts": [],
+            "proofRoles": [],
+            "requiresContextFacts": [],
+            "acquisitionRequires": [
+              "baseManufacture",
+              "t1ReadingAcquired"
+            ],
+            "factor": {
+              "id": "fixture.factor.identity.old",
+              "affectsAxes": [
+                "Identity"
+              ],
+              "weights": [
+                {
+                  "when": {
+                    "Identity": "REPRODUCTION"
+                  },
+                  "weight": 1
+                },
+                {
+                  "when": {
+                    "Identity": "LATE18_EXPORT"
+                  },
+                  "weight": 25
+                }
+              ]
+            }
+          },
+          {
+            "observationId": "obs.structure.xray.early",
+            "sourceIds": [
+              "source.instrument.xray"
+            ],
+            "sharedLatentIds": [
+              "latent.repair-map"
+            ],
+            "dependencyUnitId": "dep.structure.major",
+            "acquisitionActionId": "A.IMAGE.XRAY",
+            "coverage": {
+              "object": "OBJECT.FIRST",
+              "region": "declared-major-scope-multi-view-readable",
+              "method": "xray"
+            },
+            "facts": [
+              "xrayReadingsByRegionAcquired",
+              "currentStructureReadoutByRegion"
+            ],
+            "capabilityFacts": [],
+            "contextualFacts": [],
+            "proofRoles": [
+              "PROOF.MAJOR.PHYSICAL.STRUCTURE_MAP"
+            ],
+            "requiresContextFacts": [],
+            "acquisitionRequires": [],
+            "factor": {
+              "id": "fixture.factor.repair.major",
+              "affectsAxes": [
+                "RepairHistory"
+              ],
+              "weights": [
+                {
+                  "when": {
+                    "RepairHistory": "NO_MAJOR_REASSEMBLY"
+                  },
+                  "weight": 1
+                },
+                {
+                  "when": {
+                    "RepairHistory": "MAJOR_REASSEMBLY_NOT_THREE_PHASE"
+                  },
+                  "weight": 25
+                },
+                {
+                  "when": {
+                    "RepairHistory": "THREE_PHASE"
+                  },
+                  "weight": 25
+                }
+              ]
+            }
+          }
+        ],
+        "log": [
+          {
+            "actionId": "A.OBSERVE.WHOLE",
+            "eventKey": "whole",
+            "observationId": "obs.current.whole",
+            "cost": 0,
+            "materialObservationIds": []
+          },
+          {
+            "actionId": "A.OBSERVE.BASE",
+            "eventKey": "base",
+            "observationId": "obs.current.base",
+            "cost": 0,
+            "materialObservationIds": []
+          },
+          {
+            "actionId": "A.LOCATE.HISTORIC_IMAGE",
+            "eventKey": "t1",
+            "observationId": "obs.phase.t1",
+            "cost": 1,
+            "materialObservationIds": []
+          },
+          {
+            "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+            "eventKey": "identityContinuity",
+            "observationId": "obs.object.continuity",
+            "cost": 2,
+            "materialObservationIds": [
+              "obs.phase.t1",
+              "obs.current.base"
+            ]
+          },
+          {
+            "actionId": "A.IMAGE.XRAY",
+            "eventKey": "xrayEarly",
+            "observationId": "obs.structure.xray.early",
+            "cost": 3,
+            "materialObservationIds": []
+          }
+        ],
+        "billed": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "stopped": false,
+        "budget": 22
+      },
+      "historyIndex": null,
+      "gameId": 0,
+      "selection": null,
+      "openPlace": null,
+      "visibleBody": [
+        "OBJ_W",
+        "OBJ_D",
+        "OBJ_R",
+        "SURF"
+      ],
+      "graph": {
+        "nodes": [
+          {
+            "id": "obs.current.whole",
+            "observationId": "obs.current.whole",
+            "title": "整器形制与可见修补",
+            "summary": "已记录形制、胎釉与肉眼可见的干预分布；可见修补本身不证明重大重组。",
+            "state": "known",
+            "group": "craft",
+            "sourceIds": [
+              "obs.current.whole"
+            ],
+            "actionId": "A.OBSERVE.WHOLE",
+            "actionName": "看整体形制与胎釉",
+            "steps": [
+              1
+            ],
+            "firstSeen": 1,
+            "attempts": 1,
+            "contextualized": false,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "visual",
+              "object": "OBJECT.FIRST",
+              "region": "whole-visible"
+            },
+            "originalSourceIds": [
+              "source.physical.current"
+            ],
+            "kind": "evidence"
+          },
+          {
+            "id": "obs.current.base",
+            "observationId": "obs.current.base",
+            "title": "底足制造痕迹",
+            "summary": "底足留下修削与成型特征，为制造工艺判断提供局部读数。",
+            "state": "known",
+            "group": "craft",
+            "sourceIds": [
+              "obs.current.base"
+            ],
+            "actionId": "A.OBSERVE.BASE",
+            "actionName": "看底足与修足",
+            "steps": [
+              2
+            ],
+            "firstSeen": 2,
+            "attempts": 1,
+            "contextualized": false,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "visual",
+              "object": "OBJECT.FIRST",
+              "region": "base-and-inner"
+            },
+            "originalSourceIds": [
+              "source.physical.current"
+            ],
+            "kind": "evidence"
+          },
+          {
+            "id": "obs.phase.t1",
+            "observationId": "obs.phase.t1",
+            "title": "旧照片中的锔修痕迹",
+            "summary": "19世纪末的旧照片中可见足部瑕疵与旧锔痕。照片的这些内容已经取得。本照片与现器核验相符后，锔痕可以归入这只碗的早期历史。具体图像与特征值尚未制作；此处沿用已设定的案例内容。",
+            "state": "known",
+            "group": "history",
+            "sourceIds": [
+              "obs.phase.t1"
+            ],
+            "actionId": "A.LOCATE.HISTORIC_IMAGE",
+            "actionName": "找更早的影像",
+            "steps": [
+              3
+            ],
+            "firstSeen": 3,
+            "attempts": 1,
+            "contextualized": true,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "archive",
+              "object": "OBJECT.FIRST",
+              "region": "declared-time-anchor"
+            },
+            "originalSourceIds": [
+              "source.archive.pre-accident"
+            ],
+            "kind": "evidence",
+            "interpretationState": "established",
+            "stateLabel": "已接入本器历史"
+          },
+          {
+            "id": "obs.structure.xray.early",
+            "observationId": "obs.structure.xray.early",
+            "title": "当前内部的接合痕迹",
+            "summary": "今日多角度成像已经留下声明可读区域内的接合、填料候选与瓷片边界。它直接记录当前结构；历史照片核验不决定这份当前观察是否存在，也不替所有接合断代。",
+            "state": "known",
+            "group": "structure",
+            "sourceIds": [
+              "obs.structure.xray.early"
+            ],
+            "actionId": "A.IMAGE.XRAY",
+            "actionName": "X 射线多角度逐区成像",
+            "steps": [
+              5
+            ],
+            "firstSeen": 5,
+            "attempts": 1,
+            "contextualized": false,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "xray",
+              "object": "OBJECT.FIRST",
+              "region": "declared-major-scope-multi-view-readable"
+            },
+            "originalSourceIds": [
+              "source.instrument.xray"
+            ],
+            "kind": "evidence",
+            "interpretationState": "current"
+          },
+          {
+            "id": "claim:identity",
+            "kind": "claim",
+            "title": "晚 18 世纪外销瓷方向成立",
+            "summary": "整体制造特征与底足读数共同在场，再由比对排除或对象连续性提供身份路径；当前证据支持这一方向。",
+            "state": "established",
+            "sourceIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "group": "craft"
+          },
+          {
+            "id": "interpretation:photo-repair",
+            "kind": "interpretation",
+            "state": "known",
+            "title": "照片拍摄时已留有锔修痕迹",
+            "summary": "至迟在这张19世纪末照片拍摄时，这只碗已经过锔修。这是既有早期状态事实的范围表述，不新增计分判断，不把今天所有内部接合都定为同一时期。",
+            "sourceIds": [
+              "obs.phase.t1",
+              "obs.object.continuity",
+              "obs.current.base"
+            ],
+            "group": "history",
+            "interpretationOnly": true,
+            "layoutAnchorIds": [
+              "obs.phase.t1"
+            ],
+            "stateLabel": "已有信息的新用途"
+          }
+        ],
+        "edges": [
+          {
+            "id": "proof:identity:obs.object.continuity",
+            "from": "obs.phase.t1",
+            "to": "claim:identity",
+            "label": "工艺与身份路径共同支持",
+            "kind": "support",
+            "sourceIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "details": "共同条件：整体制造特征 + 底足读数 + 一条身份路径。比对排除与对象连续性是替代路径，不能读成两项都必须做；是否成立还取决于当前命题状态。",
+            "supportGroupIds": [
+              "proof-group:identity:continuity"
+            ]
+          },
+          {
+            "id": "proof:identity:obs.current.whole:current",
+            "from": "obs.current.whole",
+            "to": "claim:identity",
+            "label": "身份判断的共同条件",
+            "kind": "support",
+            "sourceIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "details": "这份制造读数必须与另一处工艺读数及一条身份路径共同使用；本箭头不表示它单独能够推出身份。",
+            "supportGroupIds": [
+              "proof-group:identity:continuity"
+            ]
+          },
+          {
+            "id": "proof:identity:obs.current.base:current",
+            "from": "obs.current.base",
+            "to": "claim:identity",
+            "label": "身份判断的共同条件",
+            "kind": "support",
+            "sourceIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "details": "这份制造读数必须与另一处工艺读数及一条身份路径共同使用；本箭头不表示它单独能够推出身份。",
+            "supportGroupIds": [
+              "proof-group:identity:continuity"
+            ]
+          },
+          {
+            "id": "photo:object",
+            "from": "obs.current.base",
+            "to": "obs.phase.t1",
+            "label": "照片与现器的对应特征相符",
+            "kind": "attribution",
+            "sourceIds": [
+              "obs.phase.t1",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "details": "这份核验报告支持指定旧照片与眼前器物为同一对象。照片和现器观察先取得，报告后来建立两端关系。点击原始依据可回查核验；不是照片与X射线互相证明。",
+            "directed": false
+          },
+          {
+            "id": "interpretation:photo-history",
+            "from": "obs.phase.t1",
+            "to": "interpretation:photo-repair",
+            "label": "旧照片接入本器早期历史",
+            "kind": "support",
+            "sourceIds": [
+              "obs.phase.t1",
+              "obs.object.continuity",
+              "obs.current.base"
+            ],
+            "details": "照片中的旧锔痕、有效时点与本照片核验共同允许这一表述。照片没有重新取得，核验报告也没有变成另一份照片。",
+            "directed": true
+          }
+        ],
+        "questions": [
+          {
+            "id": "question:change",
+            "anchorIds": [
+              "obs.structure.xray.early"
+            ],
+            "title": "结构从另一个时点到现在变了什么？",
+            "explanation": "当前结构已经能读，状态本身仍不能说明发生过什么变化。",
+            "actionIds": [
+              "A.MAP.REGION_CONTINUITY"
+            ],
+            "kind": "stub",
+            "continuation": {
+              "nodeIds": [
+                "obs.structure.major.cross-time"
+              ],
+              "edgeIds": []
+            },
+            "sourceIds": [
+              "obs.structure.xray.early"
+            ]
+          }
+        ],
+        "stage": {
+          "key": "G1",
+          "title": "有了一个可信的问题方向",
+          "summary": "混沌收成了一个能往下查的问题:你知道该问什么了,但还答不上。"
+        },
+        "observations": [
+          {
+            "id": "obs.current.whole",
+            "observationId": "obs.current.whole",
+            "title": "整器形制与可见修补",
+            "summary": "已记录形制、胎釉与肉眼可见的干预分布；可见修补本身不证明重大重组。",
+            "state": "known",
+            "group": "craft",
+            "sourceIds": [
+              "obs.current.whole"
+            ],
+            "actionId": "A.OBSERVE.WHOLE",
+            "actionName": "看整体形制与胎釉",
+            "steps": [
+              1
+            ],
+            "firstSeen": 1,
+            "attempts": 1,
+            "contextualized": false,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "visual",
+              "object": "OBJECT.FIRST",
+              "region": "whole-visible"
+            },
+            "originalSourceIds": [
+              "source.physical.current"
+            ],
+            "nodeId": "obs.current.whole",
+            "edgeIds": [
+              "proof:identity:obs.object.continuity",
+              "proof:identity:obs.current.whole:current",
+              "proof:identity:obs.current.base:current"
+            ]
+          },
+          {
+            "id": "obs.current.base",
+            "observationId": "obs.current.base",
+            "title": "底足制造痕迹",
+            "summary": "底足留下修削与成型特征，为制造工艺判断提供局部读数。",
+            "state": "known",
+            "group": "craft",
+            "sourceIds": [
+              "obs.current.base"
+            ],
+            "actionId": "A.OBSERVE.BASE",
+            "actionName": "看底足与修足",
+            "steps": [
+              2
+            ],
+            "firstSeen": 2,
+            "attempts": 1,
+            "contextualized": false,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "visual",
+              "object": "OBJECT.FIRST",
+              "region": "base-and-inner"
+            },
+            "originalSourceIds": [
+              "source.physical.current"
+            ],
+            "nodeId": "obs.current.base",
+            "edgeIds": [
+              "proof:identity:obs.object.continuity",
+              "proof:identity:obs.current.whole:current",
+              "proof:identity:obs.current.base:current",
+              "photo:object",
+              "interpretation:photo-history"
+            ]
+          },
+          {
+            "id": "obs.phase.t1",
+            "observationId": "obs.phase.t1",
+            "title": "旧照片中的锔修痕迹",
+            "summary": "19世纪末的旧照片中可见足部瑕疵与旧锔痕。照片的这些内容已经取得。本照片与现器核验相符后，锔痕可以归入这只碗的早期历史。具体图像与特征值尚未制作；此处沿用已设定的案例内容。",
+            "state": "known",
+            "group": "history",
+            "sourceIds": [
+              "obs.phase.t1"
+            ],
+            "actionId": "A.LOCATE.HISTORIC_IMAGE",
+            "actionName": "找更早的影像",
+            "steps": [
+              3
+            ],
+            "firstSeen": 3,
+            "attempts": 1,
+            "contextualized": true,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "archive",
+              "object": "OBJECT.FIRST",
+              "region": "declared-time-anchor"
+            },
+            "originalSourceIds": [
+              "source.archive.pre-accident"
+            ],
+            "nodeId": "obs.phase.t1",
+            "edgeIds": [
+              "photo:object",
+              "interpretation:photo-history"
+            ],
+            "interpretationState": "established",
+            "stateLabel": "已接入本器历史"
+          },
+          {
+            "id": "obs.object.continuity",
+            "observationId": "obs.object.continuity",
+            "title": "旧照片与现器的核验报告",
+            "summary": "核验针对本例已取得的旧照片与现器对应特征。报告支持为同一对象；它不替事故记录、后期处理报告或其他历史材料完成归属。",
+            "state": "known",
+            "group": "object",
+            "sourceIds": [
+              "obs.object.continuity"
+            ],
+            "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+            "actionName": "核对那些没被改动过的特征",
+            "steps": [
+              4
+            ],
+            "firstSeen": 4,
+            "attempts": 1,
+            "contextualized": false,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "cross-time",
+              "object": "OBJECT.FIRST",
+              "region": "stable-anchors"
+            },
+            "originalSourceIds": [
+              "source.archive.image",
+              "source.physical.current"
+            ],
+            "nodeId": "obs.phase.t1",
+            "edgeIds": [
+              "proof:identity:obs.object.continuity",
+              "proof:identity:obs.current.whole:current",
+              "proof:identity:obs.current.base:current",
+              "photo:object",
+              "interpretation:photo-history"
+            ],
+            "representedAs": "relation"
+          },
+          {
+            "id": "obs.structure.xray.early",
+            "observationId": "obs.structure.xray.early",
+            "title": "当前内部的接合痕迹",
+            "summary": "今日多角度成像已经留下声明可读区域内的接合、填料候选与瓷片边界。它直接记录当前结构；历史照片核验不决定这份当前观察是否存在，也不替所有接合断代。",
+            "state": "known",
+            "group": "structure",
+            "sourceIds": [
+              "obs.structure.xray.early"
+            ],
+            "actionId": "A.IMAGE.XRAY",
+            "actionName": "X 射线多角度逐区成像",
+            "steps": [
+              5
+            ],
+            "firstSeen": 5,
+            "attempts": 1,
+            "contextualized": false,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "xray",
+              "object": "OBJECT.FIRST",
+              "region": "declared-major-scope-multi-view-readable"
+            },
+            "originalSourceIds": [
+              "source.instrument.xray"
+            ],
+            "nodeId": "obs.structure.xray.early",
+            "edgeIds": [],
+            "interpretationState": "current"
+          }
+        ],
+        "localSupportGroups": [],
+        "proofRepresentatives": {},
+        "frontiers": [
+          {
+            "id": "question:change",
+            "anchorIds": [
+              "obs.structure.xray.early"
+            ],
+            "title": "结构从另一个时点到现在变了什么？",
+            "explanation": "当前结构已经能读，状态本身仍不能说明发生过什么变化。",
+            "actionIds": [
+              "A.MAP.REGION_CONTINUITY"
+            ],
+            "kind": "stub",
+            "continuation": {
+              "nodeIds": [
+                "obs.structure.major.cross-time"
+              ],
+              "edgeIds": []
+            },
+            "sourceIds": [
+              "obs.structure.xray.early"
+            ]
+          }
+        ],
+        "supportGroups": [
+          {
+            "id": "proof-group:identity:continuity",
+            "targetId": "claim:identity",
+            "kind": "all",
+            "alternativeSet": "proof-options:identity",
+            "title": "整体与底足＋对象连续性",
+            "sourceIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "memberNodeIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.phase.t1"
+            ],
+            "edgeIds": [
+              "proof:identity:obs.object.continuity",
+              "proof:identity:obs.current.whole:current",
+              "proof:identity:obs.current.base:current"
+            ]
+          }
+        ]
+      },
+      "claims": {
+        "coherentDecisionProfile": {
+          "established": false
+        },
+        "g1": {
+          "established": true
+        },
+        "identity": {
+          "contested": false,
+          "established": true,
+          "logicallyRefuted": false
+        },
+        "majorReassembly": {
+          "contested": false,
+          "established": false,
+          "logicallyRefuted": false
+        },
+        "threePhase": {
+          "established": false
+        }
+      },
+      "stage": "G1",
+      "stopping": {
+        "frozenStage": null,
+        "playerChoice": "CONTINUE",
+        "systemAutoEnded": false
+      },
+      "reduceMotion": true
+    },
+    "map": {
+      "camera": {
+        "x": -114.62874999999997,
+        "y": 91.56,
+        "s": 1
+      },
+      "phase": "idle",
+      "flight": false,
+      "layout": {
+        "width": 1120,
+        "height": 760,
+        "nodes": [
+          {
+            "id": "obs.current.whole",
+            "observationId": "obs.current.whole",
+            "title": "整器形制与可见修补",
+            "summary": "已记录形制、胎釉与肉眼可见的干预分布；可见修补本身不证明重大重组。",
+            "state": "known",
+            "group": "craft",
+            "sourceIds": [
+              "obs.current.whole"
+            ],
+            "actionId": "A.OBSERVE.WHOLE",
+            "actionName": "看整体形制与胎釉",
+            "steps": [
+              1
+            ],
+            "firstSeen": 1,
+            "attempts": 1,
+            "contextualized": false,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "visual",
+              "object": "OBJECT.FIRST",
+              "region": "whole-visible"
+            },
+            "originalSourceIds": [
+              "source.physical.current"
+            ],
+            "kind": "evidence",
+            "x": 602,
+            "y": 181.7,
+            "lines": [
+              "整器形制与可见修补"
+            ],
+            "labelX": 530,
+            "labelY": 121.7,
+            "labelWidth": 144,
+            "fontSize": 16,
+            "lineHeight": 24,
+            "labelHeight": 24,
+            "labelBounds": {
+              "x": 530,
+              "y": 121.7,
+              "width": 144,
+              "height": 24
+            }
+          },
+          {
+            "id": "obs.current.base",
+            "observationId": "obs.current.base",
+            "title": "底足制造痕迹",
+            "summary": "底足留下修削与成型特征，为制造工艺判断提供局部读数。",
+            "state": "known",
+            "group": "craft",
+            "sourceIds": [
+              "obs.current.base"
+            ],
+            "actionId": "A.OBSERVE.BASE",
+            "actionName": "看底足与修足",
+            "steps": [
+              2
+            ],
+            "firstSeen": 2,
+            "attempts": 1,
+            "contextualized": false,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "visual",
+              "object": "OBJECT.FIRST",
+              "region": "base-and-inner"
+            },
+            "originalSourceIds": [
+              "source.physical.current"
+            ],
+            "kind": "evidence",
+            "x": 226.32,
+            "y": 161.97,
+            "lines": [
+              "底足制造痕迹"
+            ],
+            "labelX": 178.32,
+            "labelY": 101.97,
+            "labelWidth": 96,
+            "fontSize": 16,
+            "lineHeight": 24,
+            "labelHeight": 24,
+            "labelBounds": {
+              "x": 178.32,
+              "y": 101.97,
+              "width": 96,
+              "height": 24
+            }
+          },
+          {
+            "id": "obs.phase.t1",
+            "observationId": "obs.phase.t1",
+            "title": "旧照片中的锔修痕迹",
+            "summary": "19世纪末的旧照片中可见足部瑕疵与旧锔痕。照片的这些内容已经取得。本照片与现器核验相符后，锔痕可以归入这只碗的早期历史。具体图像与特征值尚未制作；此处沿用已设定的案例内容。",
+            "state": "known",
+            "group": "history",
+            "sourceIds": [
+              "obs.phase.t1"
+            ],
+            "actionId": "A.LOCATE.HISTORIC_IMAGE",
+            "actionName": "找更早的影像",
+            "steps": [
+              3
+            ],
+            "firstSeen": 3,
+            "attempts": 1,
+            "contextualized": true,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "archive",
+              "object": "OBJECT.FIRST",
+              "region": "declared-time-anchor"
+            },
+            "originalSourceIds": [
+              "source.archive.pre-accident"
+            ],
+            "kind": "evidence",
+            "interpretationState": "established",
+            "stateLabel": "已接入本器历史",
+            "x": 845,
+            "y": 185,
+            "lines": [
+              "旧照片中的锔修痕迹"
+            ],
+            "labelX": 773,
+            "labelY": 99,
+            "labelWidth": 144,
+            "fontSize": 16,
+            "lineHeight": 24,
+            "subline": "照片与现器核验相符",
+            "labelHeight": 50,
+            "labelBounds": {
+              "x": 773,
+              "y": 99,
+              "width": 144,
+              "height": 50
+            }
+          },
+          {
+            "id": "obs.structure.xray.early",
+            "observationId": "obs.structure.xray.early",
+            "title": "当前内部的接合痕迹",
+            "summary": "今日多角度成像已经留下声明可读区域内的接合、填料候选与瓷片边界。它直接记录当前结构；历史照片核验不决定这份当前观察是否存在，也不替所有接合断代。",
+            "state": "known",
+            "group": "structure",
+            "sourceIds": [
+              "obs.structure.xray.early"
+            ],
+            "actionId": "A.IMAGE.XRAY",
+            "actionName": "X 射线多角度逐区成像",
+            "steps": [
+              5
+            ],
+            "firstSeen": 5,
+            "attempts": 1,
+            "contextualized": false,
+            "negative": false,
+            "scopeLimited": false,
+            "coverage": {
+              "method": "xray",
+              "object": "OBJECT.FIRST",
+              "region": "declared-major-scope-multi-view-readable"
+            },
+            "originalSourceIds": [
+              "source.instrument.xray"
+            ],
+            "kind": "evidence",
+            "interpretationState": "current",
+            "x": 397,
+            "y": 396.2,
+            "lines": [
+              "当前内部的接合痕迹"
+            ],
+            "labelX": 325,
+            "labelY": 336.2,
+            "labelWidth": 144,
+            "fontSize": 16,
+            "lineHeight": 24,
+            "labelHeight": 24,
+            "labelBounds": {
+              "x": 325,
+              "y": 336.2,
+              "width": 144,
+              "height": 24
+            }
+          },
+          {
+            "id": "claim:identity",
+            "kind": "claim",
+            "title": "晚 18 世纪外销瓷方向成立",
+            "summary": "整体制造特征与底足读数共同在场，再由比对排除或对象连续性提供身份路径；当前证据支持这一方向。",
+            "state": "established",
+            "sourceIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "group": "craft",
+            "x": 602,
+            "y": 396.2,
+            "lines": [
+              "晚 18 世纪外销瓷方",
+              "向成立"
+            ],
+            "labelX": 530,
+            "labelY": 372.2,
+            "labelWidth": 144,
+            "fontSize": 15,
+            "lineHeight": 24,
+            "box": {
+              "w": 168,
+              "h": 76
+            },
+            "labelHeight": 48
+          },
+          {
+            "id": "interpretation:photo-repair",
+            "kind": "interpretation",
+            "state": "known",
+            "title": "照片拍摄时已留有锔修痕迹",
+            "summary": "至迟在这张19世纪末照片拍摄时，这只碗已经过锔修。这是既有早期状态事实的范围表述，不新增计分判断，不把今天所有内部接合都定为同一时期。",
+            "sourceIds": [
+              "obs.phase.t1",
+              "obs.object.continuity",
+              "obs.current.base"
+            ],
+            "group": "history",
+            "interpretationOnly": true,
+            "layoutAnchorIds": [
+              "obs.phase.t1"
+            ],
+            "stateLabel": "已有信息的新用途",
+            "x": 845,
+            "y": 401.15,
+            "lines": [
+              "照片拍摄时已留有锔修痕",
+              "迹"
+            ],
+            "labelX": 881,
+            "labelY": 377.15,
+            "labelWidth": 176,
+            "fontSize": 16,
+            "lineHeight": 24,
+            "labelHeight": 48,
+            "labelBounds": {
+              "x": 881,
+              "y": 377.15,
+              "width": 176,
+              "height": 48
+            }
+          }
+        ],
+        "routes": [
+          {
+            "id": "photo:object",
+            "edgeIds": [
+              "photo:object"
+            ],
+            "from": "obs.current.base",
+            "to": "obs.phase.t1",
+            "kind": "attribution",
+            "arrow": false,
+            "d": "M 235.31 162.3 C 342.21 141.59 466 147.85 569.75 160.27 Q 580.5 160.2 591.25 160.2 C 598.13 159.13 606.09 159.5 612.75 160.2 Q 623.5 160.2 634.18 161.43 C 700.16 156.76 774.35 169.59 836.01 184.67",
+            "samples": [
+              {
+                "x": 235.31377101643494,
+                "y": 162.30478784914413
+              },
+              {
+                "x": 238.18110401444463,
+                "y": 161.75626094440113
+              },
+              {
+                "x": 241.0563566816973,
+                "y": 161.22055352517052
+              },
+              {
+                "x": 243.93937135966834,
+                "y": 160.6975765683342
+              },
+              {
+                "x": 246.82999038983286,
+                "y": 160.187241050774
+              },
+              {
+                "x": 249.72805611366604,
+                "y": 159.68945794937164
+              },
+              {
+                "x": 252.63341087264305,
+                "y": 159.20413824100902
+              },
+              {
+                "x": 255.54589700823917,
+                "y": 158.73119290256798
+              },
+              {
+                "x": 258.46535686192965,
+                "y": 158.27053291093026
+              },
+              {
+                "x": 261.3916327751895,
+                "y": 157.82206924297773
+              },
+              {
+                "x": 264.32456708949417,
+                "y": 157.38571287559225
+              },
+              {
+                "x": 267.2640021463187,
+                "y": 156.96137478565555
+              },
+              {
+                "x": 270.2097802871384,
+                "y": 156.5489659500496
+              },
+              {
+                "x": 273.16174385342833,
+                "y": 156.148397345656
+              },
+              {
+                "x": 276.11973518666383,
+                "y": 155.75957994935678
+              },
+              {
+                "x": 279.0835966283201,
+                "y": 155.38242473803365
+              },
+              {
+                "x": 282.0531705198723,
+                "y": 155.0168426885685
+              },
+              {
+                "x": 285.02829920279555,
+                "y": 154.662744777843
+              },
+              {
+                "x": 288.00882501856523,
+                "y": 154.32004198273918
+              },
+              {
+                "x": 290.9945903086563,
+                "y": 153.98864528013868
+              },
+              {
+                "x": 293.98543741454426,
+                "y": 153.66846564692344
+              },
+              {
+                "x": 296.98120867770416,
+                "y": 153.3594140599753
+              },
+              {
+                "x": 299.9817464396113,
+                "y": 153.061401496176
+              },
+              {
+                "x": 302.98689304174076,
+                "y": 152.77433893240735
+              },
+              {
+                "x": 305.9964908255677,
+                "y": 152.49813734555119
+              },
+              {
+                "x": 309.0103821325675,
+                "y": 152.23270771248943
+              },
+              {
+                "x": 312.0284093042152,
+                "y": 151.97796101010374
+              },
+              {
+                "x": 315.0504146819861,
+                "y": 151.73380821527607
+              },
+              {
+                "x": 318.0762406073555,
+                "y": 151.5001603048882
+              },
+              {
+                "x": 321.10572942179846,
+                "y": 151.27692825582196
+              },
+              {
+                "x": 324.1387234667902,
+                "y": 151.0640230449591
+              },
+              {
+                "x": 327.17506508380586,
+                "y": 150.86135564918152
+              },
+              {
+                "x": 330.21459661432084,
+                "y": 150.66883704537102
+              },
+              {
+                "x": 333.2571603998101,
+                "y": 150.48637821040938
+              },
+              {
+                "x": 336.30259878174917,
+                "y": 150.31389012117853
+              },
+              {
+                "x": 339.3507541016129,
+                "y": 150.15128375456018
+              },
+              {
+                "x": 342.40146870087676,
+                "y": 149.9984700874362
+              },
+              {
+                "x": 345.45458492101585,
+                "y": 149.85536009668846
+              },
+              {
+                "x": 348.50994510350534,
+                "y": 149.72186475919864
+              },
+              {
+                "x": 351.56739158982043,
+                "y": 149.59789505184864
+              },
+              {
+                "x": 354.62676672143635,
+                "y": 149.48336195152035
+              },
+              {
+                "x": 357.6879128398284,
+                "y": 149.37817643509547
+              },
+              {
+                "x": 360.75067228647174,
+                "y": 149.28224947945594
+              },
+              {
+                "x": 363.8148874028415,
+                "y": 149.19549206148352
+              },
+              {
+                "x": 366.88040053041294,
+                "y": 149.11781515805998
+              },
+              {
+                "x": 369.9470540106612,
+                "y": 149.04912974606725
+              },
+              {
+                "x": 373.01469018506157,
+                "y": 148.98934680238705
+              },
+              {
+                "x": 376.0831513950892,
+                "y": 148.93837730390126
+              },
+              {
+                "x": 379.1522799822193,
+                "y": 148.89613222749168
+              },
+              {
+                "x": 382.22191828792717,
+                "y": 148.86252255004018
+              },
+              {
+                "x": 385.291908653688,
+                "y": 148.83745924842853
+              },
+              {
+                "x": 388.36209342097675,
+                "y": 148.82085329953853
+              },
+              {
+                "x": 391.4323149312689,
+                "y": 148.81261568025204
+              },
+              {
+                "x": 394.50241552603944,
+                "y": 148.81265736745087
+              },
+              {
+                "x": 397.57223754676374,
+                "y": 148.82088933801685
+              },
+              {
+                "x": 400.641623334917,
+                "y": 148.8372225688318
+              },
+              {
+                "x": 403.7104152319744,
+                "y": 148.86156803677756
+              },
+              {
+                "x": 406.7784555794112,
+                "y": 148.8938367187359
+              },
+              {
+                "x": 409.84558671870246,
+                "y": 148.93393959158868
+              },
+              {
+                "x": 412.9116509913234,
+                "y": 148.98178763221773
+              },
+              {
+                "x": 415.9764907387493,
+                "y": 149.0372918175048
+              },
+              {
+                "x": 419.0399483024554,
+                "y": 149.10036312433184
+              },
+              {
+                "x": 422.10186602391684,
+                "y": 149.17091252958053
+              },
+              {
+                "x": 425.1620862446089,
+                "y": 149.2488510101328
+              },
+              {
+                "x": 428.22045130600657,
+                "y": 149.3340895428704
+              },
+              {
+                "x": 431.2768035495853,
+                "y": 149.4265391046752
+              },
+              {
+                "x": 434.3309853168202,
+                "y": 149.52611067242898
+              },
+              {
+                "x": 437.3828389491864,
+                "y": 149.63271522301358
+              },
+              {
+                "x": 440.4322067881593,
+                "y": 149.74626373331085
+              },
+              {
+                "x": 443.4789311752139,
+                "y": 149.86666718020257
+              },
+              {
+                "x": 446.52285445182554,
+                "y": 149.99383654057056
+              },
+              {
+                "x": 449.5638189594693,
+                "y": 150.12768279129665
+              },
+              {
+                "x": 452.60166703962057,
+                "y": 150.26811690926272
+              },
+              {
+                "x": 455.63624103375446,
+                "y": 150.4150498713505
+              },
+              {
+                "x": 458.66738328334594,
+                "y": 150.56839265444185
+              },
+              {
+                "x": 461.69493612987065,
+                "y": 150.72805623541862
+              },
+              {
+                "x": 464.71874191480345,
+                "y": 150.8939515911626
+              },
+              {
+                "x": 467.7386429796197,
+                "y": 151.06598969855557
+              },
+              {
+                "x": 470.7544816657947,
+                "y": 151.24408153447942
+              },
+              {
+                "x": 473.76610031480345,
+                "y": 151.42813807581595
+              },
+              {
+                "x": 476.77334126812116,
+                "y": 151.61807029944697
+              },
+              {
+                "x": 479.77604686722316,
+                "y": 151.8137891822543
+              },
+              {
+                "x": 482.77405945358464,
+                "y": 152.0152057011198
+              },
+              {
+                "x": 485.76722136868085,
+                "y": 152.22223083292528
+              },
+              {
+                "x": 488.7553749539868,
+                "y": 152.43477555455252
+              },
+              {
+                "x": 491.73836255097785,
+                "y": 152.65275084288334
+              },
+              {
+                "x": 494.71602650112914,
+                "y": 152.8760676747996
+              },
+              {
+                "x": 497.68820914591595,
+                "y": 153.10463702718312
+              },
+              {
+                "x": 500.65475282681336,
+                "y": 153.3383698769157
+              },
+              {
+                "x": 503.6154998852967,
+                "y": 153.57717720087916
+              },
+              {
+                "x": 506.57029266284115,
+                "y": 153.82096997595534
+              },
+              {
+                "x": 509.5189735009219,
+                "y": 154.06965917902608
+              },
+              {
+                "x": 512.4613847410142,
+                "y": 154.32315578697313
+              },
+              {
+                "x": 515.397368724593,
+                "y": 154.58137077667834
+              },
+              {
+                "x": 518.3267677931337,
+                "y": 154.8442151250236
+              },
+              {
+                "x": 521.2494242881116,
+                "y": 155.11159980889065
+              },
+              {
+                "x": 524.1651805510019,
+                "y": 155.38343580516135
+              },
+              {
+                "x": 527.0738789232797,
+                "y": 155.6596340907175
+              },
+              {
+                "x": 529.9753617464202,
+                "y": 155.94010564244093
+              },
+              {
+                "x": 532.8694713618986,
+                "y": 156.22476143721346
+              },
+              {
+                "x": 535.7560501111901,
+                "y": 156.51351245191694
+              },
+              {
+                "x": 538.63494033577,
+                "y": 156.80626966343314
+              },
+              {
+                "x": 541.5059843771135,
+                "y": 157.1029440486439
+              },
+              {
+                "x": 544.3690245766956,
+                "y": 157.40344658443104
+              },
+              {
+                "x": 547.2239032759917,
+                "y": 157.7076882476764
+              },
+              {
+                "x": 550.070462816477,
+                "y": 158.01558001526178
+              },
+              {
+                "x": 552.9085455396266,
+                "y": 158.32703286406905
+              },
+              {
+                "x": 555.7379937869158,
+                "y": 158.64195777097996
+              },
+              {
+                "x": 558.5586498998198,
+                "y": 158.96026571287638
+              },
+              {
+                "x": 561.3703562198137,
+                "y": 159.2818676666401
+              },
+              {
+                "x": 564.1729550883729,
+                "y": 159.60667460915295
+              },
+              {
+                "x": 566.9662888469725,
+                "y": 159.93459751729677
+              },
+              {
+                "x": 569.7501998370875,
+                "y": 160.26554736795336
+              },
+              {
+                "x": 571.900161868041,
+                "y": 160.25309336804224
+              },
+              {
+                "x": 574.0501278957362,
+                "y": 160.24195031549016
+              },
+              {
+                "x": 576.2000979201729,
+                "y": 160.23211821029713
+              },
+              {
+                "x": 578.3500719413515,
+                "y": 160.2235970524632
+              },
+              {
+                "x": 580.5000499592719,
+                "y": 160.2163868419883
+              },
+              {
+                "x": 582.650031973934,
+                "y": 160.21048757887252
+              },
+              {
+                "x": 584.800017985338,
+                "y": 160.2058992631158
+              },
+              {
+                "x": 586.9500079934835,
+                "y": 160.20262189471813
+              },
+              {
+                "x": 589.1000019983709,
+                "y": 160.20065547367952
+              },
+              {
+                "x": 591.25,
+                "y": 160.2
+              },
+              {
+                "x": 592.5520202636719,
+                "y": 160.01516876220703
+              },
+              {
+                "x": 593.8757714843749,
+                "y": 159.86269775390625
+              },
+              {
+                "x": 595.2177893066406,
+                "y": 159.74093353271482
+              },
+              {
+                "x": 596.574609375,
+                "y": 159.64822265625
+              },
+              {
+                "x": 597.9427673339844,
+                "y": 159.5829116821289
+              },
+              {
+                "x": 599.318798828125,
+                "y": 159.54334716796873
+              },
+              {
+                "x": 600.6992395019531,
+                "y": 159.5278756713867
+              },
+              {
+                "x": 602.080625,
+                "y": 159.53484375000002
+              },
+              {
+                "x": 603.4594909667969,
+                "y": 159.56259796142575
+              },
+              {
+                "x": 604.832373046875,
+                "y": 159.60948486328124
+              },
+              {
+                "x": 606.1958068847657,
+                "y": 159.6738510131836
+              },
+              {
+                "x": 607.5463281250001,
+                "y": 159.75404296874999
+              },
+              {
+                "x": 608.8804724121094,
+                "y": 159.84840728759764
+              },
+              {
+                "x": 610.194775390625,
+                "y": 159.95529052734375
+              },
+              {
+                "x": 611.4857727050781,
+                "y": 160.07303924560546
+              },
+              {
+                "x": 612.75,
+                "y": 160.2
+              },
+              {
+                "x": 614.8992945894704,
+                "y": 160.21229494448446
+              },
+              {
+                "x": 617.0471783578812,
+                "y": 160.24917977793783
+              },
+              {
+                "x": 619.1936513052324,
+                "y": 160.31065450036007
+              },
+              {
+                "x": 621.3387134315244,
+                "y": 160.39671911175125
+              },
+              {
+                "x": 623.4823647367568,
+                "y": 160.50737361211137
+              },
+              {
+                "x": 625.6246052209299,
+                "y": 160.64261800144035
+              },
+              {
+                "x": 627.7654348840433,
+                "y": 160.80245227973828
+              },
+              {
+                "x": 629.9048537260976,
+                "y": 160.9868764470051
+              },
+              {
+                "x": 632.0428617470922,
+                "y": 161.19589050324083
+              },
+              {
+                "x": 634.1794589470273,
+                "y": 161.42949444844547
+              },
+              {
+                "x": 637.0955444815202,
+                "y": 161.234592345371
+              },
+              {
+                "x": 640.0218864452032,
+                "y": 161.062119109729
+              },
+              {
+                "x": 642.9580891322742,
+                "y": 160.9117833395861
+              },
+              {
+                "x": 645.90375683693,
+                "y": 160.78329363300858
+              },
+              {
+                "x": 648.8584938533686,
+                "y": 160.6763585880631
+              },
+              {
+                "x": 651.8219044757868,
+                "y": 160.59068680281604
+              },
+              {
+                "x": 654.7935929983823,
+                "y": 160.525986875334
+              },
+              {
+                "x": 657.7731637153523,
+                "y": 160.48196740368337
+              },
+              {
+                "x": 660.7602209208945,
+                "y": 160.45833698593074
+              },
+              {
+                "x": 663.7543689092057,
+                "y": 160.45480422014248
+              },
+              {
+                "x": 666.7552119744837,
+                "y": 160.47107770438518
+              },
+              {
+                "x": 669.7623544109257,
+                "y": 160.50686603672528
+              },
+              {
+                "x": 672.7754005127294,
+                "y": 160.56187781522928
+              },
+              {
+                "x": 675.7939545740918,
+                "y": 160.63582163796366
+              },
+              {
+                "x": 678.8176208892102,
+                "y": 160.7284061029949
+              },
+              {
+                "x": 681.8460037522821,
+                "y": 160.83933980838952
+              },
+              {
+                "x": 684.8787074575051,
+                "y": 160.96833135221405
+              },
+              {
+                "x": 687.9153362990763,
+                "y": 161.11508933253495
+              },
+              {
+                "x": 690.9554945711932,
+                "y": 161.27932234741857
+              },
+              {
+                "x": 693.9987865680529,
+                "y": 161.4607389949316
+              },
+              {
+                "x": 697.0448165838533,
+                "y": 161.65904787314045
+              },
+              {
+                "x": 700.0931889127914,
+                "y": 161.87395758011166
+              },
+              {
+                "x": 703.1435078490645,
+                "y": 162.1051767139116
+              },
+              {
+                "x": 706.19537768687,
+                "y": 162.3524138726068
+              },
+              {
+                "x": 709.2484027204056,
+                "y": 162.6153776542639
+              },
+              {
+                "x": 712.3021872438683,
+                "y": 162.8937766569492
+              },
+              {
+                "x": 715.3563355514558,
+                "y": 163.18731947872928
+              },
+              {
+                "x": 718.410451937365,
+                "y": 163.49571471767058
+              },
+              {
+                "x": 721.4641406957935,
+                "y": 163.81867097183965
+              },
+              {
+                "x": 724.5170061209392,
+                "y": 164.15589683930295
+              },
+              {
+                "x": 727.5686525069988,
+                "y": 164.50710091812698
+              },
+              {
+                "x": 730.6186841481697,
+                "y": 164.87199180637822
+              },
+              {
+                "x": 733.6667053386491,
+                "y": 165.2502781021231
+              },
+              {
+                "x": 736.7123203726352,
+                "y": 165.64166840342824
+              },
+              {
+                "x": 739.7551335443247,
+                "y": 166.04587130836006
+              },
+              {
+                "x": 742.7947491479151,
+                "y": 166.46259541498503
+              },
+              {
+                "x": 745.8307714776038,
+                "y": 166.89154932136967
+              },
+              {
+                "x": 748.8628048275884,
+                "y": 167.3324416255805
+              },
+              {
+                "x": 751.890453492066,
+                "y": 167.78498092568393
+              },
+              {
+                "x": 754.9133217652338,
+                "y": 168.2488758197465
+              },
+              {
+                "x": 757.9310139412895,
+                "y": 168.72383490583468
+              },
+              {
+                "x": 760.9431343144303,
+                "y": 169.20956678201497
+              },
+              {
+                "x": 763.9492871788539,
+                "y": 169.7057800463539
+              },
+              {
+                "x": 766.9490768287569,
+                "y": 170.21218329691789
+              },
+              {
+                "x": 769.9421075583374,
+                "y": 170.72848513177345
+              },
+              {
+                "x": 772.9279836617927,
+                "y": 171.25439414898713
+              },
+              {
+                "x": 775.9063094333198,
+                "y": 171.78961894662532
+              },
+              {
+                "x": 778.8766891671164,
+                "y": 172.33386812275464
+              },
+              {
+                "x": 781.8387271573797,
+                "y": 172.88685027544142
+              },
+              {
+                "x": 784.792027698307,
+                "y": 173.44827400275227
+              },
+              {
+                "x": 787.7361950840959,
+                "y": 174.01784790275366
+              },
+              {
+                "x": 790.6708336089437,
+                "y": 174.595280573512
+              },
+              {
+                "x": 793.5955475670476,
+                "y": 175.18028061309394
+              },
+              {
+                "x": 796.5099412526051,
+                "y": 175.77255661956582
+              },
+              {
+                "x": 799.4136189598137,
+                "y": 176.3718171909942
+              },
+              {
+                "x": 802.3061849828705,
+                "y": 176.9777709254455
+              },
+              {
+                "x": 805.187243615973,
+                "y": 177.59012642098628
+              },
+              {
+                "x": 808.0563991533186,
+                "y": 178.20859227568306
+              },
+              {
+                "x": 810.9132558891047,
+                "y": 178.83287708760227
+              },
+              {
+                "x": 813.7574181175285,
+                "y": 179.4626894548104
+              },
+              {
+                "x": 816.5884901327876,
+                "y": 180.09773797537395
+              },
+              {
+                "x": 819.4060762290792,
+                "y": 180.73773124735945
+              },
+              {
+                "x": 822.2097807006007,
+                "y": 181.38237786883332
+              },
+              {
+                "x": 824.9992078415496,
+                "y": 182.03138643786207
+              },
+              {
+                "x": 827.773961946123,
+                "y": 182.68446555251222
+              },
+              {
+                "x": 830.5336473085185,
+                "y": 183.34132381085024
+              },
+              {
+                "x": 833.2778682229334,
+                "y": 184.00166981094262
+              },
+              {
+                "x": 836.006228983565,
+                "y": 184.66521215085587
+              }
+            ],
+            "points": [
+              {
+                "x": 235.31377101643494,
+                "y": 162.30478784914413
+              },
+              {
+                "x": 580.5,
+                "y": 160.2
+              },
+              {
+                "x": 623.5,
+                "y": 160.2
+              },
+              {
+                "x": 836.006228983565,
+                "y": 184.66521215085587
+              }
+            ],
+            "midpoint": {
+              "x": 536.3276261462514,
+              "y": 156.57163658765694
+            },
+            "endpointFrom": {
+              "x": 226.32,
+              "y": 161.97
+            },
+            "endpointTo": {
+              "x": 845,
+              "y": 185
+            }
+          },
+          {
+            "id": "interpretation:photo-history",
+            "edgeIds": [
+              "interpretation:photo-history"
+            ],
+            "from": "obs.phase.t1",
+            "to": "interpretation:photo-repair",
+            "kind": "support",
+            "arrow": true,
+            "d": "M 845 194 C 856.89 257.41 852.73 330.72 845 392.15",
+            "samples": [
+              {
+                "x": 845,
+                "y": 194
+              },
+              {
+                "x": 845.5216584696253,
+                "y": 196.84571289354074
+              },
+              {
+                "x": 846.0221133350846,
+                "y": 199.70423333322253
+              },
+              {
+                "x": 846.501613631996,
+                "y": 202.57512649494785
+              },
+              {
+                "x": 846.9604083959797,
+                "y": 205.45795755461947
+              },
+              {
+                "x": 847.3987466626547,
+                "y": 208.35229168813981
+              },
+              {
+                "x": 847.8168774676406,
+                "y": 211.2576940714117
+              },
+              {
+                "x": 848.2150498465571,
+                "y": 214.1737298803377
+              },
+              {
+                "x": 848.5935128350229,
+                "y": 217.09996429082034
+              },
+              {
+                "x": 848.9525154686584,
+                "y": 220.03596247876237
+              },
+              {
+                "x": 849.2923067830817,
+                "y": 222.9812896200663
+              },
+              {
+                "x": 849.6131358139132,
+                "y": 225.93551089063482
+              },
+              {
+                "x": 849.9152515967722,
+                "y": 228.89819146637058
+              },
+              {
+                "x": 850.198903167278,
+                "y": 231.86889652317606
+              },
+              {
+                "x": 850.4643395610499,
+                "y": 234.84719123695407
+              },
+              {
+                "x": 850.7118098137073,
+                "y": 237.83264078360705
+              },
+              {
+                "x": 850.9415629608694,
+                "y": 240.8248103390377
+              },
+              {
+                "x": 851.1538480381562,
+                "y": 243.82326507914865
+              },
+              {
+                "x": 851.3489140811869,
+                "y": 246.82757017984258
+              },
+              {
+                "x": 851.5270101255808,
+                "y": 249.83729081702205
+              },
+              {
+                "x": 851.6883852069569,
+                "y": 252.85199216658958
+              },
+              {
+                "x": 851.8332883609354,
+                "y": 255.871239404448
+              },
+              {
+                "x": 851.9619686231349,
+                "y": 258.8945977064998
+              },
+              {
+                "x": 852.0746750291756,
+                "y": 261.9216322486476
+              },
+              {
+                "x": 852.1716566146767,
+                "y": 264.9519082067941
+              },
+              {
+                "x": 852.2531624152573,
+                "y": 267.98499075684185
+              },
+              {
+                "x": 852.3194414665368,
+                "y": 271.0204450746933
+              },
+              {
+                "x": 852.3707428041347,
+                "y": 274.0578363362514
+              },
+              {
+                "x": 852.4073154636707,
+                "y": 277.09672971741867
+              },
+              {
+                "x": 852.429408480764,
+                "y": 280.1366903940977
+              },
+              {
+                "x": 852.4372708910339,
+                "y": 283.17728354219105
+              },
+              {
+                "x": 852.4311517300997,
+                "y": 286.21807433760137
+              },
+              {
+                "x": 852.4113000335811,
+                "y": 289.2586279562313
+              },
+              {
+                "x": 852.3779648370976,
+                "y": 292.29850957398344
+              },
+              {
+                "x": 852.3313951762684,
+                "y": 295.33728436676057
+              },
+              {
+                "x": 852.2718400867128,
+                "y": 298.37451751046507
+              },
+              {
+                "x": 852.1995486040503,
+                "y": 301.40977418099965
+              },
+              {
+                "x": 852.1147697639004,
+                "y": 304.442619554267
+              },
+              {
+                "x": 852.0177526018824,
+                "y": 307.4726188061696
+              },
+              {
+                "x": 851.908746153616,
+                "y": 310.49933711261025
+              },
+              {
+                "x": 851.7879994547202,
+                "y": 313.5223396494914
+              },
+              {
+                "x": 851.6557615408144,
+                "y": 316.54119159271585
+              },
+              {
+                "x": 851.5122814475185,
+                "y": 319.55545811818604
+              },
+              {
+                "x": 851.3578082104514,
+                "y": 322.5647044018047
+              },
+              {
+                "x": 851.1925908652329,
+                "y": 325.56849561947445
+              },
+              {
+                "x": 851.016878447482,
+                "y": 328.56639694709787
+              },
+              {
+                "x": 850.8309199928183,
+                "y": 331.5579735605776
+              },
+              {
+                "x": 850.6349645368613,
+                "y": 334.54279063581623
+              },
+              {
+                "x": 850.4292611152302,
+                "y": 337.5204133487164
+              },
+              {
+                "x": 850.2140587635446,
+                "y": 340.4904068751808
+              },
+              {
+                "x": 849.989606517424,
+                "y": 343.452336391112
+              },
+              {
+                "x": 849.7561534124875,
+                "y": 346.40576707241246
+              },
+              {
+                "x": 849.5139484843548,
+                "y": 349.35026409498505
+              },
+              {
+                "x": 849.2632407686451,
+                "y": 352.28539263473226
+              },
+              {
+                "x": 849.0042793009779,
+                "y": 355.2107178675568
+              },
+              {
+                "x": 848.7373131169725,
+                "y": 358.12580496936124
+              },
+              {
+                "x": 848.4625912522484,
+                "y": 361.03021911604816
+              },
+              {
+                "x": 848.180362742425,
+                "y": 363.9235254835202
+              },
+              {
+                "x": 847.8908766231219,
+                "y": 366.80528924768004
+              },
+              {
+                "x": 847.5943819299582,
+                "y": 369.67507558443026
+              },
+              {
+                "x": 847.2911276985533,
+                "y": 372.53244966967344
+              },
+              {
+                "x": 846.9813629645269,
+                "y": 375.37697667931224
+              },
+              {
+                "x": 846.6653367634981,
+                "y": 378.2082217892493
+              },
+              {
+                "x": 846.3432981310866,
+                "y": 381.02575017538726
+              },
+              {
+                "x": 846.0154961029116,
+                "y": 383.82912701362864
+              },
+              {
+                "x": 845.6821797145926,
+                "y": 386.61791747987616
+              },
+              {
+                "x": 845.3435980017488,
+                "y": 389.39168675003236
+              },
+              {
+                "x": 845,
+                "y": 392.15
+              }
+            ],
+            "points": [
+              {
+                "x": 845,
+                "y": 194
+              },
+              {
+                "x": 845,
+                "y": 392.15
+              }
+            ],
+            "midpoint": {
+              "x": 852.3669234056547,
+              "y": 293.01898773395453
+            },
+            "endpointFrom": {
+              "x": 845,
+              "y": 185
+            },
+            "endpointTo": {
+              "x": 845,
+              "y": 401.15
+            }
+          },
+          {
+            "id": "proof-group:identity:continuity:input:obs.current.whole",
+            "edgeIds": [
+              "proof:identity:obs.current.whole:current"
+            ],
+            "groupId": "proof-group:identity:continuity",
+            "sourceIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "representationOnly": true,
+            "from": "obs.current.whole",
+            "to": "junction:proof-group:identity:continuity",
+            "kind": "support",
+            "arrow": false,
+            "d": "M 607.53 188.8 C 635.91 243.76 682.27 296.76 724.31 338.67",
+            "samples": [
+              {
+                "x": 607.5318461908623,
+                "y": 188.7992026116066
+              },
+              {
+                "x": 608.8751289934061,
+                "y": 191.37419239986556
+              },
+              {
+                "x": 610.2442371056535,
+                "y": 193.94609366610123
+              },
+              {
+                "x": 611.6386604069401,
+                "y": 196.51469747957242
+              },
+              {
+                "x": 613.0578887766004,
+                "y": 199.07979490953795
+              },
+              {
+                "x": 614.5014120939704,
+                "y": 201.64117702525652
+              },
+              {
+                "x": 615.9687202383848,
+                "y": 204.19863489598694
+              },
+              {
+                "x": 617.4593030891793,
+                "y": 206.751959590988
+              },
+              {
+                "x": 618.9726505256887,
+                "y": 209.30094217951847
+              },
+              {
+                "x": 620.5082524272485,
+                "y": 211.84537373083708
+              },
+              {
+                "x": 622.0655986731937,
+                "y": 214.3850453142026
+              },
+              {
+                "x": 623.6441791428598,
+                "y": 216.9197479988739
+              },
+              {
+                "x": 625.2434837155819,
+                "y": 219.44927285410972
+              },
+              {
+                "x": 626.8630022706951,
+                "y": 221.97341094916877
+              },
+              {
+                "x": 628.502224687535,
+                "y": 224.49195335330992
+              },
+              {
+                "x": 630.1606408454365,
+                "y": 227.0046911357919
+              },
+              {
+                "x": 631.8377406237349,
+                "y": 229.51141536587343
+              },
+              {
+                "x": 633.5330139017656,
+                "y": 232.01191711281334
+              },
+              {
+                "x": 635.2459505588637,
+                "y": 234.50598744587043
+              },
+              {
+                "x": 636.9760404743643,
+                "y": 236.99341743430347
+              },
+              {
+                "x": 638.7227735276027,
+                "y": 239.47399814737122
+              },
+              {
+                "x": 640.4856395979144,
+                "y": 241.94752065433244
+              },
+              {
+                "x": 642.2641285646343,
+                "y": 244.4137760244459
+              },
+              {
+                "x": 644.0577303070979,
+                "y": 246.8725553269704
+              },
+              {
+                "x": 645.8659347046404,
+                "y": 249.32364963116473
+              },
+              {
+                "x": 647.6882316365967,
+                "y": 251.76685000628763
+              },
+              {
+                "x": 649.5241109823024,
+                "y": 254.20194752159793
+              },
+              {
+                "x": 651.3730626210925,
+                "y": 256.6287332463543
+              },
+              {
+                "x": 653.2345764323026,
+                "y": 259.0469982498156
+              },
+              {
+                "x": 655.1081422952674,
+                "y": 261.45653360124066
+              },
+              {
+                "x": 656.9932500893224,
+                "y": 263.8571303698881
+              },
+              {
+                "x": 658.8893896938029,
+                "y": 266.2485796250169
+              },
+              {
+                "x": 660.7960509880439,
+                "y": 268.6306724358856
+              },
+              {
+                "x": 662.712723851381,
+                "y": 271.0031998717531
+              },
+              {
+                "x": 664.6388981631493,
+                "y": 273.36595300187827
+              },
+              {
+                "x": 666.5740638026839,
+                "y": 275.7187228955197
+              },
+              {
+                "x": 668.51771064932,
+                "y": 278.06130062193625
+              },
+              {
+                "x": 670.4693285823928,
+                "y": 280.3934772503867
+              },
+              {
+                "x": 672.4284074812381,
+                "y": 282.71504385012986
+              },
+              {
+                "x": 674.3944372251902,
+                "y": 285.02579149042447
+              },
+              {
+                "x": 676.3669076935852,
+                "y": 287.32551124052924
+              },
+              {
+                "x": 678.3453087657577,
+                "y": 289.61399416970306
+              },
+              {
+                "x": 680.3291303210434,
+                "y": 291.89103134720466
+              },
+              {
+                "x": 682.3178622387773,
+                "y": 294.15641384229275
+              },
+              {
+                "x": 684.3109943982945,
+                "y": 296.4099327242262
+              },
+              {
+                "x": 686.3080166789305,
+                "y": 298.6513790622638
+              },
+              {
+                "x": 688.3084189600204,
+                "y": 300.88054392566426
+              },
+              {
+                "x": 690.3116911208995,
+                "y": 303.09721838368637
+              },
+              {
+                "x": 692.3173230409029,
+                "y": 305.30119350558886
+              },
+              {
+                "x": 694.324804599366,
+                "y": 307.4922603606306
+              },
+              {
+                "x": 696.3336256756239,
+                "y": 309.6702100180703
+              },
+              {
+                "x": 698.3432761490119,
+                "y": 311.8348335471668
+              },
+              {
+                "x": 700.3532458988653,
+                "y": 313.98592201717884
+              },
+              {
+                "x": 702.3630248045192,
+                "y": 316.12326649736514
+              },
+              {
+                "x": 704.3721027453089,
+                "y": 318.24665805698453
+              },
+              {
+                "x": 706.3799696005696,
+                "y": 320.3558877652958
+              },
+              {
+                "x": 708.3861152496365,
+                "y": 322.4507466915577
+              },
+              {
+                "x": 710.3900295718449,
+                "y": 324.531025905029
+              },
+              {
+                "x": 712.3912024465301,
+                "y": 326.5965164749685
+              },
+              {
+                "x": 714.3891237530272,
+                "y": 328.64700947063494
+              },
+              {
+                "x": 716.3832833706715,
+                "y": 330.68229596128714
+              },
+              {
+                "x": 718.3731711787982,
+                "y": 332.7021670161839
+              },
+              {
+                "x": 720.3582770567425,
+                "y": 334.7064137045839
+              },
+              {
+                "x": 722.3380908838399,
+                "y": 336.694827095746
+              },
+              {
+                "x": 724.3121025394252,
+                "y": 338.6671982589289
+              }
+            ],
+            "points": [
+              {
+                "x": 607.5318461908623,
+                "y": 188.7992026116066
+              },
+              {
+                "x": 724.3121025394252,
+                "y": 338.6671982589289
+              }
+            ],
+            "midpoint": {
+              "x": 660.3172281732923,
+              "y": 268.0324537652989
+            },
+            "endpointFrom": {
+              "x": 602,
+              "y": 181.7
+            },
+            "endpointTo": {
+              "x": 728,
+              "y": 343.4
+            }
+          },
+          {
+            "id": "proof-group:identity:continuity:input:obs.current.base",
+            "edgeIds": [
+              "proof:identity:obs.current.base:current"
+            ],
+            "groupId": "proof-group:identity:continuity",
+            "sourceIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "representationOnly": true,
+            "from": "obs.current.base",
+            "to": "junction:proof-group:identity:continuity",
+            "kind": "support",
+            "arrow": false,
+            "d": "M 234.78 165.03 C 381.96 245.91 565.46 302.59 722.36 341.36",
+            "samples": [
+              {
+                "x": 234.7835410151508,
+                "y": 165.03079621746693
+              },
+              {
+                "x": 237.33944786792753,
+                "y": 166.4308362228454
+              },
+              {
+                "x": 239.90256220337545,
+                "y": 167.8260337485967
+              },
+              {
+                "x": 242.47281111187118,
+                "y": 169.2163960681044
+              },
+              {
+                "x": 245.05012168379164,
+                "y": 170.60193045475228
+              },
+              {
+                "x": 247.63442100951315,
+                "y": 171.98264418192392
+              },
+              {
+                "x": 250.22563617941273,
+                "y": 173.3585445230031
+              },
+              {
+                "x": 252.82369428386693,
+                "y": 174.72963875137341
+              },
+              {
+                "x": 255.4285224132525,
+                "y": 176.09593414041856
+              },
+              {
+                "x": 258.04004765794605,
+                "y": 177.45743796352224
+              },
+              {
+                "x": 260.6581971083244,
+                "y": 178.81415749406813
+              },
+              {
+                "x": 263.28289785476414,
+                "y": 180.1661000054399
+              },
+              {
+                "x": 265.91407698764203,
+                "y": 181.51327277102124
+              },
+              {
+                "x": 268.55166159733477,
+                "y": 182.85568306419572
+              },
+              {
+                "x": 271.19557877421903,
+                "y": 184.1933381583472
+              },
+              {
+                "x": 273.8457556086714,
+                "y": 185.52624532685917
+              },
+              {
+                "x": 276.5021191910689,
+                "y": 186.8544118431155
+              },
+              {
+                "x": 279.16459661178783,
+                "y": 188.17784498049969
+              },
+              {
+                "x": 281.83311496120507,
+                "y": 189.4965520123955
+              },
+              {
+                "x": 284.5076013296975,
+                "y": 190.81054021218662
+              },
+              {
+                "x": 287.1879828076415,
+                "y": 192.11981685325682
+              },
+              {
+                "x": 289.8741864854138,
+                "y": 193.42438920898954
+              },
+              {
+                "x": 292.5661394533914,
+                "y": 194.72426455276863
+              },
+              {
+                "x": 295.26376880195073,
+                "y": 196.01945015797776
+              },
+              {
+                "x": 297.96700162146857,
+                "y": 197.30995329800055
+              },
+              {
+                "x": 300.67576500232155,
+                "y": 198.5957812462207
+              },
+              {
+                "x": 303.3899860348864,
+                "y": 199.8769412760218
+              },
+              {
+                "x": 306.1095918095399,
+                "y": 201.15344066078777
+              },
+              {
+                "x": 308.83450941665865,
+                "y": 202.425286673902
+              },
+              {
+                "x": 311.56466594661936,
+                "y": 203.6924865887484
+              },
+              {
+                "x": 314.2999884897988,
+                "y": 204.95504767871049
+              },
+              {
+                "x": 317.0404041365736,
+                "y": 206.21297721717204
+              },
+              {
+                "x": 319.78583997732034,
+                "y": 207.46628247751664
+              },
+              {
+                "x": 322.53622310241593,
+                "y": 208.7149707331281
+              },
+              {
+                "x": 325.291480602237,
+                "y": 209.95904925739
+              },
+              {
+                "x": 328.0515395671602,
+                "y": 211.198525323686
+              },
+              {
+                "x": 330.8163270875623,
+                "y": 212.43340620539985
+              },
+              {
+                "x": 333.5857702538199,
+                "y": 213.66369917591518
+              },
+              {
+                "x": 336.35979615630976,
+                "y": 214.88941150861564
+              },
+              {
+                "x": 339.13833188540843,
+                "y": 216.11055047688495
+              },
+              {
+                "x": 341.92130453149286,
+                "y": 217.3271233541068
+              },
+              {
+                "x": 344.7086411849398,
+                "y": 218.53913741366495
+              },
+              {
+                "x": 347.50026893612545,
+                "y": 219.74659992894283
+              },
+              {
+                "x": 350.296114875427,
+                "y": 220.94951817332432
+              },
+              {
+                "x": 353.096106093221,
+                "y": 222.14789942019314
+              },
+              {
+                "x": 355.9001696798841,
+                "y": 223.34175094293275
+              },
+              {
+                "x": 358.708232725793,
+                "y": 224.53108001492706
+              },
+              {
+                "x": 361.5202223213243,
+                "y": 225.71589390955944
+              },
+              {
+                "x": 364.33606555685503,
+                "y": 226.89619990021396
+              },
+              {
+                "x": 367.1556895227616,
+                "y": 228.07200526027404
+              },
+              {
+                "x": 369.9790213094207,
+                "y": 229.2433172631235
+              },
+              {
+                "x": 372.8059880072092,
+                "y": 230.41014318214582
+              },
+              {
+                "x": 375.63651670650347,
+                "y": 231.57249029072477
+              },
+              {
+                "x": 378.47053449768066,
+                "y": 232.73036586224413
+              },
+              {
+                "x": 381.3079684711173,
+                "y": 233.8837771700875
+              },
+              {
+                "x": 384.14874571718985,
+                "y": 235.03273148763856
+              },
+              {
+                "x": 386.9927933262752,
+                "y": 236.17723608828095
+              },
+              {
+                "x": 389.84003838875014,
+                "y": 237.3172982453984
+              },
+              {
+                "x": 392.69040799499123,
+                "y": 238.4529252323746
+              },
+              {
+                "x": 395.5438292353751,
+                "y": 239.5841243225931
+              },
+              {
+                "x": 398.40022920027855,
+                "y": 240.71090278943774
+              },
+              {
+                "x": 401.2595349800784,
+                "y": 241.8332679062922
+              },
+              {
+                "x": 404.1216736651512,
+                "y": 242.9512269465401
+              },
+              {
+                "x": 406.9865723458736,
+                "y": 244.06478718356496
+              },
+              {
+                "x": 409.85415811262226,
+                "y": 245.17395589075065
+              },
+              {
+                "x": 412.7243580557742,
+                "y": 246.27874034148093
+              },
+              {
+                "x": 415.5970992657058,
+                "y": 247.37914780913928
+              },
+              {
+                "x": 418.4723088327937,
+                "y": 248.4751855671094
+              },
+              {
+                "x": 421.34991384741494,
+                "y": 249.56686088877507
+              },
+              {
+                "x": 424.2298413999459,
+                "y": 250.65418104751984
+              },
+              {
+                "x": 427.11201858076356,
+                "y": 251.73715331672759
+              },
+              {
+                "x": 429.99637248024436,
+                "y": 252.81578496978182
+              },
+              {
+                "x": 432.882830188765,
+                "y": 253.89008328006616
+              },
+              {
+                "x": 435.7713187967023,
+                "y": 254.96005552096446
+              },
+              {
+                "x": 438.66176539443296,
+                "y": 256.02570896586036
+              },
+              {
+                "x": 441.5540970723338,
+                "y": 257.08705088813747
+              },
+              {
+                "x": 444.4482409207812,
+                "y": 258.1440885611795
+              },
+              {
+                "x": 447.3441240301519,
+                "y": 259.19682925837003
+              },
+              {
+                "x": 450.2416734908229,
+                "y": 260.24528025309303
+              },
+              {
+                "x": 453.1408163931708,
+                "y": 261.28944881873184
+              },
+              {
+                "x": 456.04147982757195,
+                "y": 262.32934222867027
+              },
+              {
+                "x": 458.9435908844033,
+                "y": 263.36496775629206
+              },
+              {
+                "x": 461.8470766540417,
+                "y": 264.39633267498084
+              },
+              {
+                "x": 464.75186422686374,
+                "y": 265.4234442581203
+              },
+              {
+                "x": 467.65788069324594,
+                "y": 266.446309779094
+              },
+              {
+                "x": 470.56505314356514,
+                "y": 267.46493651128577
+              },
+              {
+                "x": 473.4733086681981,
+                "y": 268.47933172807933
+              },
+              {
+                "x": 476.38257435752143,
+                "y": 269.4895027028581
+              },
+              {
+                "x": 479.29277730191177,
+                "y": 270.49545670900596
+              },
+              {
+                "x": 482.20384459174596,
+                "y": 271.4972010199066
+              },
+              {
+                "x": 485.11570331740063,
+                "y": 272.49474290894364
+              },
+              {
+                "x": 488.02828056925244,
+                "y": 273.4880896495007
+              },
+              {
+                "x": 490.9415034376781,
+                "y": 274.47724851496156
+              },
+              {
+                "x": 493.8552990130543,
+                "y": 275.4622267787099
+              },
+              {
+                "x": 496.76959438575784,
+                "y": 276.4430317141293
+              },
+              {
+                "x": 499.68431664616526,
+                "y": 277.4196705946035
+              },
+              {
+                "x": 502.5993928846533,
+                "y": 278.39215069351616
+              },
+              {
+                "x": 505.5147501915988,
+                "y": 279.36047928425097
+              },
+              {
+                "x": 508.4303156573783,
+                "y": 280.32466364019166
+              },
+              {
+                "x": 511.3460163723685,
+                "y": 281.2847110347218
+              },
+              {
+                "x": 514.2617794269462,
+                "y": 282.2406287412251
+              },
+              {
+                "x": 517.177531911488,
+                "y": 283.19242403308533
+              },
+              {
+                "x": 520.0932009163707,
+                "y": 284.140104183686
+              },
+              {
+                "x": 523.0087135319708,
+                "y": 285.0836764664109
+              },
+              {
+                "x": 525.9239968486653,
+                "y": 286.0231481546438
+              },
+              {
+                "x": 528.8389779568306,
+                "y": 286.95852652176814
+              },
+              {
+                "x": 531.7535839468435,
+                "y": 287.88981884116777
+              },
+              {
+                "x": 534.6677419090807,
+                "y": 288.81703238622634
+              },
+              {
+                "x": 537.581378933919,
+                "y": 289.7401744303275
+              },
+              {
+                "x": 540.4944221117349,
+                "y": 290.65925224685486
+              },
+              {
+                "x": 543.4067985329054,
+                "y": 291.5742731091923
+              },
+              {
+                "x": 546.3184352878068,
+                "y": 292.4852442907233
+              },
+              {
+                "x": 549.2292594668162,
+                "y": 293.3921730648317
+              },
+              {
+                "x": 552.1391981603099,
+                "y": 294.295066704901
+              },
+              {
+                "x": 555.0481784586649,
+                "y": 295.1939324843149
+              },
+              {
+                "x": 557.9561274522578,
+                "y": 296.0887776764573
+              },
+              {
+                "x": 560.8629722314653,
+                "y": 296.97960955471166
+              },
+              {
+                "x": 563.768639886664,
+                "y": 297.8664353924617
+              },
+              {
+                "x": 566.6730575082307,
+                "y": 298.74926246309116
+              },
+              {
+                "x": 569.576152186542,
+                "y": 299.62809803998357
+              },
+              {
+                "x": 572.4778510119748,
+                "y": 300.5029493965228
+              },
+              {
+                "x": 575.3780810749057,
+                "y": 301.37382380609245
+              },
+              {
+                "x": 578.2767694657113,
+                "y": 302.24072854207617
+              },
+              {
+                "x": 581.1738432747684,
+                "y": 303.10367087785767
+              },
+              {
+                "x": 584.0692295924536,
+                "y": 303.9626580868205
+              },
+              {
+                "x": 586.9628555091437,
+                "y": 304.8176974423486
+              },
+              {
+                "x": 589.8546481152152,
+                "y": 305.6687962178254
+              },
+              {
+                "x": 592.7445345010451,
+                "y": 306.51596168663474
+              },
+              {
+                "x": 595.6324417570099,
+                "y": 307.3592011221602
+              },
+              {
+                "x": 598.5182969734865,
+                "y": 308.1985217977855
+              },
+              {
+                "x": 601.4020272408511,
+                "y": 309.03393098689423
+              },
+              {
+                "x": 604.283559649481,
+                "y": 309.86543596287027
+              },
+              {
+                "x": 607.1628212897526,
+                "y": 310.6930439990971
+              },
+              {
+                "x": 610.0397392520426,
+                "y": 311.51676236895844
+              },
+              {
+                "x": 612.9142406267276,
+                "y": 312.33659834583807
+              },
+              {
+                "x": 615.7862525041846,
+                "y": 313.1525592031196
+              },
+              {
+                "x": 618.6557019747902,
+                "y": 313.96465221418663
+              },
+              {
+                "x": 621.5225161289209,
+                "y": 314.77288465242293
+              },
+              {
+                "x": 624.3866220569535,
+                "y": 315.5772637912122
+              },
+              {
+                "x": 627.2479468492647,
+                "y": 316.3777969039381
+              },
+              {
+                "x": 630.1064175962313,
+                "y": 317.17449126398424
+              },
+              {
+                "x": 632.9619613882297,
+                "y": 317.96735414473426
+              },
+              {
+                "x": 635.814505315637,
+                "y": 318.75639281957206
+              },
+              {
+                "x": 638.6639764688296,
+                "y": 319.5416145618811
+              },
+              {
+                "x": 641.5103019381843,
+                "y": 320.32302664504516
+              },
+              {
+                "x": 644.3534088140777,
+                "y": 321.10063634244784
+              },
+              {
+                "x": 647.1932241868868,
+                "y": 321.87445092747294
+              },
+              {
+                "x": 650.029675146988,
+                "y": 322.64447767350396
+              },
+              {
+                "x": 652.862688784758,
+                "y": 323.41072385392476
+              },
+              {
+                "x": 655.6921921905736,
+                "y": 324.173196742119
+              },
+              {
+                "x": 658.5181124548116,
+                "y": 324.9319036114702
+              },
+              {
+                "x": 661.3403766678484,
+                "y": 325.6868517353622
+              },
+              {
+                "x": 664.1589119200609,
+                "y": 326.4380483871786
+              },
+              {
+                "x": 666.9736453018256,
+                "y": 327.185500840303
+              },
+              {
+                "x": 669.7845039035197,
+                "y": 327.9292163681193
+              },
+              {
+                "x": 672.5914148155196,
+                "y": 328.669202244011
+              },
+              {
+                "x": 675.3943051282016,
+                "y": 329.4054657413618
+              },
+              {
+                "x": 678.1931019319429,
+                "y": 330.13801413355543
+              },
+              {
+                "x": 680.98773231712,
+                "y": 330.86685469397554
+              },
+              {
+                "x": 683.7781233741098,
+                "y": 331.5919946960058
+              },
+              {
+                "x": 686.5642021932887,
+                "y": 332.31344141302986
+              },
+              {
+                "x": 689.3458958650336,
+                "y": 333.03120211843145
+              },
+              {
+                "x": 692.1231314797211,
+                "y": 333.74528408559434
+              },
+              {
+                "x": 694.895836127728,
+                "y": 334.455694587902
+              },
+              {
+                "x": 697.6639368994308,
+                "y": 335.16244089873817
+              },
+              {
+                "x": 700.4273608852064,
+                "y": 335.8655302914866
+              },
+              {
+                "x": 703.1860351754315,
+                "y": 336.5649700395309
+              },
+              {
+                "x": 705.9398868604826,
+                "y": 337.2607674162548
+              },
+              {
+                "x": 708.6888430307364,
+                "y": 337.952929695042
+              },
+              {
+                "x": 711.4328307765701,
+                "y": 338.6414641492761
+              },
+              {
+                "x": 714.1717771883596,
+                "y": 339.3263780523408
+              },
+              {
+                "x": 716.9056093564822,
+                "y": 340.00767867761977
+              },
+              {
+                "x": 719.6342543713143,
+                "y": 340.68537329849676
+              },
+              {
+                "x": 722.3576393232328,
+                "y": 341.3594691883554
+              }
+            ],
+            "points": [
+              {
+                "x": 234.7835410151508,
+                "y": 165.03079621746693
+              },
+              {
+                "x": 722.3576393232328,
+                "y": 341.3594691883554
+              }
+            ],
+            "midpoint": {
+              "x": 472.9942487946417,
+              "y": 268.31223635417655
+            },
+            "endpointFrom": {
+              "x": 226.32,
+              "y": 161.97
+            },
+            "endpointTo": {
+              "x": 728,
+              "y": 343.4
+            }
+          },
+          {
+            "id": "proof-group:identity:continuity:input:obs.phase.t1",
+            "edgeIds": [
+              "proof:identity:obs.object.continuity"
+            ],
+            "groupId": "proof-group:identity:continuity",
+            "sourceIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "representationOnly": true,
+            "from": "obs.phase.t1",
+            "to": "junction:proof-group:identity:continuity",
+            "kind": "support",
+            "arrow": false,
+            "d": "M 839.65 192.24 C 796.28 232.58 759.37 288.99 731.56 338.57",
+            "samples": [
+              {
+                "x": 839.6527937898854,
+                "y": 192.23929456138592
+              },
+              {
+                "x": 837.5251410847638,
+                "y": 194.23617248896952
+              },
+              {
+                "x": 835.4079573011546,
+                "y": 196.25836028839686
+              },
+              {
+                "x": 833.3013130336399,
+                "y": 198.3052524550836
+              },
+              {
+                "x": 831.2052788768017,
+                "y": 200.37624348444533
+              },
+              {
+                "x": 829.1199254252206,
+                "y": 202.47072787189757
+              },
+              {
+                "x": 827.0453232734791,
+                "y": 204.58810011285598
+              },
+              {
+                "x": 824.9815430161586,
+                "y": 206.72775470273618
+              },
+              {
+                "x": 822.9286552478409,
+                "y": 208.88908613695378
+              },
+              {
+                "x": 820.8867305631077,
+                "y": 211.07148891092442
+              },
+              {
+                "x": 818.8558395565403,
+                "y": 213.2743575200636
+              },
+              {
+                "x": 816.836052822721,
+                "y": 215.49708645978703
+              },
+              {
+                "x": 814.8274409562307,
+                "y": 217.73907022551026
+              },
+              {
+                "x": 812.8300745516516,
+                "y": 219.99970331264885
+              },
+              {
+                "x": 810.8440242035653,
+                "y": 222.2783802166186
+              },
+              {
+                "x": 808.8693605065534,
+                "y": 224.57449543283488
+              },
+              {
+                "x": 806.9061540551977,
+                "y": 226.88744345671347
+              },
+              {
+                "x": 804.95447544408,
+                "y": 229.21661878366993
+              },
+              {
+                "x": 803.0143952677814,
+                "y": 231.56141590911983
+              },
+              {
+                "x": 801.0859841208843,
+                "y": 233.9212293284788
+              },
+              {
+                "x": 799.1693125979698,
+                "y": 236.29545353716244
+              },
+              {
+                "x": 797.2644512936197,
+                "y": 238.6834830305864
+              },
+              {
+                "x": 795.3714708024158,
+                "y": 241.08471230416623
+              },
+              {
+                "x": 793.4904417189395,
+                "y": 243.49853585331743
+              },
+              {
+                "x": 791.6214346377727,
+                "y": 245.92434817345585
+              },
+              {
+                "x": 789.7645201534972,
+                "y": 248.36154375999695
+              },
+              {
+                "x": 787.9197688606945,
+                "y": 250.80951710835635
+              },
+              {
+                "x": 786.0872513539463,
+                "y": 253.2676627139497
+              },
+              {
+                "x": 784.2670382278343,
+                "y": 255.7353750721926
+              },
+              {
+                "x": 782.4592000769402,
+                "y": 258.21204867850065
+              },
+              {
+                "x": 780.6638074958457,
+                "y": 260.69707802828947
+              },
+              {
+                "x": 778.8809310791322,
+                "y": 263.18985761697456
+              },
+              {
+                "x": 777.1106414213817,
+                "y": 265.6897819399717
+              },
+              {
+                "x": 775.3530091171756,
+                "y": 268.1962454926963
+              },
+              {
+                "x": 773.6081047610958,
+                "y": 270.7086427705641
+              },
+              {
+                "x": 771.8759989477237,
+                "y": 273.2263682689907
+              },
+              {
+                "x": 770.1567622716414,
+                "y": 275.7488164833917
+              },
+              {
+                "x": 768.4504653274302,
+                "y": 278.27538190918267
+              },
+              {
+                "x": 766.7571787096717,
+                "y": 280.8054590417793
+              },
+              {
+                "x": 765.0769730129482,
+                "y": 283.3384423765971
+              },
+              {
+                "x": 763.4099188318405,
+                "y": 285.8737264090516
+              },
+              {
+                "x": 761.756086760931,
+                "y": 288.41070563455867
+              },
+              {
+                "x": 760.1155473948011,
+                "y": 290.9487745485337
+              },
+              {
+                "x": 758.4883713280324,
+                "y": 293.4873276463924
+              },
+              {
+                "x": 756.8746291552064,
+                "y": 296.02575942355037
+              },
+              {
+                "x": 755.2743914709054,
+                "y": 298.5634643754231
+              },
+              {
+                "x": 753.6877288697104,
+                "y": 301.09983699742634
+              },
+              {
+                "x": 752.1147119462034,
+                "y": 303.6342717849757
+              },
+              {
+                "x": 750.555411294966,
+                "y": 306.16616323348666
+              },
+              {
+                "x": 749.00989751058,
+                "y": 308.6949058383749
+              },
+              {
+                "x": 747.4782411876267,
+                "y": 311.219894095056
+              },
+              {
+                "x": 745.9605129206884,
+                "y": 313.7405224989457
+              },
+              {
+                "x": 744.4567833043461,
+                "y": 316.2561855454594
+              },
+              {
+                "x": 742.967122933182,
+                "y": 318.7662777300129
+              },
+              {
+                "x": 741.4916024017775,
+                "y": 321.27019354802167
+              },
+              {
+                "x": 740.0302923047142,
+                "y": 323.76732749490134
+              },
+              {
+                "x": 738.5832632365741,
+                "y": 326.25707406606756
+              },
+              {
+                "x": 737.1505857919385,
+                "y": 328.7388277569359
+              },
+              {
+                "x": 735.7323305653892,
+                "y": 331.2119830629219
+              },
+              {
+                "x": 734.328568151508,
+                "y": 333.67593447944137
+              },
+              {
+                "x": 732.9393691448765,
+                "y": 336.13007650190974
+              },
+              {
+                "x": 731.5648041400764,
+                "y": 338.5738036257427
+              }
+            ],
+            "points": [
+              {
+                "x": 839.6527937898854,
+                "y": 192.23929456138592
+              },
+              {
+                "x": 731.5648041400764,
+                "y": 338.5738036257427
+              }
+            ],
+            "midpoint": {
+              "x": 780.1991000131679,
+              "y": 261.34682206924987
+            },
+            "endpointFrom": {
+              "x": 845,
+              "y": 185
+            },
+            "endpointTo": {
+              "x": 728,
+              "y": 343.4
+            }
+          },
+          {
+            "id": "trunk:proof-group:identity:continuity",
+            "edgeIds": [
+              "proof:identity:obs.object.continuity",
+              "proof:identity:obs.current.whole:current",
+              "proof:identity:obs.current.base:current"
+            ],
+            "groupId": "proof-group:identity:continuity",
+            "from": "junction:proof-group:identity:continuity",
+            "to": "claim:identity",
+            "kind": "support",
+            "arrow": true,
+            "d": "M 722.47 345.72 C 710.03 348.79 696.81 355.08 686 361",
+            "samples": [
+              {
+                "x": 722.4662275848933,
+                "y": 345.7189141549018
+              },
+              {
+                "x": 720.1264978515552,
+                "y": 346.3308297567191
+              },
+              {
+                "x": 717.7729101377563,
+                "y": 347.01307689868764
+              },
+              {
+                "x": 715.4101651681467,
+                "y": 347.76038888687503
+              },
+              {
+                "x": 713.0429636673757,
+                "y": 348.567499027349
+              },
+              {
+                "x": 710.6760063600929,
+                "y": 349.42914062617706
+              },
+              {
+                "x": 708.3139939709481,
+                "y": 350.3400469894269
+              },
+              {
+                "x": 705.9616272245908,
+                "y": 351.29495142316614
+              },
+              {
+                "x": 703.6236068456706,
+                "y": 352.2885872334624
+              },
+              {
+                "x": 701.3046335588372,
+                "y": 353.3156877263833
+              },
+              {
+                "x": 699.0094080887402,
+                "y": 354.37098620799645
+              },
+              {
+                "x": 696.7426311600291,
+                "y": 355.4492159843695
+              },
+              {
+                "x": 694.5090034973537,
+                "y": 356.5451103615701
+              },
+              {
+                "x": 692.3132258253634,
+                "y": 357.6534026456658
+              },
+              {
+                "x": 690.1599988687079,
+                "y": 358.76882614272427
+              },
+              {
+                "x": 688.0540233520369,
+                "y": 359.88611415881314
+              },
+              {
+                "x": 686,
+                "y": 361
+              }
+            ],
+            "points": [
+              {
+                "x": 722.4662275848933,
+                "y": 345.7189141549018
+              },
+              {
+                "x": 686,
+                "y": 361
+              }
+            ],
+            "midpoint": {
+              "x": 703.7671274699546,
+              "y": 352.22759237084676
+            },
+            "endpointFrom": {
+              "x": 728,
+              "y": 343.4
+            },
+            "endpointTo": {
+              "x": 602,
+              "y": 396.2
+            }
+          }
+        ],
+        "junctions": [
+          {
+            "id": "junction:proof-group:identity:continuity",
+            "targetId": "claim:identity",
+            "kind": "all",
+            "alternativeSet": "proof-options:identity",
+            "title": "整体与底足＋对象连续性",
+            "sourceIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.object.continuity"
+            ],
+            "memberNodeIds": [
+              "obs.current.whole",
+              "obs.current.base",
+              "obs.phase.t1"
+            ],
+            "edgeIds": [
+              "proof:identity:obs.object.continuity",
+              "proof:identity:obs.current.whole:current",
+              "proof:identity:obs.current.base:current"
+            ],
+            "groupId": "proof-group:identity:continuity",
+            "x": 728,
+            "y": 343.4,
+            "isJunction": true
+          }
+        ],
+        "frontiers": [
+          {
+            "id": "question:change",
+            "anchorIds": [
+              "obs.structure.xray.early"
+            ],
+            "title": "结构从另一个时点到现在变了什么？",
+            "explanation": "当前结构已经能读，状态本身仍不能说明发生过什么变化。",
+            "actionIds": [
+              "A.MAP.REGION_CONTINUITY"
+            ],
+            "kind": "stub",
+            "continuation": {
+              "nodeIds": [
+                "obs.structure.major.cross-time"
+              ],
+              "edgeIds": []
+            },
+            "sourceIds": [
+              "obs.structure.xray.early"
+            ],
+            "x": 397,
+            "y": 610.7,
+            "labelX": 415,
+            "labelY": 588.7,
+            "labelWidth": 168,
+            "fontSize": 14,
+            "lineHeight": 22,
+            "lines": [
+              "结构从另一个时点到现在变",
+              "了什么？"
+            ],
+            "paths": [
+              "M 397 405.2 C 384.67 470.96 388.99 547 397 610.7"
+            ],
+            "labelHeight": 44,
+            "labelBounds": {
+              "x": 415,
+              "y": 588.7,
+              "width": 168,
+              "height": 44
+            }
+          }
+        ],
+        "_state": {
+          "seed": {
+            "positions": {
+              "obs.current.whole": {
+                "x": 532,
+                "y": 98,
+                "width": 168,
+                "height": 100,
+                "anchorX": 532,
+                "anchorY": 66,
+                "lines": [
+                  ""
+                ],
+                "titleLines": [
+                  ""
+                ]
+              },
+              "obs.current.base": {
+                "x": 156.32,
+                "y": 86.04,
+                "width": 168,
+                "height": 100,
+                "anchorX": 156.32,
+                "anchorY": 54.04,
+                "lines": [
+                  ""
+                ],
+                "titleLines": [
+                  ""
+                ]
+              },
+              "obs.phase.t1": {
+                "x": 775,
+                "y": 100,
+                "width": 168,
+                "height": 100,
+                "anchorX": 775,
+                "anchorY": 68,
+                "lines": [
+                  ""
+                ],
+                "titleLines": [
+                  ""
+                ]
+              },
+              "claim:identity": {
+                "x": 532,
+                "y": 228,
+                "width": 168,
+                "height": 100,
+                "anchorX": 532,
+                "anchorY": 196,
+                "lines": [
+                  ""
+                ],
+                "titleLines": [
+                  ""
+                ]
+              },
+              "interpretation:photo-repair": {
+                "x": 775,
+                "y": 231,
+                "width": 168,
+                "height": 100,
+                "anchorX": 775,
+                "anchorY": 199,
+                "lines": [
+                  ""
+                ],
+                "titleLines": [
+                  ""
+                ]
+              },
+              "obs.structure.xray.early": {
+                "x": 327,
+                "y": 228,
+                "width": 168,
+                "height": 100,
+                "anchorX": 327,
+                "anchorY": 196,
+                "lines": [
+                  ""
+                ],
+                "titleLines": [
+                  ""
+                ]
+              }
+            },
+            "edges": [
+              {
+                "id": "proof:identity:obs.object.continuity",
+                "from": "obs.phase.t1",
+                "to": "claim:identity",
+                "label": "工艺与身份路径共同支持",
+                "kind": "support",
+                "sourceIds": [
+                  "obs.current.whole",
+                  "obs.current.base",
+                  "obs.object.continuity"
+                ],
+                "details": "共同条件：整体制造特征 + 底足读数 + 一条身份路径。比对排除与对象连续性是替代路径，不能读成两项都必须做；是否成立还取决于当前命题状态。",
+                "supportGroupIds": [
+                  "proof-group:identity:continuity"
+                ],
+                "semanticEdgeId": "proof:identity:obs.object.continuity",
+                "supportGroupId": "proof-group:identity:continuity",
+                "routeFrom": "obs.phase.t1",
+                "routeTo": "junction:proof-group:identity:continuity",
+                "path": "M 768.02 68.52 L 687.98 74.48 Q 681 75 679.69 81.88 L 659.68 187.16",
+                "points": [
+                  {
+                    "x": 768.019328880827,
+                    "y": 68.51983721100225
+                  },
+                  {
+                    "x": 681,
+                    "y": 75
+                  },
+                  {
+                    "x": 659.6806510651045,
+                    "y": 187.1583139618417
+                  }
+                ],
+                "labelX": 670.34,
+                "labelY": 131.08
+              },
+              {
+                "id": "proof:identity:obs.current.whole:current",
+                "from": "obs.current.whole",
+                "to": "claim:identity",
+                "label": "身份判断的共同条件",
+                "kind": "support",
+                "sourceIds": [
+                  "obs.current.whole",
+                  "obs.current.base",
+                  "obs.object.continuity"
+                ],
+                "details": "这份制造读数必须与另一处工艺读数及一条身份路径共同使用；本箭头不表示它单独能够推出身份。",
+                "supportGroupIds": [
+                  "proof-group:identity:continuity"
+                ],
+                "semanticEdgeId": "proof:identity:obs.current.whole:current",
+                "supportGroupId": "proof-group:identity:continuity",
+                "routeFrom": "obs.current.whole",
+                "routeTo": "junction:proof-group:identity:continuity",
+                "path": "M 538.98 66.52 L 619.02 72.48 Q 626 73 627.76 79.77 L 655.73 187.29",
+                "points": [
+                  {
+                    "x": 538.980671119173,
+                    "y": 66.51983721100225
+                  },
+                  {
+                    "x": 626,
+                    "y": 73
+                  },
+                  {
+                    "x": 655.7339687684738,
+                    "y": 187.2899424538211
+                  }
+                ],
+                "labelX": 640.87,
+                "labelY": 130.14
+              },
+              {
+                "id": "proof:identity:obs.current.base:current",
+                "from": "obs.current.base",
+                "to": "claim:identity",
+                "label": "身份判断的共同条件",
+                "kind": "support",
+                "sourceIds": [
+                  "obs.current.whole",
+                  "obs.current.base",
+                  "obs.object.continuity"
+                ],
+                "details": "这份制造读数必须与另一处工艺读数及一条身份路径共同使用；本箭头不表示它单独能够推出身份。",
+                "supportGroupIds": [
+                  "proof-group:identity:continuity"
+                ],
+                "semanticEdgeId": "proof:identity:obs.current.base:current",
+                "supportGroupId": "proof-group:identity:continuity",
+                "routeFrom": "obs.current.base",
+                "routeTo": "junction:proof-group:identity:continuity",
+                "path": "M 163.3 54.56 L 243.34 60.52 Q 250.32 61.04 256.54 64.25 L 431.78 154.79 Q 438 158 444.99 158.37 L 619.01 167.63 Q 626 168 631.27 172.61 L 651.23 190.07",
+                "points": [
+                  {
+                    "x": 163.3006711191731,
+                    "y": 54.559837211002254
+                  },
+                  {
+                    "x": 250.32,
+                    "y": 61.040000000000006
+                  },
+                  {
+                    "x": 438,
+                    "y": 158
+                  },
+                  {
+                    "x": 626,
+                    "y": 168
+                  },
+                  {
+                    "x": 651.2268097476381,
+                    "y": 190.07345852918334
+                  }
+                ],
+                "labelX": 344.16,
+                "labelY": 109.52
+              },
+              {
+                "id": "photo:object",
+                "from": "obs.current.base",
+                "to": "obs.phase.t1",
+                "label": "照片与现器的对应特征相符",
+                "kind": "attribution",
+                "sourceIds": [
+                  "obs.phase.t1",
+                  "obs.current.base",
+                  "obs.object.continuity"
+                ],
+                "details": "这份核验报告支持指定旧照片与眼前器物为同一对象。照片和现器观察先取得，报告后来建立两端关系。点击原始依据可回查核验；不是照片与X射线互相证明。",
+                "directed": false,
+                "routeFrom": "obs.current.base",
+                "routeTo": "obs.phase.t1",
+                "gapFrontierId": "question:photo-object",
+                "path": "M 163.3 54.56 L 243.34 60.52 Q 250.32 61.04 256.54 64.25 L 431.78 154.79 Q 438 158 444.99 158.37 L 619.01 167.63 Q 626 168 632.93 166.99 L 674.07 161.01 Q 681 160 681 153 L 681 82 Q 681 75 687.98 74.48 L 768.02 68.52",
+                "points": [
+                  {
+                    "x": 163.3006711191731,
+                    "y": 54.559837211002254
+                  },
+                  {
+                    "x": 250.32,
+                    "y": 61.040000000000006
+                  },
+                  {
+                    "x": 438,
+                    "y": 158
+                  },
+                  {
+                    "x": 626,
+                    "y": 168
+                  },
+                  {
+                    "x": 681,
+                    "y": 160
+                  },
+                  {
+                    "x": 681,
+                    "y": 75
+                  },
+                  {
+                    "x": 768.019328880827,
+                    "y": 68.51983721100225
+                  }
+                ],
+                "labelX": 344.16,
+                "labelY": 109.52
+              },
+              {
+                "id": "interpretation:photo-history",
+                "from": "obs.phase.t1",
+                "to": "interpretation:photo-repair",
+                "label": "旧照片接入本器早期历史",
+                "kind": "support",
+                "sourceIds": [
+                  "obs.phase.t1",
+                  "obs.object.continuity",
+                  "obs.current.base"
+                ],
+                "details": "照片中的旧锔痕、有效时点与本照片核验共同允许这一表述。照片没有重新取得，核验报告也没有变成另一份照片。",
+                "directed": true,
+                "routeFrom": "obs.phase.t1",
+                "routeTo": "interpretation:photo-repair",
+                "path": "M 768.02 68.52 L 687.98 74.48 Q 681 75 681 82 L 681 153 Q 681 160 687.47 162.68 L 766.69 195.55",
+                "points": [
+                  {
+                    "x": 768.019328880827,
+                    "y": 68.51983721100225
+                  },
+                  {
+                    "x": 681,
+                    "y": 75
+                  },
+                  {
+                    "x": 681,
+                    "y": 160
+                  },
+                  {
+                    "x": 766.6870843286158,
+                    "y": 195.55102434910657
+                  }
+                ],
+                "labelX": 723.84,
+                "labelY": 177.78
+              }
+            ],
+            "routes": {
+              "proof:identity:obs.object.continuity": {
+                "id": "proof:identity:obs.object.continuity",
+                "from": "obs.phase.t1",
+                "to": "claim:identity",
+                "label": "工艺与身份路径共同支持",
+                "kind": "support",
+                "sourceIds": [
+                  "obs.current.whole",
+                  "obs.current.base",
+                  "obs.object.continuity"
+                ],
+                "details": "共同条件：整体制造特征 + 底足读数 + 一条身份路径。比对排除与对象连续性是替代路径，不能读成两项都必须做；是否成立还取决于当前命题状态。",
+                "supportGroupIds": [
+                  "proof-group:identity:continuity"
+                ],
+                "semanticEdgeId": "proof:identity:obs.object.continuity",
+                "supportGroupId": "proof-group:identity:continuity",
+                "routeFrom": "obs.phase.t1",
+                "routeTo": "junction:proof-group:identity:continuity",
+                "path": "M 768.02 68.52 L 687.98 74.48 Q 681 75 679.69 81.88 L 659.68 187.16",
+                "points": [
+                  {
+                    "x": 768.019328880827,
+                    "y": 68.51983721100225
+                  },
+                  {
+                    "x": 681,
+                    "y": 75
+                  },
+                  {
+                    "x": 659.6806510651045,
+                    "y": 187.1583139618417
+                  }
+                ],
+                "labelX": 670.34,
+                "labelY": 131.08
+              },
+              "proof:identity:obs.current.whole:current": {
+                "id": "proof:identity:obs.current.whole:current",
+                "from": "obs.current.whole",
+                "to": "claim:identity",
+                "label": "身份判断的共同条件",
+                "kind": "support",
+                "sourceIds": [
+                  "obs.current.whole",
+                  "obs.current.base",
+                  "obs.object.continuity"
+                ],
+                "details": "这份制造读数必须与另一处工艺读数及一条身份路径共同使用；本箭头不表示它单独能够推出身份。",
+                "supportGroupIds": [
+                  "proof-group:identity:continuity"
+                ],
+                "semanticEdgeId": "proof:identity:obs.current.whole:current",
+                "supportGroupId": "proof-group:identity:continuity",
+                "routeFrom": "obs.current.whole",
+                "routeTo": "junction:proof-group:identity:continuity",
+                "path": "M 538.98 66.52 L 619.02 72.48 Q 626 73 627.76 79.77 L 655.73 187.29",
+                "points": [
+                  {
+                    "x": 538.980671119173,
+                    "y": 66.51983721100225
+                  },
+                  {
+                    "x": 626,
+                    "y": 73
+                  },
+                  {
+                    "x": 655.7339687684738,
+                    "y": 187.2899424538211
+                  }
+                ],
+                "labelX": 640.87,
+                "labelY": 130.14
+              },
+              "proof:identity:obs.current.base:current": {
+                "id": "proof:identity:obs.current.base:current",
+                "from": "obs.current.base",
+                "to": "claim:identity",
+                "label": "身份判断的共同条件",
+                "kind": "support",
+                "sourceIds": [
+                  "obs.current.whole",
+                  "obs.current.base",
+                  "obs.object.continuity"
+                ],
+                "details": "这份制造读数必须与另一处工艺读数及一条身份路径共同使用；本箭头不表示它单独能够推出身份。",
+                "supportGroupIds": [
+                  "proof-group:identity:continuity"
+                ],
+                "semanticEdgeId": "proof:identity:obs.current.base:current",
+                "supportGroupId": "proof-group:identity:continuity",
+                "routeFrom": "obs.current.base",
+                "routeTo": "junction:proof-group:identity:continuity",
+                "path": "M 163.3 54.56 L 243.34 60.52 Q 250.32 61.04 256.54 64.25 L 431.78 154.79 Q 438 158 444.99 158.37 L 619.01 167.63 Q 626 168 631.27 172.61 L 651.23 190.07",
+                "points": [
+                  {
+                    "x": 163.3006711191731,
+                    "y": 54.559837211002254
+                  },
+                  {
+                    "x": 250.32,
+                    "y": 61.040000000000006
+                  },
+                  {
+                    "x": 438,
+                    "y": 158
+                  },
+                  {
+                    "x": 626,
+                    "y": 168
+                  },
+                  {
+                    "x": 651.2268097476381,
+                    "y": 190.07345852918334
+                  }
+                ],
+                "labelX": 344.16,
+                "labelY": 109.52
+              },
+              "photo:object": {
+                "id": "photo:object",
+                "from": "obs.current.base",
+                "to": "obs.phase.t1",
+                "label": "照片与现器的对应特征相符",
+                "kind": "attribution",
+                "sourceIds": [
+                  "obs.phase.t1",
+                  "obs.current.base",
+                  "obs.object.continuity"
+                ],
+                "details": "这份核验报告支持指定旧照片与眼前器物为同一对象。照片和现器观察先取得，报告后来建立两端关系。点击原始依据可回查核验；不是照片与X射线互相证明。",
+                "directed": false,
+                "routeFrom": "obs.current.base",
+                "routeTo": "obs.phase.t1",
+                "gapFrontierId": "question:photo-object",
+                "path": "M 163.3 54.56 L 243.34 60.52 Q 250.32 61.04 256.54 64.25 L 431.78 154.79 Q 438 158 444.99 158.37 L 619.01 167.63 Q 626 168 632.93 166.99 L 674.07 161.01 Q 681 160 681 153 L 681 82 Q 681 75 687.98 74.48 L 768.02 68.52",
+                "points": [
+                  {
+                    "x": 163.3006711191731,
+                    "y": 54.559837211002254
+                  },
+                  {
+                    "x": 250.32,
+                    "y": 61.040000000000006
+                  },
+                  {
+                    "x": 438,
+                    "y": 158
+                  },
+                  {
+                    "x": 626,
+                    "y": 168
+                  },
+                  {
+                    "x": 681,
+                    "y": 160
+                  },
+                  {
+                    "x": 681,
+                    "y": 75
+                  },
+                  {
+                    "x": 768.019328880827,
+                    "y": 68.51983721100225
+                  }
+                ],
+                "labelX": 344.16,
+                "labelY": 109.52
+              },
+              "interpretation:photo-history": {
+                "id": "interpretation:photo-history",
+                "from": "obs.phase.t1",
+                "to": "interpretation:photo-repair",
+                "label": "旧照片接入本器早期历史",
+                "kind": "support",
+                "sourceIds": [
+                  "obs.phase.t1",
+                  "obs.object.continuity",
+                  "obs.current.base"
+                ],
+                "details": "照片中的旧锔痕、有效时点与本照片核验共同允许这一表述。照片没有重新取得，核验报告也没有变成另一份照片。",
+                "directed": true,
+                "routeFrom": "obs.phase.t1",
+                "routeTo": "interpretation:photo-repair",
+                "path": "M 768.02 68.52 L 687.98 74.48 Q 681 75 681 82 L 681 153 Q 681 160 687.47 162.68 L 766.69 195.55",
+                "points": [
+                  {
+                    "x": 768.019328880827,
+                    "y": 68.51983721100225
+                  },
+                  {
+                    "x": 681,
+                    "y": 75
+                  },
+                  {
+                    "x": 681,
+                    "y": 160
+                  },
+                  {
+                    "x": 766.6870843286158,
+                    "y": 195.55102434910657
+                  }
+                ],
+                "labelX": 723.84,
+                "labelY": 177.78
+              }
+            },
+            "frontiers": [
+              {
+                "id": "question:change",
+                "anchorIds": [
+                  "obs.structure.xray.early"
+                ],
+                "title": "",
+                "explanation": "当前结构已经能读，状态本身仍不能说明发生过什么变化。",
+                "actionIds": [
+                  "A.MAP.REGION_CONTINUITY"
+                ],
+                "kind": "stub",
+                "continuation": {
+                  "nodeIds": [
+                    "obs.structure.major.cross-time"
+                  ],
+                  "edgeIds": []
+                },
+                "sourceIds": [
+                  "obs.structure.xray.early"
+                ]
+              }
+            ],
+            "frontierPositions": {
+              "question:change": {
+                "x": 327,
+                "y": 358,
+                "width": 168,
+                "height": 100,
+                "anchorX": 327,
+                "anchorY": 326,
+                "lines": [
+                  ""
+                ],
+                "titleLines": [
+                  ""
+                ],
+                "kind": "stub",
+                "frontierId": "question:change"
+              }
+            },
+            "frontierRoutes": {
+              "question:change": [
+                {
+                  "id": "question:change:branch:obs.structure.xray.early",
+                  "from": "obs.structure.xray.early",
+                  "to": "question:change",
+                  "kind": "stub",
+                  "frontierId": "question:change",
+                  "openEnd": true,
+                  "directed": false,
+                  "routeFrom": "obs.structure.xray.early",
+                  "routeTo": "question:change",
+                  "path": "M 320.02 196.52 L 239.98 202.48 Q 233 203 233 210 L 233 281 Q 233 288 239.49 290.62 L 318.66 322.63",
+                  "points": [
+                    {
+                      "x": 320.0193288808269,
+                      "y": 196.51983721100225
+                    },
+                    {
+                      "x": 233,
+                      "y": 203
+                    },
+                    {
+                      "x": 233,
+                      "y": 288
+                    },
+                    {
+                      "x": 318.6560094086626,
+                      "y": 322.62689742052316
+                    }
+                  ],
+                  "labelX": 275.83,
+                  "labelY": 305.31
+                }
+              ]
+            },
+            "junctionPositions": {
+              "junction:proof-group:identity:continuity": {
+                "x": 658,
+                "y": 196,
+                "width": 16,
+                "height": 16,
+                "anchorX": 658,
+                "anchorY": 196,
+                "isJunction": true
+              }
+            },
+            "supportJunctions": [
+              {
+                "id": "junction:proof-group:identity:continuity",
+                "targetId": "claim:identity",
+                "kind": "support",
+                "alternativeSet": "proof-options:identity",
+                "title": "整体与底足＋对象连续性",
+                "sourceIds": [
+                  "obs.current.whole",
+                  "obs.current.base",
+                  "obs.object.continuity"
+                ],
+                "memberNodeIds": [
+                  "obs.current.whole",
+                  "obs.current.base",
+                  "obs.phase.t1"
+                ],
+                "edgeIds": [
+                  "proof:identity:obs.object.continuity",
+                  "proof:identity:obs.current.whole:current",
+                  "proof:identity:obs.current.base:current"
+                ],
+                "groupId": "proof-group:identity:continuity",
+                "x": 658,
+                "y": 196,
+                "from": "junction:proof-group:identity:continuity",
+                "to": "claim:identity",
+                "supportGroupId": "proof-group:identity:continuity",
+                "routeFrom": "junction:proof-group:identity:continuity",
+                "routeTo": "claim:identity",
+                "path": "M 651 196 L 541 196",
+                "points": [
+                  {
+                    "x": 651,
+                    "y": 196
+                  },
+                  {
+                    "x": 541,
+                    "y": 196
+                  }
+                ],
+                "labelX": 596,
+                "labelY": 196
+              }
+            ],
+            "roadMemories": {
+              "photo:object": {
+                "from": "obs.current.base",
+                "to": "obs.phase.t1",
+                "frontierId": "question:photo-object",
+                "points": [
+                  {
+                    "x": 163.3006711191731,
+                    "y": 54.559837211002254
+                  },
+                  {
+                    "x": 250.32,
+                    "y": 61.040000000000006
+                  },
+                  {
+                    "x": 438,
+                    "y": 158
+                  },
+                  {
+                    "x": 626,
+                    "y": 168
+                  },
+                  {
+                    "x": 790.1411028750027,
+                    "y": 197.41256756719702
+                  },
+                  {
+                    "x": 743.1378882134456,
+                    "y": 194.6196805760626
+                  },
+                  {
+                    "x": 681,
+                    "y": 160
+                  },
+                  {
+                    "x": 681,
+                    "y": 75
+                  },
+                  {
+                    "x": 768.019328880827,
+                    "y": 68.51983721100225
+                  }
+                ]
+              }
+            },
+            "geometryKey": "[980,[[\"obs.current.whole\",\"\",[]],[\"obs.current.base\",\"\",[]],[\"obs.phase.t1\",\"\",[]],[\"obs.structure.xray.early\",\"\",[]],[\"claim:identity\",\"\",[\"obs.current.whole\",\"obs.current.base\",\"obs.phase.t1\"]],[\"interpretation:photo-repair\",\"\",[\"obs.phase.t1\"]]],[[\"proof:identity:obs.object.continuity\",\"obs.phase.t1\",\"claim:identity\"],[\"proof:identity:obs.current.whole:current\",\"obs.current.whole\",\"claim:identity\"],[\"proof:identity:obs.current.base:current\",\"obs.current.base\",\"claim:identity\"],[\"photo:object\",\"obs.current.base\",\"obs.phase.t1\"],[\"interpretation:photo-history\",\"obs.phase.t1\",\"interpretation:photo-repair\"]],[[\"question:change\",\"stub\",\"\",[\"obs.structure.xray.early\"],{\"nodeIds\":[\"obs.structure.major.cross-time\"],\"edgeIds\":[]}]],[{\"id\":\"proof-group:identity:continuity\",\"targetId\":\"claim:identity\",\"kind\":\"all\",\"alternativeSet\":\"proof-options:identity\",\"title\":\"整体与底足＋对象连续性\",\"sourceIds\":[\"obs.current.whole\",\"obs.current.base\",\"obs.object.continuity\"],\"memberNodeIds\":[\"obs.current.whole\",\"obs.current.base\",\"obs.phase.t1\"],\"edgeIds\":[\"proof:identity:obs.object.continuity\",\"proof:identity:obs.current.whole:current\",\"proof:identity:obs.current.base:current\"]}]]",
+            "width": 980,
+            "height": 760,
+            "diagnostics": {
+              "overlaps": [],
+              "routeNodeIntersections": [],
+              "movements": [
+                {
+                  "id": "obs.current.whole",
+                  "distance": 0,
+                  "from": {
+                    "x": 532,
+                    "y": 98
+                  },
+                  "to": {
+                    "x": 532,
+                    "y": 98
+                  }
+                },
+                {
+                  "id": "obs.current.base",
+                  "distance": 0,
+                  "from": {
+                    "x": 156.32,
+                    "y": 86.04
+                  },
+                  "to": {
+                    "x": 156.32,
+                    "y": 86.04
+                  }
+                },
+                {
+                  "id": "obs.phase.t1",
+                  "distance": 0,
+                  "from": {
+                    "x": 775,
+                    "y": 100
+                  },
+                  "to": {
+                    "x": 775,
+                    "y": 100
+                  }
+                },
+                {
+                  "id": "claim:identity",
+                  "distance": 0,
+                  "from": {
+                    "x": 532,
+                    "y": 228
+                  },
+                  "to": {
+                    "x": 532,
+                    "y": 228
+                  }
+                },
+                {
+                  "id": "interpretation:photo-repair",
+                  "distance": 0,
+                  "from": {
+                    "x": 775,
+                    "y": 231
+                  },
+                  "to": {
+                    "x": 775,
+                    "y": 231
+                  }
+                }
+              ],
+              "maxMovement": 0,
+              "relocated": [],
+              "components": [
+                [
+                  "obs.current.whole",
+                  "claim:identity",
+                  "obs.phase.t1",
+                  "obs.current.base",
+                  "interpretation:photo-repair"
+                ],
+                [
+                  "obs.structure.xray.early"
+                ]
+              ],
+              "ignoredEdges": [],
+              "algorithm": "experimental-stable-known-nodes-continuing-roads",
+              "nodeWidth": 168,
+              "nodeHeight": 100,
+              "nodeBoxAreaRatio": 0.14,
+              "averageRoadLength": 381.34,
+              "maxRoadLength": 714.61,
+              "roadEndpointInsets": {
+                "start": 7,
+                "end": 9
+              },
+              "labelPolicy": "questions occupy reserved boxes; edge labels belong in selected detail panel"
+            }
+          },
+          "rememberedPositions": {
+            "obs.current.whole": {
+              "x": 532,
+              "y": 98,
+              "width": 168,
+              "height": 100,
+              "anchorX": 532,
+              "anchorY": 66,
+              "lines": [
+                ""
+              ],
+              "titleLines": [
+                ""
+              ]
+            },
+            "obs.current.base": {
+              "x": 156.32,
+              "y": 86.04,
+              "width": 168,
+              "height": 100,
+              "anchorX": 156.32,
+              "anchorY": 54.04,
+              "lines": [
+                ""
+              ],
+              "titleLines": [
+                ""
+              ]
+            },
+            "obs.phase.t1": {
+              "x": 775,
+              "y": 100,
+              "width": 168,
+              "height": 100,
+              "anchorX": 775,
+              "anchorY": 68,
+              "lines": [
+                ""
+              ],
+              "titleLines": [
+                ""
+              ]
+            },
+            "claim:identity": {
+              "x": 532,
+              "y": 228,
+              "width": 168,
+              "height": 100,
+              "anchorX": 532,
+              "anchorY": 196,
+              "lines": [
+                ""
+              ],
+              "titleLines": [
+                ""
+              ]
+            },
+            "interpretation:photo-repair": {
+              "x": 775,
+              "y": 231,
+              "width": 168,
+              "height": 100,
+              "anchorX": 775,
+              "anchorY": 199,
+              "lines": [
+                ""
+              ],
+              "titleLines": [
+                ""
+              ]
+            },
+            "obs.structure.xray.early": {
+              "x": 327,
+              "y": 228,
+              "width": 168,
+              "height": 100,
+              "anchorX": 327,
+              "anchorY": 196,
+              "lines": [
+                ""
+              ],
+              "titleLines": [
+                ""
+              ]
+            }
+          },
+          "rememberedJunctions": {
+            "junction:proof-group:identity:continuity": {
+              "x": 658,
+              "y": 196,
+              "width": 16,
+              "height": 16,
+              "anchorX": 658,
+              "anchorY": 196,
+              "isJunction": true
+            }
+          },
+          "frontierRoads": {
+            "question:change": [
+              {
+                "from": "obs.structure.xray.early",
+                "d": "M 397 405.2 C 384.67 470.96 388.99 547 397 610.7",
+                "samples": [
+                  {
+                    "x": 397,
+                    "y": 405.2
+                  },
+                  {
+                    "x": 396.47436229144415,
+                    "y": 408.0655361040337
+                  },
+                  {
+                    "x": 395.96946543930306,
+                    "y": 410.94360830296887
+                  },
+                  {
+                    "x": 395.4850729843019,
+                    "y": 413.83380373140466
+                  },
+                  {
+                    "x": 395.0209484671652,
+                    "y": 416.73570952394
+                  },
+                  {
+                    "x": 394.57685542861844,
+                    "y": 419.64891281517407
+                  },
+                  {
+                    "x": 394.1525574093861,
+                    "y": 422.57300073970583
+                  },
+                  {
+                    "x": 393.7478179501931,
+                    "y": 425.5075604321342
+                  },
+                  {
+                    "x": 393.36240059176464,
+                    "y": 428.45217902705866
+                  },
+                  {
+                    "x": 392.9960688748253,
+                    "y": 431.4064436590778
+                  },
+                  {
+                    "x": 392.6485863401003,
+                    "y": 434.369941462791
+                  },
+                  {
+                    "x": 392.31971652831425,
+                    "y": 437.342259572797
+                  },
+                  {
+                    "x": 392.0092229801923,
+                    "y": 440.3229851236952
+                  },
+                  {
+                    "x": 391.71686923645933,
+                    "y": 443.3117052500846
+                  },
+                  {
+                    "x": 391.4424188378401,
+                    "y": 446.30800708656386
+                  },
+                  {
+                    "x": 391.1856353250596,
+                    "y": 449.31147776773247
+                  },
+                  {
+                    "x": 390.94628223884274,
+                    "y": 452.3217044281892
+                  },
+                  {
+                    "x": 390.72412311991457,
+                    "y": 455.3382742025333
+                  },
+                  {
+                    "x": 390.51892150899965,
+                    "y": 458.3607742253636
+                  },
+                  {
+                    "x": 390.3304409468234,
+                    "y": 461.38879163127945
+                  },
+                  {
+                    "x": 390.15844497411035,
+                    "y": 464.42191355487984
+                  },
+                  {
+                    "x": 390.0026971315854,
+                    "y": 467.4597271307636
+                  },
+                  {
+                    "x": 389.8629609599737,
+                    "y": 470.5018194935299
+                  },
+                  {
+                    "x": 389.73900000000003,
+                    "y": 473.5477777777778
+                  },
+                  {
+                    "x": 389.63057779238926,
+                    "y": 476.59718911810637
+                  },
+                  {
+                    "x": 389.5374578778663,
+                    "y": 479.6496406491146
+                  },
+                  {
+                    "x": 389.45940379715626,
+                    "y": 482.7047195054017
+                  },
+                  {
+                    "x": 389.3961790909839,
+                    "y": 485.7620128215667
+                  },
+                  {
+                    "x": 389.347547300074,
+                    "y": 488.8211077322083
+                  },
+                  {
+                    "x": 389.31327196515167,
+                    "y": 491.8815913719259
+                  },
+                  {
+                    "x": 389.2931166269418,
+                    "y": 494.94305087531853
+                  },
+                  {
+                    "x": 389.2868448261691,
+                    "y": 498.005073376985
+                  },
+                  {
+                    "x": 389.29422010355876,
+                    "y": 501.06724601152473
+                  },
+                  {
+                    "x": 389.3150059998356,
+                    "y": 504.1291559135367
+                  },
+                  {
+                    "x": 389.3489660557246,
+                    "y": 507.1903902176197
+                  },
+                  {
+                    "x": 389.3958638119504,
+                    "y": 510.25053605837286
+                  },
+                  {
+                    "x": 389.4554628092381,
+                    "y": 513.3091805703955
+                  },
+                  {
+                    "x": 389.5275265883127,
+                    "y": 516.3659108882862
+                  },
+                  {
+                    "x": 389.6118186898989,
+                    "y": 519.4203141466444
+                  },
+                  {
+                    "x": 389.70810265472176,
+                    "y": 522.471977480069
+                  },
+                  {
+                    "x": 389.81614202350625,
+                    "y": 525.5204880231593
+                  },
+                  {
+                    "x": 389.93570033697705,
+                    "y": 528.5654329105139
+                  },
+                  {
+                    "x": 390.06654113585927,
+                    "y": 531.6063992767321
+                  },
+                  {
+                    "x": 390.2084279608778,
+                    "y": 534.6429742564131
+                  },
+                  {
+                    "x": 390.36112435275743,
+                    "y": 537.6747449841556
+                  },
+                  {
+                    "x": 390.52439385222317,
+                    "y": 540.701298594559
+                  },
+                  {
+                    "x": 390.69800000000004,
+                    "y": 543.7222222222222
+                  },
+                  {
+                    "x": 390.8817063368127,
+                    "y": 546.7371030017443
+                  },
+                  {
+                    "x": 391.07527640338617,
+                    "y": 549.7455280677242
+                  },
+                  {
+                    "x": 391.2784737404455,
+                    "y": 552.7470845547612
+                  },
+                  {
+                    "x": 391.49106188871536,
+                    "y": 555.741359597454
+                  },
+                  {
+                    "x": 391.71280438892086,
+                    "y": 558.7279403304019
+                  },
+                  {
+                    "x": 391.9434647817868,
+                    "y": 561.706413888204
+                  },
+                  {
+                    "x": 392.18280660803816,
+                    "y": 564.6763674054591
+                  },
+                  {
+                    "x": 392.4305934083998,
+                    "y": 567.6373880167667
+                  },
+                  {
+                    "x": 392.6865887235966,
+                    "y": 570.5890628567254
+                  },
+                  {
+                    "x": 392.9505560943536,
+                    "y": 573.5309790599345
+                  },
+                  {
+                    "x": 393.22225906139556,
+                    "y": 576.4627237609928
+                  },
+                  {
+                    "x": 393.5014611654475,
+                    "y": 579.3838840944998
+                  },
+                  {
+                    "x": 393.7879259472343,
+                    "y": 582.294047195054
+                  },
+                  {
+                    "x": 394.0814169474809,
+                    "y": 585.1928001972549
+                  },
+                  {
+                    "x": 394.3816977069121,
+                    "y": 588.0797302357013
+                  },
+                  {
+                    "x": 394.688531766253,
+                    "y": 590.9544244449924
+                  },
+                  {
+                    "x": 395.00168266622836,
+                    "y": 593.8164699597272
+                  },
+                  {
+                    "x": 395.3209139475631,
+                    "y": 596.6654539145047
+                  },
+                  {
+                    "x": 395.64598915098213,
+                    "y": 599.5009634439239
+                  },
+                  {
+                    "x": 395.9766718172105,
+                    "y": 602.3225856825841
+                  },
+                  {
+                    "x": 396.312725486973,
+                    "y": 605.1299077650841
+                  },
+                  {
+                    "x": 396.65391370099445,
+                    "y": 607.922516826023
+                  },
+                  {
+                    "x": 397,
+                    "y": 610.7
+                  }
+                ],
+                "points": [
+                  {
+                    "x": 397,
+                    "y": 405.2
+                  },
+                  {
+                    "x": 397,
+                    "y": 610.7
+                  }
+                ],
+                "midpoint": {
+                  "x": 389.3597170552102,
+                  "y": 507.8919083499883
+                },
+                "endpointFrom": {
+                  "x": 397,
+                  "y": 396.2
+                },
+                "endpointTo": {
+                  "x": 397,
+                  "y": 610.7
+                }
+              }
+            ]
+          },
+          "roadMemories": {
+            "photo:object": {
+              "from": "obs.current.base",
+              "to": "obs.phase.t1",
+              "points": [
+                {
+                  "x": 234.74017196848473,
+                  "y": 165.1481604775631
+                },
+                {
+                  "x": 860,
+                  "y": 401.15
+                },
+                {
+                  "x": 830,
+                  "y": 401.15
+                },
+                {
+                  "x": 844.3769322219425,
+                  "y": 193.97840668180868
+                }
+              ]
+            }
+          }
+        },
+        "diagnostics": {
+          "maxNodeMovement": 0,
+          "routingPolicy": "topology-and-glyphs-only",
+          "ignoredEdgeIds": [],
+          "labelOverlaps": [],
+          "remoteLabelIds": [],
+          "labelMeasurement": "rendered-dimensions",
+          "labelsMoveRoads": false
+        }
+      },
+      "fresh": null
+    }
+  },
+  "pass": true,
+  "cameraFitReview": {
+    "reviewRequired": true,
+    "viewportWidth": 1440,
+    "automaticOnly": true,
+    "usedFitOrMapSelection": false,
+    "viewport": {
+      "left": 424.234375,
+      "right": 1055.53125,
+      "top": 212,
+      "bottom": 954
+    },
+    "camera": {
+      "x": -78.37691112349711,
+      "y": 132.51523972524188,
+      "s": 0.7355885237342664
+    },
+    "phase": "idle",
+    "selection": {
+      "kind": "evidence",
+      "id": "obs.object.continuity"
+    },
+    "steps": [
+      "A.OBSERVE.WHOLE",
+      "A.OBSERVE.BASE",
+      "A.LOCATE.HISTORIC_IMAGE",
+      "A.VERIFY.OBJECT_CONTINUITY"
+    ],
+    "labels": [
+      {
+        "id": "obs.current.whole",
+        "box": {
+          "left": 735.7194213867188,
+          "right": 841.6441650390625,
+          "top": 434.02716064453125,
+          "bottom": 451.6813049316406
+        },
+        "actualTextRects": [
+          {
+            "text": "整器形制与可见修补",
+            "left": 735.7194213867188,
+            "right": 841.6441650390625,
+            "top": 434.02716064453125,
+            "bottom": 450.9457092285156
+          }
+        ],
+        "clippedText": [],
+        "node": {
+          "id": "obs.current.whole",
+          "observationId": "obs.current.whole",
+          "title": "整器形制与可见修补",
+          "summary": "已记录形制、胎釉与肉眼可见的干预分布；可见修补本身不证明重大重组。",
+          "state": "known",
+          "group": "craft",
+          "sourceIds": [
+            "obs.current.whole"
+          ],
+          "actionId": "A.OBSERVE.WHOLE",
+          "actionName": "看整体形制与胎釉",
+          "steps": [
+            1
+          ],
+          "firstSeen": 1,
+          "attempts": 1,
+          "contextualized": false,
+          "negative": false,
+          "scopeLimited": false,
+          "coverage": {
+            "method": "visual",
+            "object": "OBJECT.FIRST",
+            "region": "whole-visible"
+          },
+          "originalSourceIds": [
+            "source.physical.current"
+          ],
+          "kind": "evidence",
+          "x": 602,
+          "y": 181.7,
+          "lines": [
+            "整器形制与可见修补"
+          ],
+          "labelX": 530,
+          "labelY": 121.7,
+          "labelWidth": 144,
+          "fontSize": 16,
+          "lineHeight": 24,
+          "labelHeight": 24,
+          "labelBounds": {
+            "x": 530,
+            "y": 121.7,
+            "width": 144,
+            "height": 24
+          }
+        }
+      },
+      {
+        "id": "obs.current.base",
+        "box": {
+          "left": 477.0220947265625,
+          "right": 547.6386108398438,
+          "top": 419.52227783203125,
+          "bottom": 437.1764221191406
+        },
+        "actualTextRects": [
+          {
+            "text": "底足制造痕迹",
+            "left": 477.0220947265625,
+            "right": 547.6386108398438,
+            "top": 419.52227783203125,
+            "bottom": 436.4408264160156
+          }
+        ],
+        "clippedText": [],
+        "node": {
+          "id": "obs.current.base",
+          "observationId": "obs.current.base",
+          "title": "底足制造痕迹",
+          "summary": "底足留下修削与成型特征，为制造工艺判断提供局部读数。",
+          "state": "known",
+          "group": "craft",
+          "sourceIds": [
+            "obs.current.base"
+          ],
+          "actionId": "A.OBSERVE.BASE",
+          "actionName": "看底足与修足",
+          "steps": [
+            2
+          ],
+          "firstSeen": 2,
+          "attempts": 1,
+          "contextualized": false,
+          "negative": false,
+          "scopeLimited": false,
+          "coverage": {
+            "method": "visual",
+            "object": "OBJECT.FIRST",
+            "region": "base-and-inner"
+          },
+          "originalSourceIds": [
+            "source.physical.current"
+          ],
+          "kind": "evidence",
+          "x": 226.32,
+          "y": 161.97,
+          "lines": [
+            "底足制造痕迹"
+          ],
+          "labelX": 178.32,
+          "labelY": 101.97,
+          "labelWidth": 96,
+          "fontSize": 16,
+          "lineHeight": 24,
+          "labelHeight": 24,
+          "labelBounds": {
+            "x": 178.32,
+            "y": 101.97,
+            "width": 96,
+            "height": 24
+          }
+        }
+      },
+      {
+        "id": "obs.phase.t1",
+        "box": {
+          "left": 914.4674072265625,
+          "right": 1020.3922119140625,
+          "top": 417.3385009765625,
+          "bottom": 454.117919921875
+        },
+        "actualTextRects": [
+          {
+            "text": "旧照片中的锔修痕迹",
+            "left": 914.4674072265625,
+            "right": 1020.3922119140625,
+            "top": 417.3385009765625,
+            "bottom": 434.2570495605469
+          },
+          {
+            "text": "照片与现器核验相符",
+            "left": 914.4674072265625,
+            "right": 993.9110107421875,
+            "top": 440.8773498535156,
+            "bottom": 451.9111633300781
+          }
+        ],
+        "clippedText": [],
+        "node": {
+          "id": "obs.phase.t1",
+          "observationId": "obs.phase.t1",
+          "title": "旧照片中的锔修痕迹",
+          "summary": "19世纪末的旧照片中可见足部瑕疵与旧锔痕。照片的这些内容已经取得。本照片与现器核验相符后，锔痕可以归入这只碗的早期历史。具体图像与特征值尚未制作；此处沿用已设定的案例内容。",
+          "state": "known",
+          "group": "history",
+          "sourceIds": [
+            "obs.phase.t1"
+          ],
+          "actionId": "A.LOCATE.HISTORIC_IMAGE",
+          "actionName": "找更早的影像",
+          "steps": [
+            3
+          ],
+          "firstSeen": 3,
+          "attempts": 1,
+          "contextualized": true,
+          "negative": false,
+          "scopeLimited": false,
+          "coverage": {
+            "method": "archive",
+            "object": "OBJECT.FIRST",
+            "region": "declared-time-anchor"
+          },
+          "originalSourceIds": [
+            "source.archive.pre-accident"
+          ],
+          "kind": "evidence",
+          "interpretationState": "established",
+          "stateLabel": "已接入本器历史",
+          "x": 845,
+          "y": 185,
+          "lines": [
+            "旧照片中的锔修痕迹"
+          ],
+          "labelX": 773,
+          "labelY": 99,
+          "labelWidth": 144,
+          "fontSize": 16,
+          "lineHeight": 24,
+          "subline": "照片与现器核验相符",
+          "labelHeight": 50,
+          "labelBounds": {
+            "x": 773,
+            "y": 99,
+            "width": 144,
+            "height": 50
+          }
+        }
+      },
+      {
+        "id": "interpretation:photo-repair",
+        "box": {
+          "left": 993.9110107421875,
+          "right": 1123.37451171875,
+          "top": 621.935546875,
+          "bottom": 657.2438354492188
+        },
+        "actualTextRects": [
+          {
+            "text": "照片拍摄时已留有锔修痕",
+            "left": 993.9110107421875,
+            "right": 1123.37451171875,
+            "top": 621.935546875,
+            "bottom": 638.8541259765625
+          },
+          {
+            "text": "迹",
+            "left": 993.9110107421875,
+            "right": 1005.680419921875,
+            "top": 639.5897216796875,
+            "bottom": 656.5082397460938
+          }
+        ],
+        "clippedText": [
+          {
+            "text": "照片拍摄时已留有锔修痕",
+            "left": 993.9110107421875,
+            "right": 1123.37451171875,
+            "top": 621.935546875,
+            "bottom": 638.8541259765625
+          }
+        ],
+        "node": {
+          "id": "interpretation:photo-repair",
+          "kind": "interpretation",
+          "state": "known",
+          "title": "照片拍摄时已留有锔修痕迹",
+          "summary": "至迟在这张19世纪末照片拍摄时，这只碗已经过锔修。这是既有早期状态事实的范围表述，不新增计分判断，不把今天所有内部接合都定为同一时期。",
+          "sourceIds": [
+            "obs.phase.t1",
+            "obs.object.continuity",
+            "obs.current.base"
+          ],
+          "group": "history",
+          "interpretationOnly": true,
+          "layoutAnchorIds": [
+            "obs.phase.t1"
+          ],
+          "stateLabel": "已有信息的新用途",
+          "x": 845,
+          "y": 401.15,
+          "lines": [
+            "照片拍摄时已留有锔修痕",
+            "迹"
+          ],
+          "labelX": 881,
+          "labelY": 377.15,
+          "labelWidth": 176,
+          "fontSize": 16,
+          "lineHeight": 24,
+          "labelHeight": 48,
+          "labelBounds": {
+            "x": 881,
+            "y": 377.15,
+            "width": 176,
+            "height": 48
+          }
+        }
+      }
+    ]
+  },
+  "cameraFitRecheck": {
+    "generatedAt": "2026-09-09T04:17:47.516Z",
+    "reviewRequired": true,
+    "sha256": "40dfc7b133a602bf4a55b6dd1445fb69f9da05e6c42738dd1945a65c3b23d0b3",
+    "bytes": 5056180,
+    "viewportWidth": 1440,
+    "automaticOnly": true,
+    "usedFitOrMapSelection": false,
+    "pass": true,
+    "viewport": {
+      "left": 424.234375,
+      "right": 1055.53125,
+      "top": 212,
+      "bottom": 954
+    },
+    "camera": {
+      "x": -104.36036250000001,
+      "y": 160.03199999999995,
+      "s": 0.68
+    },
+    "phase": "idle",
+    "selection": {
+      "kind": "evidence",
+      "id": "obs.object.continuity"
+    },
+    "labels": [
+      {
+        "id": "obs.current.whole",
+        "box": {
+          "left": 680.2740478515625,
+          "right": 778.1940307617188,
+          "top": 454.77947998046875,
+          "bottom": 471.0994873046875
+        },
+        "actualTextRects": [
+          {
+            "text": "整器形制与可见修补",
+            "left": 680.2740478515625,
+            "right": 778.1940307617188,
+            "top": 454.77947998046875,
+            "bottom": 470.41949462890625
+          }
+        ],
+        "clippedText": []
+      },
+      {
+        "id": "obs.current.base",
+        "box": {
+          "left": 441.12652587890625,
+          "right": 506.4065246582031,
+          "top": 441.3707580566406,
+          "bottom": 457.69073486328125
+        },
+        "actualTextRects": [
+          {
+            "text": "底足制造痕迹",
+            "left": 441.12652587890625,
+            "right": 506.4065246582031,
+            "top": 441.3707580566406,
+            "bottom": 457.0107421875
+          }
+        ],
+        "clippedText": []
+      },
+      {
+        "id": "obs.phase.t1",
+        "box": {
+          "left": 845.5140380859375,
+          "right": 943.4340209960938,
+          "top": 439.35198974609375,
+          "bottom": 473.35198974609375
+        },
+        "actualTextRects": [
+          {
+            "text": "旧照片中的锔修痕迹",
+            "left": 845.5140380859375,
+            "right": 943.4340209960938,
+            "top": 439.35198974609375,
+            "bottom": 454.99200439453125
+          },
+          {
+            "text": "照片与现器核验相符",
+            "left": 845.5140380859375,
+            "right": 918.9540405273438,
+            "top": 461.11199951171875,
+            "bottom": 471.31201171875
+          }
+        ],
+        "clippedText": []
+      },
+      {
+        "id": "claim:identity",
+        "box": {
+          "left": 672.114013671875,
+          "right": 786.35400390625,
+          "top": 615.5994873046875,
+          "bottom": 667.2794799804688
+        },
+        "actualTextRects": [
+          {
+            "text": "晚 18 世纪外销瓷方",
+            "left": 685.6715087890625,
+            "right": 772.7965087890625,
+            "top": 619.3394775390625,
+            "bottom": 633.6195068359375
+          },
+          {
+            "text": "向成立",
+            "left": 713.9340209960938,
+            "right": 744.5340576171875,
+            "top": 634.2994995117188,
+            "bottom": 648.5795288085938
+          },
+          {
+            "text": "已有依据",
+            "left": 714.2740478515625,
+            "right": 744.1940307617188,
+            "top": 654.0194702148438,
+            "bottom": 662.8594970703125
+          }
+        ],
+        "clippedText": []
+      },
+      {
+        "id": "interpretation:photo-repair",
+        "box": {
+          "left": 918.9540405273438,
+          "right": 1038.634033203125,
+          "top": 628.4876098632812,
+          "bottom": 661.1276245117188
+        },
+        "actualTextRects": [
+          {
+            "text": "照片拍摄时已留有锔修痕",
+            "left": 918.9540405273438,
+            "right": 1038.634033203125,
+            "top": 628.4876098632812,
+            "bottom": 644.1276245117188
+          },
+          {
+            "text": "迹",
+            "left": 918.9540405273438,
+            "right": 929.8340454101562,
+            "top": 644.8076171875,
+            "bottom": 660.4476318359375
+          }
+        ],
+        "clippedText": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "generatedAt": "2026-09-09T04:11:25.708Z",
+  "url": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+  "suite": "all",
+  "tag": "final-visual-polish",
+  "reviewRequired": true,
+  "scenarios": [
+    {
+      "name": "desktop-1280",
+      "passed": true,
+      "evidence": {
+        "screenshots": {
+          "initial": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1280-initial.png",
+          "mid": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1280-mid.png",
+          "g3": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1280-g3.png",
+          "stop": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1280-stop.png"
+        },
+        "stage": "G3",
+        "actions": [
+          "A.OBSERVE.WHOLE",
+          "A.OBSERVE.BASE",
+          "A.LOCATE.HISTORIC_IMAGE",
+          "A.VERIFY.OBJECT_CONTINUITY",
+          "A.RESEARCH.ACCIDENT",
+          "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "A.RESEARCH.LATE_TREATMENT",
+          "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "A.IMAGE.XRAY",
+          "A.INSPECT.WINDOWS",
+          "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "A.SYNTHESIZE.SURFACE_REGIONS",
+          "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "A.ASSESS.TREATED_AND_UNTREATED",
+          "A.TRACE.PROVENANCE_CHAIN",
+          "A.SCREEN.UV",
+          "A.OBSERVE.REGION_DECOR",
+          "A.COMPARE.CORPUS",
+          "A.COMPARE.CORPUS.RECHECK",
+          "A.MAP.REGION_CONTINUITY"
+        ],
+        "billed": [
+          3,
+          10,
+          6,
+          3
+        ],
+        "finalNodes": 22,
+        "finalEdges": 25,
+        "finalFrontiers": 1
+      },
+      "errors": [],
+      "elapsedMs": 8127
+    },
+    {
+      "name": "desktop-1440",
+      "passed": true,
+      "evidence": {
+        "screenshots": {
+          "initial": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1440-initial.png",
+          "mid": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1440-mid.png",
+          "g3": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1440-g3.png",
+          "stop": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1440-stop.png"
+        },
+        "stage": "G3",
+        "actions": [
+          "A.OBSERVE.WHOLE",
+          "A.OBSERVE.BASE",
+          "A.LOCATE.HISTORIC_IMAGE",
+          "A.VERIFY.OBJECT_CONTINUITY",
+          "A.RESEARCH.ACCIDENT",
+          "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "A.RESEARCH.LATE_TREATMENT",
+          "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "A.IMAGE.XRAY",
+          "A.INSPECT.WINDOWS",
+          "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "A.SYNTHESIZE.SURFACE_REGIONS",
+          "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "A.ASSESS.TREATED_AND_UNTREATED",
+          "A.TRACE.PROVENANCE_CHAIN",
+          "A.SCREEN.UV",
+          "A.OBSERVE.REGION_DECOR",
+          "A.COMPARE.CORPUS",
+          "A.COMPARE.CORPUS.RECHECK",
+          "A.MAP.REGION_CONTINUITY"
+        ],
+        "billed": [
+          3,
+          10,
+          6,
+          3
+        ],
+        "finalNodes": 22,
+        "finalEdges": 25,
+        "finalFrontiers": 1
+      },
+      "errors": [],
+      "elapsedMs": 7210
+    },
+    {
+      "name": "desktop-1920",
+      "passed": true,
+      "evidence": {
+        "screenshots": {
+          "initial": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1920-initial.png",
+          "mid": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1920-mid.png",
+          "g3": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1920-g3.png",
+          "stop": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-1920-stop.png"
+        },
+        "stage": "G3",
+        "actions": [
+          "A.OBSERVE.WHOLE",
+          "A.OBSERVE.BASE",
+          "A.LOCATE.HISTORIC_IMAGE",
+          "A.VERIFY.OBJECT_CONTINUITY",
+          "A.RESEARCH.ACCIDENT",
+          "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "A.RESEARCH.LATE_TREATMENT",
+          "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "A.IMAGE.XRAY",
+          "A.INSPECT.WINDOWS",
+          "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "A.SYNTHESIZE.SURFACE_REGIONS",
+          "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "A.ASSESS.TREATED_AND_UNTREATED",
+          "A.TRACE.PROVENANCE_CHAIN",
+          "A.SCREEN.UV",
+          "A.OBSERVE.REGION_DECOR",
+          "A.COMPARE.CORPUS",
+          "A.COMPARE.CORPUS.RECHECK",
+          "A.MAP.REGION_CONTINUITY"
+        ],
+        "billed": [
+          3,
+          10,
+          6,
+          3
+        ],
+        "finalNodes": 22,
+        "finalEdges": 25,
+        "finalFrontiers": 1
+      },
+      "errors": [],
+      "elapsedMs": 7481
+    },
+    {
+      "name": "materials-and-comparison-history",
+      "passed": true,
+      "evidence": {
+        "screenshots": {
+          "photo": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-material-photo-unverified.png",
+          "verification": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-material-object-verification.png",
+          "basePair": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-material-base-comparison.png",
+          "history": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-comparison-history-before-attribution.png"
+        },
+        "rendered": [
+          {
+            "rendered": true,
+            "width": 455,
+            "height": 340,
+            "nontransparentPixels": 46333
+          },
+          {
+            "rendered": true,
+            "width": 455,
+            "height": 340,
+            "nontransparentPixels": 46333
+          }
+        ],
+        "photoHistoryStep": 4,
+        "bases": [
+          "photo",
+          "archive",
+          "archive"
+        ],
+        "repeatedRecordCount": 9
+      },
+      "errors": [],
+      "elapsedMs": 6695
+    },
+    {
+      "name": "animation-sequence-and-cancellation",
+      "passed": true,
+      "evidence": {
+        "phases": [
+          "fly",
+          "focus",
+          "connect",
+          "idle"
+        ],
+        "screenshots": {
+          "fly": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-motion-fly.png",
+          "relation": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-final-visual-polish-motion-relation-landing.png"
+        },
+        "verificationLanding": "photo:object",
+        "cancelledBy": [
+          "modal/Escape",
+          "map drag",
+          "history",
+          "restart",
+          "stop"
+        ],
+        "stoppedAfterOneAction": true
+      },
+      "errors": [],
+      "elapsedMs": 19596
+    }
+  ],
+  "boundary": "Machine UI integration checks, not human gameplay or aesthetic acceptance. No old tests, baselines or rules are changed.",
+  "passed": true
+}

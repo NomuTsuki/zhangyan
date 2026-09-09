@@ -1,5 +1,45 @@
 # 产品数值登记表
 
+## 2026-09-09 高保真调查呈现（Experimental）
+
+用户已授权按已采纳的画面制作，确认道路先行、文字避路，蜿蜒程度略加强。此处只登记呈现与操作参数；游戏预算、费用档位、判定阈值均沿用融合版。
+
+id: v3.hifi.discovery.timeline
+value & unit: 飞线 560 ms；随后拉近 420 ms；1260 ms 时开始拉远与道路接通 800 ms；2200 ms 结束强调
+identity: experimental-default
+why: 把一次调查中的取得落点、近看、与旧内容相连分成可辨认的连续过程
+affects: 发现位置的可见性、调查反馈节奏
+does NOT affect: 调查次数、费用、证据取得、成立条件；数据在动画开始前已结算一次
+status: experimental
+reopen when: 用户感觉被镜头拖慢或来不及辨认；可缩短停留或调整各段，主动操作始终能打断
+
+id: v3.hifi.discovery.camera
+value & unit: 调查拉近 1.18–1.42 倍；自动拉远最低 0.68 倍；手动地图缩放 0.45–1.8 倍
+identity: experimental-default
+why: 新发现先清楚进入视野，再回到包含相关旧内容的局部范围；全览允许用户主动看整体轮廓
+affects: 镜头焦点与地图文字的屏幕大小
+does NOT affect: 节点世界坐标、证据关系、选择状态或任何游戏概率
+status: experimental
+reopen when: 用户不能辨认拉远后的节点，或全览难以定位；全览小字不视为已通过真人阅读验收
+
+id: v3.hifi.object.orientation
+value & unit: 初始 Euler=(-0.3,-0.29,-0.105) rad；镜头距离 4.35 scene units；拖曳 0.008 rad/px；方向键 0.15 rad；稳态 130 ms
+identity: experimental-default
+why: 让默认视角呈现外壁彩绘，同时支持宽容的自由把玩与键盘旋转；初稿(0.28,-0.29,-0.065)/4.7更多露出空内壁，实际对照后改为当前值
+affects: 器物初始观感、旋转速度与部位显隐稳定性
+does NOT affect: 部位对应的真实动作、取得条件、费用或物品真相
+status: experimental
+reopen when: 用户找不到部位、转动过快或显隐抖动；回到较慢旋转或扩大稳定可見角，而不删除合法手段
+
+id: v3.hifi.map.road-curvature
+value & unit: 长道路控制点侧向偏移约长度的 6%，最大 26 world px；短路按长度减小
+identity: experimental-default
+why: 4.5 world px 初稿在实际48–60%全览尺度下近似直线，未呈现用户要求的温和蜿蜒；单段采用一次缓弯并校验真实节点避障
+affects: 道路的探索感与逻辑走向的可辨认性
+does NOT affect: 节点位置、道路来源、证据或共同条件；文字仍在道路确定后避让
+status: experimental
+reopen when: 用户认为弯曲抢眼或关系不清；减小偏移，不以绕文字替代真实路线
+
 本表登记**影响玩家体验**的数值：概率、成本、节奏、经济、阈值。
 循环边界、内部容差与一次性夹具技术值**不登记**。
 

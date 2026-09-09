@@ -1,0 +1,196 @@
+{
+  "generatedAt": "2026-09-09T04:12:39.879Z",
+  "reviewRequired": true,
+  "checks": [
+    {
+      "name": "High-fidelity engine uses the existing fusion functions and the same 22 actions",
+      "passed": true,
+      "evidence": {
+        "actionCount": 22,
+        "unchangedFunctionIdentity": true
+      }
+    },
+    {
+      "name": "Protected modules and old tests have no staged or unstaged difference from HEAD",
+      "passed": true,
+      "evidence": {
+        "head": "85c7419a8b2f0c22cf5b94dff9bd3849df6340a1",
+        "paths": [
+          "docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0",
+          "docs/project/evidence/v3-design/validation/knowledge-map-slice-v0",
+          "docs/project/evidence/v3-design/validation/workbench-map-v0",
+          "docs/project/evidence/v3-design/validation/workbench-map-focus-v1",
+          "docs/project/evidence/v3-design/validation/workbench-map-atlas-v0",
+          "docs/project/evidence/v3-design/validation/workbench-map-fusion-v0"
+        ],
+        "changedFiles": [],
+        "untrackedFiles": []
+      }
+    },
+    {
+      "name": "The 16-step inventory establishes all four claims on both archive routes",
+      "passed": true,
+      "evidence": [
+        {
+          "route": [
+            "A.OBSERVE.WHOLE",
+            "A.OBSERVE.BASE",
+            "A.LOCATE.HISTORIC_IMAGE",
+            "A.VERIFY.OBJECT_CONTINUITY",
+            "A.RESEARCH.ACCIDENT",
+            "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+            "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+            "A.RESEARCH.LATE_TREATMENT",
+            "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+            "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+            "A.ANALYZE.MATERIAL.SUBSTRATE",
+            "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+            "A.INSPECT.WINDOWS",
+            "A.SYNTHESIZE.SURFACE_REGIONS",
+            "A.ASSESS.TREATED_AND_UNTREATED",
+            "A.TRACE.PROVENANCE_CHAIN"
+          ],
+          "stage": "G3",
+          "billed": [
+            2,
+            8,
+            4,
+            2
+          ]
+        },
+        {
+          "route": [
+            "A.OBSERVE.WHOLE",
+            "A.OBSERVE.BASE",
+            "A.LOCATE.HISTORIC_IMAGE",
+            "A.VERIFY.OBJECT_CONTINUITY",
+            "A.RESEARCH.ACCIDENT",
+            "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+            "A.MAP.REGION_CONTINUITY",
+            "A.RESEARCH.LATE_TREATMENT",
+            "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+            "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+            "A.ANALYZE.MATERIAL.SUBSTRATE",
+            "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+            "A.INSPECT.WINDOWS",
+            "A.SYNTHESIZE.SURFACE_REGIONS",
+            "A.ASSESS.TREATED_AND_UNTREATED",
+            "A.TRACE.PROVENANCE_CHAIN"
+          ],
+          "stage": "G3",
+          "billed": [
+            2,
+            7,
+            5,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "name": "All 22 actions are reachable without changing costs, opportunity budget or stop semantics",
+      "passed": true,
+      "evidence": {
+        "actions": [
+          "A.OBSERVE.WHOLE",
+          "A.OBSERVE.BASE",
+          "A.OBSERVE.REGION_DECOR",
+          "A.COMPARE.CORPUS",
+          "A.COMPARE.CORPUS.RECHECK",
+          "A.IMAGE.XRAY",
+          "A.SCREEN.UV",
+          "A.RESEARCH.ACCIDENT",
+          "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "A.LOCATE.HISTORIC_IMAGE",
+          "A.VERIFY.OBJECT_CONTINUITY",
+          "A.MAP.REGION_CONTINUITY",
+          "A.RESEARCH.LATE_TREATMENT",
+          "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "A.INSPECT.WINDOWS",
+          "A.SYNTHESIZE.SURFACE_REGIONS",
+          "A.ASSESS.TREATED_AND_UNTREATED",
+          "A.TRACE.PROVENANCE_CHAIN"
+        ],
+        "billed": [
+          3,
+          10,
+          6,
+          3
+        ],
+        "stage": "G3"
+      }
+    },
+    {
+      "name": "Early X-ray is current information; photo waits for verification without being acquired twice",
+      "passed": true,
+      "evidence": {
+        "activated": [
+          "obs.phase.t1"
+        ],
+        "added": [
+          "obs.current.base",
+          "interpretation:photo-repair"
+        ],
+        "observations": 4
+      }
+    },
+    {
+      "name": "Comparison reports retain selected materials through delayed interpretation and historical replay",
+      "passed": true,
+      "evidence": {
+        "recordedBases": [
+          {
+            "basis": "photo",
+            "materials": [
+              "obs.phase.t1",
+              "obs.current.whole",
+              "obs.structure.xray.early"
+            ]
+          },
+          {
+            "basis": "archive",
+            "materials": [
+              "obs.accident.major",
+              "obs.current.whole"
+            ]
+          }
+        ],
+        "pastStage": "NONE"
+      }
+    },
+    {
+      "name": "Repeated investigation charges once without creating evidence or increasing support",
+      "passed": true,
+      "evidence": {
+        "repeatKind": "repeat",
+        "steps": 5,
+        "billed": [
+          1,
+          2,
+          2,
+          0
+        ],
+        "uniqueEvidence": 4
+      }
+    }
+  ],
+  "protected": {
+    "head": "85c7419a8b2f0c22cf5b94dff9bd3849df6340a1",
+    "paths": [
+      "docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0",
+      "docs/project/evidence/v3-design/validation/knowledge-map-slice-v0",
+      "docs/project/evidence/v3-design/validation/workbench-map-v0",
+      "docs/project/evidence/v3-design/validation/workbench-map-focus-v1",
+      "docs/project/evidence/v3-design/validation/workbench-map-atlas-v0",
+      "docs/project/evidence/v3-design/validation/workbench-map-fusion-v0"
+    ],
+    "changedFiles": [],
+    "untrackedFiles": []
+  },
+  "boundary": "Integration behavior only; no claim of human comprehension, aesthetic acceptance or official numerical approval.",
+  "passed": true
+}

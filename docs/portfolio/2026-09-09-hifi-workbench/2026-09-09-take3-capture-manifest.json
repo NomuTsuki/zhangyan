@@ -1,0 +1,249 @@
+{
+  "capturedAt": "2026-09-09T04:19:46.136Z",
+  "status": "candidate",
+  "reviewRequired": true,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "heroDeviceScaleFactor": 2,
+  "clipDeviceScaleFactor": 1,
+  "route": [
+    "A.OBSERVE.WHOLE",
+    "A.LOCATE.HISTORIC_IMAGE",
+    "A.OBSERVE.BASE",
+    "A.VERIFY.OBJECT_CONTINUITY"
+  ],
+  "assets": [
+    {
+      "key": "before",
+      "file": "2026-09-09-take3-fusion-before-1440x900-2x.png",
+      "slot": "process / system",
+      "line": "The fusion prototype records four completed investigations · Logical dependencies had to become visible before art direction · This is the same-state baseline for the workbench.",
+      "pixels": {
+        "width": 2880,
+        "height": 1800
+      },
+      "sha256": "ccb754f775b55170d94ebec083d02d7a76b2e529a1fec30dedec06b1becc7eda",
+      "bytes": 335554
+    },
+    {
+      "key": "after",
+      "file": "2026-09-09-take3-hifi-after-1440x900-2x.png",
+      "slot": "system / outcome",
+      "line": "The high-fidelity workbench presents the same four investigations · Object inspection and evidence relationships had to stay connected · The new presentation retains the existing records and judgment.",
+      "pixels": {
+        "width": 2880,
+        "height": 1800
+      },
+      "sha256": "f5d79089aa570e86dc51e0175d054153a06207e94008669be10c4ccc91ef09c8",
+      "bytes": 2419135
+    },
+    {
+      "key": "hero",
+      "file": "2026-09-09-take3-hifi-hero-1440x900-2x.png",
+      "slot": "outcome",
+      "line": "A verified photograph joins the bowl’s history in a navigable 3D workbench · New meaning had to preserve its original evidence · The candidate interface links the object, map and supported judgment.",
+      "pixels": {
+        "width": 2880,
+        "height": 1800
+      },
+      "sha256": "f5426e7fa804f8e451d8d9ca062dfd8f4bab633abbab6211c741ab2f45b025b0",
+      "bytes": 2494545
+    },
+    {
+      "key": "process",
+      "file": "2026-09-09-take3-local-road-study-process.png",
+      "slot": "process / reflection",
+      "line": "A small clickable study isolated the photograph and its later interpretation · Acquired material and justified meaning were being confused · The accepted local model preceded integration into the full map.",
+      "pixels": {
+        "width": 2880,
+        "height": 2000
+      },
+      "sha256": "b146948c4d5d561a1100a9b66b5f9f56c61d58b6052eb9c8fe94a286cccaa8ce",
+      "bytes": 337306
+    },
+    {
+      "key": "clip",
+      "file": "2026-09-09-take3-evidence-gains-historical-meaning.webm",
+      "slot": "system / process",
+      "line": "A live investigation moves from observation to verified history · Acquisition, focus and connection needed distinct feedback · Existing evidence gains a historical use without being acquired again.",
+      "durationSeconds": 24.68,
+      "streams": [
+        {
+          "width": 1440,
+          "height": 900
+        }
+      ],
+      "method": "D:/anaconda/Library/bin/ffprobe.exe",
+      "sha256": "f8179a07defd0adeeef1afe8babeb527015841c2a6261439641a31f64e640939",
+      "bytes": 2704276
+    }
+  ],
+  "browserErrors": [],
+  "boundary": "Native UI states captured from local artifacts. Machine verification and human aesthetic/gameplay acceptance remain separate.",
+  "sources": {
+    "high": {
+      "file": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\prototype.html",
+      "sha256": "40dfc7b133a602bf4a55b6dd1445fb69f9da05e6c42738dd1945a65c3b23d0b3"
+    },
+    "low": {
+      "file": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-map-fusion-v0\\prototype.html",
+      "sha256": "c7c34550645c89427bc72d4dd38f9a63f9ec53bbdbb8ff78ab539460e34dcf7a"
+    },
+    "process": {
+      "file": "E:\\zhangyan__v2\\docs\\portfolio\\2026-09-08-local-road-studies\\2026-09-08-photo-after-2x.png",
+      "sha256": "b146948c4d5d561a1100a9b66b5f9f56c61d58b6052eb9c8fe94a286cccaa8ce"
+    }
+  },
+  "beforeState": {
+    "stage": "G1",
+    "observationIds": [
+      "obs.current.whole",
+      "obs.phase.t1",
+      "obs.current.base",
+      "obs.object.continuity"
+    ],
+    "steps": [
+      "A.OBSERVE.WHOLE",
+      "A.LOCATE.HISTORIC_IMAGE",
+      "A.OBSERVE.BASE",
+      "A.VERIFY.OBJECT_CONTINUITY"
+    ]
+  },
+  "afterState": {
+    "stage": "G1",
+    "observationIds": [
+      "obs.current.whole",
+      "obs.phase.t1",
+      "obs.current.base",
+      "obs.object.continuity"
+    ],
+    "steps": [
+      "A.OBSERVE.WHOLE",
+      "A.LOCATE.HISTORIC_IMAGE",
+      "A.OBSERVE.BASE",
+      "A.VERIFY.OBJECT_CONTINUITY"
+    ],
+    "claims": {
+      "coherentDecisionProfile": {
+        "established": false
+      },
+      "g1": {
+        "established": true
+      },
+      "identity": {
+        "contested": false,
+        "established": true,
+        "logicallyRefuted": false
+      },
+      "majorReassembly": {
+        "contested": false,
+        "established": false,
+        "logicallyRefuted": false
+      },
+      "threePhase": {
+        "established": false
+      }
+    },
+    "camera": {
+      "x": -104.36036250000001,
+      "y": 114.03199999999995,
+      "s": 0.68
+    },
+    "framing": {
+      "viewport": {
+        "left": 424.234375,
+        "right": 1055.53125,
+        "top": 212,
+        "bottom": 854
+      },
+      "outside": []
+    }
+  },
+  "clipState": {
+    "steps": [
+      "A.OBSERVE.WHOLE",
+      "A.LOCATE.HISTORIC_IMAGE",
+      "A.OBSERVE.BASE",
+      "A.VERIFY.OBJECT_CONTINUITY"
+    ],
+    "observationIds": [
+      "obs.current.whole",
+      "obs.phase.t1",
+      "obs.current.base",
+      "obs.object.continuity"
+    ],
+    "phaseTimeline": [
+      {
+        "phase": "idle",
+        "atMs": 712
+      },
+      {
+        "phase": "fly",
+        "atMs": 2104
+      },
+      {
+        "phase": "focus",
+        "atMs": 2662
+      },
+      {
+        "phase": "connect",
+        "atMs": 3402
+      },
+      {
+        "phase": "idle",
+        "atMs": 4345
+      },
+      {
+        "phase": "fly",
+        "atMs": 6102
+      },
+      {
+        "phase": "focus",
+        "atMs": 6656
+      },
+      {
+        "phase": "connect",
+        "atMs": 7352
+      },
+      {
+        "phase": "idle",
+        "atMs": 8281
+      },
+      {
+        "phase": "fly",
+        "atMs": 11220
+      },
+      {
+        "phase": "focus",
+        "atMs": 11794
+      },
+      {
+        "phase": "connect",
+        "atMs": 12503
+      },
+      {
+        "phase": "idle",
+        "atMs": 13431
+      },
+      {
+        "phase": "fly",
+        "atMs": 16256
+      },
+      {
+        "phase": "focus",
+        "atMs": 16811
+      },
+      {
+        "phase": "connect",
+        "atMs": 17502
+      },
+      {
+        "phase": "idle",
+        "atMs": 18474
+      }
+    ]
+  },
+  "passed": true
+}

@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-09-09T04:18:29.418Z",
+  "url": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+  "suite": "motion",
+  "tag": "label-bounds",
+  "reviewRequired": true,
+  "scenarios": [
+    {
+      "name": "animation-sequence-and-cancellation",
+      "passed": true,
+      "evidence": {
+        "phases": [
+          "fly",
+          "focus",
+          "connect",
+          "idle"
+        ],
+        "screenshots": {
+          "fly": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-label-bounds-motion-fly.png",
+          "relation": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-label-bounds-motion-relation-landing.png"
+        },
+        "verificationLanding": "photo:object",
+        "cancelledBy": [
+          "modal/Escape",
+          "map drag",
+          "history",
+          "restart",
+          "stop"
+        ],
+        "stoppedAfterOneAction": true
+      },
+      "errors": [],
+      "elapsedMs": 20254
+    }
+  ],
+  "boundary": "Machine UI integration checks, not human gameplay or aesthetic acceptance. No old tests, baselines or rules are changed.",
+  "passed": true
+}

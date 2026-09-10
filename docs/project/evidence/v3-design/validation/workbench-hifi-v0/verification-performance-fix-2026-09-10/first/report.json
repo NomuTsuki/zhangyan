@@ -1,0 +1,131 @@
+{
+  "reviewRequired": true,
+  "url": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+  "sha256": "10039aac47de84d8415c07db09c9d8d332c1ebc3fc42691565d845ec29730336",
+  "suite": "all",
+  "checks": [
+    {
+      "name": "New question and frontier wait until information lands and camera pulls back",
+      "passed": true,
+      "evidence": {
+        "before": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-performance-fix-2026-09-10\\first\\xray-in-flight.png",
+        "middle": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-performance-fix-2026-09-10\\first\\xray-frontier-growing.png",
+        "initial": "1px",
+        "growing": "0.481556px",
+        "after": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-performance-fix-2026-09-10\\first\\xray-frontier-settled.png"
+      }
+    },
+    {
+      "name": "The old photo question stays with its road until verification reaches it",
+      "passed": true,
+      "evidence": {
+        "before": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-performance-fix-2026-09-10\\first\\verification-flight-old-question.png",
+        "after": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-performance-fix-2026-09-10\\first\\verification-settled.png"
+      }
+    },
+    {
+      "name": "Canceling during flight or frontier growth settles every visible element",
+      "passed": true,
+      "evidence": {
+        "historyLength": 2,
+        "camera": {
+          "x": 41.065365694615934,
+          "y": 48.406006027629246,
+          "s": 0.8695911645847445
+        }
+      }
+    },
+    {
+      "name": "22 cold native investigations keep the UI responsive and preserve costs and judgments",
+      "passed": true,
+      "evidence": {
+        "worstClickFrameMs": 4.300000000745058,
+        "maxLongTaskMs": 66,
+        "steps": 22,
+        "stage": "G3"
+      }
+    },
+    {
+      "name": "Cold pending investigation remains atomic through manual-navigation",
+      "passed": true,
+      "evidence": {
+        "log": 17,
+        "bill": [
+          2,
+          8,
+          4,
+          3
+        ],
+        "phase": "idle",
+        "history": null,
+        "camera": {
+          "x": 140.1484375,
+          "y": -73.53600000000012,
+          "s": 0.2
+        }
+      }
+    },
+    {
+      "name": "Cold pending investigation remains atomic through history",
+      "passed": true,
+      "evidence": {
+        "log": 17,
+        "bill": [
+          2,
+          8,
+          4,
+          3
+        ],
+        "phase": "idle",
+        "history": 0,
+        "camera": {
+          "x": -236.3515625,
+          "y": 50,
+          "s": 1
+        }
+      }
+    },
+    {
+      "name": "Cold pending investigation remains atomic through restart",
+      "passed": true,
+      "evidence": {
+        "log": 0,
+        "bill": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "phase": "idle",
+        "history": null,
+        "camera": {
+          "x": 0,
+          "y": 0,
+          "s": 1
+        }
+      }
+    },
+    {
+      "name": "Cold pending investigation remains atomic through stop",
+      "passed": true,
+      "evidence": {
+        "log": 17,
+        "bill": [
+          2,
+          8,
+          4,
+          3
+        ],
+        "phase": "idle",
+        "history": null,
+        "camera": {
+          "x": -561.8515625,
+          "y": -1851.68,
+          "s": 1
+        }
+      }
+    }
+  ],
+  "generatedAt": "2026-09-10T07:06:37.874Z",
+  "passed": true
+}

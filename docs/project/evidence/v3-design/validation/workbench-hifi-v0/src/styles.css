@@ -42,7 +42,9 @@
 @keyframes road-segment-reveal{from{stroke-dashoffset:var(--reveal-from)}to{stroke-dashoffset:var(--reveal-to)}}
 @keyframes road-reveal-half{from{stroke-dashoffset:1}to{stroke-dashoffset:.5}}
 @keyframes road-reveal-reverse-half{from{stroke-dashoffset:-1}to{stroke-dashoffset:-.5}}
-@keyframes map-appear{from{opacity:0}to{opacity:1}}
+@keyframes map-appear{from{opacity:0;visibility:hidden}to{opacity:1;visibility:visible}}
+@keyframes map-retire{from{opacity:1;visibility:visible}to{opacity:0;visibility:hidden}}
+.new-pending{visibility:hidden!important}
 .investigation-flight path{animation-duration:850ms;animation-timing-function:linear}
 .investigation-popover{position:fixed;right:auto;bottom:auto;width:330px;max-height:calc(100vh - 110px);z-index:40}
 .completed-record{display:block;margin-top:13px;line-height:1.8}

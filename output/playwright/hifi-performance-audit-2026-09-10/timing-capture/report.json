@@ -1,0 +1,182 @@
+{
+  "reviewRequired": true,
+  "sha256": "98f640e5341d575d003e38b695851bf54f6ffecf275f0e5b308a9a7d0aafae1f",
+  "shots": [
+    {
+      "name": "01-first-xray-before-arrival",
+      "phase": "fly",
+      "flight": true,
+      "elapsed": 536.4000000003725,
+      "nodes": [
+        {
+          "id": "obs.structure.xray.early",
+          "opacity": "0",
+          "intersectsViewport": true
+        }
+      ],
+      "frontiers": [
+        {
+          "id": "question:change",
+          "opacity": "1",
+          "intersectsViewport": true
+        }
+      ]
+    },
+    {
+      "name": "02-first-xray-settled",
+      "phase": "idle",
+      "flight": false,
+      "elapsed": 3203,
+      "nodes": [
+        {
+          "id": "obs.structure.xray.early",
+          "opacity": "1",
+          "intersectsViewport": true
+        }
+      ],
+      "frontiers": [
+        {
+          "id": "question:change",
+          "opacity": "1",
+          "intersectsViewport": true
+        }
+      ]
+    },
+    {
+      "name": "03-continuity-before-arrival",
+      "phase": "fly",
+      "flight": true,
+      "elapsed": 477.09999999962747,
+      "nodes": [
+        {
+          "id": "claim:identity",
+          "opacity": "0",
+          "intersectsViewport": false
+        },
+        {
+          "id": "interpretation:photo-repair",
+          "opacity": "0",
+          "intersectsViewport": false
+        },
+        {
+          "id": "obs.current.base",
+          "opacity": "1",
+          "intersectsViewport": false
+        },
+        {
+          "id": "obs.current.whole",
+          "opacity": "1",
+          "intersectsViewport": true
+        },
+        {
+          "id": "obs.phase.t1",
+          "opacity": "1",
+          "intersectsViewport": true
+        },
+        {
+          "id": "obs.structure.xray.early",
+          "opacity": "1",
+          "intersectsViewport": false
+        }
+      ],
+      "frontiers": [
+        {
+          "id": "question:change",
+          "opacity": "1",
+          "intersectsViewport": true
+        }
+      ]
+    },
+    {
+      "name": "04-continuity-connecting",
+      "phase": "connect",
+      "flight": false,
+      "elapsed": 3451.199999999255,
+      "nodes": [
+        {
+          "id": "claim:identity",
+          "opacity": "0",
+          "intersectsViewport": true
+        },
+        {
+          "id": "interpretation:photo-repair",
+          "opacity": "0",
+          "intersectsViewport": true
+        },
+        {
+          "id": "obs.current.base",
+          "opacity": "1",
+          "intersectsViewport": true
+        },
+        {
+          "id": "obs.current.whole",
+          "opacity": "1",
+          "intersectsViewport": true
+        },
+        {
+          "id": "obs.phase.t1",
+          "opacity": "1",
+          "intersectsViewport": true
+        },
+        {
+          "id": "obs.structure.xray.early",
+          "opacity": "1",
+          "intersectsViewport": true
+        }
+      ],
+      "frontiers": [
+        {
+          "id": "question:change",
+          "opacity": "1",
+          "intersectsViewport": true
+        }
+      ]
+    },
+    {
+      "name": "05-continuity-settled",
+      "phase": "idle",
+      "flight": false,
+      "elapsed": 7594,
+      "nodes": [
+        {
+          "id": "claim:identity",
+          "opacity": "1",
+          "intersectsViewport": true
+        },
+        {
+          "id": "interpretation:photo-repair",
+          "opacity": "1",
+          "intersectsViewport": true
+        },
+        {
+          "id": "obs.current.base",
+          "opacity": "1",
+          "intersectsViewport": true
+        },
+        {
+          "id": "obs.current.whole",
+          "opacity": "1",
+          "intersectsViewport": true
+        },
+        {
+          "id": "obs.phase.t1",
+          "opacity": "1",
+          "intersectsViewport": true
+        },
+        {
+          "id": "obs.structure.xray.early",
+          "opacity": "1",
+          "intersectsViewport": true
+        }
+      ],
+      "frontiers": [
+        {
+          "id": "question:change",
+          "opacity": "1",
+          "intersectsViewport": true
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

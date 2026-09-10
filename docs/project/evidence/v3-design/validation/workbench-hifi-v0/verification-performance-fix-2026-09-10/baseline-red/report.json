@@ -1,0 +1,36 @@
+{
+  "reviewRequired": true,
+  "url": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+  "sha256": "98f640e5341d575d003e38b695851bf54f6ffecf275f0e5b308a9a7d0aafae1f",
+  "suite": "reveal",
+  "checks": [
+    {
+      "name": "New question and frontier wait until information lands and camera pulls back",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Question cannot precede the flying material\n\n'1' !== '0'\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-performance-reveal.mjs:31:205\n    at async check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-performance-reveal.mjs:27:50)\n    at async file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-performance-reveal.mjs:29:1",
+      "errors": [],
+      "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-performance-fix-2026-09-10\\baseline-red\\failure-0.png"
+    },
+    {
+      "name": "The old photo question stays with its road until verification reaches it",
+      "passed": false,
+      "error": "locator.evaluate: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-retiring-question=\"question:photo-object\"]')\u001b[22m\n\n    at E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\scripts\\check-performance-reveal.mjs:37:286\n    at async check (E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\scripts\\check-performance-reveal.mjs:27:50)\n    at async file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-performance-reveal.mjs:36:1",
+      "errors": [],
+      "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-performance-fix-2026-09-10\\baseline-red\\failure-1.png"
+    },
+    {
+      "name": "Canceling during flight or frontier growth settles every visible element",
+      "passed": true,
+      "evidence": {
+        "historyLength": 2,
+        "camera": {
+          "x": 41.052545086851524,
+          "y": 48.40778134197876,
+          "s": 0.8695942978610408
+        }
+      }
+    }
+  ],
+  "generatedAt": "2026-09-10T07:02:24.208Z",
+  "passed": false
+}

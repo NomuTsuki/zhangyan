@@ -1,0 +1,20 @@
+{
+  "reviewRequired": true,
+  "sha256": "98f640e5341d575d003e38b695851bf54f6ffecf275f0e5b308a9a7d0aafae1f",
+  "dev": true,
+  "generatedAt": "2026-09-10T06:23:28.300Z",
+  "results": [
+    {
+      "case": "native-17-provenance",
+      "errors": [],
+      "log": 17
+    },
+    {
+      "case": "overlapping-investigations-then-restart-during-connection",
+      "settingsClickMs": 22.09189999999944,
+      "log": 0,
+      "phase": "idle",
+      "errors": []
+    }
+  ]
+}

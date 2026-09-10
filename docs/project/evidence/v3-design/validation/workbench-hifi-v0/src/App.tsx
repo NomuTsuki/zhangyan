@@ -2,14 +2,22 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import BowlScene from './BowlScene';
 import MapView from './MapView';
 import MaterialViewer, { type MaterialContext } from './MaterialViewer';
-import { completedInvestigation, takeNewInvestigation } from './action-state.mjs';
+import { completedInvestigation } from './action-state.mjs';
+import EngineWorker from './engine.worker.ts?worker&inline';
+import { BackgroundEngine } from './engine-client.mjs';
 import Dialog from './Dialog';
-import { actionById, billText, buildGraph, cleanCopy, costNames, derive, diffGraphs, engine, observationTitle, placeById, places, resolveFocus, stageNames, type Investigation, type Selection } from './engine';
+import { actionById, billText, cleanCopy, costNames, observationTitle, placeById, places, resolveFocus, stageNames, type Investigation, type Selection } from './engine';
 
 declare global {interface Window {hifiSnapshot?:()=>any;}}
+const emptySession=(budget=22)=>({acquired:[],log:[],billed:[0,0,0,0],stopped:false,budget});
+const emptyModel:any={solved:{stage:'NONE',claims:{},stopping:{}},graph:{nodes:[],edges:[],frontiers:[],observations:[],supportGroups:[]},rows:[],overview:[],facets:[]};
 
 export default function App(){
-  const [session,setSession]=useState<any>(()=>engine.newSession(22));
+  const [session,setSession]=useState<any>(()=>emptySession());
+  const [viewSession,setViewSession]=useState<any>(()=>emptySession());
+  const [model,setModel]=useState<any>(emptyModel);
+  const [ready,setReady]=useState(false),[busy,setBusy]=useState(false),[viewBusy,setViewBusy]=useState(false),[stopping,setStopping]=useState(false),[engineError,setEngineError]=useState('');
+  const background=useRef<BackgroundEngine|null>(null),pending=useRef(false),stopPending=useRef(false),revision=useRef(0),viewRequest=useRef(0),interaction=useRef(0);
   const [selection,setSelection]=useState<Selection>(null);
   const [hover,setHover]=useState<Selection>(null);
   const [openPlace,setOpenPlace]=useState<string|null>(null);
@@ -28,11 +36,9 @@ export default function App(){
   const popRef=useRef<HTMLDivElement>(null),eventId=useRef(0);
   const entryRef=useRef<HTMLElement|null>(null),anchorRect=useRef<DOMRect|null>(null);
   const [popoverPosition,setPopoverPosition]=useState({left:20,top:100});
-  const viewSession=useMemo(()=>historyIndex===null?session:engine.replayLog(session.log.slice(0,historyIndex),session.budget,false),[session,historyIndex]);
-  const model=useMemo(()=>derive(viewSession),[viewSession]);
   const focus=useMemo(()=>resolveFocus(hover||selection,model,viewSession),[hover,selection,model,viewSession]);
   const detailFocus=useMemo(()=>resolveFocus(selection,model,viewSession),[selection,model,viewSession]);
-  const locked=historyIndex!==null||session.stopped;
+  const locked=historyIndex!==null||session.stopped||!ready||viewBusy;
   const activeRows=model.rows.filter((r:any)=>r.action.place===openPlace);
   const selectedAction=selection?.kind==='action'?model.rows.find((r:any)=>r.action.id===selection.id):null;
   const sourceIds=new Set(detailFocus.sourceIds||[]);
@@ -43,7 +49,7 @@ export default function App(){
   const selectedGap=selection?.kind==='gap'?model.graph.frontiers.find((f:any)=>f.id===selection.id):null;
   const selectedGroup=selection?.kind==='group'?model.graph.supportGroups.find((g:any)=>g.id===selection.id):null;
 
-  const cancelMotion=()=>setCancelEpoch(n=>n+1);
+  const cancelMotion=()=>{interaction.current++;setCancelEpoch(n=>n+1);};
   const clear=()=>{setSelection(null);setHover(null);setOpenPlace(null);};
   const choose=(next:Selection)=>{cancelMotion();setHover(null);setSelection(old=>old?.id===next?.id&&old?.kind===next?.kind?null:next);};
   function openDialog(kind:typeof dialog){cancelMotion();setOpenPlace(null);setDialog(kind);}
@@ -54,23 +60,64 @@ export default function App(){
     entryRef.current=anchor||fallback;anchorRect.current=entryRef.current?.getBoundingClientRect()||null;
     setOpenPlace(old=>old===id?null:id);setSelection({kind:'place',id});setHover(null);setComparisonBasis('');
   }
-  function perform(row:any){
-    if(locked)return;
-    const rect=entryRef.current?.isConnected?entryRef.current.getBoundingClientRect():anchorRect.current;
-    if(!rect)return;
-    const next=structuredClone(session);
-    const before:any=buildGraph(engine.solve(session),session);
-    const result=takeNewInvestigation(next,row.action.id,comparisonBasis?{comparisonBasis}:{});
-    if(!result.ok){setNotice(result.why||'先选择要比较的材料。');return;}
-    const after:any=buildGraph(engine.solve(next),next),changes=diffGraphs(before,after);
-    setSession(next);setOpenPlace(null);setSelection({kind:'evidence',id:result.observationId});setHover(null);setLatestId(result.observationId);
-    setNotice(`已记录：${observationTitle(after,result.observationId)}`);
-    setInvestigation({id:++eventId.current,observationId:result.observationId,result,changes,origin:{x:rect.left+rect.width*.5,y:rect.top+rect.height*.5},beforeGraph:before,originPlaceId:row.action.place});
+  function accept(response:any,showView=true){
+    if(response.revision>=revision.current){revision.current=response.revision;setSession(response.session);}
+    if(showView){setViewSession(response.viewSession);setModel(response.model);setHistoryIndex(response.historyIndex);}
   }
-  function restart(){setSession(engine.newSession(session.budget));setGameId(x=>x+1);setInvestigation(null);setHistoryIndex(null);setLatestId(null);setNotice('');setNote('');setSavedNote('');clear();setDialog(null);cancelMotion();}
-  function stop(){const next=structuredClone(session);next.stopped=true;setSession(next);setSavedNote(note.trim());setDialog(null);setNotice('本局已收手。判断、依据和仍未说清的部分都保留下来。');clear();cancelMotion();}
-  function reviewTurn(n:number){cancelMotion();setHistoryIndex(n);clear();setDialog(null);setLatestId(null);setNotice('');}
-  function returnLive(){setHistoryIndex(null);clear();setNotice(session.stopped?'已回到收手时的记录。':'已回到当前调查。');cancelMotion();}
+  const failed=(error:any)=>{if(error?.name!=='AbortError')setNotice(`这次核对未能完成：${error.message||String(error)}`);};
+  async function prepareGame(budget:number){
+    const client=background.current;if(!client)return;
+    pending.current=false;stopPending.current=false;revision.current=0;viewRequest.current++;setBusy(false);setViewBusy(false);setStopping(false);setReady(false);setEngineError('');
+    const empty=emptySession(budget);setSession(empty);setViewSession(empty);setModel(emptyModel);
+    const generation=client.generation+1;
+    try{const response:any=await client.reset(budget);if(generation!==client.generation)return;accept(response);setReady(true);}
+    catch(error:any){if(error?.name!=='AbortError'&&generation===client.generation)setEngineError(error.message||'工作台未能准备好。');}
+  }
+  useEffect(()=>{
+    const client=new BackgroundEngine(()=>new EngineWorker());background.current=client;
+    void prepareGame(22);
+    return()=>{client.dispose();if(background.current===client)background.current=null;};
+  },[]);
+  async function perform(row:any){
+    const client=background.current;if(locked||pending.current||stopPending.current||!client)return;
+    const rect=entryRef.current?.isConnected?entryRef.current.getBoundingClientRect():anchorRect.current;if(!rect)return;
+    const generation=client.generation,viewVersion=viewRequest.current,interactionVersion=interaction.current;
+    const origin={x:rect.left+rect.width*.5,y:rect.top+rect.height*.5};
+    pending.current=true;setBusy(true);setOpenPlace(null);setInvestigation(null);setNotice('正在核对这份材料…你仍可以把玩器物和查看已有记录。');
+    try{
+      const response:any=await client.request('take',{actionId:row.action.id,options:comparisonBasis?{comparisonBasis}:{},expectedRevision:revision.current});
+      if(generation!==client.generation)return;
+      const sameView=viewVersion===viewRequest.current;accept(response,sameView);if(!sameView)return;
+      const {result,changes,beforeGraph}=response;if(!result.ok){setNotice(result.why||'先选择要比较的材料。');return;}
+      setLatestId(result.observationId);setNotice(`已记录：${observationTitle(response.model.graph,result.observationId)}`);
+      if(interaction.current===interactionVersion){
+        setSelection({kind:'evidence',id:result.observationId});setHover(null);
+        setInvestigation({id:++eventId.current,observationId:result.observationId,result,changes,origin,beforeGraph,originPlaceId:row.action.place});
+      }
+    }catch(error){if(generation===client.generation)failed(error);}
+    finally{if(generation===client.generation){pending.current=false;setBusy(false);}}
+  }
+  function restart(){const budget=session.budget;setGameId(x=>x+1);setInvestigation(null);setHistoryIndex(null);setLatestId(null);setNotice('');setNote('');setSavedNote('');setMaterialId(null);setMaterialContext(null);clear();setDialog(null);cancelMotion();void prepareGame(budget);}
+  async function stop(){
+    const client=background.current;if(!client||stopPending.current||viewBusy)return;
+    const generation=client.generation,version=viewRequest.current;stopPending.current=true;setStopping(true);setDialog(null);cancelMotion();setInvestigation(null);
+    try{const response:any=await client.request('stop');if(generation!==client.generation)return;const sameView=version===viewRequest.current;accept(response,sameView);setSavedNote(note.trim());if(sameView){setNotice('本局已收手。判断、依据和仍未说清的部分都保留下来。');clear();}}
+    catch(error){if(generation===client.generation)failed(error);}finally{if(generation===client.generation){stopPending.current=false;setStopping(false);}}
+  }
+  async function changeView(index:number|null){
+    const client=background.current;if(!client||!ready)return;
+    const generation=client.generation,version=++viewRequest.current;cancelMotion();setInvestigation(null);clear();setDialog(null);setLatestId(null);setViewBusy(true);setNotice(index===null?'正在返回当前记录…':'正在打开这段调查记录…');
+    try{const response:any=await client.request('view',{historyIndex:index});if(generation!==client.generation||version!==viewRequest.current)return;accept(response);setNotice(index===null&&response.session.stopped?'已回到收手时的记录。':'');}
+    catch(error){if(generation===client.generation&&version===viewRequest.current)failed(error);}finally{if(generation===client.generation&&version===viewRequest.current)setViewBusy(false);}
+  }
+  const reviewTurn=(n:number)=>{void changeView(n);};
+  const returnLive=()=>{void changeView(null);};
+  async function changeBudget(budget:string){
+    const client=background.current;if(!client||pending.current||stopPending.current||viewBusy)return;
+    const generation=client.generation,version=viewRequest.current;pending.current=true;setBusy(true);
+    try{const response:any=await client.request('budget',{budget,expectedRevision:revision.current});if(generation!==client.generation)return;accept(response,version===viewRequest.current);if(!response.result.ok)setNotice(response.result.why);}
+    catch(error){if(generation===client.generation)failed(error);}finally{if(generation===client.generation){pending.current=false;setBusy(false);}}
+  }
 
   useEffect(()=>{
     const onKey=(e:KeyboardEvent)=>{if(e.key==='Escape'){cancelMotion();if(!dialog&&!materialId){if(openPlace)setOpenPlace(null);else clear();}}};
@@ -103,9 +150,10 @@ export default function App(){
   useEffect(()=>{
     window.hifiSnapshot=()=>structuredClone({session,viewSession,historyIndex,gameId,selection,openPlace,visibleBody,
       graph:model.graph,claims:model.solved.claims,stage:model.solved.stage,stopping:model.solved.stopping,reduceMotion,materialContext,
+      engineReady:ready,computeBusy:busy||viewBusy||stopping,workerGeneration:background.current?.generation,revision:revision.current,
       entryAnchor:anchorRect.current?{x:anchorRect.current.x,y:anchorRect.current.y,width:anchorRect.current.width,height:anchorRect.current.height}:null});
     return()=>{delete window.hifiSnapshot;};
-  },[session,viewSession,historyIndex,gameId,selection,openPlace,visibleBody,model,reduceMotion,materialContext]);
+  },[session,viewSession,historyIndex,gameId,selection,openPlace,visibleBody,model,reduceMotion,materialContext,ready,busy,viewBusy,stopping]);
 
   const bodyPlaceVisible=!openPlace||placeById.get(openPlace)?.group!=='object'||visibleBody.includes(openPlace);
   const detailTitle=selectedGap?.title||selectedNode?.title||selectedClaim?.title||selectedAction?.action.name||
@@ -115,13 +163,14 @@ export default function App(){
   if(selectedClaim&&!selectedNode)detailCopy=selectedClaim.sourceIds.length?'已经留下一些相关信息，当前仍不足以作出这项判断。':'还没有能够支撑这项判断的调查记录。';
   const relevantRows=(detailFocus.actionIds||[]).map((id:string)=>model.rows.find((r:any)=>r.action.id===id)).filter(Boolean);
 
-  return <main className="game-frame" data-history={historyIndex!==null} data-stopped={session.stopped} data-reduced-motion={reduceMotion}>
+  if(!ready)return <main className="game-frame"><section role="status" style={{padding:40}}><h1>掌眼</h1><p>{engineError||'正在准备工作台…'}</p>{engineError&&<button className="outlined-button" onClick={()=>void prepareGame(session.budget)}>重新准备</button>}</section></main>;
+  return <main className="game-frame" data-history={historyIndex!==null} data-stopped={session.stopped} data-reduced-motion={reduceMotion} data-compute-busy={busy||viewBusy||stopping}>
     <header className="game-topbar">
       <div className="brand" aria-label="掌眼">掌眼<span className="brand-seal">鉴</span></div>
       <div className="case-name">彩绘大碗<span>一号委托</span></div>
-      <div className="session-heading">{historyIndex!==null?'回看调查':session.stopped?'本局已收手':'鉴定进行中'}</div>
+      <div className="session-heading">{stopping?'正在保存判断':busy?'正在核对材料':viewBusy?'正在读取记录':historyIndex!==null?'回看调查':session.stopped?'本局已收手':'鉴定进行中'}</div>
       <div className="opportunities"><span>调查机会</span><strong>{Math.max(0,viewSession.budget-viewSession.log.length)}</strong><span className="budget-total">/ {viewSession.budget}</span></div>
-      <button className="stop-button" onClick={()=>openDialog('stop')} disabled={locked}>收手，作出判断</button>
+      <button className="stop-button" onClick={()=>openDialog('stop')} disabled={locked||stopping}>收手，作出判断</button>
       <button className="top-link" onClick={()=>openDialog('brief')}>查看委托</button>
       <button className="top-link" onClick={()=>openDialog('history')}>调查记录<span className="record-count">{session.log.length}</span></button>
       <button className="settings-button" onClick={()=>openDialog('settings')} aria-label="设置">⚙</button>
@@ -155,7 +204,7 @@ export default function App(){
             </label>)}</fieldset>}
             {!row.usable&&<div className="condition-note">{row.why}</div>}
             <div className="method-footer"><span>{completed?'记录已留存':`占 1 次 · ${row.action.cost?`费用${costNames[row.action.cost]}`:'免费'}`}</span>
-              <button className="investigate-button" data-action={row.action.id} disabled={!!completed||locked||!row.usable||!row.affordable||!!row.comparisonOptions&&!comparisonBasis} onClick={()=>perform(row)}>{completed?'已经做过':'做这一步'}</button></div>
+              <button className="investigate-button" data-action={row.action.id} disabled={!!completed||locked||busy||stopping||!row.usable||!row.affordable||!!row.comparisonOptions&&!comparisonBasis} onClick={()=>void perform(row)}>{completed?'已经做过':busy||stopping?'核对中…':'做这一步'}</button></div>
             {completed&&<button className="completed-record quiet-link" onClick={()=>inspect(completed.observationId,false)}>查看第 {completed.step} 次调查记录 · 免费</button>}
             {!row.affordable&&!locked&&<small>调查机会已用完，你仍可以查看记录并作出判断。</small>}
           </div>;})}
@@ -164,7 +213,7 @@ export default function App(){
       </aside>
 
       <section className="knowledge-panel" aria-label="已知与推理">
-        <MapView key={gameId} graph={model.graph} focus={focus} selection={selection} onSelect={choose} onHover={setHover}
+        <MapView key={gameId} graph={model.graph} focus={focus} selection={selection} onSelect={choose} onHover={setHover} onManualNavigation={cancelMotion}
           investigation={historyIndex===null?investigation:null} cancelEpoch={cancelEpoch} reducedMotion={reduceMotion} historyMode={historyIndex!==null}
           notice={notice} latestTitle={latestId?observationTitle(model.graph,latestId):''} onOpenLatest={latestId?()=>inspect(latestId,false):undefined}/>
       </section>
@@ -177,7 +226,7 @@ export default function App(){
         </button>)}</div>
         <div className="selection-details">
           {selection&&subject?<>
-            <div className="detail-kicker"><span>{selection.kind==='gap'?'尚未接通':selection.kind==='action'?'调查手段':selection.kind==='edge'?'关系与依据':selection.kind==='claim'?'判断依据':'正在查看'}</span><button className="quiet-link" onClick={clear}>取消选择</button></div>
+            <div className="detail-kicker"><span>{selection.kind==='gap'?'尚未接通':selection.kind==='action'?'调查手段':selection.kind==='edge'?'关系与依据':selection.kind==='claim'?'判断依据':'正在查看'}</span><button className="quiet-link" onClick={()=>{cancelMotion();clear();}}>取消选择</button></div>
             <h3>{detailTitle}</h3>{detailCopy&&<p>{cleanCopy(detailCopy)}</p>}
             {selectedNode?.relations&&<ul className="relation-status">{selectedNode.relations.map((r:any)=><li key={r.key}><span>{r.status==='established'?'✓':'○'}</span>{r.title}<small>{r.status==='established'?'已核对':'待核对'}</small></li>)}</ul>}
             {selection.kind==='evidence'&&model.graph.observations.some((o:any)=>o.id===selection.id)&&<button className="material-link" onClick={()=>inspect(selection.id)}>展开这份材料 <span>↗</span></button>}
@@ -201,7 +250,7 @@ export default function App(){
     {dialog==='history'&&<Dialog title="调查记录" onClose={()=>setDialog(null)}><div className="history-list"><button onClick={()=>reviewTurn(0)}><span>开局</span><strong>还没有留下调查记录</strong><small>回看 →</small></button>{session.log.map((step:any,i:number)=><button key={i} onClick={()=>reviewTurn(i+1)}><span>{String(i+1).padStart(2,'0')}</span><div><strong>{actionById.get(step.actionId)?.name}</strong><small>{step.comparisonBasis?(step.comparisonBasis==='photo'?'比较旧照片 · ':'比较事故记录 · '):''}{costNames[step.cost]}费用</small></div><small>回看 →</small></button>)}</div><div className="history-bottom">{billText(session)}{historyIndex!==null&&<button className="quiet-link" onClick={()=>{returnLive();setDialog(null);}}>回到当前调查</button>}</div></Dialog>}
     {dialog==='stop'&&<Dialog title="收手，作出判断" onClose={()=>setDialog(null)}><p className="dialog-intro">你已经调查了 {session.log.length} 次。目前的依据与未决之处都会保留。</p><div className="stop-overview">{model.overview.map((c:any)=><div key={c.id}><span>{c.title}</span><strong>{c.statusLabel}</strong></div>)}</div><label className="note-label" htmlFor="judgment-note">留下你的判断</label><textarea id="judgment-note" value={note} onChange={e=>setNote(e.target.value)} placeholder="哪些已经有把握，哪些仍需要保留？" rows={4}/><div className="dialog-actions"><button className="quiet-link" onClick={()=>setDialog(null)}>继续调查</button><button className="dark-button" onClick={stop}>确认收手</button></div></Dialog>}
     {dialog==='restart'&&<Dialog title="重新开始这次委托" onClose={()=>setDialog(null)}><p className="dialog-intro">这会清除本局的调查记录与判断，使用当前的 {session.budget} 次机会设置重新开始。</p><div className="dialog-actions"><button className="quiet-link" onClick={()=>setDialog(null)}>保留本局</button><button className="dark-button" onClick={restart}>重新开始</button></div></Dialog>}
-    {dialog==='settings'&&<Dialog title="工作台设置" onClose={()=>setDialog(null)}><label className="setting-row"><span>减少动态效果<small>直接呈现调查后的关系，保留短暂强调。</small></span><input type="checkbox" checked={reduceMotion} onChange={e=>{setReduceMotion(e.target.checked);cancelMotion();}}/></label><label className="setting-row"><span>本局调查机会<small>{session.log.length?'已开始的调查不修改机会设置。':'开始第一次调查前可以设置。'}</small></span><input aria-label="本局调查机会" type="number" min={12} max={22} value={session.budget} disabled={!!session.log.length||session.stopped} onChange={e=>{const next=structuredClone(session);engine.setBudget(next,e.target.value);setSession(next);}}/></label><div className="setting-row"><span>重新开始<small>清除本局记录，重新鉴定这只碗。</small></span><button className="outlined-button" onClick={()=>setDialog('restart')}>重开</button></div></Dialog>}
+    {dialog==='settings'&&<Dialog title="工作台设置" onClose={()=>setDialog(null)}><label className="setting-row"><span>减少动态效果<small>直接呈现调查后的关系，保留短暂强调。</small></span><input type="checkbox" checked={reduceMotion} onChange={e=>{setReduceMotion(e.target.checked);cancelMotion();}}/></label><label className="setting-row"><span>本局调查机会<small>{session.log.length?'已开始的调查不修改机会设置。':'开始第一次调查前可以设置。'}</small></span><input aria-label="本局调查机会" type="number" min={12} max={22} value={session.budget} disabled={!!session.log.length||session.stopped||busy||viewBusy} onChange={e=>void changeBudget(e.target.value)}/></label><div className="setting-row"><span>重新开始<small>清除本局记录，重新鉴定这只碗。</small></span><button className="outlined-button" onClick={()=>setDialog('restart')}>重开</button></div></Dialog>}
     {materialId&&<MaterialViewer observationId={materialId} graph={model.graph} context={materialContext} onClose={()=>setMaterialId(null)}/>}
   </main>;
 }

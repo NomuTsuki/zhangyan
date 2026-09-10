@@ -1,6 +1,6 @@
 /** Experimental timing follows actual route dependencies, never a solved path. */
 export const MOTION = Object.freeze({ flight:850, focus:600, hold:420, pullback:950,
-  correspondence:1800, support:1700, longSupport:2300, junctionOutput:850, settle:260 });
+  correspondence:1800, support:1700, longSupport:2300, junctionOutput:850, frontier:900, settle:260 });
 
 export function intervalDifference(after = [{from:0,to:1}], before = []) {
   let output=after.map(part=>({...part}));
@@ -10,6 +10,31 @@ export function intervalDifference(after = [{from:0,to:1}], before = []) {
       ...(old.to<part.to?[{from:old.to,to:part.to}]:[])];
   });
   return output.filter(part=>part.to-part.from>.00001);
+}
+
+const frontierSignature = f => JSON.stringify({title:f.title,anchors:f.anchorIds,segments:f.segments});
+/** A question can grow only from anchors which have actually appeared. */
+export function frontierTransitionPlan(layout,beforeLayout,nodeDelays={},routes={}) {
+  const old=new Map((beforeLayout?.frontiers||[]).map(f=>[f.id,f]));
+  const current=new Map(layout.frontiers.map(f=>[f.id,f]));
+  const frontiers={};
+  for(const f of layout.frontiers){
+    const previous=old.get(f.id);
+    if(previous&&frontierSignature(previous)===frontierSignature(f))continue;
+    const start=Math.max(0,...f.anchorIds.map(id=>nodeDelays[id]===undefined?0:nodeDelays[id]+240));
+    const segments=f.segments.map(s=>{
+      const prior=(previous?.segments||[]).filter(p=>p.d===s.d).map(p=>({from:Math.max(p.from,s.from),to:Math.min(p.to,s.to)})).filter(p=>p.to>p.from);
+      return {...s,prior,growth:intervalDifference([{from:s.from,to:s.to}],prior)};
+    });
+    frontiers[f.id]={start,duration:MOTION.frontier,end:start+MOTION.frontier,segments};
+  }
+  const retiring=(beforeLayout?.frontiers||[]).filter(f=>!current.has(f.id)||frontiers[f.id]).map(f=>{
+    // A replaced question stays until its actual verification has reached it.
+    // For an extended frontier, the live layer already carries the old ink.
+    const replacement=frontiers[f.id],related=Object.values(routes).filter(r=>f.segments.some(s=>s.canonicalRouteId===r.id));
+    return {frontier:f,retireAt:replacement?replacement.start:Math.max(0,...related.map(r=>r.end))};
+  });
+  return {frontiers,retiring};
 }
 
 export function roadTransitionPlan(graph,layout,beforeLayout,changes) {
@@ -45,6 +70,7 @@ export function roadTransitionPlan(graph,layout,beforeLayout,changes) {
   const nodeDelays=Object.fromEntries([...derived].map(id=>[id,ready(id)]));
   const oldJoints=new Set((beforeLayout?.junctions||[]).map(j=>j.id));
   const junctionDelays=Object.fromEntries([...joints].filter(id=>!oldJoints.has(id)).map(id=>[id,ready(id)]));
-  return {routes:Object.fromEntries(memo),nodeDelays,junctionDelays,
-    duration:Math.max(0,...[...memo.values()].map(r=>r.end))+MOTION.settle};
+  const routePlan=Object.fromEntries(memo),questions=frontierTransitionPlan(layout,beforeLayout,nodeDelays,routePlan);
+  return {routes:routePlan,nodeDelays,junctionDelays,...questions,
+    duration:Math.max(0,...[...memo.values()].map(r=>r.end),...Object.values(questions.frontiers).map(f=>f.end))+MOTION.settle};
 }

@@ -1,0 +1,200 @@
+{
+  "experimental": true,
+  "humanAcceptance": false,
+  "captureCommand": "node output/playwright/responsive-map-reveal-2026-09-10/capture.cjs",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "imageDpr": 2,
+  "sources": {
+    "before": {
+      "revision": "18dc40d",
+      "bytes": 5085383,
+      "sha256": "98f640e5341d575d003e38b695851bf54f6ffecf275f0e5b308a9a7d0aafae1f",
+      "input": "output\\playwright\\responsive-map-reveal-2026-09-10\\2026-09-10-before-18dc40d.html"
+    },
+    "after": {
+      "revision": "working-tree-build",
+      "bytes": 5161993,
+      "sha256": "10039aac47de84d8415c07db09c9d8d332c1ebc3fc42691565d845ec29730336",
+      "input": "output\\playwright\\responsive-map-reveal-2026-09-10\\2026-09-10-after-responsive-reveal.html"
+    }
+  },
+  "pair": [
+    {
+      "kind": "before",
+      "filename": "2026-09-10-before-first-xray-during-flight-2x.png",
+      "targetSinceFlyMs": 500,
+      "start": {
+        "sinceFlyMs": 504.80000000074506,
+        "phase": "fly",
+        "camera": {
+          "x": -596.0306089152834,
+          "y": 82.53444081654078,
+          "s": 1.145666150399825
+        },
+        "flight": true,
+        "questionElements": [
+          {
+            "text": "结构从另一个时点到现在变了什么？",
+            "perceptibleByStyleAndBounds": true
+          }
+        ],
+        "frontierPathCount": 1,
+        "sessionActions": [
+          "A.IMAGE.XRAY"
+        ]
+      },
+      "end": {
+        "sinceFlyMs": 1154.5999999996275,
+        "phase": "focus"
+      },
+      "timingPolicy": "Time measured from actual DOM phase=fly; screenshot request and return bracket capture. Not a pixel-identical frame or a CPU timing comparison."
+    },
+    {
+      "kind": "after",
+      "filename": "2026-09-10-after-first-xray-during-flight-2x.png",
+      "targetSinceFlyMs": 500,
+      "start": {
+        "sinceFlyMs": 509.19999999925494,
+        "phase": "fly",
+        "camera": {
+          "x": -601.1829043045309,
+          "y": 83.24789716007837,
+          "s": 1.1469253391459202
+        },
+        "flight": true,
+        "questionElements": [
+          {
+            "text": "结构从另一个时点到现在变了什么？",
+            "perceptibleByStyleAndBounds": false
+          }
+        ],
+        "frontierPathCount": 2,
+        "sessionActions": [
+          "A.IMAGE.XRAY"
+        ]
+      },
+      "end": {
+        "sinceFlyMs": 1153.699999999255,
+        "phase": "focus"
+      },
+      "timingPolicy": "Time measured from actual DOM phase=fly; screenshot request and return bracket capture. Not a pixel-identical frame or a CPU timing comparison."
+    }
+  ],
+  "errors": [],
+  "browserVersion": "152.0.4191.66",
+  "hero": {
+    "filename": "2026-09-10-responsive-reveal-hero-four-actions-2x.png",
+    "camera": {
+      "x": 128.0234375,
+      "y": 7.089230769230767,
+      "s": 0.5064102564102564
+    },
+    "sessionLog": [
+      {
+        "actionId": "A.OBSERVE.WHOLE",
+        "eventKey": "whole",
+        "observationId": "obs.current.whole",
+        "cost": 0,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.OBSERVE.BASE",
+        "eventKey": "base",
+        "observationId": "obs.current.base",
+        "cost": 0,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.LOCATE.HISTORIC_IMAGE",
+        "eventKey": "t1",
+        "observationId": "obs.phase.t1",
+        "cost": 1,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+        "eventKey": "identityContinuity",
+        "observationId": "obs.object.continuity",
+        "cost": 2,
+        "materialObservationIds": [
+          "obs.phase.t1",
+          "obs.current.base"
+        ]
+      }
+    ],
+    "cameraPolicy": "Normal automatic post-investigation camera; identity selection only, no manual map framing."
+  },
+  "clip": {
+    "filename": "2026-09-10-responsive-reveal-normal-speed.mp4",
+    "normalSpeed": true,
+    "requestedDuration": 22,
+    "trimStartSeconds": 15.06,
+    "raw": "output\\playwright\\responsive-map-reveal-2026-09-10\\2026-09-10-raw-video\\page@5572015482ef7dc51a660d352fa929ed.webm",
+    "ffmpegArgs": [
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-ss",
+      "15.060",
+      "-i",
+      "E:\\zhangyan__v2\\output\\playwright\\responsive-map-reveal-2026-09-10\\2026-09-10-raw-video\\page@5572015482ef7dc51a660d352fa929ed.webm",
+      "-t",
+      "22",
+      "-an",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "medium",
+      "-crf",
+      "20",
+      "-pix_fmt",
+      "yuv420p",
+      "-movflags",
+      "+faststart",
+      "E:\\zhangyan__v2\\docs\\portfolio\\2026-09-10-responsive-map-reveal\\2026-09-10-responsive-reveal-normal-speed.mp4"
+    ],
+    "sessionLog": [
+      {
+        "actionId": "A.OBSERVE.WHOLE",
+        "eventKey": "whole",
+        "observationId": "obs.current.whole",
+        "cost": 0,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.OBSERVE.BASE",
+        "eventKey": "base",
+        "observationId": "obs.current.base",
+        "cost": 0,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.LOCATE.HISTORIC_IMAGE",
+        "eventKey": "t1",
+        "observationId": "obs.phase.t1",
+        "cost": 1,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+        "eventKey": "identityContinuity",
+        "observationId": "obs.object.continuity",
+        "cost": 2,
+        "materialObservationIds": [
+          "obs.phase.t1",
+          "obs.current.base"
+        ]
+      },
+      {
+        "actionId": "A.IMAGE.XRAY",
+        "eventKey": "xrayEarly",
+        "observationId": "obs.structure.xray.early",
+        "cost": 3,
+        "materialObservationIds": []
+      }
+    ]
+  }
+}

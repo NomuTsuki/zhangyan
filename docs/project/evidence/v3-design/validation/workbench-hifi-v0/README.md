@@ -1,8 +1,8 @@
 # 掌眼 · 高保真工作台 v0
 
-2026-09-10。独立桌面高保真切片，已接入用户审阅通过的固定地图骨架、同路接通和材料来源回查，并修复前轮调查交互反馈。整体视觉仍承接已采纳的悬空器物工作台；本轮整页体验待用户评价。
+2026-09-10。独立桌面高保真切片。固定骨架整合已保存为 `18dc40d`；当前修订把规则计算整体放入内联 Worker，并修复节点尚未到达时前沿/问句抢先出现的问题，精简小比例全图绘制。视觉方向、固定拓扑和规则保持不变；用户报告的首次最小缩放卡死/闪烁单独复核，体验仍以用户反馈为准。
 
-[打开离线页面](prototype.html) · [试玩提示](PLAYTEST.md) · [本轮验证](VERIFICATION-2026-09-10.md) · [本轮过程资产](../../../../../portfolio/2026-09-10-fixed-hifi-integration/README.md) · [前版验证](VERIFICATION.md)
+[打开离线页面](prototype.html) · [试玩提示](PLAYTEST.md) · [性能与时序修复验证](VERIFICATION-PERFORMANCE-2026-09-10.md) · [固定骨架整合验证](VERIFICATION-2026-09-10.md) · [整合过程资产](../../../../../portfolio/2026-09-10-fixed-hifi-integration/README.md)
 
 ## 运行
 
@@ -15,11 +15,12 @@ npm run build
 node scripts/check-contract.mjs
 node src/fixed-map-layout-check.mjs
 node --experimental-strip-types scripts/check-material-records.mjs
-node scripts/check-integration-2026-09-10.mjs --tag=local
-node scripts/check-browser.mjs --offline --suite=main --tag=local
+node scripts/check-worker.mjs
+node scripts/check-reveal-lifecycle.mjs
+node scripts/check-performance-reveal.mjs --tag=local
 ```
 
-本机 PowerShell 使用 `npm.cmd`。开发地址为 `http://127.0.0.1:4260/`。构建先执行 TypeScript 检查，再生成离线单文件与 `build-stamp.json`。浏览器检查脚本使用本机已有 Playwright 缓存路径；其他机器需要调整脚本中的运行时路径，不需要改游戏源码。旧 `check-browser.mjs` 的 materials/motion 分支保留前版重复收费及旧节奏预期，本轮使用日期化整合检查，不修改旧测试使其适应新行为。
+本机 PowerShell 使用 `npm.cmd`。开发地址为 `http://127.0.0.1:4260/`。构建先执行 TypeScript 检查，再生成离线单文件与 `build-stamp.json`；Worker 同样内联，`file://` 不需要外部脚本或服务器。浏览器脚本使用本机已有 Playwright 缓存路径，换机器需调整运行时路径。旧浏览器检查原样保留，其中部分立即读取状态的操作假定同步调查；当前异步边界使用新增检查明确等待调查落账。旧 materials/motion 分支的重复收费和节奏预期也不改成新基线。
 
 ## 这版可以操作什么
 
@@ -31,11 +32,11 @@ node scripts/check-browser.mjs --offline --suite=main --tag=local
 
 ## 规则、道路与文字分别负责什么
 
-`src/engine.ts` 直接接入融合版 `local-session.mjs`、`graph.mjs` 与 `selection.mjs`。调查前提、费用、结果和关系成立条件读既有模型；`src/action-state.mjs` 在本页执行入口拦截用户已要求禁止的重复调查，保留不同比较材料的新调查和原历史重放。
+`src/engine-runtime.mjs` 在一个后台实例内调用既有 `local-session.mjs`、`graph.mjs` 和 `engine.ts` 的派生模型，调查、判断概况、手段状态与历史回放的求解均在这里完成。`engine.worker.ts`／`engine-client.mjs` 管理请求与重开代次；页面只消费快照和投影当前选择。昂贵的首次组合校验原样保留，但不会阻塞界面。`src/action-state.mjs` 继续拦截同基底的重复调查，保留另一组材料的新调查。
 
 `src/fixed-map-schema.mjs` 保存审阅骨架的固定位置和控制点；`src/map-layout.mjs` 只取本局真实显露的节点与关系，再为文字寻找空位。不同取得顺序和选择不会重排节点；改文案也不会把道路挤弯。真实共同条件使用汇流菱形，替代证明路线各有入路。对应道路按归属和实物印证分别显示已成立部分，虚线与后续实线共用同一路径，不生成新的游戏证据。
 
-`src/MapView.tsx` 只改变看地图的镜头。飞线不是永久关系，镜头移动也不改变节点的世界位置。会话先可靠落定，再播放可被打断的反馈；拖动、缩放、历史、重开、收手和弹窗都会取消旧镜头回调。这样保留空间记忆，同时让玩家看见这一步接通了哪里。
+`src/MapView.tsx` 只改变呈现和镜头，不改变节点位置。镜头逐帧直接更新变换，固定命中路径缓存复用，完整已成立道路不再套整张地图大小的绘制遮罩。新前沿在可见锚点之后生长，问句随后出现；旧疑问保留到对应核验接通。会话先可靠落定，再播放可打断反馈。后台等待期间拖缩或取消选择会抑制迟到镜头，重开会终止旧 Worker；收手排在已经接受的调查之后处理，结果和费用保留。
 
 `src/BowlScene.tsx` 与 `src/MaterialViewer.tsx` 共用 `bowl-art.ts` 的三维器型和绘画贴图。旧影像与当前器物使用同一主体；阶段差异由额外修补表现区分。它们是本案的合成游戏材料，结构视图也是示意，不是真实历史照片或科学检测结果。素材来源见 [资产说明](src/assets/README.md)。
 
@@ -45,4 +46,4 @@ node scripts/check-browser.mjs --offline --suite=main --tag=local
 
 绘画、器型、镜头节奏、转动灵敏度与曲线幅度均为本轮 Experimental 呈现；相应参数记在项目 `PARAMS.md`。当前页不新增交易数值或市场结算系统，也没有改动冻结求解器、旧原型或旧测试。
 
-新增自动检查与实现时的呈现参数选择触发 **review required**。机器证据、限定独立复核与真人体验分开记录；本轮改动尚未提交，没有推送或部署，前版检查点 `68f9283` 保留。
+新增检查触发 **review required**。机器证据、限定独立复核与真人体验分开记录；用户已明确要求将本次性能/时序修复保存为本地提交，没有推送或部署，旧检查点 `18dc40d` 保留。

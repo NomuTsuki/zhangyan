@@ -1,0 +1,1075 @@
+{
+  "reviewRequired": true,
+  "source": {
+    "revision": "18dc40d",
+    "bytes": 5085383,
+    "sha256": "98f640e5341d575d003e38b695851bf54f6ffecf275f0e5b308a9a7d0aafae1f"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "browser": "Edge headless; one page; normal motion",
+  "instrumentation": "CDP cumulative metrics around bounded windows; timestamp-only RAF observer; low-cost mutation counters; full game snapshots only at checkpoints, never per frame",
+  "states": [
+    {
+      "requestedActionCount": 0,
+      "results": [
+        {
+          "label": "settled before zoom",
+          "wallMs": 1519,
+          "longTasks": [],
+          "mutationCount": 0,
+          "styleMutationCount": 0,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 365,
+          "rafP50": 4.199999999999818,
+          "rafP95": 4.300000000000182,
+          "rafMax": 4.400000000000091,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.19893800000000006,
+            "ScriptDuration": 0.12902599999999986,
+            "LayoutDuration": 0,
+            "RecalcStyleDuration": 0,
+            "LayoutCount": 0,
+            "RecalcStyleCount": 0,
+            "JSHeapUsedSize": 1378108
+          },
+          "state": {
+            "actions": 0,
+            "observations": 0,
+            "stage": "NONE",
+            "camera": {
+              "x": 0,
+              "y": 0,
+              "s": 1
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 0,
+            "routes": 0,
+            "frontiers": 0,
+            "world": "width: 1104px; height: 2760px; transform: translate(0px, 0px) scale(1);",
+            "visibleNodes": 0,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "15 minus-button clicks to clamp; pointer leaves map",
+          "wallMs": 1835,
+          "longTasks": [],
+          "mutationCount": 12,
+          "styleMutationCount": 12,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 440,
+          "rafP50": 4.199999999999818,
+          "rafP95": 4.300000000000182,
+          "rafMax": 8.199999999999818,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.306438,
+            "ScriptDuration": 0.13686299999999996,
+            "LayoutDuration": 0.0030820000000000014,
+            "RecalcStyleDuration": 0.0015569999999999998,
+            "LayoutCount": 12,
+            "RecalcStyleCount": 43,
+            "JSHeapUsedSize": 2734240
+          },
+          "state": {
+            "actions": 0,
+            "observations": 0,
+            "stage": "NONE",
+            "camera": {
+              "x": 252.51875,
+              "y": 296.8,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 0,
+            "routes": 0,
+            "frontiers": 0,
+            "world": "width: 1104px; height: 2760px; transform: translate(252.519px, 296.8px) scale(0.2);",
+            "visibleNodes": 0,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "stationary at 20%, pointer outside",
+          "wallMs": 1511,
+          "longTasks": [],
+          "mutationCount": 0,
+          "styleMutationCount": 0,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 362,
+          "rafP50": 4.199999999999818,
+          "rafP95": 4.300000000000182,
+          "rafMax": 4.300000000000182,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.16844099999999962,
+            "ScriptDuration": 0.10035299999999969,
+            "LayoutDuration": 0,
+            "RecalcStyleDuration": 0,
+            "LayoutCount": 0,
+            "RecalcStyleCount": 0,
+            "JSHeapUsedSize": -2290348
+          },
+          "state": {
+            "actions": 0,
+            "observations": 0,
+            "stage": "NONE",
+            "camera": {
+              "x": 252.51875,
+              "y": 296.8,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 0,
+            "routes": 0,
+            "frontiers": 0,
+            "world": "width: 1104px; height: 2760px; transform: translate(252.519px, 296.8px) scale(0.2);",
+            "visibleNodes": 0,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "overview, then Ctrl-wheel back to 20%",
+          "wallMs": 1558,
+          "longTasks": [],
+          "mutationCount": 2,
+          "styleMutationCount": 2,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 1,
+          "hoverTargets": {
+            "svg": 1
+          },
+          "rafIntervals": 374,
+          "rafP50": 4.199999999999818,
+          "rafP95": 4.300000000000182,
+          "rafMax": 4.300000000001091,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.18815999999999988,
+            "ScriptDuration": 0.10484700000000036,
+            "LayoutDuration": 0.00038299999999999446,
+            "RecalcStyleDuration": 0.00021900000000000044,
+            "LayoutCount": 2,
+            "RecalcStyleCount": 6,
+            "JSHeapUsedSize": 1163532
+          },
+          "state": {
+            "actions": 0,
+            "observations": 0,
+            "stage": "NONE",
+            "camera": {
+              "x": 270.1421875,
+              "y": 265.2,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 0,
+            "routes": 0,
+            "frontiers": 0,
+            "world": "width: 1104px; height: 2760px; transform: translate(270.142px, 265.2px) scale(0.2);",
+            "visibleNodes": 0,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "map drag at 20%",
+          "wallMs": 1622,
+          "longTasks": [],
+          "mutationCount": 25,
+          "styleMutationCount": 25,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 2,
+          "hoverTargets": {
+            "DIV": 2
+          },
+          "rafIntervals": 390,
+          "rafP50": 4.199999999998909,
+          "rafP95": 4.299999999999272,
+          "rafMax": 4.399999999999636,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.21762399999999982,
+            "ScriptDuration": 0.12062600000000012,
+            "LayoutDuration": 0,
+            "RecalcStyleDuration": 0.0015379999999999994,
+            "LayoutCount": 0,
+            "RecalcStyleCount": 26,
+            "JSHeapUsedSize": 1658172
+          },
+          "state": {
+            "actions": 0,
+            "observations": 0,
+            "stage": "NONE",
+            "camera": {
+              "x": 395.1421264648437,
+              "y": 185.2,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 0,
+            "routes": 0,
+            "frontiers": 0,
+            "world": "width: 1104px; height: 2760px; transform: translate(395.142px, 185.2px) scale(0.2);",
+            "visibleNodes": 0,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "recover through overview; then min again",
+          "wallMs": 1821,
+          "longTasks": [],
+          "mutationCount": 13,
+          "styleMutationCount": 13,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 437,
+          "rafP50": 4.199999999998909,
+          "rafP95": 4.299999999999272,
+          "rafMax": 4.600000000000364,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.2842119999999997,
+            "ScriptDuration": 0.12869699999999984,
+            "LayoutDuration": 0.0024040000000000034,
+            "RecalcStyleDuration": 0.001365,
+            "LayoutCount": 13,
+            "RecalcStyleCount": 47,
+            "JSHeapUsedSize": 620836
+          },
+          "state": {
+            "actions": 0,
+            "observations": 0,
+            "stage": "NONE",
+            "camera": {
+              "x": 205.24843750000002,
+              "y": 306.8,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 0,
+            "routes": 0,
+            "frontiers": 0,
+            "world": "width: 1104px; height: 2760px; transform: translate(205.248px, 306.8px) scale(0.2);",
+            "visibleNodes": 0,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        }
+      ]
+    },
+    {
+      "requestedActionCount": 5,
+      "results": [
+        {
+          "label": "settled before zoom",
+          "wallMs": 1510,
+          "longTasks": [],
+          "mutationCount": 0,
+          "styleMutationCount": 0,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 360,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.299999999995634,
+          "rafMax": 16.69999999999709,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.21757200000000054,
+            "ScriptDuration": 0.09963500000000014,
+            "LayoutDuration": 0.0008739999999999859,
+            "RecalcStyleDuration": 0.004610000000000003,
+            "LayoutCount": 34,
+            "RecalcStyleCount": 34,
+            "JSHeapUsedSize": -2505388
+          },
+          "state": {
+            "actions": 5,
+            "observations": 5,
+            "stage": "G1",
+            "camera": {
+              "x": -413.3915625000001,
+              "y": -579.0799999999999,
+              "s": 1.04
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 6,
+            "routes": 6,
+            "frontiers": 2,
+            "world": "width: 1104px; height: 2760px; transform: translate(-413.392px, -579.08px) scale(1.04);",
+            "visibleNodes": 2,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "15 minus-button clicks to clamp; pointer leaves map",
+          "wallMs": 1872,
+          "longTasks": [],
+          "mutationCount": 12,
+          "styleMutationCount": 12,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 449,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 4.400000000001455,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.36893700000000074,
+            "ScriptDuration": 0.13424100000000028,
+            "LayoutDuration": 0.002249000000000001,
+            "RecalcStyleDuration": 0.0014139999999999986,
+            "LayoutCount": 12,
+            "RecalcStyleCount": 43,
+            "JSHeapUsedSize": -553064
+          },
+          "state": {
+            "actions": 5,
+            "observations": 5,
+            "stage": "G1",
+            "camera": {
+              "x": 175.44843749999995,
+              "y": 188.29230769230767,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 6,
+            "routes": 6,
+            "frontiers": 2,
+            "world": "width: 1104px; height: 2760px; transform: translate(175.448px, 188.292px) scale(0.2);",
+            "visibleNodes": 6,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "stationary at 20%, pointer outside",
+          "wallMs": 1513,
+          "longTasks": [],
+          "mutationCount": 0,
+          "styleMutationCount": 0,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 363,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.299999999995634,
+          "rafMax": 4.30000000000291,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.19719700000000095,
+            "ScriptDuration": 0.10161399999999965,
+            "LayoutDuration": 0,
+            "RecalcStyleDuration": 0,
+            "LayoutCount": 0,
+            "RecalcStyleCount": 0,
+            "JSHeapUsedSize": 3952040
+          },
+          "state": {
+            "actions": 5,
+            "observations": 5,
+            "stage": "G1",
+            "camera": {
+              "x": 175.44843749999995,
+              "y": 188.29230769230767,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 6,
+            "routes": 6,
+            "frontiers": 2,
+            "world": "width: 1104px; height: 2760px; transform: translate(175.448px, 188.292px) scale(0.2);",
+            "visibleNodes": 6,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "overview, then Ctrl-wheel back to 20%",
+          "wallMs": 1574,
+          "longTasks": [],
+          "mutationCount": 2,
+          "styleMutationCount": 2,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 1,
+          "hoverTargets": {
+            "svg": 1
+          },
+          "rafIntervals": 378,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 4.30000000000291,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.23695299999999975,
+            "ScriptDuration": 0.11997899999999984,
+            "LayoutDuration": 0.00033400000000000096,
+            "RecalcStyleDuration": 0.00017100000000000448,
+            "LayoutCount": 2,
+            "RecalcStyleCount": 6,
+            "JSHeapUsedSize": -1559780
+          },
+          "state": {
+            "actions": 5,
+            "observations": 5,
+            "stage": "G1",
+            "camera": {
+              "x": 256.16546993670886,
+              "y": 195.81498734177214,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 6,
+            "routes": 6,
+            "frontiers": 2,
+            "world": "width: 1104px; height: 2760px; transform: translate(256.165px, 195.815px) scale(0.2);",
+            "visibleNodes": 6,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "stationary hover at 20%",
+          "wallMs": 1516,
+          "longTasks": [],
+          "mutationCount": 0,
+          "styleMutationCount": 0,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 364,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.299999999995634,
+          "rafMax": 4.30000000000291,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.20678000000000019,
+            "ScriptDuration": 0.10846900000000037,
+            "LayoutDuration": 0,
+            "RecalcStyleDuration": 0,
+            "LayoutCount": 0,
+            "RecalcStyleCount": 0,
+            "JSHeapUsedSize": -2478076
+          },
+          "state": {
+            "actions": 5,
+            "observations": 5,
+            "stage": "G1",
+            "camera": {
+              "x": 256.16546993670886,
+              "y": 195.81498734177214,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 6,
+            "routes": 6,
+            "frontiers": 2,
+            "world": "width: 1104px; height: 2760px; transform: translate(256.165px, 195.815px) scale(0.2);",
+            "visibleNodes": 6,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "map drag at 20%",
+          "wallMs": 1743,
+          "longTasks": [],
+          "mutationCount": 25,
+          "styleMutationCount": 25,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 2,
+          "hoverTargets": {
+            "DIV": 2
+          },
+          "rafIntervals": 418,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 4.400000000001455,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.35881900000000044,
+            "ScriptDuration": 0.13545500000000033,
+            "LayoutDuration": 0,
+            "RecalcStyleDuration": 0.0027840000000000087,
+            "LayoutCount": 0,
+            "RecalcStyleCount": 26,
+            "JSHeapUsedSize": -3000444
+          },
+          "state": {
+            "actions": 5,
+            "observations": 5,
+            "stage": "G1",
+            "camera": {
+              "x": 381.1654089015526,
+              "y": 115.81498734177214,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 6,
+            "routes": 6,
+            "frontiers": 2,
+            "world": "width: 1104px; height: 2760px; transform: translate(381.165px, 115.815px) scale(0.2);",
+            "visibleNodes": 6,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "recover through overview; then min again",
+          "wallMs": 1969,
+          "longTasks": [],
+          "mutationCount": 8,
+          "styleMutationCount": 8,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 473,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 4.400000000001455,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.4089520000000011,
+            "ScriptDuration": 0.1525230000000004,
+            "LayoutDuration": 0.0015339999999999798,
+            "RecalcStyleDuration": 0.0013120000000000076,
+            "LayoutCount": 8,
+            "RecalcStyleCount": 42,
+            "JSHeapUsedSize": -132412
+          },
+          "state": {
+            "actions": 5,
+            "observations": 5,
+            "stage": "G1",
+            "camera": {
+              "x": 207.08443749999998,
+              "y": 227.27827848101265,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 6,
+            "routes": 6,
+            "frontiers": 2,
+            "world": "width: 1104px; height: 2760px; transform: translate(207.084px, 227.278px) scale(0.2);",
+            "visibleNodes": 6,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        }
+      ]
+    },
+    {
+      "requestedActionCount": 17,
+      "results": [
+        {
+          "label": "settled before zoom",
+          "wallMs": 1509,
+          "longTasks": [],
+          "mutationCount": 0,
+          "styleMutationCount": 0,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 343,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 62.39999999999418,
+          "rafOver50ms": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.18087099999999978,
+            "ScriptDuration": 0.08943999999999974,
+            "LayoutDuration": 0.0007449999999999957,
+            "RecalcStyleDuration": 0.004534000000000038,
+            "LayoutCount": 20,
+            "RecalcStyleCount": 20,
+            "JSHeapUsedSize": 3411956
+          },
+          "state": {
+            "actions": 17,
+            "observations": 17,
+            "stage": "G3",
+            "camera": {
+              "x": -22.98262195121947,
+              "y": -860.2057240853658,
+              "s": 0.5650914634146341
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 17,
+            "routes": 23,
+            "frontiers": 1,
+            "world": "width: 1104px; height: 2765px; transform: translate(-22.9826px, -860.206px) scale(0.565091);",
+            "visibleNodes": 8,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "15 minus-button clicks to clamp; pointer leaves map",
+          "wallMs": 1817,
+          "longTasks": [],
+          "mutationCount": 9,
+          "styleMutationCount": 9,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 436,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 4.30000000000291,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.306712000000001,
+            "ScriptDuration": 0.14619399999999771,
+            "LayoutDuration": 0.0012250000000000316,
+            "RecalcStyleDuration": 0.0011419999999999764,
+            "LayoutCount": 8,
+            "RecalcStyleCount": 40,
+            "JSHeapUsedSize": 8255420
+          },
+          "state": {
+            "actions": 17,
+            "observations": 17,
+            "stage": "G3",
+            "camera": {
+              "x": 195.79843750000003,
+              "y": -64.75449420016184,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 17,
+            "routes": 23,
+            "frontiers": 1,
+            "world": "width: 1104px; height: 2765px; transform: translate(195.798px, -64.7545px) scale(0.2);",
+            "visibleNodes": 14,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "stationary at 20%, pointer outside",
+          "wallMs": 1507,
+          "longTasks": [],
+          "mutationCount": 0,
+          "styleMutationCount": 0,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 361,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 4.400000000008731,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.17535200000000017,
+            "ScriptDuration": 0.10082700000000244,
+            "LayoutDuration": 0,
+            "RecalcStyleDuration": 0,
+            "LayoutCount": 0,
+            "RecalcStyleCount": 0,
+            "JSHeapUsedSize": 3611392
+          },
+          "state": {
+            "actions": 17,
+            "observations": 17,
+            "stage": "G3",
+            "camera": {
+              "x": 195.79843750000003,
+              "y": -64.75449420016184,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 17,
+            "routes": 23,
+            "frontiers": 1,
+            "world": "width: 1104px; height: 2765px; transform: translate(195.798px, -64.7545px) scale(0.2);",
+            "visibleNodes": 14,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "overview, then Ctrl-wheel back to 20%",
+          "wallMs": 1563,
+          "longTasks": [],
+          "mutationCount": 2,
+          "styleMutationCount": 2,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 1,
+          "hoverTargets": {
+            "svg": 1
+          },
+          "rafIntervals": 375,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 4.400000000008731,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.18622200000000078,
+            "ScriptDuration": 0.10368700000000075,
+            "LayoutDuration": 0.0003889999999999727,
+            "RecalcStyleDuration": 0.00016899999999997473,
+            "LayoutCount": 2,
+            "RecalcStyleCount": 6,
+            "JSHeapUsedSize": 7314316
+          },
+          "state": {
+            "actions": 17,
+            "observations": 17,
+            "stage": "G3",
+            "camera": {
+              "x": 209.26235042523732,
+              "y": 66.86530379746836,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 17,
+            "routes": 23,
+            "frontiers": 1,
+            "world": "width: 1104px; height: 2765px; transform: translate(209.262px, 66.8653px) scale(0.2);",
+            "visibleNodes": 17,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "stationary hover at 20%",
+          "wallMs": 1507,
+          "longTasks": [],
+          "mutationCount": 0,
+          "styleMutationCount": 0,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 361,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 5.2000000000116415,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.1846350000000001,
+            "ScriptDuration": 0.09874599999999845,
+            "LayoutDuration": 0,
+            "RecalcStyleDuration": 0,
+            "LayoutCount": 0,
+            "RecalcStyleCount": 0,
+            "JSHeapUsedSize": -88145312
+          },
+          "state": {
+            "actions": 17,
+            "observations": 17,
+            "stage": "G3",
+            "camera": {
+              "x": 209.26235042523732,
+              "y": 66.86530379746836,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 17,
+            "routes": 23,
+            "frontiers": 1,
+            "world": "width: 1104px; height: 2765px; transform: translate(209.262px, 66.8653px) scale(0.2);",
+            "visibleNodes": 17,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "map drag at 20%",
+          "wallMs": 1730,
+          "longTasks": [],
+          "mutationCount": 25,
+          "styleMutationCount": 25,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 2,
+          "hoverTargets": {
+            "DIV": 2
+          },
+          "rafIntervals": 415,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 4.399999999994179,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.2905799999999985,
+            "ScriptDuration": 0.17095700000000136,
+            "LayoutDuration": 0,
+            "RecalcStyleDuration": 0.0042680000000000495,
+            "LayoutCount": 0,
+            "RecalcStyleCount": 26,
+            "JSHeapUsedSize": 306868
+          },
+          "state": {
+            "actions": 17,
+            "observations": 17,
+            "stage": "G3",
+            "camera": {
+              "x": 334.26228939008104,
+              "y": -13.134696202531643,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 17,
+            "routes": 23,
+            "frontiers": 1,
+            "world": "width: 1104px; height: 2765px; transform: translate(334.262px, -13.1347px) scale(0.2);",
+            "visibleNodes": 17,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        },
+        {
+          "label": "recover through overview; then min again",
+          "wallMs": 1868,
+          "longTasks": [],
+          "mutationCount": 3,
+          "styleMutationCount": 3,
+          "classMutationCount": 0,
+          "pointerBoundaryEvents": 0,
+          "hoverTargets": {},
+          "rafIntervals": 449,
+          "rafP50": 4.19999999999709,
+          "rafP95": 4.30000000000291,
+          "rafMax": 4.600000000005821,
+          "rafOver50ms": 0,
+          "metricsDelta": {
+            "TaskDuration": 0.3439219999999992,
+            "ScriptDuration": 0.15875899999999987,
+            "LayoutDuration": 0.0006420000000000314,
+            "RecalcStyleDuration": 0.0011309999999999931,
+            "LayoutCount": 3,
+            "RecalcStyleCount": 37,
+            "JSHeapUsedSize": 8289532
+          },
+          "state": {
+            "actions": 17,
+            "observations": 17,
+            "stage": "G3",
+            "camera": {
+              "x": 195.79843749999998,
+              "y": 75.49631645569616,
+              "s": 0.2
+            },
+            "phase": "idle",
+            "flight": false,
+            "selection": null,
+            "nodes": 17,
+            "routes": 23,
+            "frontiers": 1,
+            "world": "width: 1104px; height: 2765px; transform: translate(195.798px, 75.4963px) scale(0.2);",
+            "visibleNodes": 17,
+            "finiteCamera": true,
+            "textSelection": ""
+          }
+        }
+      ]
+    }
+  ],
+  "animationInterruptions": [
+    {
+      "label": "interrupt action 1 while fly/focus",
+      "wallMs": 2010,
+      "longTasks": [],
+      "mutationCount": 18,
+      "styleMutationCount": 9,
+      "classMutationCount": 4,
+      "pointerBoundaryEvents": 1,
+      "hoverTargets": {
+        "svg": 1
+      },
+      "rafIntervals": 446,
+      "rafP50": 4.199999999998909,
+      "rafP95": 4.300000000001091,
+      "rafMax": 104.10000000000036,
+      "rafOver50ms": 1,
+      "metricsDelta": {
+        "TaskDuration": 0.2642610000000003,
+        "ScriptDuration": 0.15119099999999985,
+        "LayoutDuration": 0.011709999999999998,
+        "RecalcStyleDuration": 0.001556,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 16,
+        "JSHeapUsedSize": 841792
+      },
+      "state": {
+        "actions": 1,
+        "observations": 1,
+        "stage": "NONE",
+        "camera": {
+          "x": 205.24843750000005,
+          "y": 306.8,
+          "s": 0.2
+        },
+        "phase": "idle",
+        "flight": false,
+        "selection": {
+          "kind": "evidence",
+          "id": "obs.current.whole"
+        },
+        "nodes": 1,
+        "routes": 0,
+        "frontiers": 2,
+        "world": "width: 1104px; height: 2760px; transform: translate(205.248px, 306.8px) scale(0.2);",
+        "visibleNodes": 1,
+        "finiteCamera": true,
+        "textSelection": ""
+      }
+    },
+    {
+      "label": "interrupt action 6 while fly/focus",
+      "wallMs": 1903,
+      "longTasks": [],
+      "mutationCount": 41,
+      "styleMutationCount": 16,
+      "classMutationCount": 4,
+      "pointerBoundaryEvents": 3,
+      "hoverTargets": {
+        "DIV": 2,
+        "svg": 1
+      },
+      "rafIntervals": 444,
+      "rafP50": 4.19999999999709,
+      "rafP95": 4.30000000000291,
+      "rafMax": 33.30000000000291,
+      "rafOver50ms": 0,
+      "metricsDelta": {
+        "TaskDuration": 0.2623129999999989,
+        "ScriptDuration": 0.14324899999999996,
+        "LayoutDuration": 0.0034379999999999966,
+        "RecalcStyleDuration": 0.005525999999999975,
+        "LayoutCount": 29,
+        "RecalcStyleCount": 49,
+        "JSHeapUsedSize": 7415576
+      },
+      "state": {
+        "actions": 6,
+        "observations": 6,
+        "stage": "G1",
+        "camera": {
+          "x": 207.08443749999998,
+          "y": 227.27827848101265,
+          "s": 0.2
+        },
+        "phase": "idle",
+        "flight": false,
+        "selection": {
+          "kind": "evidence",
+          "id": "obs.archive.t2.object-attribution"
+        },
+        "nodes": 6,
+        "routes": 7,
+        "frontiers": 1,
+        "world": "width: 1104px; height: 2760px; transform: translate(207.084px, 227.278px) scale(0.2);",
+        "visibleNodes": 6,
+        "finiteCamera": true,
+        "textSelection": ""
+      }
+    },
+    {
+      "label": "interrupt action 18 while fly/focus",
+      "wallMs": 1954,
+      "longTasks": [],
+      "mutationCount": 120,
+      "styleMutationCount": 37,
+      "classMutationCount": 82,
+      "pointerBoundaryEvents": 1,
+      "hoverTargets": {
+        "proof-group:coherentDecisionProfile:input:claim:majorReassembly": 1
+      },
+      "rafIntervals": 448,
+      "rafP50": 4.19999999999709,
+      "rafP95": 4.30000000000291,
+      "rafMax": 45.79999999998836,
+      "rafOver50ms": 0,
+      "metricsDelta": {
+        "TaskDuration": 0.36176900000000245,
+        "ScriptDuration": 0.17308500000000038,
+        "LayoutDuration": 0.005327999999999999,
+        "RecalcStyleDuration": 0.013519999999999976,
+        "LayoutCount": 48,
+        "RecalcStyleCount": 58,
+        "JSHeapUsedSize": 4204540
+      },
+      "state": {
+        "actions": 18,
+        "observations": 18,
+        "stage": "G3",
+        "camera": {
+          "x": 195.79843749999998,
+          "y": 75.49631645569613,
+          "s": 0.2
+        },
+        "phase": "idle",
+        "flight": false,
+        "selection": {
+          "kind": "evidence",
+          "id": "obs.surface.no-signal.unresolved"
+        },
+        "nodes": 18,
+        "routes": 23,
+        "frontiers": 1,
+        "world": "width: 1104px; height: 2765px; transform: translate(195.798px, 75.4963px) scale(0.2);",
+        "visibleNodes": 18,
+        "finiteCamera": true,
+        "textSelection": ""
+      }
+    }
+  ],
+  "errors": [],
+  "failure": "page.waitForFunction: Timeout 14000ms exceeded.\n    at E:\\zhangyan__v2\\output\\playwright\\hifi-performance-fix-2026-09-10\\minzoom-baseline\\audit.cjs:56:42"
+}

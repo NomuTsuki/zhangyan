@@ -1,0 +1,3785 @@
+{
+  "reviewRequired": true,
+  "source": {
+    "bytes": 5161993,
+    "sha256": "10039aac47de84d8415c07db09c9d8d332c1ebc3fc42691565d845ec29730336",
+    "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html"
+  },
+  "preparation": "Real UI only; temporary reduced motion between checkpoints; normal motion at all zoom checks and the 1/6/18/22 interrupted investigations. DOM busy and record-count checks wait for Worker completion. No per-frame graph snapshots.",
+  "cases": [
+    {
+      "width": 1280,
+      "dpr": 1,
+      "height": 1000,
+      "states": [
+        {
+          "count": 0,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1222,
+              "longTasks": [],
+              "frames": 293,
+              "rafP95": 4.300000000000182,
+              "rafMax": 4.400000000000091,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.15602399999999994,
+                "ScriptDuration": 0.07701000000000002,
+                "LayoutDuration": 0.0018399999999999944,
+                "RecalcStyleDuration": 0.000678,
+                "JSHeapUsedSize": 1642716
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 224.4125,
+                  "y": 296.8,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1188,
+              "longTasks": [],
+              "frames": 285,
+              "rafP95": 4.300000000000182,
+              "rafMax": 4.400000000000091,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.113421,
+                "ScriptDuration": 0.06264100000000017,
+                "LayoutDuration": 0.0009280000000000121,
+                "RecalcStyleDuration": 0.00033199999999999983,
+                "JSHeapUsedSize": 1609688
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 214.41562499999998,
+                  "y": 265.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1063,
+              "longTasks": [],
+              "frames": 255,
+              "rafP95": 4.300000000000182,
+              "rafMax": 4.800000000000182,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.08358299999999996,
+                "ScriptDuration": 0.048162999999999956,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0003880000000000003,
+                "JSHeapUsedSize": -161028
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 284.415625,
+                  "y": 220.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1216,
+              "longTasks": [],
+              "frames": 292,
+              "rafP95": 4.300000000000182,
+              "rafMax": 4.800000000000182,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.09118699999999991,
+                "ScriptDuration": 0.056134999999999824,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 169724
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 284.415625,
+                  "y": 220.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 5,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1236,
+              "longTasks": [],
+              "frames": 296,
+              "rafP95": 4.299999999999272,
+              "rafMax": 8.299999999999272,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.17679899999999993,
+                "ScriptDuration": 0.07532699999999992,
+                "LayoutDuration": 0.0019829999999999848,
+                "RecalcStyleDuration": 0.0035589999999999997,
+                "JSHeapUsedSize": 2089208
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 140.31562499999998,
+                  "y": 188.06399999999994,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1201,
+              "longTasks": [],
+              "frames": 288,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.399999999999636,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.12102900000000005,
+                "ScriptDuration": 0.06414699999999995,
+                "LayoutDuration": 0.0008839999999999959,
+                "RecalcStyleDuration": 0.0003300000000000039,
+                "JSHeapUsedSize": -2144212
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 205.45700474683542,
+                  "y": 195.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1217,
+              "longTasks": [],
+              "frames": 292,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.5,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.101518,
+                "ScriptDuration": 0.056379999999999875,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 724392
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 205.45700474683542,
+                  "y": 195.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1058,
+              "longTasks": [],
+              "frames": 254,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.09643999999999986,
+                "ScriptDuration": 0.056405999999999956,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0009540000000000035,
+                "JSHeapUsedSize": 3097124
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 275.4570047468354,
+                  "y": 150.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1205,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.09712299999999985,
+                "ScriptDuration": 0.05937999999999999,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": -3412244
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 275.4570047468354,
+                  "y": 150.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 17,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1245,
+              "longTasks": [],
+              "frames": 299,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.19984400000000013,
+                "ScriptDuration": 0.07729600000000003,
+                "LayoutDuration": 0.002595000000000014,
+                "RecalcStyleDuration": 0.0049990000000000034,
+                "JSHeapUsedSize": 10073840
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 244.51562499999997,
+                  "y": -88.43600000000009,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 13,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1165,
+              "longTasks": [],
+              "frames": 279,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.600000000002183,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.11896500000000021,
+                "ScriptDuration": 0.06123900000000004,
+                "LayoutDuration": 0.0008440000000000114,
+                "RecalcStyleDuration": 0.0003439999999999971,
+                "JSHeapUsedSize": -8276168
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 169.85682357594936,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1211,
+              "longTasks": [],
+              "frames": 290,
+              "rafP95": 4.30000000000291,
+              "rafMax": 4.5,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.0947180000000003,
+                "ScriptDuration": 0.056467000000000045,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3128872
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 169.85682357594936,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1069,
+              "longTasks": [],
+              "frames": 256,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.10126900000000028,
+                "ScriptDuration": 0.05630999999999986,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0015389999999999987,
+                "JSHeapUsedSize": 3196440
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 239.85682357594936,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1204,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.0957530000000002,
+                "ScriptDuration": 0.05781700000000001,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": -10008768
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 239.85682357594936,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 22,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1221,
+              "longTasks": [],
+              "frames": 293,
+              "rafP95": 4.30000000000291,
+              "rafMax": 4.5,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.17464100000000027,
+                "ScriptDuration": 0.06392500000000023,
+                "LayoutDuration": 0.0008450000000000402,
+                "RecalcStyleDuration": 0.006034999999999999,
+                "JSHeapUsedSize": 11233784
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 299.25899935294956,
+                  "y": 217.72206755749633,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1168,
+              "longTasks": [],
+              "frames": 280,
+              "rafP95": 4.30000000000291,
+              "rafMax": 4.5,
+              "rafOver50": 0,
+              "mutations": 154,
+              "classes": 146,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.17093899999999973,
+                "ScriptDuration": 0.058478999999999726,
+                "LayoutDuration": 0.002012999999999987,
+                "RecalcStyleDuration": 0.011276000000000008,
+                "JSHeapUsedSize": 5467784
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 177.20682357594936,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1216,
+              "longTasks": [],
+              "frames": 292,
+              "rafP95": 4.30000000000291,
+              "rafMax": 4.899999999994179,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.09116000000000035,
+                "ScriptDuration": 0.051673999999999776,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3305544
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 177.20682357594936,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1064,
+              "longTasks": [],
+              "frames": 255,
+              "rafP95": 4.30000000000291,
+              "rafMax": 4.900000000001455,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.0973139999999999,
+                "ScriptDuration": 0.05053200000000002,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0019869999999999888,
+                "JSHeapUsedSize": -22952604
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 247.20682357594936,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1215,
+              "longTasks": [],
+              "frames": 291,
+              "rafP95": 4.30000000000291,
+              "rafMax": 4.799999999995634,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.09271000000000029,
+                "ScriptDuration": 0.05268600000000001,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3160128
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 247.20682357594936,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        }
+      ],
+      "interruptions": [
+        {
+          "label": "animation 1: zoom to minimum",
+          "wallMs": 1362,
+          "longTasks": [],
+          "frames": 309,
+          "rafP95": 4.300000000000182,
+          "rafMax": 62.400000000000546,
+          "rafOver50": 1,
+          "mutations": 43,
+          "classes": 6,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.13669299999999995,
+            "ScriptDuration": 0.06688500000000008,
+            "LayoutDuration": 0.017922000000000007,
+            "RecalcStyleDuration": 0.0012159999999999996,
+            "JSHeapUsedSize": -8107432
+          },
+          "state": {
+            "actions": 1,
+            "observations": 1,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 284.415625,
+              "y": 220.2,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 1,
+            "visibleNodes": 1,
+            "maskCount": 2,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 6: zoom to minimum",
+          "wallMs": 1344,
+          "longTasks": [],
+          "frames": 317,
+          "rafP95": 4.300000000001091,
+          "rafMax": 16.600000000000364,
+          "rafOver50": 0,
+          "mutations": 73,
+          "classes": 21,
+          "pointers": 3,
+          "metricsDelta": {
+            "TaskDuration": 0.15785399999999994,
+            "ScriptDuration": 0.07380999999999993,
+            "LayoutDuration": 0.002832000000000001,
+            "RecalcStyleDuration": 0.006281999999999996,
+            "JSHeapUsedSize": 257964
+          },
+          "state": {
+            "actions": 6,
+            "observations": 6,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 275.4570047468354,
+              "y": 150.81498734177214,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 6,
+            "visibleNodes": 6,
+            "maskCount": 2,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 18: zoom to minimum",
+          "wallMs": 1354,
+          "longTasks": [],
+          "frames": 322,
+          "rafP95": 4.30000000000291,
+          "rafMax": 16.799999999999272,
+          "rafOver50": 0,
+          "mutations": 144,
+          "classes": 57,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.15784400000000076,
+            "ScriptDuration": 0.07642199999999999,
+            "LayoutDuration": 0.005003000000000035,
+            "RecalcStyleDuration": 0.005538000000000001,
+            "JSHeapUsedSize": -2750864
+          },
+          "state": {
+            "actions": 18,
+            "observations": 18,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 239.85682357594936,
+              "y": 21.865303797468357,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 18,
+            "visibleNodes": 18,
+            "maskCount": 1,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 22: zoom to minimum",
+          "wallMs": 1347,
+          "longTasks": [
+            {
+              "duration": 58,
+              "start": 29324.700000001118
+            }
+          ],
+          "frames": 297,
+          "rafP95": 4.30000000000291,
+          "rafMax": 62.5,
+          "rafOver50": 1,
+          "mutations": 368,
+          "classes": 90,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.2208629999999996,
+            "ScriptDuration": 0.11424900000000004,
+            "LayoutDuration": 0.007095999999999991,
+            "RecalcStyleDuration": 0.008542999999999995,
+            "JSHeapUsedSize": 1473224
+          },
+          "state": {
+            "actions": 22,
+            "observations": 22,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 299.25899935294956,
+              "y": 217.72206755749633,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 22,
+            "visibleNodes": 22,
+            "maskCount": 1,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        }
+      ],
+      "errors": [],
+      "crashes": [],
+      "warnings": [
+        {
+          "type": "warning",
+          "text": "THREE.WebGLProgram: Program Info Log: (210,81-129): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision\n(209,37-61): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision\n(210,82-106): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision\n(209,37-61): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision\n(210,82-106): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision\n\n\n\u0000"
+        }
+      ],
+      "webgl": {
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "final": {
+        "actions": 22,
+        "observations": 22,
+        "computeBusy": false,
+        "engineReady": true,
+        "phase": "idle",
+        "camera": {
+          "x": 247.20682357594936,
+          "y": 21.865303797468357,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "visibleNodes": 22,
+        "maskCount": 1,
+        "transitionDuration": null,
+        "contextEvents": []
+      },
+      "lossEvents": []
+    },
+    {
+      "width": 1440,
+      "dpr": 1,
+      "height": 1000,
+      "states": [
+        {
+          "count": 0,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1212,
+              "longTasks": [],
+              "frames": 291,
+              "rafP95": 4.2999999999999545,
+              "rafMax": 4.400000000000091,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.142119,
+                "ScriptDuration": 0.06839,
+                "LayoutDuration": 0.0018740000000000007,
+                "RecalcStyleDuration": 0.0006920000000000001,
+                "JSHeapUsedSize": 2064300
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 252.51875,
+                  "y": 296.8,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1158,
+              "longTasks": [],
+              "frames": 278,
+              "rafP95": 4.300000000000182,
+              "rafMax": 4.5,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.09481799999999996,
+                "ScriptDuration": 0.052551000000000014,
+                "LayoutDuration": 0.0008779999999999968,
+                "RecalcStyleDuration": 0.0004069999999999998,
+                "JSHeapUsedSize": 1544240
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 255.7421875,
+                  "y": 265.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1065,
+              "longTasks": [],
+              "frames": 255,
+              "rafP95": 4.300000000000182,
+              "rafMax": 4.699999999999818,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.0741440000000001,
+                "ScriptDuration": 0.041503999999999985,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0005380000000000003,
+                "JSHeapUsedSize": -143300
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 325.74212646484375,
+                  "y": 220.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1212,
+              "longTasks": [],
+              "frames": 290,
+              "rafP95": 4.300000000000182,
+              "rafMax": 4.600000000000364,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.081816,
+                "ScriptDuration": 0.049351000000000034,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 181200
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 325.74212646484375,
+                  "y": 220.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 5,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1214,
+              "longTasks": [],
+              "frames": 291,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.15028700000000006,
+                "ScriptDuration": 0.06057999999999997,
+                "LayoutDuration": 0.0018470000000000014,
+                "RecalcStyleDuration": 0.0035140000000000032,
+                "JSHeapUsedSize": 1443060
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 175.44843749999998,
+                  "y": 188.06399999999994,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1167,
+              "longTasks": [],
+              "frames": 280,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.5,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.098082,
+                "ScriptDuration": 0.050775000000000015,
+                "LayoutDuration": 0.0008420000000000094,
+                "RecalcStyleDuration": 0.00031499999999999584,
+                "JSHeapUsedSize": 4201244
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 245.27433069620253,
+                  "y": 195.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1204,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.399999999999636,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.08140199999999997,
+                "ScriptDuration": 0.04496900000000004,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": -4969572
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 245.27433069620253,
+                  "y": 195.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1064,
+              "longTasks": [],
+              "frames": 255,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.399999999999636,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.07689099999999982,
+                "ScriptDuration": 0.04280700000000004,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0008839999999999959,
+                "JSHeapUsedSize": 3155428
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 315.2742696610463,
+                  "y": 150.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1208,
+              "longTasks": [],
+              "frames": 290,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.399999999999636,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.07659299999999991,
+                "ScriptDuration": 0.04572799999999999,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": -3346512
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 315.2742696610463,
+                  "y": 150.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 17,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1216,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.5,
+              "rafMax": 12.5,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.14402000000000026,
+                "ScriptDuration": 0.05057800000000001,
+                "LayoutDuration": 0.0017910000000000148,
+                "RecalcStyleDuration": 0.0038459999999999883,
+                "JSHeapUsedSize": 9940044
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 279.64843749999994,
+                  "y": -88.43600000000009,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 13,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1159,
+              "longTasks": [],
+              "frames": 279,
+              "rafP95": 4.400000000001455,
+              "rafMax": 5.099999999998545,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.09202300000000019,
+                "ScriptDuration": 0.044578000000000007,
+                "LayoutDuration": 0.0007550000000000057,
+                "RecalcStyleDuration": 0.0003060000000000007,
+                "JSHeapUsedSize": -8817996
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 206.27469219738924,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1213,
+              "longTasks": [],
+              "frames": 291,
+              "rafP95": 4.5,
+              "rafMax": 4.600000000002183,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.072349,
+                "ScriptDuration": 0.04108500000000004,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3140688
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 206.27469219738924,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1064,
+              "longTasks": [],
+              "frames": 255,
+              "rafP95": 4.5,
+              "rafMax": 5.200000000000728,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.06958500000000001,
+                "ScriptDuration": 0.037733000000000017,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0013070000000000026,
+                "JSHeapUsedSize": 3190096
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 276.274631162233,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1214,
+              "longTasks": [],
+              "frames": 291,
+              "rafP95": 4.400000000001455,
+              "rafMax": 4.899999999997817,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.06910099999999986,
+                "ScriptDuration": 0.039934000000000136,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": -9944592
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 276.274631162233,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 22,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1197,
+              "longTasks": [],
+              "frames": 287,
+              "rafP95": 4.400000000001455,
+              "rafMax": 4.799999999999272,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.14665600000000012,
+                "ScriptDuration": 0.05003000000000002,
+                "LayoutDuration": 0.0007800000000000029,
+                "RecalcStyleDuration": 0.004796999999999996,
+                "JSHeapUsedSize": 11179864
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 340.54430336549984,
+                  "y": 217.61704983931142,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1164,
+              "longTasks": [],
+              "frames": 279,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.700000000000728,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.10589199999999988,
+                "ScriptDuration": 0.052857000000000376,
+                "LayoutDuration": 0.0008080000000000032,
+                "RecalcStyleDuration": 0.00032700000000000784,
+                "JSHeapUsedSize": 5146240
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 213.62469219738924,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1210,
+              "longTasks": [],
+              "frames": 290,
+              "rafP95": 4.5,
+              "rafMax": 5,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.0702379999999998,
+                "ScriptDuration": 0.03756300000000001,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3213940
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 213.62469219738924,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1060,
+              "longTasks": [],
+              "frames": 255,
+              "rafP95": 4.5,
+              "rafMax": 4.900000000001455,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.07328700000000055,
+                "ScriptDuration": 0.03801599999999983,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0017710000000000087,
+                "JSHeapUsedSize": -22850496
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 283.62463116223296,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1209,
+              "longTasks": [],
+              "frames": 290,
+              "rafP95": 4.5,
+              "rafMax": 4.900000000001455,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.06991000000000014,
+                "ScriptDuration": 0.04049399999999981,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3117796
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 283.62463116223296,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        }
+      ],
+      "interruptions": [
+        {
+          "label": "animation 1: zoom to minimum",
+          "wallMs": 1348,
+          "longTasks": [],
+          "frames": 323,
+          "rafP95": 4.300000000000182,
+          "rafMax": 8.299999999999272,
+          "rafOver50": 0,
+          "mutations": 43,
+          "classes": 6,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.12241400000000002,
+            "ScriptDuration": 0.061311000000000004,
+            "LayoutDuration": 0.007780999999999996,
+            "RecalcStyleDuration": 0.0014320000000000001,
+            "JSHeapUsedSize": -8006696
+          },
+          "state": {
+            "actions": 1,
+            "observations": 1,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 325.74212646484375,
+              "y": 220.2,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 1,
+            "visibleNodes": 1,
+            "maskCount": 2,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 6: zoom to minimum",
+          "wallMs": 1343,
+          "longTasks": [],
+          "frames": 322,
+          "rafP95": 4.299999999999272,
+          "rafMax": 4.300000000001091,
+          "rafOver50": 0,
+          "mutations": 73,
+          "classes": 21,
+          "pointers": 3,
+          "metricsDelta": {
+            "TaskDuration": 0.14950600000000014,
+            "ScriptDuration": 0.06741600000000014,
+            "LayoutDuration": 0.0025049999999999933,
+            "RecalcStyleDuration": 0.006845999999999998,
+            "JSHeapUsedSize": 300304
+          },
+          "state": {
+            "actions": 6,
+            "observations": 6,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 315.2742696610463,
+              "y": 150.81498734177214,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 6,
+            "visibleNodes": 6,
+            "maskCount": 2,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 18: zoom to minimum",
+          "wallMs": 1351,
+          "longTasks": [],
+          "frames": 321,
+          "rafP95": 4.5,
+          "rafMax": 12.5,
+          "rafOver50": 0,
+          "mutations": 144,
+          "classes": 57,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.1235949999999999,
+            "ScriptDuration": 0.05919499999999989,
+            "LayoutDuration": 0.002473000000000003,
+            "RecalcStyleDuration": 0.004699999999999996,
+            "JSHeapUsedSize": 1104520
+          },
+          "state": {
+            "actions": 18,
+            "observations": 18,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 276.274631162233,
+              "y": 21.865303797468357,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 18,
+            "visibleNodes": 18,
+            "maskCount": 1,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 22: zoom to minimum",
+          "wallMs": 1345,
+          "longTasks": [],
+          "frames": 307,
+          "rafP95": 4.5,
+          "rafMax": 54.099999999998545,
+          "rafOver50": 1,
+          "mutations": 356,
+          "classes": 71,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.15736000000000017,
+            "ScriptDuration": 0.09117200000000025,
+            "LayoutDuration": 0.0034520000000000106,
+            "RecalcStyleDuration": 0.005069000000000004,
+            "JSHeapUsedSize": 1098572
+          },
+          "state": {
+            "actions": 22,
+            "observations": 22,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 340.54430336549984,
+              "y": 217.61704983931142,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 22,
+            "visibleNodes": 22,
+            "maskCount": 1,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        }
+      ],
+      "errors": [],
+      "crashes": [],
+      "warnings": [],
+      "webgl": {
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "final": {
+        "actions": 22,
+        "observations": 22,
+        "computeBusy": false,
+        "engineReady": true,
+        "phase": "idle",
+        "camera": {
+          "x": 283.62463116223296,
+          "y": 21.865303797468357,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "visibleNodes": 22,
+        "maskCount": 1,
+        "transitionDuration": null,
+        "contextEvents": []
+      },
+      "lossEvents": []
+    },
+    {
+      "width": 1920,
+      "dpr": 1,
+      "height": 1000,
+      "states": [
+        {
+          "count": 0,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1207,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.399999999999977,
+              "rafMax": 5,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.14200000000000002,
+                "ScriptDuration": 0.07011699999999993,
+                "LayoutDuration": 0.0017700000000000007,
+                "RecalcStyleDuration": 0.000626,
+                "JSHeapUsedSize": 1776980
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 336.825,
+                  "y": 296.8,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1149,
+              "longTasks": [],
+              "frames": 276,
+              "rafP95": 4.599999999999909,
+              "rafMax": 5,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.09326099999999993,
+                "ScriptDuration": 0.051813,
+                "LayoutDuration": 0.0008589999999999987,
+                "RecalcStyleDuration": 0.00034000000000000024,
+                "JSHeapUsedSize": -1640128
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 377.28125,
+                  "y": 265.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1065,
+              "longTasks": [],
+              "frames": 256,
+              "rafP95": 4.5,
+              "rafMax": 4.900000000000091,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.072133,
+                "ScriptDuration": 0.04161999999999999,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0007069999999999997,
+                "JSHeapUsedSize": 3092260
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 447.28125,
+                  "y": 220.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1213,
+              "longTasks": [],
+              "frames": 291,
+              "rafP95": 4.5,
+              "rafMax": 5,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.06964999999999999,
+                "ScriptDuration": 0.04279899999999992,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 137332
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 447.28125,
+                  "y": 220.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 5,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1190,
+              "longTasks": [],
+              "frames": 286,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.699999999998909,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.13230699999999995,
+                "ScriptDuration": 0.05127000000000004,
+                "LayoutDuration": 0.0017530000000000046,
+                "RecalcStyleDuration": 0.0029469999999999982,
+                "JSHeapUsedSize": 1408596
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 280.83124999999995,
+                  "y": 188.06399999999994,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1154,
+              "longTasks": [],
+              "frames": 277,
+              "rafP95": 4.399999999999636,
+              "rafMax": 4.800000000001091,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.087866,
+                "ScriptDuration": 0.044584999999999875,
+                "LayoutDuration": 0.0008299999999999974,
+                "RecalcStyleDuration": 0.00030300000000000465,
+                "JSHeapUsedSize": 4218312
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 362.876585443038,
+                  "y": 195.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1215,
+              "longTasks": [],
+              "frames": 291,
+              "rafP95": 4.399999999999636,
+              "rafMax": 4.600000000000364,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.07414699999999996,
+                "ScriptDuration": 0.0428869999999999,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": -3304908
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 362.876585443038,
+                  "y": 195.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1066,
+              "longTasks": [],
+              "frames": 256,
+              "rafP95": 4.399999999999636,
+              "rafMax": 4.700000000000728,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.07627800000000007,
+                "ScriptDuration": 0.042067999999999994,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0008150000000000032,
+                "JSHeapUsedSize": 3113160
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 432.876585443038,
+                  "y": 150.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1215,
+              "longTasks": [],
+              "frames": 291,
+              "rafP95": 4.400000000001455,
+              "rafMax": 4.799999999999272,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.06890699999999983,
+                "ScriptDuration": 0.040497000000000005,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": -3392956
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 432.876585443038,
+                  "y": 150.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 17,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1201,
+              "longTasks": [],
+              "frames": 288,
+              "rafP95": 4.5,
+              "rafMax": 5,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.14602300000000001,
+                "ScriptDuration": 0.05350900000000003,
+                "LayoutDuration": 0.0018289999999999973,
+                "RecalcStyleDuration": 0.0036830000000000057,
+                "JSHeapUsedSize": 9946440
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 385.03124999999994,
+                  "y": -88.43600000000009,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 13,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1196,
+              "longTasks": [],
+              "frames": 287,
+              "rafP95": 4.400000000001455,
+              "rafMax": 4.900000000001455,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.11789499999999986,
+                "ScriptDuration": 0.05845699999999998,
+                "LayoutDuration": 0.0009210000000000051,
+                "RecalcStyleDuration": 0.0003449999999999981,
+                "JSHeapUsedSize": -8399740
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 315.0095431170886,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1207,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.399999999997817,
+              "rafMax": 4.900000000001455,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.07604900000000026,
+                "ScriptDuration": 0.043739000000000194,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3125936
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 315.0095431170886,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1070,
+              "longTasks": [],
+              "frames": 257,
+              "rafP95": 4.400000000001455,
+              "rafMax": 4.80000000000291,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.07288400000000017,
+                "ScriptDuration": 0.03977000000000008,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0014880000000000032,
+                "JSHeapUsedSize": 3201176
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 385.0095431170886,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1206,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.5,
+              "rafMax": 5,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.07745600000000019,
+                "ScriptDuration": 0.04454399999999992,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": -9951888
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 385.0095431170886,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 22,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1241,
+              "longTasks": [],
+              "frames": 298,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.399999999997817,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.2231169999999998,
+                "ScriptDuration": 0.08658600000000005,
+                "LayoutDuration": 0.0009599999999999886,
+                "RecalcStyleDuration": 0.006768999999999997,
+                "JSHeapUsedSize": 11290520
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 462.09245034751586,
+                  "y": 217.63608429113918,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1191,
+              "longTasks": [],
+              "frames": 286,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 154,
+              "classes": 146,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.23574099999999998,
+                "ScriptDuration": 0.07633900000000038,
+                "LayoutDuration": 0.003123999999999988,
+                "RecalcStyleDuration": 0.01741999999999999,
+                "JSHeapUsedSize": 5474248
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 322.3595431170886,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1214,
+              "longTasks": [],
+              "frames": 291,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.30000000000291,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.11258000000000035,
+                "ScriptDuration": 0.06486100000000006,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3313168
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 322.3595431170886,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1068,
+              "longTasks": [],
+              "frames": 257,
+              "rafP95": 4.299999999995634,
+              "rafMax": 4.399999999994179,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.11724600000000063,
+                "ScriptDuration": 0.06378100000000009,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0020699999999999885,
+                "JSHeapUsedSize": 3298636
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 392.3595431170886,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1212,
+              "longTasks": [],
+              "frames": 290,
+              "rafP95": 4.299999999995634,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.10364299999999993,
+                "ScriptDuration": 0.061308999999999614,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3154756
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 392.3595431170886,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        }
+      ],
+      "interruptions": [
+        {
+          "label": "animation 1: zoom to minimum",
+          "wallMs": 1343,
+          "longTasks": [],
+          "frames": 322,
+          "rafP95": 4.5,
+          "rafMax": 8.300000000000182,
+          "rafOver50": 0,
+          "mutations": 43,
+          "classes": 6,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.10184700000000002,
+            "ScriptDuration": 0.052630000000000066,
+            "LayoutDuration": 0.007120000000000001,
+            "RecalcStyleDuration": 0.0012150000000000004,
+            "JSHeapUsedSize": 2386700
+          },
+          "state": {
+            "actions": 1,
+            "observations": 1,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 447.28125,
+              "y": 220.2,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 1,
+            "visibleNodes": 1,
+            "maskCount": 2,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 6: zoom to minimum",
+          "wallMs": 1351,
+          "longTasks": [],
+          "frames": 324,
+          "rafP95": 4.399999999999636,
+          "rafMax": 4.800000000001091,
+          "rafOver50": 0,
+          "mutations": 73,
+          "classes": 21,
+          "pointers": 3,
+          "metricsDelta": {
+            "TaskDuration": 0.1325280000000002,
+            "ScriptDuration": 0.055245999999999906,
+            "LayoutDuration": 0.002356999999999998,
+            "RecalcStyleDuration": 0.005967,
+            "JSHeapUsedSize": -2995432
+          },
+          "state": {
+            "actions": 6,
+            "observations": 6,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 432.876585443038,
+              "y": 150.81498734177214,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 6,
+            "visibleNodes": 6,
+            "maskCount": 2,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 18: zoom to minimum",
+          "wallMs": 1360,
+          "longTasks": [],
+          "frames": 323,
+          "rafP95": 4.30000000000291,
+          "rafMax": 12.5,
+          "rafOver50": 0,
+          "mutations": 157,
+          "classes": 70,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.16145900000000024,
+            "ScriptDuration": 0.06879400000000002,
+            "LayoutDuration": 0.003039999999999987,
+            "RecalcStyleDuration": 0.006918999999999995,
+            "JSHeapUsedSize": -3151300
+          },
+          "state": {
+            "actions": 18,
+            "observations": 18,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 385.0095431170886,
+              "y": 21.865303797468357,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 18,
+            "visibleNodes": 18,
+            "maskCount": 1,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 22: zoom to minimum",
+          "wallMs": 1360,
+          "longTasks": [
+            {
+              "duration": 52,
+              "start": 28279.900000000373
+            }
+          ],
+          "frames": 300,
+          "rafP95": 4.299999999999272,
+          "rafMax": 58.30000000000291,
+          "rafOver50": 1,
+          "mutations": 373,
+          "classes": 92,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.22180500000000025,
+            "ScriptDuration": 0.11629999999999985,
+            "LayoutDuration": 0.004416000000000003,
+            "RecalcStyleDuration": 0.007876000000000008,
+            "JSHeapUsedSize": -22109620
+          },
+          "state": {
+            "actions": 22,
+            "observations": 22,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 462.09245034751586,
+              "y": 217.63608429113918,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 22,
+            "visibleNodes": 22,
+            "maskCount": 1,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        }
+      ],
+      "errors": [],
+      "crashes": [],
+      "warnings": [],
+      "webgl": {
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "final": {
+        "actions": 22,
+        "observations": 22,
+        "computeBusy": false,
+        "engineReady": true,
+        "phase": "idle",
+        "camera": {
+          "x": 392.3595431170886,
+          "y": 21.865303797468357,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "visibleNodes": 22,
+        "maskCount": 1,
+        "transitionDuration": null,
+        "contextEvents": []
+      },
+      "lossEvents": []
+    },
+    {
+      "width": 1920,
+      "dpr": 2,
+      "height": 1000,
+      "states": [
+        {
+          "count": 0,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1218,
+              "longTasks": [],
+              "frames": 292,
+              "rafP95": 4.2999999999999545,
+              "rafMax": 4.400000000000091,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.14547100000000002,
+                "ScriptDuration": 0.06955999999999996,
+                "LayoutDuration": 0.002024000000000005,
+                "RecalcStyleDuration": 0.000673,
+                "JSHeapUsedSize": 1876048
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 336.825,
+                  "y": 296.8,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1155,
+              "longTasks": [],
+              "frames": 277,
+              "rafP95": 4.300000000000182,
+              "rafMax": 4.400000000000091,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.10593300000000005,
+                "ScriptDuration": 0.05514599999999992,
+                "LayoutDuration": 0.0009559999999999985,
+                "RecalcStyleDuration": 0.0004040000000000003,
+                "JSHeapUsedSize": -5634784
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 377.28125,
+                  "y": 265.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1064,
+              "longTasks": [],
+              "frames": 255,
+              "rafP95": 4.300000000000182,
+              "rafMax": 4.599999999999909,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.07830399999999993,
+                "ScriptDuration": 0.04342900000000005,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.000428,
+                "JSHeapUsedSize": -195576
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 447.28125,
+                  "y": 220.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1210,
+              "longTasks": [],
+              "frames": 290,
+              "rafP95": 4.300000000000182,
+              "rafMax": 4.5,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.07625199999999999,
+                "ScriptDuration": 0.04567499999999991,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 129596
+              },
+              "state": {
+                "actions": 0,
+                "observations": 0,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 447.28125,
+                  "y": 220.2,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 0,
+                "visibleNodes": 0,
+                "maskCount": 0,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 5,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1221,
+              "longTasks": [],
+              "frames": 292,
+              "rafP95": 4.299999999999272,
+              "rafMax": 8.299999999999272,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.14633399999999996,
+                "ScriptDuration": 0.0575460000000001,
+                "LayoutDuration": 0.001898999999999998,
+                "RecalcStyleDuration": 0.003025,
+                "JSHeapUsedSize": 1271960
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 280.83124999999995,
+                  "y": 188.06399999999994,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1161,
+              "longTasks": [],
+              "frames": 279,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.399999999999636,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.10170900000000005,
+                "ScriptDuration": 0.04765399999999986,
+                "LayoutDuration": 0.0009249999999999953,
+                "RecalcStyleDuration": 0.0003660000000000052,
+                "JSHeapUsedSize": -6349228
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 362.876585443038,
+                  "y": 195.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1204,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.399999999999636,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.08320099999999986,
+                "ScriptDuration": 0.046388000000000096,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3185368
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 362.876585443038,
+                  "y": 195.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1068,
+              "longTasks": [],
+              "frames": 256,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.07474599999999976,
+                "ScriptDuration": 0.041214000000000084,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0008200000000000013,
+                "JSHeapUsedSize": -3465220
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 432.876585443038,
+                  "y": 150.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1204,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.300000000001091,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.07639400000000007,
+                "ScriptDuration": 0.045070000000000165,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3150060
+              },
+              "state": {
+                "actions": 5,
+                "observations": 5,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 432.876585443038,
+                  "y": 150.81498734177214,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 6,
+                "visibleNodes": 6,
+                "maskCount": 2,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 17,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1226,
+              "longTasks": [],
+              "frames": 294,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.17149400000000004,
+                "ScriptDuration": 0.06314700000000006,
+                "LayoutDuration": 0.002014999999999989,
+                "RecalcStyleDuration": 0.003957000000000002,
+                "JSHeapUsedSize": 9968096
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 385.03124999999994,
+                  "y": -88.43600000000009,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 13,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1206,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.30000000000291,
+              "rafOver50": 0,
+              "mutations": 8,
+              "classes": 0,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.10724,
+                "ScriptDuration": 0.052192000000000016,
+                "LayoutDuration": 0.0008519999999999917,
+                "RecalcStyleDuration": 0.00032400000000000484,
+                "JSHeapUsedSize": -8378132
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 315.0095431170886,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1204,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.400000000001455,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.07867899999999972,
+                "ScriptDuration": 0.045572999999999864,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3114532
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 315.0095431170886,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1071,
+              "longTasks": [],
+              "frames": 257,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.799999999999272,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.08224700000000018,
+                "ScriptDuration": 0.04368100000000008,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0016260000000000024,
+                "JSHeapUsedSize": 3211236
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 385.0095431170886,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1211,
+              "longTasks": [],
+              "frames": 290,
+              "rafP95": 4.299999999999272,
+              "rafMax": 4.399999999997817,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.089588,
+                "ScriptDuration": 0.05218900000000004,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": -9968252
+              },
+              "state": {
+                "actions": 17,
+                "observations": 17,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 385.0095431170886,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 17,
+                "visibleNodes": 17,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        },
+        {
+          "count": 22,
+          "checks": [
+            {
+              "label": "first/repeated minus-button minimum",
+              "wallMs": 1208,
+              "longTasks": [],
+              "frames": 289,
+              "rafP95": 4.399999999997817,
+              "rafMax": 4.799999999999272,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.1497440000000001,
+                "ScriptDuration": 0.05156599999999978,
+                "LayoutDuration": 0.0005860000000000032,
+                "RecalcStyleDuration": 0.004751000000000005,
+                "JSHeapUsedSize": 11233300
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 462.06082682893265,
+                  "y": 217.55491847063263,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "three Ctrl-wheel pairs and overview recovery",
+              "wallMs": 1167,
+              "longTasks": [],
+              "frames": 280,
+              "rafP95": 4.400000000001455,
+              "rafMax": 4.900000000001455,
+              "rafOver50": 0,
+              "mutations": 154,
+              "classes": 146,
+              "pointers": 3,
+              "metricsDelta": {
+                "TaskDuration": 0.1523450000000004,
+                "ScriptDuration": 0.048036999999999885,
+                "LayoutDuration": 0.0021100000000000008,
+                "RecalcStyleDuration": 0.010916999999999982,
+                "JSHeapUsedSize": 5442472
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 322.3595431170886,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary label hover at minimum",
+              "wallMs": 1214,
+              "longTasks": [],
+              "frames": 291,
+              "rafP95": 4.400000000001455,
+              "rafMax": 4.80000000000291,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.0711170000000001,
+                "ScriptDuration": 0.03987200000000035,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3240000
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 322.3595431170886,
+                  "y": 66.86530379746836,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "drag at minimum; map remains responsive",
+              "wallMs": 1068,
+              "longTasks": [],
+              "frames": 257,
+              "rafP95": 4.400000000001455,
+              "rafMax": 4.900000000001455,
+              "rafOver50": 0,
+              "mutations": 12,
+              "classes": 0,
+              "pointers": 2,
+              "metricsDelta": {
+                "TaskDuration": 0.07451600000000003,
+                "ScriptDuration": 0.03879600000000005,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0.0016619999999999968,
+                "JSHeapUsedSize": 3412204
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 392.3595431170886,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "rest after minimum interactions",
+              "wallMs": 1203,
+              "longTasks": [],
+              "frames": 288,
+              "rafP95": 4.30000000000291,
+              "rafMax": 4.69999999999709,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.07219400000000054,
+                "ScriptDuration": 0.040700999999999876,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 3082292
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 392.3595431170886,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            },
+            {
+              "label": "stationary road hover at DPR2 minimum",
+              "wallMs": 1803,
+              "longTasks": [],
+              "frames": 432,
+              "rafP95": 4.400000000001455,
+              "rafMax": 4.799999999995634,
+              "rafOver50": 0,
+              "mutations": 0,
+              "classes": 0,
+              "pointers": 0,
+              "metricsDelta": {
+                "TaskDuration": 0.10424300000000031,
+                "ScriptDuration": 0.06014800000000031,
+                "LayoutDuration": 0,
+                "RecalcStyleDuration": 0,
+                "JSHeapUsedSize": 4684360
+              },
+              "state": {
+                "actions": 22,
+                "observations": 22,
+                "computeBusy": false,
+                "engineReady": true,
+                "phase": "idle",
+                "camera": {
+                  "x": 392.3595431170886,
+                  "y": 21.865303797468357,
+                  "s": 0.2
+                },
+                "finite": true,
+                "nodeCount": 22,
+                "visibleNodes": 22,
+                "maskCount": 1,
+                "transitionDuration": null,
+                "contextEvents": []
+              }
+            }
+          ]
+        }
+      ],
+      "interruptions": [
+        {
+          "label": "animation 1: zoom to minimum",
+          "wallMs": 1346,
+          "longTasks": [],
+          "frames": 322,
+          "rafP95": 4.300000000000182,
+          "rafMax": 8.399999999999636,
+          "rafOver50": 0,
+          "mutations": 43,
+          "classes": 6,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.11031100000000005,
+            "ScriptDuration": 0.056633000000000044,
+            "LayoutDuration": 0.007463999999999998,
+            "RecalcStyleDuration": 0.0012980000000000001,
+            "JSHeapUsedSize": -1431668
+          },
+          "state": {
+            "actions": 1,
+            "observations": 1,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 447.28125,
+              "y": 220.2,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 1,
+            "visibleNodes": 1,
+            "maskCount": 2,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 6: zoom to minimum",
+          "wallMs": 1353,
+          "longTasks": [],
+          "frames": 324,
+          "rafP95": 4.300000000001091,
+          "rafMax": 4.399999999999636,
+          "rafOver50": 0,
+          "mutations": 73,
+          "classes": 21,
+          "pointers": 3,
+          "metricsDelta": {
+            "TaskDuration": 0.14963999999999977,
+            "ScriptDuration": 0.06344000000000016,
+            "LayoutDuration": 0.002805000000000002,
+            "RecalcStyleDuration": 0.006928999999999998,
+            "JSHeapUsedSize": -5603604
+          },
+          "state": {
+            "actions": 6,
+            "observations": 6,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 432.876585443038,
+              "y": 150.81498734177214,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 6,
+            "visibleNodes": 6,
+            "maskCount": 2,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 18: zoom to minimum",
+          "wallMs": 1374,
+          "longTasks": [],
+          "frames": 326,
+          "rafP95": 4.30000000000291,
+          "rafMax": 16.700000000000728,
+          "rafOver50": 0,
+          "mutations": 157,
+          "classes": 70,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.1767559999999997,
+            "ScriptDuration": 0.07220399999999993,
+            "LayoutDuration": 0.003966999999999998,
+            "RecalcStyleDuration": 0.008929000000000006,
+            "JSHeapUsedSize": 1169184
+          },
+          "state": {
+            "actions": 18,
+            "observations": 18,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 385.0095431170886,
+              "y": 21.865303797468357,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 18,
+            "visibleNodes": 18,
+            "maskCount": 1,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        },
+        {
+          "label": "animation 22: zoom to minimum",
+          "wallMs": 1355,
+          "longTasks": [
+            {
+              "duration": 50,
+              "start": 30012.200000001118
+            }
+          ],
+          "frames": 307,
+          "rafP95": 4.5,
+          "rafMax": 54.099999999998545,
+          "rafOver50": 1,
+          "mutations": 375,
+          "classes": 92,
+          "pointers": 1,
+          "metricsDelta": {
+            "TaskDuration": 0.1932299999999998,
+            "ScriptDuration": 0.09495399999999998,
+            "LayoutDuration": 0.004401999999999989,
+            "RecalcStyleDuration": 0.007951,
+            "JSHeapUsedSize": -15274208
+          },
+          "state": {
+            "actions": 22,
+            "observations": 22,
+            "computeBusy": false,
+            "engineReady": true,
+            "phase": "idle",
+            "camera": {
+              "x": 462.06082682893265,
+              "y": 217.55491847063263,
+              "s": 0.2
+            },
+            "finite": true,
+            "nodeCount": 22,
+            "visibleNodes": 22,
+            "maskCount": 1,
+            "transitionDuration": null,
+            "contextEvents": []
+          }
+        }
+      ],
+      "errors": [],
+      "crashes": [],
+      "warnings": [],
+      "webgl": {
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    }
+  ],
+  "browserVersion": "152.0.4191.66",
+  "gpu": {
+    "devices": [
+      {
+        "vendorId": 4318,
+        "deviceId": 10208,
+        "subSysId": 890769475,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce RTX 4080 Laptop GPU",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.9649"
+      },
+      {
+        "vendorId": 32902,
+        "deviceId": 42888,
+        "subSysId": 890769475,
+        "revision": 4,
+        "vendorString": "",
+        "deviceString": "Intel(R) UHD Graphics",
+        "driverVendor": "",
+        "driverVersion": "31.0.101.5186"
+      },
+      {
+        "vendorId": 5140,
+        "deviceId": 140,
+        "subSysId": 0,
+        "revision": 0,
+        "vendorString": "",
+        "deviceString": "Microsoft Basic Render Driver",
+        "driverVendor": "",
+        "driverVersion": "10.0.26100.8972"
+      }
+    ],
+    "auxAttributes": {
+      "amdSwitchable": false,
+      "bgra8OverlaySupport": "SCALING",
+      "canSupportThreadedTextureMailbox": false,
+      "directComposition": true,
+      "directMLFeatureLevel": "Not supported",
+      "directRenderingVersion": "",
+      "displayType": "ANGLE_D3D11",
+      "dx12FeatureLevel": "Not supported",
+      "glExtensions": "GL_AMD_performance_monitor GL_ANGLE_base_vertex_base_instance_shader_builtin GL_ANGLE_blob_cache GL_ANGLE_client_arrays GL_ANGLE_clip_cull_distance GL_ANGLE_copy_texture_3d GL_ANGLE_depth_texture GL_ANGLE_framebuffer_blit GL_ANGLE_framebuffer_multisample GL_ANGLE_get_serialized_context_string GL_ANGLE_get_tex_level_parameter GL_ANGLE_instanced_arrays GL_ANGLE_memory_size GL_ANGLE_multiview_multisample GL_ANGLE_pack_reverse_row_order GL_ANGLE_polygon_mode GL_ANGLE_program_binary_readiness_query GL_ANGLE_program_cache_control GL_ANGLE_provoking_vertex GL_ANGLE_renderability_validation GL_ANGLE_request_extension GL_ANGLE_robust_client_memory GL_ANGLE_shader_pixel_local_storage GL_ANGLE_shader_pixel_local_storage_coherent GL_ANGLE_stencil_texturing GL_ANGLE_texture_compression_dxt3 GL_ANGLE_texture_compression_dxt5 GL_ANGLE_texture_multisample GL_ANGLE_texture_usage GL_ANGLE_translated_shader_source GL_APPLE_clip_distance GL_ARM_rgba8 GL_CHROMIUM_bind_generates_resource GL_CHROMIUM_bind_uniform_location GL_CHROMIUM_copy_compressed_texture GL_CHROMIUM_copy_texture GL_CHROMIUM_lose_context GL_EXT_EGL_image_external_wrap_modes GL_EXT_base_instance GL_EXT_blend_func_extended GL_EXT_blend_minmax GL_EXT_clip_control GL_EXT_clip_cull_distance GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_conservative_depth GL_EXT_debug_label GL_EXT_debug_marker GL_EXT_depth_clamp GL_EXT_discard_framebuffer GL_EXT_disjoint_timer_query GL_EXT_draw_buffers GL_EXT_draw_buffers_indexed GL_EXT_draw_elements_base_vertex GL_EXT_float_blend GL_EXT_frag_depth GL_EXT_instanced_arrays GL_EXT_map_buffer_range GL_EXT_occlusion_query_boolean GL_EXT_polygon_offset_clamp GL_EXT_read_format_bgra GL_EXT_render_snorm GL_EXT_robustness GL_EXT_sRGB GL_EXT_shader_texture_lod GL_EXT_texture_border_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc_srgb GL_EXT_texture_filter_anisotropic GL_EXT_texture_format_BGRA8888 GL_EXT_texture_mirror_clamp_to_edge GL_EXT_texture_norm16 GL_EXT_texture_rg GL_EXT_texture_storage GL_EXT_texture_type_2_10_10_10_REV GL_EXT_unpack_subimage GL_KHR_debug GL_KHR_parallel_shader_compile GL_KHR_robustness GL_NV_EGL_stream_consumer_external GL_NV_fence GL_NV_framebuffer_blit GL_NV_pack_subimage GL_NV_pixel_buffer_object GL_NV_shader_noperspective_interpolation GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_EGL_image_external_essl3 GL_OES_depth24 GL_OES_depth32 GL_OES_draw_buffers_indexed GL_OES_draw_elements_base_vertex GL_OES_element_index_uint GL_OES_fbo_render_mipmap GL_OES_get_program_binary GL_OES_mapbuffer GL_OES_packed_depth_stencil GL_OES_required_internalformat GL_OES_rgb8_rgba8 GL_OES_sample_variables GL_OES_shader_multisample_interpolation GL_OES_standard_derivatives GL_OES_surfaceless_context GL_OES_texture_border_clamp GL_OES_texture_float GL_OES_texture_float_linear GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_texture_npot GL_OES_texture_stencil8 GL_OES_texture_storage_multisample_2d_array GL_OES_vertex_array_object GL_OVR_multiview GL_OVR_multiview2 ",
+      "glImplementationParts": "(gl=egl-angle,angle=d3d11)",
+      "glRenderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.15.9649)",
+      "glResetNotificationStrategy": 33362,
+      "glVendor": "Google Inc. (NVIDIA)",
+      "glVersion": "OpenGL ES 3.0 (ANGLE 2.1.47485 git hash: bb681b5d5ea0)",
+      "glWsExtensions": "EGL_EXT_create_context_robustness EGL_ANGLE_d3d_share_handle_client_buffer EGL_ANGLE_d3d_texture_client_buffer EGL_ANGLE_surface_d3d_texture_2d_share_handle EGL_ANGLE_query_surface_pointer EGL_ANGLE_window_fixed_size EGL_ANGLE_keyed_mutex EGL_ANGLE_surface_orientation EGL_ANGLE_direct_composition EGL_NV_post_sub_buffer EGL_KHR_create_context EGL_KHR_image EGL_KHR_image_base EGL_KHR_gl_texture_2D_image EGL_KHR_gl_texture_cubemap_image EGL_KHR_gl_renderbuffer_image EGL_KHR_get_all_proc_addresses EGL_KHR_stream EGL_KHR_stream_consumer_gltexture EGL_NV_stream_consumer_gltexture_yuv EGL_ANGLE_stream_producer_d3d_texture EGL_ANGLE_create_context_webgl_compatibility EGL_CHROMIUM_create_context_bind_generates_resource EGL_CHROMIUM_sync_control EGL_EXT_pixel_format_float EGL_KHR_surfaceless_context EGL_ANGLE_display_texture_share_group EGL_ANGLE_display_semaphore_share_group EGL_ANGLE_create_context_client_arrays EGL_ANGLE_program_cache_control EGL_ANGLE_robust_resource_initialization EGL_ANGLE_create_context_extensions_enabled EGL_ANDROID_blob_cache EGL_ANDROID_recordable EGL_ANGLE_image_d3d11_texture EGL_ANGLE_create_context_backwards_compatible EGL_KHR_no_config_context EGL_KHR_create_context_no_error EGL_KHR_reusable_sync EGL_ANGLE_memory_usage_report ",
+      "glWsVendor": "Google Inc. (NVIDIA)",
+      "glWsVersion": "1.5 (ANGLE 2.1.47485 git hash: bb681b5d5ea0)",
+      "inProcessGpu": false,
+      "initializationTime": 0.193214,
+      "isAsan": false,
+      "isClangCoverage": false,
+      "jpegDecodeAcceleratorSupported": false,
+      "maxMsaaSamples": "8",
+      "nv12OverlaySupport": "SCALING",
+      "optimus": false,
+      "p010OverlaySupport": "SCALING",
+      "passthroughCmdDecoder": true,
+      "pixelShaderVersion": "5.0",
+      "playreadyHardwareDrmSupport": false,
+      "processCrashCount": 0,
+      "rgb10a2OverlaySupport": "SCALING",
+      "sandboxed": false,
+      "skiaBackendType": "GaneshGL",
+      "subpixelFontRendering": true,
+      "supportsD3dSharedImages": false,
+      "supportsDirectML": false,
+      "supportsDx12": false,
+      "supportsOverlays": true,
+      "supportsVulkan": false,
+      "targetCpuBits": 64,
+      "vertexShaderVersion": "5.0",
+      "visibilityCallbackCallCount": 0,
+      "vulkanVersion": "Not supported",
+      "yuy2OverlaySupport": "SCALING"
+    },
+    "featureStatus": {
+      "2d_canvas": "enabled",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "enabled",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "enabled_on",
+      "rasterization": "enabled",
+      "raw_draw": "disabled_off_ok",
+      "skia_graphite": "disabled_off",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "enabled",
+      "video_encode": "enabled",
+      "webgl": "enabled",
+      "webgpu": "enabled",
+      "webnn": "disabled_off"
+    },
+    "driverBugWorkarounds": [
+      "disable_d3d11_vp9_ksvc_decoding",
+      "disable_hevc_hmft_cbr_encoding",
+      "disable_vp9_hmft_temporal_encoding",
+      "enable_bgra8_overlays_with_yuv_overlay_support",
+      "enable_webgl_timer_query_extensions",
+      "exit_on_context_lost",
+      "force_rgb10a2_overlay_support",
+      "unpack_overlapping_rows_separately_unpack_buffer",
+      "use_first_valid_ref_for_av1_invalid_ref",
+      "disabled_extension_GL_KHR_blend_equation_advanced",
+      "disabled_extension_GL_KHR_blend_equation_advanced_coherent"
+    ],
+    "videoDecoding": [],
+    "videoEncoding": []
+  }
+}

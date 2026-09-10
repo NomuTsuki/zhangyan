@@ -1,0 +1,774 @@
+{
+  "generatedAt": "2026-09-10T06:21:51.643Z",
+  "executor": "fusion_road_geometry",
+  "mode": "read-only Node diagnostic, no candidate product edits",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "cpu": "Intel(R) Core(TM) i9-14900HX",
+    "logicalCpus": 32
+  },
+  "sources": {
+    "src/App.tsx": "b0bc859df314ede4662b74d53bb67a78ca8df08b8f647552ab9c017105e82289",
+    "src/MapView.tsx": "b751dbb950344a22767136b1f65999154a7c17db0bbee88144c25451bb2da3e6",
+    "src/map-layout.mjs": "14c57bd129074bf50b4157a6b762a4fd99f989916ee711769583a37e89d36b53",
+    "src/engine.ts": "f8a36af3faf8f10569cef444e9a73046d728d5ee1986c8749d555085616a62cc",
+    "src/map-motion.mjs": "05eb4533d4c6df3e8ca3cbb6307ba2c911174de51fd74bb20ce417f52aaea4f0",
+    "prototype.html": "98f640e5341d575d003e38b695851bf54f6ffecf275f0e5b308a9a7d0aafae1f"
+  },
+  "bounds": "Warm same-process CPU cost. Estimated label bounds proxy is not actual DOM measurement. routeHitPath is extracted verbatim from current TS and type-stripped. React reconciliation, browser layout, paint and GPU work are not timed.",
+  "states": [
+    {
+      "actions": 0,
+      "stage": "NONE",
+      "nodes": 0,
+      "observations": 0,
+      "edges": 0,
+      "drawnRoutes": 0,
+      "frontiers": 0,
+      "labels": 0,
+      "routeSamplePoints": 0,
+      "frontierSamplePoints": 0,
+      "compactCurveCharacters": 0,
+      "hitPolylineCharacters": 0,
+      "labelBoundsProxy": "Current estimated labelWidth/labelHeight; real DOM figures belong to root browser trace",
+      "metrics": {
+        "solve": {
+          "runs": 20,
+          "medianMs": 0.7578000000003158,
+          "p95Ms": 1.0881999999992331,
+          "minMs": 0.5505000000002838,
+          "maxMs": 1.4778000000005704,
+          "meanMs": 0.776450000000068
+        },
+        "buildGraph_from_solved": {
+          "runs": 20,
+          "medianMs": 0.025300000000243017,
+          "p95Ms": 0.08219999999982974,
+          "minMs": 0.021499999999832653,
+          "maxMs": 0.08560000000034051,
+          "meanMs": 0.03638000000009924
+        },
+        "workbench": {
+          "runs": 20,
+          "medianMs": 0.024900000000343425,
+          "p95Ms": 0.028800000000046566,
+          "minMs": 0.021800000000439468,
+          "maxMs": 0.032599999999547435,
+          "meanMs": 0.025000000000045475
+        },
+        "derive": {
+          "runs": 20,
+          "medianMs": 0.7826999999997497,
+          "p95Ms": 1.021099999999933,
+          "minMs": 0.6900999999998021,
+          "maxMs": 1.2125000000005457,
+          "meanMs": 0.8037999999997737
+        },
+        "resolveFocus": {
+          "runs": 20,
+          "medianMs": 0.003899999999703141,
+          "p95Ms": 0.017400000000634464,
+          "minMs": 0.0011000000004059984,
+          "maxMs": 0.021999999999934516,
+          "meanMs": 0.004510000000027503
+        },
+        "layoutMap_including_estimated_labels": {
+          "runs": 20,
+          "medianMs": 0.0039000000006126356,
+          "p95Ms": 0.012999999999919964,
+          "minMs": 0.001900000000205182,
+          "maxMs": 0.03330000000005384,
+          "meanMs": 0.006385000000000219
+        },
+        "placeMapLabels_estimated": {
+          "runs": 20,
+          "medianMs": 0.0011999999996987754,
+          "p95Ms": 0.0018000000000029104,
+          "minMs": 0.0010999999994965037,
+          "maxMs": 0.0024000000003070454,
+          "meanMs": 0.0012999999999919964
+        },
+        "placeMapLabels_bounds_proxy": {
+          "runs": 20,
+          "medianMs": 0.0011999999996987754,
+          "p95Ms": 0.0014999999993960955,
+          "minMs": 0.0010000000002037268,
+          "maxMs": 0.0029999999997016857,
+          "meanMs": 0.0012599999998201383
+        },
+        "routeHitPath_all_routes": {
+          "runs": 20,
+          "medianMs": 0.00019999999949504854,
+          "p95Ms": 0.0003999999998995918,
+          "minMs": 0.00010000000020227162,
+          "maxMs": 0.0007999999997991836,
+          "meanMs": 0.00020499999995990948
+        },
+        "snapshot_structuredClone_layout": {
+          "runs": 20,
+          "medianMs": 0.004500000000007276,
+          "p95Ms": 0.006099999999605643,
+          "minMs": 0.004300000000512227,
+          "maxMs": 0.010000000000218279,
+          "meanMs": 0.0050000000000181895
+        }
+      }
+    },
+    {
+      "actions": 5,
+      "stage": "G1",
+      "nodes": 6,
+      "observations": 5,
+      "edges": 5,
+      "drawnRoutes": 6,
+      "frontiers": 2,
+      "labels": 8,
+      "routeSamplePoints": 844,
+      "frontierSamplePoints": 269,
+      "compactCurveCharacters": 748,
+      "hitPolylineCharacters": 31507,
+      "labelBoundsProxy": "Current estimated labelWidth/labelHeight; real DOM figures belong to root browser trace",
+      "metrics": {
+        "solve": {
+          "runs": 20,
+          "medianMs": 0.7622000000001208,
+          "p95Ms": 0.9912999999996828,
+          "minMs": 0.6860999999998967,
+          "maxMs": 1.4287999999996828,
+          "meanMs": 0.8128449999998792
+        },
+        "buildGraph_from_solved": {
+          "runs": 20,
+          "medianMs": 0.0658000000003085,
+          "p95Ms": 0.11599999999998545,
+          "minMs": 0.05199999999967986,
+          "maxMs": 0.12799999999970169,
+          "meanMs": 0.07149499999991349
+        },
+        "workbench": {
+          "runs": 20,
+          "medianMs": 0.6714000000001761,
+          "p95Ms": 0.8240000000005239,
+          "minMs": 0.5970999999999549,
+          "maxMs": 0.8541000000004715,
+          "meanMs": 0.6861850000001141
+        },
+        "derive": {
+          "runs": 20,
+          "medianMs": 1.6271000000006097,
+          "p95Ms": 1.9270000000005894,
+          "minMs": 1.4256999999997788,
+          "maxMs": 1.969199999999546,
+          "meanMs": 1.6470650000000204
+        },
+        "resolveFocus": {
+          "runs": 20,
+          "medianMs": 0.012400000000525324,
+          "p95Ms": 0.0330999999996493,
+          "minMs": 0.008399999999710417,
+          "maxMs": 0.037699999999858846,
+          "meanMs": 0.015004999999973734
+        },
+        "layoutMap_including_estimated_labels": {
+          "runs": 20,
+          "medianMs": 0.6398999999992157,
+          "p95Ms": 0.920100000000275,
+          "minMs": 0.43730000000050495,
+          "maxMs": 0.9519000000000233,
+          "meanMs": 0.6448299999999563
+        },
+        "placeMapLabels_estimated": {
+          "runs": 20,
+          "medianMs": 0.5090000000000146,
+          "p95Ms": 0.7193999999999505,
+          "minMs": 0.3728999999993903,
+          "maxMs": 0.7939000000005763,
+          "meanMs": 0.5260949999999867
+        },
+        "placeMapLabels_bounds_proxy": {
+          "runs": 20,
+          "medianMs": 0.5160000000005311,
+          "p95Ms": 0.6799999999993815,
+          "minMs": 0.4513999999999214,
+          "maxMs": 0.7331000000003769,
+          "meanMs": 0.5407650000001013
+        },
+        "routeHitPath_all_routes": {
+          "runs": 20,
+          "medianMs": 0.08920000000034634,
+          "p95Ms": 0.17550000000028376,
+          "minMs": 0.07670000000052823,
+          "maxMs": 0.4056000000000495,
+          "meanMs": 0.11478500000007444
+        },
+        "snapshot_structuredClone_layout": {
+          "runs": 20,
+          "medianMs": 0.36930000000029395,
+          "p95Ms": 0.6000000000003638,
+          "minMs": 0.3360000000002401,
+          "maxMs": 0.6934999999994034,
+          "meanMs": 0.40957999999986894
+        }
+      }
+    },
+    {
+      "actions": 17,
+      "stage": "G3",
+      "nodes": 17,
+      "observations": 17,
+      "edges": 20,
+      "drawnRoutes": 23,
+      "frontiers": 1,
+      "labels": 19,
+      "routeSamplePoints": 4980,
+      "frontierSamplePoints": 35,
+      "compactCurveCharacters": 3397,
+      "hitPolylineCharacters": 186205,
+      "labelBoundsProxy": "Current estimated labelWidth/labelHeight; real DOM figures belong to root browser trace",
+      "metrics": {
+        "solve": {
+          "runs": 20,
+          "medianMs": 0.6925000000001091,
+          "p95Ms": 0.9246999999995751,
+          "minMs": 0.6156000000000859,
+          "maxMs": 1.1725999999998749,
+          "meanMs": 0.7305199999999786
+        },
+        "buildGraph_from_solved": {
+          "runs": 20,
+          "medianMs": 0.16719999999986612,
+          "p95Ms": 0.2974000000003798,
+          "minMs": 0.13069999999970605,
+          "maxMs": 0.3239000000003216,
+          "meanMs": 0.18950500000005377
+        },
+        "workbench": {
+          "runs": 20,
+          "medianMs": 0.7683000000006359,
+          "p95Ms": 0.8672999999998865,
+          "minMs": 0.6448999999993248,
+          "maxMs": 1.1809999999995853,
+          "meanMs": 0.7758599999999205
+        },
+        "derive": {
+          "runs": 20,
+          "medianMs": 1.8265000000001237,
+          "p95Ms": 2.1159999999999854,
+          "minMs": 1.5779999999995198,
+          "maxMs": 2.3986000000004424,
+          "meanMs": 1.8060400000000754
+        },
+        "resolveFocus": {
+          "runs": 20,
+          "medianMs": 0.01749999999992724,
+          "p95Ms": 0.02760000000034779,
+          "minMs": 0.015900000000328873,
+          "maxMs": 0.03349999999954889,
+          "meanMs": 0.019349999999985813
+        },
+        "layoutMap_including_estimated_labels": {
+          "runs": 20,
+          "medianMs": 3.5268000000005486,
+          "p95Ms": 4.784300000000258,
+          "minMs": 3.2440000000005966,
+          "maxMs": 5.015899999999419,
+          "meanMs": 3.8243700000000445
+        },
+        "placeMapLabels_estimated": {
+          "runs": 20,
+          "medianMs": 3.1337000000003172,
+          "p95Ms": 3.744699999999284,
+          "minMs": 2.8090000000001965,
+          "maxMs": 3.751299999999901,
+          "meanMs": 3.213229999999976
+        },
+        "placeMapLabels_bounds_proxy": {
+          "runs": 20,
+          "medianMs": 4.188500000000204,
+          "p95Ms": 4.706600000000435,
+          "minMs": 3.224199999999655,
+          "maxMs": 4.7653999999993175,
+          "meanMs": 4.0781400000000305
+        },
+        "routeHitPath_all_routes": {
+          "runs": 20,
+          "medianMs": 1.0090000000000146,
+          "p95Ms": 1.2609000000002197,
+          "minMs": 0.6635000000005675,
+          "maxMs": 1.45049999999992,
+          "meanMs": 0.9964900000000398
+        },
+        "snapshot_structuredClone_layout": {
+          "runs": 20,
+          "medianMs": 1.592399999999543,
+          "p95Ms": 2.131999999999607,
+          "minMs": 1.512499999999818,
+          "maxMs": 2.507499999999709,
+          "meanMs": 1.7137449999997443
+        }
+      }
+    },
+    {
+      "actions": 22,
+      "stage": "G3",
+      "nodes": 22,
+      "observations": 22,
+      "edges": 29,
+      "drawnRoutes": 34,
+      "frontiers": 0,
+      "labels": 23,
+      "routeSamplePoints": 6479,
+      "frontierSamplePoints": 0,
+      "compactCurveCharacters": 4639,
+      "hitPolylineCharacters": 241275,
+      "labelBoundsProxy": "Current estimated labelWidth/labelHeight; real DOM figures belong to root browser trace",
+      "metrics": {
+        "solve": {
+          "runs": 20,
+          "medianMs": 0.8361000000004424,
+          "p95Ms": 1.1538000000000466,
+          "minMs": 0.7592000000004191,
+          "maxMs": 1.3091000000003987,
+          "meanMs": 0.8779750000001059
+        },
+        "buildGraph_from_solved": {
+          "runs": 20,
+          "medianMs": 0.22340000000076543,
+          "p95Ms": 0.2980999999999767,
+          "minMs": 0.17999999999938154,
+          "maxMs": 0.3252999999995154,
+          "meanMs": 0.23148000000010144
+        },
+        "workbench": {
+          "runs": 20,
+          "medianMs": 0.7836999999999534,
+          "p95Ms": 0.9380999999993946,
+          "minMs": 0.6734999999998763,
+          "maxMs": 1.0820000000003347,
+          "meanMs": 0.8042100000001028
+        },
+        "derive": {
+          "runs": 20,
+          "medianMs": 1.8197000000000116,
+          "p95Ms": 2.19800000000032,
+          "minMs": 1.590700000000652,
+          "maxMs": 2.2116000000005442,
+          "meanMs": 1.8691050000001723
+        },
+        "resolveFocus": {
+          "runs": 20,
+          "medianMs": 0.02129999999942811,
+          "p95Ms": 0.04219999999986612,
+          "minMs": 0.017899999999826832,
+          "maxMs": 0.054600000000391447,
+          "meanMs": 0.02496000000010099
+        },
+        "layoutMap_including_estimated_labels": {
+          "runs": 20,
+          "medianMs": 52.84770000000026,
+          "p95Ms": 64.13119999999981,
+          "minMs": 39.68090000000029,
+          "maxMs": 64.6864000000005,
+          "meanMs": 53.322020000000066
+        },
+        "placeMapLabels_estimated": {
+          "runs": 20,
+          "medianMs": 11.313000000000102,
+          "p95Ms": 12.565999999999804,
+          "minMs": 6.782399999999143,
+          "maxMs": 14.000600000000304,
+          "meanMs": 10.835754999999882
+        },
+        "placeMapLabels_bounds_proxy": {
+          "runs": 20,
+          "medianMs": 7.777999999999338,
+          "p95Ms": 8.95430000000033,
+          "minMs": 5.807999999999993,
+          "maxMs": 9.972899999999754,
+          "meanMs": 7.593059999999968
+        },
+        "routeHitPath_all_routes": {
+          "runs": 20,
+          "medianMs": 1.1387999999997191,
+          "p95Ms": 1.352299999999559,
+          "minMs": 1.0289000000002488,
+          "maxMs": 1.797500000000582,
+          "meanMs": 1.1924400000000333
+        },
+        "snapshot_structuredClone_layout": {
+          "runs": 20,
+          "medianMs": 2.3189000000002125,
+          "p95Ms": 2.5670000000000073,
+          "minMs": 2.0583999999998923,
+          "maxMs": 2.6536000000005515,
+          "meanMs": 2.3471300000000612
+        }
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "enteringAction": 1,
+      "action": "A.OBSERVE.WHOLE",
+      "metrics": {
+        "perform_core": {
+          "runs": 12,
+          "medianMs": 1.8567000000002736,
+          "p95Ms": 2.676100000000588,
+          "minMs": 1.57549999999992,
+          "maxMs": 2.676100000000588,
+          "meanMs": 1.8958583333334598
+        },
+        "derive_after": {
+          "runs": 12,
+          "medianMs": 0.888199999999415,
+          "p95Ms": 1.382300000000214,
+          "minMs": 0.7924000000002707,
+          "maxMs": 1.382300000000214,
+          "meanMs": 0.9371999999999238
+        },
+        "layout_after": {
+          "runs": 12,
+          "medianMs": 0.05389999999988504,
+          "p95Ms": 0.08719999999993888,
+          "minMs": 0.050099999999474676,
+          "maxMs": 0.08719999999993888,
+          "meanMs": 0.05947499999994458
+        },
+        "measurement_label_pass_proxy": {
+          "runs": 12,
+          "medianMs": 0.022100000000136788,
+          "p95Ms": 0.023299999999835563,
+          "minMs": 0.020599999999831198,
+          "maxMs": 0.023299999999835563,
+          "meanMs": 0.02197499999988395
+        },
+        "beforeLayout_for_animation": {
+          "runs": 12,
+          "medianMs": 0.0016000000005078618,
+          "p95Ms": 0.002300000000104774,
+          "minMs": 0.0015000000003055902,
+          "maxMs": 0.002300000000104774,
+          "meanMs": 0.0017250000000027892
+        },
+        "roadTransitionPlan": {
+          "runs": 12,
+          "medianMs": 0.0033000000003085006,
+          "p95Ms": 0.01599999999962165,
+          "minMs": 0.0009000000000014552,
+          "maxMs": 0.01599999999962165,
+          "meanMs": 0.004641666666808912
+        },
+        "synchronous_chain_excluding_DOM_and_React": {
+          "runs": 12,
+          "medianMs": 4.272100000000137,
+          "p95Ms": 5.33390000000054,
+          "minMs": 3.369100000000799,
+          "maxMs": 5.33390000000054,
+          "meanMs": 4.293625000000247
+        }
+      }
+    },
+    {
+      "enteringAction": 5,
+      "action": "A.RESEARCH.ACCIDENT",
+      "metrics": {
+        "perform_core": {
+          "runs": 12,
+          "medianMs": 3.8757000000005064,
+          "p95Ms": 5.752200000000812,
+          "minMs": 2.743199999999888,
+          "maxMs": 5.752200000000812,
+          "meanMs": 4.070383333333363
+        },
+        "derive_after": {
+          "runs": 12,
+          "medianMs": 1.8262999999997191,
+          "p95Ms": 2.4310000000004948,
+          "minMs": 1.225600000000668,
+          "maxMs": 2.4310000000004948,
+          "meanMs": 1.825483333333447
+        },
+        "layout_after": {
+          "runs": 12,
+          "medianMs": 0.5050999999994019,
+          "p95Ms": 1.0567000000000917,
+          "minMs": 0.4528999999993175,
+          "maxMs": 1.0567000000000917,
+          "meanMs": 0.595716666666552
+        },
+        "measurement_label_pass_proxy": {
+          "runs": 12,
+          "medianMs": 0.3434000000006563,
+          "p95Ms": 0.7614999999996144,
+          "minMs": 0.3274999999994179,
+          "maxMs": 0.7614999999996144,
+          "meanMs": 0.3759583333332254
+        },
+        "beforeLayout_for_animation": {
+          "runs": 12,
+          "medianMs": 0.6291000000001077,
+          "p95Ms": 0.717000000000553,
+          "minMs": 0.5073999999995067,
+          "maxMs": 0.717000000000553,
+          "meanMs": 0.6162583333333865
+        },
+        "roadTransitionPlan": {
+          "runs": 12,
+          "medianMs": 0.0020000000004074536,
+          "p95Ms": 0.015600000000631553,
+          "minMs": 0.0017000000007101335,
+          "maxMs": 0.015600000000631553,
+          "meanMs": 0.003325000000207486
+        },
+        "synchronous_chain_excluding_DOM_and_React": {
+          "runs": 12,
+          "medianMs": 5.592400000000453,
+          "p95Ms": 6.542099999999664,
+          "minMs": 5.299200000000383,
+          "maxMs": 6.542099999999664,
+          "meanMs": 5.7402499999999845
+        }
+      }
+    },
+    {
+      "enteringAction": 17,
+      "action": "A.TRACE.PROVENANCE_CHAIN",
+      "metrics": {
+        "perform_core": {
+          "runs": 12,
+          "medianMs": 4.101999999999862,
+          "p95Ms": 4.659599999999955,
+          "minMs": 3.8007000000006883,
+          "maxMs": 4.659599999999955,
+          "meanMs": 4.143083333333379
+        },
+        "derive_after": {
+          "runs": 12,
+          "medianMs": 1.5716999999995096,
+          "p95Ms": 2.1213000000007014,
+          "minMs": 1.371700000000601,
+          "maxMs": 2.1213000000007014,
+          "meanMs": 1.5988833333334849
+        },
+        "layout_after": {
+          "runs": 12,
+          "medianMs": 3.9470000000001164,
+          "p95Ms": 5.158400000000256,
+          "minMs": 2.7192000000004555,
+          "maxMs": 5.158400000000256,
+          "meanMs": 3.73313333333355
+        },
+        "measurement_label_pass_proxy": {
+          "runs": 12,
+          "medianMs": 3.07300000000032,
+          "p95Ms": 4.311900000000605,
+          "minMs": 2.7367999999996755,
+          "maxMs": 4.311900000000605,
+          "meanMs": 3.2361333333333278
+        },
+        "beforeLayout_for_animation": {
+          "runs": 12,
+          "medianMs": 2.2619999999997162,
+          "p95Ms": 2.708099999999831,
+          "minMs": 1.9483999999993102,
+          "maxMs": 2.708099999999831,
+          "meanMs": 2.2786416666666205
+        },
+        "roadTransitionPlan": {
+          "runs": 12,
+          "medianMs": 0.052700000000186265,
+          "p95Ms": 0.1242999999994936,
+          "minMs": 0.04980000000068685,
+          "maxMs": 0.1242999999994936,
+          "meanMs": 0.060225000000097374
+        },
+        "synchronous_chain_excluding_DOM_and_React": {
+          "runs": 12,
+          "medianMs": 17.76130000000012,
+          "p95Ms": 23.43000000000029,
+          "minMs": 14.104599999999664,
+          "maxMs": 23.43000000000029,
+          "meanMs": 18.354816666666768
+        }
+      }
+    },
+    {
+      "enteringAction": 22,
+      "action": "A.MAP.REGION_CONTINUITY",
+      "metrics": {
+        "perform_core": {
+          "runs": 12,
+          "medianMs": 5.13839999999982,
+          "p95Ms": 5.850500000000466,
+          "minMs": 4.622200000000703,
+          "maxMs": 5.850500000000466,
+          "meanMs": 5.069741666666687
+        },
+        "derive_after": {
+          "runs": 12,
+          "medianMs": 1.6614999999992506,
+          "p95Ms": 2.0471000000006825,
+          "minMs": 1.5828000000001339,
+          "maxMs": 2.0471000000006825,
+          "meanMs": 1.6910916666666556
+        },
+        "layout_after": {
+          "runs": 12,
+          "medianMs": 46.12780000000021,
+          "p95Ms": 54.17450000000008,
+          "minMs": 39.38119999999981,
+          "maxMs": 54.17450000000008,
+          "meanMs": 46.27650000000002
+        },
+        "measurement_label_pass_proxy": {
+          "runs": 12,
+          "medianMs": 6.618999999999687,
+          "p95Ms": 13.386400000000322,
+          "minMs": 5.742000000000189,
+          "maxMs": 13.386400000000322,
+          "meanMs": 7.768150000000105
+        },
+        "beforeLayout_for_animation": {
+          "runs": 12,
+          "medianMs": 42.05279999999948,
+          "p95Ms": 59.52559999999903,
+          "minMs": 32.20650000000023,
+          "maxMs": 59.52559999999903,
+          "meanMs": 42.737908333332975
+        },
+        "roadTransitionPlan": {
+          "runs": 12,
+          "medianMs": 0.15090000000054715,
+          "p95Ms": 0.17970000000059372,
+          "minMs": 0.05740000000150758,
+          "maxMs": 0.17970000000059372,
+          "meanMs": 0.13270833333384266
+        },
+        "synchronous_chain_excluding_DOM_and_React": {
+          "runs": 12,
+          "medianMs": 88.05190000000039,
+          "p95Ms": 95.89259999999922,
+          "minMs": 80.20540000000074,
+          "maxMs": 95.89259999999922,
+          "meanMs": 88.04477499999969
+        }
+      }
+    }
+  ],
+  "profile": {
+    "scope": "35 x (layoutMap full 22-action graph + placeMapLabels same estimated-bounds proxy)",
+    "totalSampledMs": 1837.463,
+    "topSelf": [
+      {
+        "function": "crosses",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 23,
+        "selfMs": 805.723
+      },
+      {
+        "function": "free",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 300,
+        "selfMs": 506.787
+      },
+      {
+        "function": "crosses",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 23,
+        "selfMs": 151.879
+      },
+      {
+        "function": "(garbage collector)",
+        "file": "",
+        "line": 0,
+        "selfMs": 109.632
+      },
+      {
+        "function": "free",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 300,
+        "selfMs": 78.484
+      },
+      {
+        "function": "post",
+        "file": "node:inspector",
+        "line": 115,
+        "selfMs": 71.611
+      },
+      {
+        "function": "placeMapLabels",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 281,
+        "selfMs": 62.066
+      },
+      {
+        "function": "placeMapLabels",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 281,
+        "selfMs": 8.942
+      },
+      {
+        "function": "(anonymous)",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 302,
+        "selfMs": 7.33
+      },
+      {
+        "function": "(anonymous)",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 286,
+        "selfMs": 5.752
+      },
+      {
+        "function": "crosses",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 23,
+        "selfMs": 5.509
+      },
+      {
+        "function": "layoutMap",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 162,
+        "selfMs": 4.658
+      },
+      {
+        "function": "crosses",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 23,
+        "selfMs": 3.348
+      },
+      {
+        "function": "(anonymous)",
+        "file": "file:///E:/zhangyan__v2/output/playwright/hifi-performance-audit-2026-09-10/static/diagnose.mjs",
+        "line": 0,
+        "selfMs": 2.379
+      },
+      {
+        "function": "dispatch",
+        "file": "",
+        "line": 0,
+        "selfMs": 1.556
+      },
+      {
+        "function": "(anonymous)",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 356,
+        "selfMs": 1.549
+      },
+      {
+        "function": "(anonymous)",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 286,
+        "selfMs": 1.547
+      },
+      {
+        "function": "(anonymous)",
+        "file": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/src/map-layout.mjs",
+        "line": 165,
+        "selfMs": 1.543
+      }
+    ]
+  }
+}

@@ -1,0 +1,786 @@
+{
+  "reviewRequired": true,
+  "source": "18dc40d-prototype.html / 98f640e5341d575d003e38b695851bf54f6ffecf275f0e5b308a9a7d0aafae1f",
+  "viewport": {
+    "width": 1920,
+    "height": 1000
+  },
+  "dpr": 2,
+  "preparation": "Real UI; reduced motion enabled for first 17 actions, normal motion restored before action 18",
+  "errors": [],
+  "consoleWarnings": [
+    {
+      "type": "warning",
+      "text": "THREE.WebGLProgram: Program Info Log: (210,81-129): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision\n(209,37-61): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision\n(210,82-106): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision\n(209,37-61): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision\n(210,82-106): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision\n\n\n\u0000"
+    }
+  ],
+  "crashes": [],
+  "actionTiming": [
+    {
+      "action": "A.SCREEN.UV",
+      "elapsed": 783,
+      "samples": [
+        {
+          "actions": 18,
+          "observations": 18,
+          "phase": "fly",
+          "transitionDuration": 260,
+          "camera": {
+            "x": 385.03124999999994,
+            "y": -88.43600000000009,
+            "s": 0.2
+          },
+          "finite": true,
+          "nodeCount": 18,
+          "maskCount": 24,
+          "world": {
+            "width": 1104,
+            "height": 2765
+          },
+          "contextEvents": [],
+          "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+        },
+        {
+          "actions": 18,
+          "observations": 18,
+          "phase": "idle",
+          "transitionDuration": null,
+          "camera": {
+            "x": 385.03124999999994,
+            "y": -88.43600000000009,
+            "s": 0.2
+          },
+          "finite": true,
+          "nodeCount": 18,
+          "maskCount": 24,
+          "world": {
+            "width": 1104,
+            "height": 2765
+          },
+          "contextEvents": [],
+          "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+        }
+      ],
+      "final": {
+        "actions": 18,
+        "observations": 18,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 385.03124999999994,
+          "y": -88.43600000000009,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 18,
+        "maskCount": 24,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "action": "A.OBSERVE.REGION_DECOR",
+      "elapsed": 6687,
+      "samples": [
+        {
+          "actions": 19,
+          "observations": 19,
+          "phase": "fly",
+          "transitionDuration": 3410,
+          "camera": {
+            "x": 385.03124999999994,
+            "y": -88.43600000000009,
+            "s": 0.2
+          },
+          "finite": true,
+          "nodeCount": 19,
+          "maskCount": 40,
+          "world": {
+            "width": 1104,
+            "height": 2765
+          },
+          "contextEvents": [],
+          "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+        },
+        {
+          "actions": 19,
+          "observations": 19,
+          "phase": "focus",
+          "transitionDuration": 3410,
+          "camera": {
+            "x": 252.88125000000002,
+            "y": -1680.02,
+            "s": 1.18
+          },
+          "finite": true,
+          "nodeCount": 19,
+          "maskCount": 40,
+          "world": {
+            "width": 1104,
+            "height": 2765
+          },
+          "contextEvents": [],
+          "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+        },
+        {
+          "actions": 19,
+          "observations": 19,
+          "phase": "idle",
+          "transitionDuration": null,
+          "camera": {
+            "x": 248.24185842433698,
+            "y": -220.67687987519503,
+            "s": 0.32865314612584506
+          },
+          "finite": true,
+          "nodeCount": 19,
+          "maskCount": 24,
+          "world": {
+            "width": 1104,
+            "height": 2765
+          },
+          "contextEvents": [],
+          "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+        }
+      ],
+      "final": {
+        "actions": 19,
+        "observations": 19,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 248.24185842433698,
+          "y": -220.67687987519503,
+          "s": 0.32865314612584506
+        },
+        "finite": true,
+        "nodeCount": 19,
+        "maskCount": 24,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "action": "A.COMPARE.CORPUS",
+      "elapsed": 7991,
+      "samples": [
+        {
+          "actions": 20,
+          "observations": 20,
+          "phase": "fly",
+          "transitionDuration": 3410,
+          "camera": {
+            "x": 248.25725619961614,
+            "y": -220.71895480113184,
+            "s": 0.32923995026937625
+          },
+          "finite": true,
+          "nodeCount": 20,
+          "maskCount": 76,
+          "world": {
+            "width": 1104,
+            "height": 2765
+          },
+          "contextEvents": [],
+          "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+        }
+      ],
+      "final": {
+        "actions": 20,
+        "observations": 20,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 134.4748195538058,
+          "y": 5.4144881889764065,
+          "s": 0.552930883639545
+        },
+        "finite": true,
+        "nodeCount": 20,
+        "maskCount": 28,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "action": "A.COMPARE.CORPUS.RECHECK",
+      "elapsed": 6513,
+      "samples": [
+        {
+          "actions": 21,
+          "observations": 21,
+          "phase": "fly",
+          "transitionDuration": 3410,
+          "camera": {
+            "x": 134.4748195538058,
+            "y": 5.4144881889764065,
+            "s": 0.552930883639545
+          },
+          "finite": true,
+          "nodeCount": 20,
+          "maskCount": 44,
+          "world": {
+            "width": 1104,
+            "height": 2765
+          },
+          "contextEvents": [],
+          "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+        }
+      ],
+      "final": {
+        "actions": 21,
+        "observations": 21,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 221.07154304029302,
+          "y": 11.429890109890096,
+          "s": 0.3858363858363858
+        },
+        "finite": true,
+        "nodeCount": 20,
+        "maskCount": 28,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "action": "A.MAP.REGION_CONTINUITY",
+      "elapsed": 836,
+      "samples": [
+        {
+          "actions": 22,
+          "observations": 22,
+          "phase": "fly",
+          "transitionDuration": 7300,
+          "camera": {
+            "x": 221.07154304029302,
+            "y": 11.429890109890096,
+            "s": 0.3858363858363858
+          },
+          "finite": true,
+          "nodeCount": 22,
+          "maskCount": 98,
+          "world": {
+            "width": 1104,
+            "height": 2765
+          },
+          "contextEvents": [],
+          "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+        },
+        {
+          "actions": 22,
+          "observations": 22,
+          "phase": "idle",
+          "transitionDuration": null,
+          "camera": {
+            "x": 349.8020174050632,
+            "y": 170.1658734177215,
+            "s": 0.2
+          },
+          "finite": true,
+          "nodeCount": 22,
+          "maskCount": 34,
+          "world": {
+            "width": 1104,
+            "height": 2765
+          },
+          "contextEvents": [],
+          "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+        }
+      ],
+      "final": {
+        "actions": 22,
+        "observations": 22,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 349.8020174050632,
+          "y": 170.1658734177215,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "maskCount": 34,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    }
+  ],
+  "windows": [
+    {
+      "label": "22-information natural resting state",
+      "wallMs": 2513,
+      "longTasks": [],
+      "rafP95": 4.299999999999272,
+      "rafMax": 16.599999999998545,
+      "rafOver50": 0,
+      "frames": 600,
+      "mutations": 0,
+      "classes": 0,
+      "pointerEvents": 0,
+      "metricsDelta": {
+        "TaskDuration": 0.26968300000000056,
+        "ScriptDuration": 0.13439600000000063,
+        "LayoutDuration": 0.0013769999999999893,
+        "RecalcStyleDuration": 0.006440000000000001,
+        "JSHeapUsedSize": 6585852
+      },
+      "state": {
+        "actions": 22,
+        "observations": 22,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 349.8020174050632,
+          "y": 170.1658734177215,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "maskCount": 34,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "label": "22-information repeat minus clicks to 20%",
+      "wallMs": 2760,
+      "longTasks": [],
+      "rafP95": 4.299999999999272,
+      "rafMax": 4.700000000000728,
+      "rafOver50": 0,
+      "frames": 663,
+      "mutations": 0,
+      "classes": 0,
+      "pointerEvents": 0,
+      "metricsDelta": {
+        "TaskDuration": 0.3342150000000004,
+        "ScriptDuration": 0.17096,
+        "LayoutDuration": 0,
+        "RecalcStyleDuration": 0.0005210000000000214,
+        "JSHeapUsedSize": -12079800
+      },
+      "state": {
+        "actions": 22,
+        "observations": 22,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 349.8020174050632,
+          "y": 170.1658734177215,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "maskCount": 34,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "label": "22-information 20% stationary outside map",
+      "wallMs": 3510,
+      "longTasks": [],
+      "rafP95": 4.30000000000291,
+      "rafMax": 4.400000000001455,
+      "rafOver50": 0,
+      "frames": 842,
+      "mutations": 0,
+      "classes": 0,
+      "pointerEvents": 0,
+      "metricsDelta": {
+        "TaskDuration": 0.239649,
+        "ScriptDuration": 0.13842,
+        "LayoutDuration": 0,
+        "RecalcStyleDuration": 0,
+        "JSHeapUsedSize": 9178364
+      },
+      "state": {
+        "actions": 22,
+        "observations": 22,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 349.8020174050632,
+          "y": 170.1658734177215,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "maskCount": 34,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "label": "22-information 20% stationary on label",
+      "wallMs": 3516,
+      "longTasks": [],
+      "rafP95": 4.30000000000291,
+      "rafMax": 8.400000000001455,
+      "rafOver50": 0,
+      "frames": 842,
+      "mutations": 0,
+      "classes": 0,
+      "pointerEvents": 0,
+      "metricsDelta": {
+        "TaskDuration": 0.2946780000000011,
+        "ScriptDuration": 0.1647249999999998,
+        "LayoutDuration": 0,
+        "RecalcStyleDuration": 0,
+        "JSHeapUsedSize": -14727688
+      },
+      "state": {
+        "actions": 22,
+        "observations": 22,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 349.8020174050632,
+          "y": 170.1658734177215,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "maskCount": 34,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "label": "22-information 20% stationary on road hit",
+      "wallMs": 3516,
+      "longTasks": [],
+      "rafP95": 4.30000000000291,
+      "rafMax": 4.400000000001455,
+      "rafOver50": 0,
+      "frames": 844,
+      "mutations": 0,
+      "classes": 0,
+      "pointerEvents": 0,
+      "metricsDelta": {
+        "TaskDuration": 0.25433400000000006,
+        "ScriptDuration": 0.14591899999999924,
+        "LayoutDuration": 0,
+        "RecalcStyleDuration": 0,
+        "JSHeapUsedSize": -321240
+      },
+      "state": {
+        "actions": 22,
+        "observations": 22,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 349.8020174050632,
+          "y": 170.1658734177215,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "maskCount": 34,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "label": "12 Ctrl-wheel zoom-in/out pairs",
+      "wallMs": 3018,
+      "longTasks": [],
+      "rafP95": 4.30000000000291,
+      "rafMax": 4.700000000004366,
+      "rafOver50": 0,
+      "frames": 724,
+      "mutations": 24,
+      "classes": 0,
+      "pointerEvents": 2,
+      "metricsDelta": {
+        "TaskDuration": 0.2884879999999992,
+        "ScriptDuration": 0.14718199999999992,
+        "LayoutDuration": 0.002491000000000021,
+        "RecalcStyleDuration": 0.0007409999999999917,
+        "JSHeapUsedSize": 5864720
+      },
+      "state": {
+        "actions": 22,
+        "observations": 22,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 349.8020174050632,
+          "y": 170.1658734177215,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "maskCount": 34,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "label": "4 overview/minimum cycles",
+      "wallMs": 2667,
+      "longTasks": [],
+      "rafP95": 4.30000000000291,
+      "rafMax": 4.400000000001455,
+      "rafOver50": 0,
+      "frames": 640,
+      "mutations": 8,
+      "classes": 0,
+      "pointerEvents": 8,
+      "metricsDelta": {
+        "TaskDuration": 0.20609300000000097,
+        "ScriptDuration": 0.10901300000000003,
+        "LayoutDuration": 0.0009329999999999894,
+        "RecalcStyleDuration": 0.0003999999999999837,
+        "JSHeapUsedSize": 4182576
+      },
+      "state": {
+        "actions": 22,
+        "observations": 22,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 319.70384691455695,
+          "y": 70.51688607594934,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "maskCount": 34,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    },
+    {
+      "label": "after stress: stable minimum",
+      "wallMs": 3509,
+      "longTasks": [],
+      "rafP95": 4.30000000000291,
+      "rafMax": 4.400000000001455,
+      "rafOver50": 0,
+      "frames": 842,
+      "mutations": 0,
+      "classes": 0,
+      "pointerEvents": 0,
+      "metricsDelta": {
+        "TaskDuration": 0.35840099999999886,
+        "ScriptDuration": 0.20742100000000008,
+        "LayoutDuration": 0,
+        "RecalcStyleDuration": 0,
+        "JSHeapUsedSize": 2538508
+      },
+      "state": {
+        "actions": 22,
+        "observations": 22,
+        "phase": "idle",
+        "transitionDuration": null,
+        "camera": {
+          "x": 319.70384691455695,
+          "y": 70.51688607594934,
+          "s": 0.2
+        },
+        "finite": true,
+        "nodeCount": 22,
+        "maskCount": 34,
+        "world": {
+          "width": 1104,
+          "height": 2765
+        },
+        "contextEvents": [],
+        "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+      }
+    }
+  ],
+  "browserVersion": "152.0.4191.66",
+  "systemInfo": {
+    "gpu": {
+      "devices": [
+        {
+          "vendorId": 4318,
+          "deviceId": 10208,
+          "subSysId": 890769475,
+          "revision": 161,
+          "vendorString": "",
+          "deviceString": "NVIDIA GeForce RTX 4080 Laptop GPU",
+          "driverVendor": "NVIDIA",
+          "driverVersion": "32.0.15.9649"
+        },
+        {
+          "vendorId": 32902,
+          "deviceId": 42888,
+          "subSysId": 890769475,
+          "revision": 4,
+          "vendorString": "",
+          "deviceString": "Intel(R) UHD Graphics",
+          "driverVendor": "",
+          "driverVersion": "31.0.101.5186"
+        },
+        {
+          "vendorId": 5140,
+          "deviceId": 140,
+          "subSysId": 0,
+          "revision": 0,
+          "vendorString": "",
+          "deviceString": "Microsoft Basic Render Driver",
+          "driverVendor": "",
+          "driverVersion": "10.0.26100.8972"
+        }
+      ],
+      "auxAttributes": {
+        "amdSwitchable": false,
+        "bgra8OverlaySupport": "SCALING",
+        "canSupportThreadedTextureMailbox": false,
+        "directComposition": true,
+        "directMLFeatureLevel": "Not supported",
+        "directRenderingVersion": "",
+        "displayType": "ANGLE_D3D11",
+        "dx12FeatureLevel": "Not supported",
+        "glExtensions": "GL_AMD_performance_monitor GL_ANGLE_base_vertex_base_instance_shader_builtin GL_ANGLE_blob_cache GL_ANGLE_client_arrays GL_ANGLE_clip_cull_distance GL_ANGLE_copy_texture_3d GL_ANGLE_depth_texture GL_ANGLE_framebuffer_blit GL_ANGLE_framebuffer_multisample GL_ANGLE_get_serialized_context_string GL_ANGLE_get_tex_level_parameter GL_ANGLE_instanced_arrays GL_ANGLE_memory_size GL_ANGLE_multiview_multisample GL_ANGLE_pack_reverse_row_order GL_ANGLE_polygon_mode GL_ANGLE_program_binary_readiness_query GL_ANGLE_program_cache_control GL_ANGLE_provoking_vertex GL_ANGLE_renderability_validation GL_ANGLE_request_extension GL_ANGLE_robust_client_memory GL_ANGLE_shader_pixel_local_storage GL_ANGLE_shader_pixel_local_storage_coherent GL_ANGLE_stencil_texturing GL_ANGLE_texture_compression_dxt3 GL_ANGLE_texture_compression_dxt5 GL_ANGLE_texture_multisample GL_ANGLE_texture_usage GL_ANGLE_translated_shader_source GL_APPLE_clip_distance GL_ARM_rgba8 GL_CHROMIUM_bind_generates_resource GL_CHROMIUM_bind_uniform_location GL_CHROMIUM_copy_compressed_texture GL_CHROMIUM_copy_texture GL_CHROMIUM_lose_context GL_EXT_EGL_image_external_wrap_modes GL_EXT_base_instance GL_EXT_blend_func_extended GL_EXT_blend_minmax GL_EXT_clip_control GL_EXT_clip_cull_distance GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_conservative_depth GL_EXT_debug_label GL_EXT_debug_marker GL_EXT_depth_clamp GL_EXT_discard_framebuffer GL_EXT_disjoint_timer_query GL_EXT_draw_buffers GL_EXT_draw_buffers_indexed GL_EXT_draw_elements_base_vertex GL_EXT_float_blend GL_EXT_frag_depth GL_EXT_instanced_arrays GL_EXT_map_buffer_range GL_EXT_occlusion_query_boolean GL_EXT_polygon_offset_clamp GL_EXT_read_format_bgra GL_EXT_render_snorm GL_EXT_robustness GL_EXT_sRGB GL_EXT_shader_texture_lod GL_EXT_texture_border_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc_srgb GL_EXT_texture_filter_anisotropic GL_EXT_texture_format_BGRA8888 GL_EXT_texture_mirror_clamp_to_edge GL_EXT_texture_norm16 GL_EXT_texture_rg GL_EXT_texture_storage GL_EXT_texture_type_2_10_10_10_REV GL_EXT_unpack_subimage GL_KHR_debug GL_KHR_parallel_shader_compile GL_KHR_robustness GL_NV_EGL_stream_consumer_external GL_NV_fence GL_NV_framebuffer_blit GL_NV_pack_subimage GL_NV_pixel_buffer_object GL_NV_shader_noperspective_interpolation GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_EGL_image_external_essl3 GL_OES_depth24 GL_OES_depth32 GL_OES_draw_buffers_indexed GL_OES_draw_elements_base_vertex GL_OES_element_index_uint GL_OES_fbo_render_mipmap GL_OES_get_program_binary GL_OES_mapbuffer GL_OES_packed_depth_stencil GL_OES_required_internalformat GL_OES_rgb8_rgba8 GL_OES_sample_variables GL_OES_shader_multisample_interpolation GL_OES_standard_derivatives GL_OES_surfaceless_context GL_OES_texture_border_clamp GL_OES_texture_float GL_OES_texture_float_linear GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_texture_npot GL_OES_texture_stencil8 GL_OES_texture_storage_multisample_2d_array GL_OES_vertex_array_object GL_OVR_multiview GL_OVR_multiview2 ",
+        "glImplementationParts": "(gl=egl-angle,angle=d3d11)",
+        "glRenderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.15.9649)",
+        "glResetNotificationStrategy": 33362,
+        "glVendor": "Google Inc. (NVIDIA)",
+        "glVersion": "OpenGL ES 3.0 (ANGLE 2.1.47485 git hash: bb681b5d5ea0)",
+        "glWsExtensions": "EGL_EXT_create_context_robustness EGL_ANGLE_d3d_share_handle_client_buffer EGL_ANGLE_d3d_texture_client_buffer EGL_ANGLE_surface_d3d_texture_2d_share_handle EGL_ANGLE_query_surface_pointer EGL_ANGLE_window_fixed_size EGL_ANGLE_keyed_mutex EGL_ANGLE_surface_orientation EGL_ANGLE_direct_composition EGL_NV_post_sub_buffer EGL_KHR_create_context EGL_KHR_image EGL_KHR_image_base EGL_KHR_gl_texture_2D_image EGL_KHR_gl_texture_cubemap_image EGL_KHR_gl_renderbuffer_image EGL_KHR_get_all_proc_addresses EGL_KHR_stream EGL_KHR_stream_consumer_gltexture EGL_NV_stream_consumer_gltexture_yuv EGL_ANGLE_stream_producer_d3d_texture EGL_ANGLE_create_context_webgl_compatibility EGL_CHROMIUM_create_context_bind_generates_resource EGL_CHROMIUM_sync_control EGL_EXT_pixel_format_float EGL_KHR_surfaceless_context EGL_ANGLE_display_texture_share_group EGL_ANGLE_display_semaphore_share_group EGL_ANGLE_create_context_client_arrays EGL_ANGLE_program_cache_control EGL_ANGLE_robust_resource_initialization EGL_ANGLE_create_context_extensions_enabled EGL_ANDROID_blob_cache EGL_ANDROID_recordable EGL_ANGLE_image_d3d11_texture EGL_ANGLE_create_context_backwards_compatible EGL_KHR_no_config_context EGL_KHR_create_context_no_error EGL_KHR_reusable_sync EGL_ANGLE_memory_usage_report ",
+        "glWsVendor": "Google Inc. (NVIDIA)",
+        "glWsVersion": "1.5 (ANGLE 2.1.47485 git hash: bb681b5d5ea0)",
+        "inProcessGpu": false,
+        "initializationTime": 0.175068,
+        "isAsan": false,
+        "isClangCoverage": false,
+        "jpegDecodeAcceleratorSupported": false,
+        "maxMsaaSamples": "8",
+        "nv12OverlaySupport": "SCALING",
+        "optimus": false,
+        "p010OverlaySupport": "SCALING",
+        "passthroughCmdDecoder": true,
+        "pixelShaderVersion": "5.0",
+        "playreadyHardwareDrmSupport": false,
+        "processCrashCount": 0,
+        "rgb10a2OverlaySupport": "SCALING",
+        "sandboxed": false,
+        "skiaBackendType": "GaneshGL",
+        "subpixelFontRendering": true,
+        "supportsD3dSharedImages": false,
+        "supportsDirectML": false,
+        "supportsDx12": false,
+        "supportsOverlays": true,
+        "supportsVulkan": false,
+        "targetCpuBits": 64,
+        "vertexShaderVersion": "5.0",
+        "visibilityCallbackCallCount": 0,
+        "vulkanVersion": "Not supported",
+        "yuy2OverlaySupport": "SCALING"
+      },
+      "featureStatus": {
+        "2d_canvas": "enabled",
+        "direct_rendering_display_compositor": "disabled_off_ok",
+        "gpu_compositing": "enabled",
+        "multiple_raster_threads": "enabled_on",
+        "opengl": "enabled_on",
+        "rasterization": "enabled",
+        "raw_draw": "disabled_off_ok",
+        "skia_graphite": "disabled_off",
+        "trees_in_viz": "disabled_off",
+        "video_decode": "enabled",
+        "video_encode": "enabled",
+        "webgl": "enabled",
+        "webgpu": "enabled",
+        "webnn": "disabled_off"
+      },
+      "driverBugWorkarounds": [
+        "disable_d3d11_vp9_ksvc_decoding",
+        "disable_hevc_hmft_cbr_encoding",
+        "disable_vp9_hmft_temporal_encoding",
+        "enable_bgra8_overlays_with_yuv_overlay_support",
+        "enable_webgl_timer_query_extensions",
+        "exit_on_context_lost",
+        "force_rgb10a2_overlay_support",
+        "unpack_overlapping_rows_separately_unpack_buffer",
+        "use_first_valid_ref_for_av1_invalid_ref",
+        "disabled_extension_GL_KHR_blend_equation_advanced",
+        "disabled_extension_GL_KHR_blend_equation_advanced_coherent"
+      ],
+      "videoDecoding": [],
+      "videoEncoding": []
+    },
+    "modelName": "",
+    "modelVersion": ""
+  },
+  "webgl": {
+    "renderer": "WebKit WebGL",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "unmasked": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "final": {
+    "actions": 22,
+    "observations": 22,
+    "phase": "idle",
+    "transitionDuration": null,
+    "camera": {
+      "x": 319.70384691455695,
+      "y": 70.51688607594934,
+      "s": 0.2
+    },
+    "finite": true,
+    "nodeCount": 22,
+    "maskCount": 34,
+    "world": {
+      "width": 1104,
+      "height": 2765
+    },
+    "contextEvents": [],
+    "bodyEnd": "拖动器物，自由把玩滚轮拉近纹饰与色差没被改动的特征表面↺ 复位−100%＋此刻看得见整只碗↗纹饰与色差↗没被改动的特征↗表面↗转到底部，可以查看底足。选部位不消耗调查机会。"
+  },
+  "lossEvents": []
+}

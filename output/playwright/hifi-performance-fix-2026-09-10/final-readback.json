@@ -1,0 +1,15 @@
+{
+  "sha256": "10039aac47de84d8415c07db09c9d8d332c1ebc3fc42691565d845ec29730336",
+  "bytes": 5161993,
+  "stampMatches": true,
+  "uiBuildMatches": true,
+  "minzoomBuildMatches": true,
+  "uiChecks": 9,
+  "uiPassed": true,
+  "minzoomConfigurations": 4,
+  "protectedChanges": "",
+  "brokenLinks": [],
+  "diffCheck": 0,
+  "commit": "not committed; checkpoint 18dc40d preserved",
+  "generatedAt": "2026-09-10T07:39:21.725Z"
+}

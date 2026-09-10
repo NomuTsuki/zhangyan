@@ -1,0 +1,80 @@
+{
+  "reviewRequired": true,
+  "passed": true,
+  "total": 7,
+  "results": [
+    {
+      "name": "UI has no synchronous solver, derive, replay or take calls",
+      "passed": true,
+      "evidence": {
+        "offlinePackaging": "Vite inline worker import",
+        "uiCalls": "snapshot + read-only selection only"
+      }
+    },
+    {
+      "name": "Real Worker yields a serializable equivalent 17-step model and keeps parent responsive on cold solve",
+      "passed": true,
+      "evidence": {
+        "actions": 17,
+        "stage": "G3",
+        "workerElapsedMs": 1561.9732,
+        "parentHeartbeatTicks": 101,
+        "maxParentHeartbeatGapMs": 23.71969999999999,
+        "realSessionAndGraphEqual": true
+      }
+    },
+    {
+      "name": "History and stop queued behind accepted take preserve its single charge and result",
+      "passed": true,
+      "evidence": {
+        "historyLength": 2,
+        "liveLength": 5,
+        "stoppedAfterAcceptedTake": true,
+        "billed": [
+          2,
+          2,
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Duplicate actions and stale revisions do not charge; a distinct comparison basis remains new",
+      "passed": true,
+      "evidence": {
+        "initialActions": 7,
+        "finalActions": 9,
+        "bases": [
+          "photo",
+          "archive"
+        ]
+      }
+    },
+    {
+      "name": "Restart terminates a real cold computation and returns an unpolluted empty generation",
+      "passed": true,
+      "evidence": {
+        "oldRequest": "AbortError",
+        "newActions": 0,
+        "budget": 12,
+        "generation": 2
+      }
+    },
+    {
+      "name": "A transport callback from a terminated generation cannot satisfy a new promise",
+      "passed": true,
+      "evidence": {
+        "lateGenerationIgnored": true
+      }
+    },
+    {
+      "name": "Actual worker request-ID deduplication returns one charged investigation",
+      "passed": true,
+      "evidence": {
+        "sameResponse": true,
+        "chargedActions": 1
+      }
+    }
+  ],
+  "boundary": "Real Node worker-thread and transport contract evidence; browser responsiveness, map camera behavior and file:// inline worker startup require the separate browser run."
+}

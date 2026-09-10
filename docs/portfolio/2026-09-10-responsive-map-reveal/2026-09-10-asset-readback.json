@@ -1,0 +1,45 @@
+{
+  "experimental": true,
+  "assets": [
+    {
+      "file": "2026-09-10-after-first-xray-during-flight-2x.png",
+      "bytes": 2619247,
+      "sha256": "2070f4dea4b569e84ae32a1fcc19d8353c301f861e63665207308302230f7932",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-10-before-first-xray-during-flight-2x.png",
+      "bytes": 2656154,
+      "sha256": "23f00ae598e4011d9a047aff62dd4aea62856ffdc03d837a986f01d780165baa",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-10-responsive-reveal-hero-four-actions-2x.png",
+      "bytes": 2736063,
+      "sha256": "93096c77bafc22d618914a920493ee9bd01aaf21a6ecb1083bb6455c5c2ef5d2",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-10-responsive-reveal-normal-speed.mp4",
+      "bytes": 1629232,
+      "sha256": "be256a07c55c0e1d9de88caa0b0cc2904c4c773f5dbd311a439287a1916b3aa1",
+      "media": {
+        "programs": [],
+        "streams": [
+          {
+            "width": 1440,
+            "height": 1000,
+            "avg_frame_rate": "25/1"
+          }
+        ],
+        "format": {
+          "duration": "21.960000",
+          "size": "1629232"
+        }
+      }
+    }
+  ]
+}

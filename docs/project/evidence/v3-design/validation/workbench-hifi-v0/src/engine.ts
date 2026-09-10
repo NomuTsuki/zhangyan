@@ -3,7 +3,8 @@ import { ACTIONS as frozenActions } from '../../workbench-map-fusion-v0/local-ca
 import { buildGraph, diffGraphs } from '../../workbench-map-fusion-v0/graph.mjs';
 import { resolveSelection, judgmentOverview, judgmentFacets } from '../../workbench-map-fusion-v0/selection.mjs';
 
-// This boundary consumes the existing solver; presentation never rewrites it.
+// Worker computation exports are also retained for existing Node contracts.
+// App consumes worker snapshots; resolveFocus is a read-only UI projection.
 export const engine = SessionEngine as any;
 export const actions: any[] = frozenActions;
 export { buildGraph, diffGraphs };

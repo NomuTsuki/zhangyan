@@ -1,0 +1,292 @@
+{
+  "reviewRequired": true,
+  "sha256": "98f640e5341d575d003e38b695851bf54f6ffecf275f0e5b308a9a7d0aafae1f",
+  "tag": "baseline",
+  "profile": false,
+  "headless": true,
+  "viewport": [
+    1440,
+    1000
+  ],
+  "generatedAt": "2026-09-10T06:20:48.575Z",
+  "scenarios": [
+    {
+      "name": "01-first-xray",
+      "id": "A.IMAGE.XRAY",
+      "wallMs": 3373.2661999999996,
+      "stats": {
+        "clickToIdleMs": 3319,
+        "firstFlyMs": 43.59999999962747,
+        "frames": 781,
+        "p50": 4.199999999999818,
+        "p95": 4.300000000000182,
+        "max": 41.69999999999982,
+        "over50": 0,
+        "over100": 0,
+        "longTaskCount": 0,
+        "longTaskTotal": 0,
+        "maxLongTask": 0,
+        "phases": [
+          {
+            "phase": "idle",
+            "ms": -13.199999999254942
+          },
+          {
+            "phase": "fly",
+            "ms": 43.59999999962747
+          },
+          {
+            "phase": "focus",
+            "ms": 895
+          },
+          {
+            "phase": "pullback",
+            "ms": 1915.800000000745
+          },
+          {
+            "phase": "connect",
+            "ms": 2865.7000000011176
+          },
+          {
+            "phase": "idle",
+            "ms": 3215.5999999996275
+          }
+        ]
+      },
+      "sessionLength": 1,
+      "errors": [],
+      "geometry": {
+        "nodes": 1,
+        "routes": 0,
+        "frontiers": 1
+      }
+    },
+    {
+      "name": "02-photo-after-xray",
+      "id": "A.LOCATE.HISTORIC_IMAGE",
+      "wallMs": 3334.0089000000007,
+      "stats": {
+        "clickToIdleMs": 3295.9000000003725,
+        "firstFlyMs": 17.199999999254942,
+        "frames": 779,
+        "p50": 4.199999999999818,
+        "p95": 4.300000000000182,
+        "max": 46,
+        "over50": 0,
+        "over100": 0,
+        "longTaskCount": 0,
+        "longTaskTotal": 0,
+        "maxLongTask": 0,
+        "phases": [
+          {
+            "phase": "idle",
+            "ms": -11.200000001117587
+          },
+          {
+            "phase": "fly",
+            "ms": 17.199999999254942
+          },
+          {
+            "phase": "focus",
+            "ms": 872.5999999996275
+          },
+          {
+            "phase": "pullback",
+            "ms": 1893.199999999255
+          },
+          {
+            "phase": "connect",
+            "ms": 2842.9000000003725
+          },
+          {
+            "phase": "idle",
+            "ms": 3189.0999999996275
+          }
+        ]
+      },
+      "sessionLength": 2,
+      "errors": [],
+      "geometry": {
+        "nodes": 2,
+        "routes": 0,
+        "frontiers": 2
+      }
+    },
+    {
+      "name": "03-continuity-four-known",
+      "id": "A.VERIFY.OBJECT_CONTINUITY",
+      "wallMs": 7798.3991000000005,
+      "stats": {
+        "clickToIdleMs": 7708,
+        "firstFlyMs": 22,
+        "frames": 1488,
+        "p50": 4.199999999999818,
+        "p95": 8.399999999999636,
+        "max": 33.399999999999636,
+        "over50": 0,
+        "over100": 0,
+        "longTaskCount": 0,
+        "longTaskTotal": 0,
+        "maxLongTask": 0,
+        "phases": [
+          {
+            "phase": "idle",
+            "ms": -6.700000001117587
+          },
+          {
+            "phase": "fly",
+            "ms": 22
+          },
+          {
+            "phase": "focus",
+            "ms": 876.1999999992549
+          },
+          {
+            "phase": "pullback",
+            "ms": 1897.199999999255
+          },
+          {
+            "phase": "connect",
+            "ms": 2843
+          },
+          {
+            "phase": "idle",
+            "ms": 7596.799999998882
+          }
+        ]
+      },
+      "sessionLength": 5,
+      "errors": [],
+      "geometry": {
+        "nodes": 6,
+        "routes": 6,
+        "frontiers": 1
+      }
+    },
+    {
+      "name": "04-seventeenth-provenance",
+      "id": "A.TRACE.PROVENANCE_CHAIN",
+      "wallMs": 7721.8060000000005,
+      "stats": {
+        "clickToIdleMs": 7606,
+        "firstFlyMs": 1268.4000000003725,
+        "frames": 1038,
+        "p50": 4.200000000000728,
+        "p95": 12.5,
+        "max": 1266.6999999999998,
+        "over50": 1,
+        "over100": 1,
+        "longTaskCount": 1,
+        "longTaskTotal": 1268,
+        "maxLongTask": 1268,
+        "phases": [
+          {
+            "phase": "idle",
+            "ms": -10.599999999627471
+          },
+          {
+            "phase": "fly",
+            "ms": 1268.4000000003725
+          },
+          {
+            "phase": "focus",
+            "ms": 2118.0999999996275
+          },
+          {
+            "phase": "pullback",
+            "ms": 3139.0999999996275
+          },
+          {
+            "phase": "connect",
+            "ms": 4089.4000000003725
+          },
+          {
+            "phase": "idle",
+            "ms": 7501.5999999996275
+          }
+        ]
+      },
+      "sessionLength": 17,
+      "errors": [],
+      "geometry": {
+        "nodes": 17,
+        "routes": 23,
+        "frontiers": 1
+      }
+    },
+    {
+      "name": "05-twentysecond-comparison",
+      "id": "A.MAP.REGION_CONTINUITY",
+      "wallMs": 10476.809799999999,
+      "stats": {
+        "clickToIdleMs": 10326.10000000149,
+        "firstFlyMs": 93.70000000111759,
+        "frames": 1168,
+        "p50": 4.200000000000728,
+        "p95": 20.799999999999272,
+        "max": 91.60000000000036,
+        "over50": 1,
+        "over100": 0,
+        "longTaskCount": 1,
+        "longTaskTotal": 93,
+        "maxLongTask": 93,
+        "phases": [
+          {
+            "phase": "idle",
+            "ms": -6.399999998509884
+          },
+          {
+            "phase": "fly",
+            "ms": 93.70000000111759
+          },
+          {
+            "phase": "focus",
+            "ms": 943.5
+          },
+          {
+            "phase": "pullback",
+            "ms": 1964.1000000014901
+          },
+          {
+            "phase": "connect",
+            "ms": 2914.10000000149
+          },
+          {
+            "phase": "idle",
+            "ms": 10213.800000000745
+          }
+        ]
+      },
+      "sessionLength": 22,
+      "errors": [],
+      "geometry": {
+        "nodes": 22,
+        "routes": 33,
+        "frontiers": 1
+      }
+    },
+    {
+      "name": "06-dense-interaction",
+      "stats": {
+        "clickToIdleMs": 871,
+        "firstFlyMs": 0,
+        "frames": 208,
+        "p50": 4.19999999999709,
+        "p95": 4.30000000000291,
+        "max": 4.899999999997817,
+        "over50": 0,
+        "over100": 0,
+        "longTaskCount": 0,
+        "longTaskTotal": 0,
+        "maxLongTask": 0,
+        "phases": [
+          {
+            "phase": "idle",
+            "ms": 0.40000000037252903
+          }
+        ]
+      },
+      "errors": []
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "reviewRequired": true,
+  "sha256": "98f640e5341d575d003e38b695851bf54f6ffecf275f0e5b308a9a7d0aafae1f",
+  "reducedMotion": true,
+  "viewport": [
+    1440,
+    1000
+  ],
+  "generatedAt": "2026-09-10T06:28:33.092Z",
+  "steps": [
+    {
+      "id": "A.OBSERVE.WHOLE",
+      "firstFrameMs": 23.299999998882413,
+      "longtasks": [],
+      "count": 1
+    },
+    {
+      "id": "A.OBSERVE.BASE",
+      "firstFrameMs": 10.099999999627471,
+      "longtasks": [],
+      "count": 2
+    },
+    {
+      "id": "A.LOCATE.HISTORIC_IMAGE",
+      "firstFrameMs": 12.5,
+      "longtasks": [],
+      "count": 3
+    },
+    {
+      "id": "A.VERIFY.OBJECT_CONTINUITY",
+      "firstFrameMs": 19.699999999254942,
+      "longtasks": [],
+      "count": 4
+    },
+    {
+      "id": "A.RESEARCH.ACCIDENT",
+      "firstFrameMs": 14.700000001117587,
+      "longtasks": [],
+      "count": 5
+    },
+    {
+      "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+      "firstFrameMs": 10.700000001117587,
+      "longtasks": [],
+      "count": 6
+    },
+    {
+      "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+      "firstFrameMs": 11.5,
+      "longtasks": [],
+      "count": 7
+    },
+    {
+      "id": "A.RESEARCH.LATE_TREATMENT",
+      "firstFrameMs": 15.199999999254942,
+      "longtasks": [],
+      "count": 8
+    },
+    {
+      "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+      "firstFrameMs": 12.399999998509884,
+      "longtasks": [],
+      "count": 9
+    },
+    {
+      "id": "A.IMAGE.XRAY",
+      "firstFrameMs": 17.300000000745058,
+      "longtasks": [],
+      "count": 10
+    },
+    {
+      "id": "A.INSPECT.WINDOWS",
+      "firstFrameMs": 19.199999999254942,
+      "longtasks": [],
+      "count": 11
+    },
+    {
+      "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+      "firstFrameMs": 16.90000000037253,
+      "longtasks": [],
+      "count": 12
+    },
+    {
+      "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+      "firstFrameMs": 24.90000000037253,
+      "longtasks": [],
+      "count": 13
+    },
+    {
+      "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+      "firstFrameMs": 16.5,
+      "longtasks": [],
+      "count": 14
+    },
+    {
+      "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+      "firstFrameMs": 48.5,
+      "longtasks": [],
+      "count": 15
+    },
+    {
+      "id": "A.ASSESS.TREATED_AND_UNTREATED",
+      "firstFrameMs": 226.09999999962747,
+      "longtasks": [
+        {
+          "start": 5556.199999999255,
+          "duration": 226
+        }
+      ],
+      "count": 16
+    },
+    {
+      "id": "A.TRACE.PROVENANCE_CHAIN",
+      "firstFrameMs": 1350.800000000745,
+      "longtasks": [
+        {
+          "start": 6001.800000000745,
+          "duration": 1350
+        }
+      ],
+      "count": 17
+    },
+    {
+      "id": "A.SCREEN.UV",
+      "firstFrameMs": 19,
+      "longtasks": [],
+      "count": 18
+    },
+    {
+      "id": "A.OBSERVE.REGION_DECOR",
+      "firstFrameMs": 19.09999999962747,
+      "longtasks": [],
+      "count": 19
+    },
+    {
+      "id": "A.COMPARE.CORPUS",
+      "firstFrameMs": 1433.199999999255,
+      "longtasks": [
+        {
+          "start": 8052.0999999996275,
+          "duration": 1433
+        }
+      ],
+      "count": 20
+    },
+    {
+      "id": "A.COMPARE.CORPUS.RECHECK",
+      "firstFrameMs": 53.09999999962747,
+      "longtasks": [
+        {
+          "start": 9718.900000000373,
+          "duration": 52
+        }
+      ],
+      "count": 21
+    },
+    {
+      "id": "A.MAP.REGION_CONTINUITY",
+      "firstFrameMs": 60.59999999962747,
+      "longtasks": [
+        {
+          "start": 10010,
+          "duration": 60
+        }
+      ],
+      "count": 22
+    }
+  ],
+  "errors": []
+}

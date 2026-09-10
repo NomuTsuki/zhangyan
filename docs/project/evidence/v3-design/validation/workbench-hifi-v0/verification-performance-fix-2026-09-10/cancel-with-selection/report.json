@@ -1,0 +1,30 @@
+{
+  "reviewRequired": true,
+  "url": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+  "sha256": "10039aac47de84d8415c07db09c9d8d332c1ebc3fc42691565d845ec29730336",
+  "suite": "all",
+  "checks": [
+    {
+      "name": "Cold pending investigation remains atomic through cancel-selection",
+      "passed": true,
+      "evidence": {
+        "log": 17,
+        "bill": [
+          2,
+          8,
+          4,
+          3
+        ],
+        "phase": "idle",
+        "history": null,
+        "camera": {
+          "x": -561.8515625,
+          "y": -1851.68,
+          "s": 1
+        }
+      }
+    }
+  ],
+  "generatedAt": "2026-09-10T07:25:34.559Z",
+  "passed": true
+}

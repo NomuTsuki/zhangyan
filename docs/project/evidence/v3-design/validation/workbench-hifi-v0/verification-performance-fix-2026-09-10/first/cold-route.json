@@ -1,0 +1,128 @@
+{
+  "events": [
+    {
+      "id": "A.OBSERVE.WHOLE",
+      "at": 1010.3999999985099,
+      "firstFrame": 4.300000000745058
+    },
+    {
+      "id": "A.OBSERVE.BASE",
+      "at": 1271.2999999988824,
+      "firstFrame": 2.800000000745058
+    },
+    {
+      "id": "A.LOCATE.HISTORIC_IMAGE",
+      "at": 1343.8999999985099,
+      "firstFrame": 4.200000001117587
+    },
+    {
+      "id": "A.VERIFY.OBJECT_CONTINUITY",
+      "at": 1586.5999999996275,
+      "firstFrame": 3.599999999627471
+    },
+    {
+      "id": "A.RESEARCH.ACCIDENT",
+      "at": 1681.7999999988824,
+      "firstFrame": 2.900000000372529
+    },
+    {
+      "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+      "at": 1769.5,
+      "firstFrame": 3.399999998509884
+    },
+    {
+      "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+      "at": 1842.0999999996275,
+      "firstFrame": 1.900000000372529
+    },
+    {
+      "id": "A.RESEARCH.LATE_TREATMENT",
+      "at": 1925.699999999255,
+      "firstFrame": 2.099999999627471
+    },
+    {
+      "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+      "at": 2008.8999999985099,
+      "firstFrame": 1.900000000372529
+    },
+    {
+      "id": "A.IMAGE.XRAY",
+      "at": 2092.199999999255,
+      "firstFrame": 1.599999999627471
+    },
+    {
+      "id": "A.INSPECT.WINDOWS",
+      "at": 2200.2999999988824,
+      "firstFrame": 1.900000000372529
+    },
+    {
+      "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+      "at": 2292.199999999255,
+      "firstFrame": 1.699999999254942
+    },
+    {
+      "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+      "at": 2392.89999999851,
+      "firstFrame": 2.400000000372529
+    },
+    {
+      "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+      "at": 2499.89999999851,
+      "firstFrame": 1.900000000372529
+    },
+    {
+      "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+      "at": 2596,
+      "firstFrame": 2.399999998509884
+    },
+    {
+      "id": "A.ASSESS.TREATED_AND_UNTREATED",
+      "at": 2745.699999999255,
+      "firstFrame": 2.300000000745058
+    },
+    {
+      "id": "A.TRACE.PROVENANCE_CHAIN",
+      "at": 3174.5,
+      "firstFrame": 1.3999999985098839
+    },
+    {
+      "id": "A.SCREEN.UV",
+      "at": 5258.699999999255,
+      "firstFrame": 2
+    },
+    {
+      "id": "A.OBSERVE.REGION_DECOR",
+      "at": 5379.89999999851,
+      "firstFrame": 1.900000000372529
+    },
+    {
+      "id": "A.COMPARE.CORPUS",
+      "at": 5500.0999999996275,
+      "firstFrame": 2.400000000372529
+    },
+    {
+      "id": "A.COMPARE.CORPUS.RECHECK",
+      "at": 7658.699999999255,
+      "firstFrame": 2.199999999254942
+    },
+    {
+      "id": "A.MAP.REGION_CONTINUITY",
+      "at": 7838.0999999996275,
+      "firstFrame": 2.699999999254942
+    }
+  ],
+  "tasks": [
+    {
+      "start": 7494.39999999851,
+      "duration": 66
+    },
+    {
+      "start": 7667.89999999851,
+      "duration": 51
+    },
+    {
+      "start": 7848.5,
+      "duration": 56
+    }
+  ]
+}

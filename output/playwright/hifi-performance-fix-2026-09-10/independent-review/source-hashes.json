@@ -1,0 +1,56 @@
+{
+  "reviewedAt": "2026-09-10T07:07:34.302Z",
+  "scope": "static source review only; no build, engine execution, or browser",
+  "files": [
+    {
+      "file": "src/App.tsx",
+      "bytes": 29231,
+      "sha256": "39f2f1282728ac00c711fdbd1e86c3fa1690bd78f57059e0c3660ee75207a42b"
+    },
+    {
+      "file": "src/MapView.tsx",
+      "bytes": 26863,
+      "sha256": "b556d61566c227581193878d0843d01116f4367eaae19a35004d2286772ce796"
+    },
+    {
+      "file": "src/map-motion.mjs",
+      "bytes": 4893,
+      "sha256": "675d11975d971182bb07483b7312a389e3efc00f6914089e69b9d29a77cb52f3"
+    },
+    {
+      "file": "src/engine-client.mjs",
+      "bytes": 1977,
+      "sha256": "b46de5c386a84800f7ef2f59225bc4b1cdaa1d2027d1827fda992c4914db2a65"
+    },
+    {
+      "file": "src/engine-runtime.mjs",
+      "bytes": 2987,
+      "sha256": "93b49939d78b88026f580022aa519f98b2bdda1bf5e78701ed556c73c8c08f3a"
+    },
+    {
+      "file": "src/engine.worker.ts",
+      "bytes": 1011,
+      "sha256": "92bd872207feb22cd4601aab0e75906273fd90fd7437470d2ed46def4d2f204f"
+    },
+    {
+      "file": "src/engine.ts",
+      "bytes": 5807,
+      "sha256": "ea6df03df2d1ed4e1a645584f2f230588d53fd906f3a977e8b1174034f50191a"
+    },
+    {
+      "file": "src/action-state.mjs",
+      "bytes": 1381,
+      "sha256": "f540e3763f6b8a9709cd71b6c054e174ee5bc1a17ebe0f2c4b21b23be2c101fd"
+    },
+    {
+      "file": "vite.config.ts",
+      "bytes": 468,
+      "sha256": "749d11ceb3ef188739609d1c031957348c5ace025abacbe3269bbe7a0cd99cfc"
+    },
+    {
+      "file": "scripts/finalize.mjs",
+      "bytes": 648,
+      "sha256": "c4a455f3e760c128ba7d474b97598d50a57582efbca2614173e159ada9e749a4"
+    }
+  ]
+}

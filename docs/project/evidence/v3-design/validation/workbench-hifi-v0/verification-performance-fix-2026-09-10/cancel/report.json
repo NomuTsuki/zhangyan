@@ -1,0 +1,17 @@
+{
+  "reviewRequired": true,
+  "url": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+  "sha256": "10039aac47de84d8415c07db09c9d8d332c1ebc3fc42691565d845ec29730336",
+  "suite": "all",
+  "checks": [
+    {
+      "name": "Cold pending investigation remains atomic through cancel-selection",
+      "passed": false,
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '取消选择', exact: true })\u001b[22m\n\n    at E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\scripts\\check-performance-reveal.mjs:57:81\n    at async check (E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\scripts\\check-performance-reveal.mjs:28:87)\n    at async file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-performance-reveal.mjs:53:154",
+      "errors": [],
+      "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-performance-fix-2026-09-10\\cancel\\failure-0.png"
+    }
+  ],
+  "generatedAt": "2026-09-10T07:24:02.715Z",
+  "passed": false
+}

@@ -1,0 +1,513 @@
+{
+  "generatedAt": "2026-09-10T06:26:20.390Z",
+  "profileFile": "targeted-dev/provenance.cpuprofile",
+  "hot": [
+    {
+      "name": "solveFixture",
+      "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+      "line": 1491,
+      "selfMs": 2.7409999999999997,
+      "inclusiveMs": 1319.34
+    },
+    {
+      "name": "solveOrderIndependentFactors",
+      "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+      "line": 1155,
+      "selfMs": 1.175,
+      "inclusiveMs": 1316.599
+    },
+    {
+      "name": "applyFactorOrder",
+      "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+      "line": 1139,
+      "selfMs": 34.583,
+      "inclusiveMs": 1311.202
+    },
+    {
+      "name": "applyAxisPreservingFactor",
+      "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+      "line": 968,
+      "selfMs": 355.92300000000006,
+      "inclusiveMs": 1276.619
+    },
+    {
+      "name": "",
+      "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+      "line": 1014,
+      "selfMs": 706.87,
+      "inclusiveMs": 706.87
+    },
+    {
+      "name": "routeHitPath",
+      "url": "http://127.0.0.1:4260/src/MapView.tsx?t=1789013435787",
+      "line": 48,
+      "selfMs": 299.8980000000001,
+      "inclusiveMs": 299.8980000000001
+    },
+    {
+      "name": "factorWeight",
+      "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+      "line": 942,
+      "selfMs": 90.44999999999997,
+      "inclusiveMs": 213.82599999999996
+    },
+    {
+      "name": "paint",
+      "url": "http://127.0.0.1:4260/src/BowlScene.tsx?t=1789011085201",
+      "line": 472,
+      "selfMs": 1.118,
+      "inclusiveMs": 213.684
+    },
+    {
+      "name": "",
+      "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+      "line": 957,
+      "selfMs": 6.3100000000000005,
+      "inclusiveMs": 123.37599999999998
+    },
+    {
+      "name": "selectorMatches",
+      "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+      "line": 85,
+      "selfMs": 45.853999999999985,
+      "inclusiveMs": 117.06599999999997
+    },
+    {
+      "name": "",
+      "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+      "line": 86,
+      "selfMs": 71.21199999999999,
+      "inclusiveMs": 71.21199999999999
+    }
+  ],
+  "validationCallChains": [
+    [
+      {
+        "name": "solveOrderIndependentFactors",
+        "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+        "line": 1155,
+        "selfMs": 1.175,
+        "inclusiveMs": 1316.599
+      },
+      {
+        "name": "solveFixture",
+        "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0/solver.mjs",
+        "line": 1491,
+        "selfMs": 2.7409999999999997,
+        "inclusiveMs": 1319.34
+      },
+      {
+        "name": "take",
+        "url": "http://127.0.0.1:4260/@fs/E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-map-fusion-v0/local-session.mjs",
+        "line": 30,
+        "selfMs": 0,
+        "inclusiveMs": 1320.963
+      },
+      {
+        "name": "takeNewInvestigation",
+        "url": "http://127.0.0.1:4260/src/action-state.mjs",
+        "line": 14,
+        "selfMs": 0,
+        "inclusiveMs": 1320.963
+      },
+      {
+        "name": "perform",
+        "url": "http://127.0.0.1:4260/src/App.tsx?t=1789013435787",
+        "line": 104,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "onClick",
+        "url": "http://127.0.0.1:4260/src/App.tsx?t=1789013435787",
+        "line": 673,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "executeDispatch",
+        "url": "http://127.0.0.1:4260/node_modules/.vite/deps/react-dom_client.js?v=e9af70c6",
+        "line": 9138,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "run",
+        "url": "",
+        "line": 0,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "runWithFiberInDEV",
+        "url": "http://127.0.0.1:4260/node_modules/.vite/deps/react-dom_client.js?v=e9af70c6",
+        "line": 847,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "processDispatchQueue",
+        "url": "http://127.0.0.1:4260/node_modules/.vite/deps/react-dom_client.js?v=e9af70c6",
+        "line": 9147,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "",
+        "url": "http://127.0.0.1:4260/node_modules/.vite/deps/react-dom_client.js?v=e9af70c6",
+        "line": 9240,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "batchedUpdates$1",
+        "url": "http://127.0.0.1:4260/node_modules/.vite/deps/react-dom_client.js?v=e9af70c6",
+        "line": 2040,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "dispatchEventForPluginEventSystem",
+        "url": "http://127.0.0.1:4260/node_modules/.vite/deps/react-dom_client.js?v=e9af70c6",
+        "line": 9214,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "dispatchEvent",
+        "url": "http://127.0.0.1:4260/node_modules/.vite/deps/react-dom_client.js?v=e9af70c6",
+        "line": 11316,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "dispatchDiscreteEvent",
+        "url": "http://127.0.0.1:4260/node_modules/.vite/deps/react-dom_client.js?v=e9af70c6",
+        "line": 11296,
+        "selfMs": 0,
+        "inclusiveMs": 1323.946
+      },
+      {
+        "name": "(root)",
+        "url": "",
+        "line": 0,
+        "selfMs": 0,
+        "inclusiveMs": 7736.256000000004
+      }
+    ]
+  ],
+  "timing": [
+    {
+      "name": "01-first-xray",
+      "firstAfterClick": {
+        "t": 1887.0999999996275,
+        "phase": "fly",
+        "flight": true,
+        "nodes": [
+          {
+            "id": "obs.structure.xray.early",
+            "opacity": "0",
+            "display": "block",
+            "box": {
+              "x": 1353.607177734375,
+              "y": 429.6555480957031,
+              "w": 30.0059814453125,
+              "h": 30.005950927734375
+            },
+            "text": ""
+          }
+        ],
+        "frontiers": [
+          {
+            "id": "question:change",
+            "opacity": "1",
+            "display": "block",
+            "box": {
+              "x": 1137.908203125,
+              "y": 509.21820068359375,
+              "w": 252.050048828125,
+              "h": 60.01190185546875
+            },
+            "text": "结构从另一个时点到现在变了什\n么？"
+          }
+        ],
+        "roads": [
+          {
+            "id": "question:change",
+            "opacity": "1",
+            "display": "inline",
+            "box": {
+              "x": 1376.7518310546875,
+              "y": 455.4306640625,
+              "w": 56.8712158203125,
+              "h": 75.244873046875
+            },
+            "text": ""
+          }
+        ]
+      },
+      "nodeReveals": [
+        {
+          "id": "obs.structure.xray.early",
+          "firstVisibleMs": 999.0999999996275
+        }
+      ]
+    },
+    {
+      "name": "02-photo-after-xray",
+      "firstAfterClick": {
+        "t": 5495.0999999996275,
+        "phase": "fly",
+        "flight": true,
+        "nodes": [
+          {
+            "id": "obs.phase.t1",
+            "opacity": "0",
+            "display": "block",
+            "box": {
+              "x": 242.33981323242188,
+              "y": 752.8812255859375,
+              "w": 31.221527099609375,
+              "h": 31.2215576171875
+            },
+            "text": ""
+          },
+          {
+            "id": "obs.structure.xray.early",
+            "opacity": "1",
+            "display": "block",
+            "box": {
+              "x": 726.2733764648438,
+              "y": 581.1629028320312,
+              "w": 31.2215576171875,
+              "h": 31.22149658203125
+            },
+            "text": ""
+          }
+        ],
+        "frontiers": [
+          {
+            "id": "question:change",
+            "opacity": "1",
+            "display": "block",
+            "box": {
+              "x": 501.836181640625,
+              "y": 663.94873046875,
+              "w": 262.26080322265625,
+              "h": 62.4429931640625
+            },
+            "text": "结构从另一个时点到现在变了什\n么？"
+          },
+          {
+            "id": "question:photo-object",
+            "opacity": "1",
+            "display": "block",
+            "box": {
+              "x": -5.41595458984375,
+              "y": 761.2069702148438,
+              "w": 206.06204223632812,
+              "h": 31.22149658203125
+            },
+            "text": "照片里是眼前这只碗吗？"
+          }
+        ],
+        "roads": [
+          {
+            "id": "question:change",
+            "opacity": "1",
+            "display": "inline",
+            "box": {
+              "x": 750.3555908203125,
+              "y": 607.982177734375,
+              "w": 59.1751708984375,
+              "h": 78.29315185546875
+            },
+            "text": ""
+          },
+          {
+            "id": "question:photo-object",
+            "opacity": "1",
+            "display": "inline",
+            "box": {
+              "x": 4.42144775390625,
+              "y": 666.7618408203125,
+              "w": 241.5712890625,
+              "h": 94.3514404296875
+            },
+            "text": ""
+          }
+        ]
+      },
+      "nodeReveals": [
+        {
+          "id": "obs.structure.xray.early",
+          "firstVisibleMs": 101.59999999962747
+        },
+        {
+          "id": "obs.phase.t1",
+          "firstVisibleMs": 889.0999999996275
+        }
+      ]
+    },
+    {
+      "name": "03-continuity-four-known",
+      "firstAfterClick": {
+        "t": 1616,
+        "phase": "fly",
+        "flight": true,
+        "nodes": [
+          {
+            "id": "claim:identity",
+            "opacity": "0",
+            "display": "flex",
+            "box": {
+              "x": -20.12646484375,
+              "y": 1111.56494140625,
+              "w": 249.17752075195312,
+              "h": 93.06640625
+            },
+            "text": "晚18世纪\n外销瓷方向\n已有依据"
+          },
+          {
+            "id": "interpretation:photo-repair",
+            "opacity": "0",
+            "display": "block",
+            "box": {
+              "x": 21.9034423828125,
+              "y": 1600.91357421875,
+              "w": 30.02142333984375,
+              "h": 30.021484375
+            },
+            "text": ""
+          },
+          {
+            "id": "obs.current.base",
+            "opacity": "1",
+            "display": "block",
+            "box": {
+              "x": 6.89276123046875,
+              "y": 640.2291259765625,
+              "w": 30.021392822265625,
+              "h": 30.02142333984375
+            },
+            "text": ""
+          },
+          {
+            "id": "obs.current.whole",
+            "opacity": "1",
+            "display": "block",
+            "box": {
+              "x": 307.1066589355469,
+              "y": 482.61688232421875,
+              "w": 30.021392822265625,
+              "h": 30.0213623046875
+            },
+            "text": ""
+          },
+          {
+            "id": "obs.phase.t1",
+            "opacity": "1",
+            "display": "block",
+            "box": {
+              "x": 262.0745849609375,
+              "y": 745.3040161132812,
+              "w": 30.021392822265625,
+              "h": 30.02142333984375
+            },
+            "text": ""
+          },
+          {
+            "id": "obs.structure.xray.early",
+            "opacity": "1",
+            "display": "block",
+            "box": {
+              "x": 727.4061279296875,
+              "y": 580.1864013671875,
+              "w": 30.0213623046875,
+              "h": 30.0213623046875
+            },
+            "text": ""
+          }
+        ],
+        "frontiers": [
+          {
+            "id": "question:change",
+            "opacity": "1",
+            "display": "block",
+            "box": {
+              "x": 511.59613037109375,
+              "y": 659.7899780273438,
+              "w": 252.17962646484375,
+              "h": 60.04278564453125
+            },
+            "text": "结构从另一个时点到现在变了什\n么？"
+          }
+        ],
+        "roads": [
+          {
+            "id": "question:craft",
+            "opacity": "1",
+            "display": "inline",
+            "box": {
+              "x": 30.04925537109375,
+              "y": 508.4052429199219,
+              "w": 357.11444091796875,
+              "h": 232.89590454101562
+            },
+            "text": ""
+          },
+          {
+            "id": "question:photo-object",
+            "opacity": "1",
+            "display": "inline",
+            "box": {
+              "x": 33.30157470703125,
+              "y": 662.4949951171875,
+              "w": 232.2855224609375,
+              "h": 90.72467041015625
+            },
+            "text": ""
+          },
+          {
+            "id": "question:change",
+            "opacity": "1",
+            "display": "inline",
+            "box": {
+              "x": 750.5626220703125,
+              "y": 605.9747314453125,
+              "w": 56.9005126953125,
+              "h": 75.28369140625
+            },
+            "text": ""
+          }
+        ]
+      },
+      "nodeReveals": [
+        {
+          "id": "obs.current.base",
+          "firstVisibleMs": 105.59999999962747
+        },
+        {
+          "id": "obs.current.whole",
+          "firstVisibleMs": 105.59999999962747
+        },
+        {
+          "id": "obs.phase.t1",
+          "firstVisibleMs": 105.59999999962747
+        },
+        {
+          "id": "obs.structure.xray.early",
+          "firstVisibleMs": 105.59999999962747
+        },
+        {
+          "id": "claim:identity",
+          "firstVisibleMs": 7346.799999998882
+        },
+        {
+          "id": "interpretation:photo-repair",
+          "firstVisibleMs": 7125.0999999996275
+        }
+      ]
+    }
+  ]
+}

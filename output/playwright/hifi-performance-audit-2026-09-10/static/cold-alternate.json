@@ -1,0 +1,1113 @@
+{
+  "generatedAt": "2026-09-10T06:27:39.793Z",
+  "variant": "alternate",
+  "node": "v24.15.0",
+  "freshProcess": true,
+  "stateCount": 324,
+  "method": "One new Node process per bounded order; existing runtime first take and 4 repeat executions on clones. No solver source modification or cache manipulation. Factor groups/cache fingerprint reconstructed from exposed active units and unmodified events.",
+  "keySemantics": "stableStringify({factors:groupedFactors(active units),prior:prior probabilities}); grouped axes and components matter; event count and action ordinal do not.",
+  "totalFirstMs": 5757.248399999998,
+  "steps": [
+    {
+      "step": 1,
+      "action": "A.ASSESS.TREATED_AND_UNTREATED",
+      "stage": "NONE",
+      "firstTakeMs": 12.3337,
+      "warmTakeMedianMs": 2.071799999999996,
+      "newCombination": true,
+      "groups": [
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        }
+      ],
+      "groupCount": 1,
+      "permutations": 1,
+      "axisFactorApplications": 1,
+      "keySha256": "39931f190cb489cb4abb6699fd463f30f079b723a65e86b8a856b8d530b3942f"
+    },
+    {
+      "step": 2,
+      "action": "A.ANALYZE.MATERIAL.SUBSTRATE",
+      "stage": "NONE",
+      "firstTakeMs": 2.686099999999996,
+      "warmTakeMedianMs": 2.6674000000000007,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        }
+      ],
+      "groupCount": 1,
+      "permutations": 1,
+      "axisFactorApplications": 1,
+      "keySha256": "39931f190cb489cb4abb6699fd463f30f079b723a65e86b8a856b8d530b3942f"
+    },
+    {
+      "step": 3,
+      "action": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+      "stage": "NONE",
+      "firstTakeMs": 4.8263999999999925,
+      "warmTakeMedianMs": 2.212299999999999,
+      "newCombination": true,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        }
+      ],
+      "groupCount": 2,
+      "permutations": 2,
+      "axisFactorApplications": 4,
+      "keySha256": "8bfe1f925ba9d7add34e20ebf5f8689d1adcecfef4798632a15e1ff759bcbcdb"
+    },
+    {
+      "step": 4,
+      "action": "A.SYNTHESIZE.SURFACE_REGIONS",
+      "stage": "NONE",
+      "firstTakeMs": 10.961299999999994,
+      "warmTakeMedianMs": 2.502600000000001,
+      "newCombination": true,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 3,
+      "permutations": 6,
+      "axisFactorApplications": 18,
+      "keySha256": "6a87b1763a54d1cf056472de44ab1a97429ba7d4aed663612733ae7ba7a1186e"
+    },
+    {
+      "step": 5,
+      "action": "A.INSPECT.WINDOWS",
+      "stage": "NONE",
+      "firstTakeMs": 2.284000000000006,
+      "warmTakeMedianMs": 2.6148000000000025,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 3,
+      "permutations": 6,
+      "axisFactorApplications": 18,
+      "keySha256": "6a87b1763a54d1cf056472de44ab1a97429ba7d4aed663612733ae7ba7a1186e"
+    },
+    {
+      "step": 6,
+      "action": "A.RESEARCH.ACCIDENT",
+      "stage": "NONE",
+      "firstTakeMs": 43.649699999999996,
+      "warmTakeMedianMs": 2.1470999999999947,
+      "newCombination": true,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 4,
+      "permutations": 24,
+      "axisFactorApplications": 96,
+      "keySha256": "36e739f82666ff909f06e3f601c8ccfd146e3052a5c01b9a1753d9eae71850bf"
+    },
+    {
+      "step": 7,
+      "action": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+      "stage": "NONE",
+      "firstTakeMs": 2.31219999999999,
+      "warmTakeMedianMs": 1.9572000000000003,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 4,
+      "permutations": 24,
+      "axisFactorApplications": 96,
+      "keySha256": "36e739f82666ff909f06e3f601c8ccfd146e3052a5c01b9a1753d9eae71850bf"
+    },
+    {
+      "step": 8,
+      "action": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+      "stage": "NONE",
+      "firstTakeMs": 2.356599999999986,
+      "warmTakeMedianMs": 2.0160999999999945,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 4,
+      "permutations": 24,
+      "axisFactorApplications": 96,
+      "keySha256": "36e739f82666ff909f06e3f601c8ccfd146e3052a5c01b9a1753d9eae71850bf"
+    },
+    {
+      "step": 9,
+      "action": "A.RESEARCH.LATE_TREATMENT",
+      "stage": "NONE",
+      "firstTakeMs": 50.25490000000002,
+      "warmTakeMedianMs": 2.3222000000000094,
+      "newCombination": true,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 4,
+      "permutations": 24,
+      "axisFactorApplications": 96,
+      "keySha256": "d92ce1af83c0dfb4d45dac62257784b30dbcd81ac2e0003e9f4d212a9a24c4de"
+    },
+    {
+      "step": 10,
+      "action": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+      "stage": "NONE",
+      "firstTakeMs": 2.183499999999981,
+      "warmTakeMedianMs": 2.186900000000037,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 4,
+      "permutations": 24,
+      "axisFactorApplications": 96,
+      "keySha256": "d92ce1af83c0dfb4d45dac62257784b30dbcd81ac2e0003e9f4d212a9a24c4de"
+    },
+    {
+      "step": 11,
+      "action": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+      "stage": "NONE",
+      "firstTakeMs": 1.9488000000000056,
+      "warmTakeMedianMs": 2.518700000000024,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 4,
+      "permutations": 24,
+      "axisFactorApplications": 96,
+      "keySha256": "d92ce1af83c0dfb4d45dac62257784b30dbcd81ac2e0003e9f4d212a9a24c4de"
+    },
+    {
+      "step": 12,
+      "action": "A.LOCATE.HISTORIC_IMAGE",
+      "stage": "NONE",
+      "firstTakeMs": 2.8263000000000034,
+      "warmTakeMedianMs": 2.6274999999999977,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 4,
+      "permutations": 24,
+      "axisFactorApplications": 96,
+      "keySha256": "d92ce1af83c0dfb4d45dac62257784b30dbcd81ac2e0003e9f4d212a9a24c4de"
+    },
+    {
+      "step": 13,
+      "action": "A.OBSERVE.BASE",
+      "stage": "NONE",
+      "firstTakeMs": 2.851600000000019,
+      "warmTakeMedianMs": 2.1999000000000137,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 4,
+      "permutations": 24,
+      "axisFactorApplications": 96,
+      "keySha256": "d92ce1af83c0dfb4d45dac62257784b30dbcd81ac2e0003e9f4d212a9a24c4de"
+    },
+    {
+      "step": 14,
+      "action": "A.VERIFY.OBJECT_CONTINUITY",
+      "stage": "NONE",
+      "firstTakeMs": 267.8140000000001,
+      "warmTakeMedianMs": 2.3629000000000815,
+      "newCombination": true,
+      "groups": [
+        {
+          "axes": [
+            "Identity"
+          ],
+          "componentFactors": [
+            "fixture.factor.identity.old"
+          ]
+        },
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.three-phase-source"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 5,
+      "permutations": 120,
+      "axisFactorApplications": 600,
+      "keySha256": "ccc15ad5cf81ccf14e8a28444fc2abc7dc8597c9ddb0e6b686c5f181902509ef"
+    },
+    {
+      "step": 15,
+      "action": "A.TRACE.PROVENANCE_CHAIN",
+      "stage": "NONE",
+      "firstTakeMs": 1718.9425,
+      "warmTakeMedianMs": 2.2283000000002176,
+      "newCombination": true,
+      "groups": [
+        {
+          "axes": [
+            "Documentation"
+          ],
+          "componentFactors": [
+            "fixture.factor.documentation.partial"
+          ]
+        },
+        {
+          "axes": [
+            "Identity"
+          ],
+          "componentFactors": [
+            "fixture.factor.identity.old"
+          ]
+        },
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.three-phase-source"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 6,
+      "permutations": 720,
+      "axisFactorApplications": 4320,
+      "keySha256": "e4dd59b52e26b1b41b91bd175f9b28bed22a0df3239bc3dd8e94ce62612e2c3c"
+    },
+    {
+      "step": 16,
+      "action": "A.OBSERVE.WHOLE",
+      "stage": "G3",
+      "firstTakeMs": 2.089499999999589,
+      "warmTakeMedianMs": 2.0450000000000728,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "Documentation"
+          ],
+          "componentFactors": [
+            "fixture.factor.documentation.partial"
+          ]
+        },
+        {
+          "axes": [
+            "Identity"
+          ],
+          "componentFactors": [
+            "fixture.factor.identity.old"
+          ]
+        },
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.three-phase-source"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 6,
+      "permutations": 720,
+      "axisFactorApplications": 4320,
+      "keySha256": "e4dd59b52e26b1b41b91bd175f9b28bed22a0df3239bc3dd8e94ce62612e2c3c"
+    },
+    {
+      "step": 17,
+      "action": "A.COMPARE.CORPUS",
+      "stage": "G3",
+      "firstTakeMs": 1730.732,
+      "warmTakeMedianMs": 2.2641999999996187,
+      "newCombination": true,
+      "groups": [
+        {
+          "axes": [
+            "Documentation"
+          ],
+          "componentFactors": [
+            "fixture.factor.documentation.partial"
+          ]
+        },
+        {
+          "axes": [
+            "Identity"
+          ],
+          "componentFactors": [
+            "fixture.factor.identity.old",
+            "fixture.factor.identity.old"
+          ]
+        },
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.three-phase-source"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 6,
+      "permutations": 720,
+      "axisFactorApplications": 4320,
+      "keySha256": "520901239bc81fec32cd537393f2c351cf10c6bff0c27f4a9ec526d108ccdbc5"
+    },
+    {
+      "step": 18,
+      "action": "A.OBSERVE.REGION_DECOR",
+      "stage": "G3",
+      "firstTakeMs": 2.272899999999936,
+      "warmTakeMedianMs": 2.3843000000006214,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "Documentation"
+          ],
+          "componentFactors": [
+            "fixture.factor.documentation.partial"
+          ]
+        },
+        {
+          "axes": [
+            "Identity"
+          ],
+          "componentFactors": [
+            "fixture.factor.identity.old",
+            "fixture.factor.identity.old"
+          ]
+        },
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.three-phase-source"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 6,
+      "permutations": 720,
+      "axisFactorApplications": 4320,
+      "keySha256": "520901239bc81fec32cd537393f2c351cf10c6bff0c27f4a9ec526d108ccdbc5"
+    },
+    {
+      "step": 19,
+      "action": "A.IMAGE.XRAY",
+      "stage": "G3",
+      "firstTakeMs": 1885.3997999999992,
+      "warmTakeMedianMs": 2.2950000000000728,
+      "newCombination": true,
+      "groups": [
+        {
+          "axes": [
+            "Documentation"
+          ],
+          "componentFactors": [
+            "fixture.factor.documentation.partial"
+          ]
+        },
+        {
+          "axes": [
+            "Identity"
+          ],
+          "componentFactors": [
+            "fixture.factor.identity.old",
+            "fixture.factor.identity.old"
+          ]
+        },
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.major"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 6,
+      "permutations": 720,
+      "axisFactorApplications": 4320,
+      "keySha256": "16f2cd02433746ed185ac934fd2e4ef7dc3ef6379b5846a3d4c5245c0b052f8f"
+    },
+    {
+      "step": 20,
+      "action": "A.SCREEN.UV",
+      "stage": "G3",
+      "firstTakeMs": 2.708199999999124,
+      "warmTakeMedianMs": 2.428200000000288,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "Documentation"
+          ],
+          "componentFactors": [
+            "fixture.factor.documentation.partial"
+          ]
+        },
+        {
+          "axes": [
+            "Identity"
+          ],
+          "componentFactors": [
+            "fixture.factor.identity.old",
+            "fixture.factor.identity.old"
+          ]
+        },
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.major"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 6,
+      "permutations": 720,
+      "axisFactorApplications": 4320,
+      "keySha256": "16f2cd02433746ed185ac934fd2e4ef7dc3ef6379b5846a3d4c5245c0b052f8f"
+    },
+    {
+      "step": 21,
+      "action": "A.COMPARE.CORPUS.RECHECK",
+      "stage": "G3",
+      "firstTakeMs": 3.443500000000313,
+      "warmTakeMedianMs": 2.7294999999994616,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "Documentation"
+          ],
+          "componentFactors": [
+            "fixture.factor.documentation.partial"
+          ]
+        },
+        {
+          "axes": [
+            "Identity"
+          ],
+          "componentFactors": [
+            "fixture.factor.identity.old",
+            "fixture.factor.identity.old"
+          ]
+        },
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.major"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 6,
+      "permutations": 720,
+      "axisFactorApplications": 4320,
+      "keySha256": "16f2cd02433746ed185ac934fd2e4ef7dc3ef6379b5846a3d4c5245c0b052f8f"
+    },
+    {
+      "step": 22,
+      "action": "A.MAP.REGION_CONTINUITY",
+      "stage": "G3",
+      "firstTakeMs": 2.3708999999998923,
+      "warmTakeMedianMs": 2.5027000000000044,
+      "newCombination": false,
+      "groups": [
+        {
+          "axes": [
+            "Documentation"
+          ],
+          "componentFactors": [
+            "fixture.factor.documentation.partial"
+          ]
+        },
+        {
+          "axes": [
+            "Identity"
+          ],
+          "componentFactors": [
+            "fixture.factor.identity.old",
+            "fixture.factor.identity.old"
+          ]
+        },
+        {
+          "axes": [
+            "KeyMaterial"
+          ],
+          "componentFactors": [
+            "fixture.factor.key.preserved"
+          ]
+        },
+        {
+          "axes": [
+            "RepairHistory"
+          ],
+          "componentFactors": [
+            "fixture.factor.repair.major",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.three-phase-source",
+            "fixture.factor.repair.major"
+          ]
+        },
+        {
+          "axes": [
+            "Stability"
+          ],
+          "componentFactors": [
+            "fixture.factor.stability.local-risk"
+          ]
+        },
+        {
+          "axes": [
+            "Surface"
+          ],
+          "componentFactors": [
+            "fixture.factor.surface.mixed"
+          ]
+        }
+      ],
+      "groupCount": 6,
+      "permutations": 720,
+      "axisFactorApplications": 4320,
+      "keySha256": "16f2cd02433746ed185ac934fd2e4ef7dc3ef6379b5846a3d4c5245c0b052f8f"
+    }
+  ]
+}

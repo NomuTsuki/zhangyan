@@ -1,0 +1,91 @@
+{
+  "reviewRequired": true,
+  "sha256": "fd2bb3e37c865dd17e95af8f5becd0304219e7b5c9e6b82e07332dc9eb9b2683",
+  "checks": [
+    {
+      "name": "Identical investigations are free to recall; a new comparison basis is still new",
+      "passed": true,
+      "evidence": {
+        "ordinaryRepeatCharged": false,
+        "matchingBasisCharged": false,
+        "alternateBasisPreserved": true
+      }
+    },
+    {
+      "name": "Actual entry anchors the popup and the flight for outside and bowl hotspots",
+      "passed": true,
+      "evidence": [
+        {
+          "id": "A.IMAGE.XRAY",
+          "anchor": {
+            "x": 22,
+            "y": 753.25,
+            "width": 77.484375,
+            "height": 33.1875
+          },
+          "pop": {
+            "x": 111.484375,
+            "y": 745.25,
+            "width": 330,
+            "height": 191.578125
+          },
+          "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-integration-2026-09-10\\second\\outside-near-popup.png"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "anchor": {
+            "x": 199.796875,
+            "y": 298.5,
+            "width": 30,
+            "height": 30
+          },
+          "pop": {
+            "x": 241.796875,
+            "y": 290.5,
+            "width": 330,
+            "height": 191.578125
+          },
+          "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-integration-2026-09-10\\second\\bowl-near-popup.png"
+        }
+      ]
+    },
+    {
+      "name": "Map dragging does not select text; selection and recovery remain free",
+      "passed": true,
+      "evidence": {
+        "selectedText": "",
+        "sessionUnchanged": true
+      }
+    },
+    {
+      "name": "UI repeat buttons are disabled and material recall preserves judgment context",
+      "passed": true,
+      "evidence": {
+        "context": "claim:identity",
+        "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-integration-2026-09-10\\second\\1280-judgment-evidence.png",
+        "alternativeComparisonEnabled": true
+      }
+    },
+    {
+      "name": "Old photo and xray remain acquired once; verification grows first and later uses follow",
+      "passed": true,
+      "evidence": {
+        "sameCanonicalCurve": true,
+        "startMask": "0.496543px",
+        "middleMask": "0.24421px",
+        "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-integration-2026-09-10\\second\\photo-mid-connection.png"
+      }
+    },
+    {
+      "name": "History, restart and stopping cancel camera and roads without stale callbacks",
+      "passed": true,
+      "evidence": {
+        "history": true,
+        "restart": true,
+        "stopping": true
+      }
+    }
+  ],
+  "generatedAt": "2026-09-10T03:46:29.711Z",
+  "passed": true
+}

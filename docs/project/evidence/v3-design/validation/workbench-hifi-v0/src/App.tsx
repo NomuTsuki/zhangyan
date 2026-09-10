@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import BowlScene from './BowlScene';
 import MapView from './MapView';
-import MaterialViewer from './MaterialViewer';
+import MaterialViewer, { type MaterialContext } from './MaterialViewer';
+import { completedInvestigation, takeNewInvestigation } from './action-state.mjs';
 import Dialog from './Dialog';
 import { actionById, billText, buildGraph, cleanCopy, costNames, derive, diffGraphs, engine, observationTitle, placeById, places, resolveFocus, stageNames, type Investigation, type Selection } from './engine';
 
@@ -15,6 +16,7 @@ export default function App(){
   const [visibleBody,setVisibleBody]=useState<string[]>(['OBJ_W','OBJ_D','SURF']);
   const [dialog,setDialog]=useState<'brief'|'history'|'stop'|'restart'|'settings'|null>(null);
   const [materialId,setMaterialId]=useState<string|null>(null);
+  const [materialContext,setMaterialContext]=useState<MaterialContext|null>(null);
   const [historyIndex,setHistoryIndex]=useState<number|null>(null);
   const [comparisonBasis,setComparisonBasis]=useState<string>('');
   const [notice,setNotice]=useState('');
@@ -24,6 +26,8 @@ export default function App(){
   const [reduceMotion,setReduceMotion]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [note,setNote]=useState(''),[savedNote,setSavedNote]=useState('');
   const popRef=useRef<HTMLDivElement>(null),eventId=useRef(0);
+  const entryRef=useRef<HTMLElement|null>(null),anchorRect=useRef<DOMRect|null>(null);
+  const [popoverPosition,setPopoverPosition]=useState({left:20,top:100});
   const viewSession=useMemo(()=>historyIndex===null?session:engine.replayLog(session.log.slice(0,historyIndex),session.budget,false),[session,historyIndex]);
   const model=useMemo(()=>derive(viewSession),[viewSession]);
   const focus=useMemo(()=>resolveFocus(hover||selection,model,viewSession),[hover,selection,model,viewSession]);
@@ -43,21 +47,25 @@ export default function App(){
   const clear=()=>{setSelection(null);setHover(null);setOpenPlace(null);};
   const choose=(next:Selection)=>{cancelMotion();setHover(null);setSelection(old=>old?.id===next?.id&&old?.kind===next?.kind?null:next);};
   function openDialog(kind:typeof dialog){cancelMotion();setOpenPlace(null);setDialog(kind);}
-  function inspect(id:string){if(!model.graph.observations.some((o:any)=>o.id===id))return;cancelMotion();setOpenPlace(null);setMaterialId(id);}
-  function choosePlace(id:string){
+  function inspect(id:string,retainContext=true){if(!model.graph.observations.some((o:any)=>o.id===id))return;cancelMotion();setOpenPlace(null);setMaterialContext(retainContext&&selection?{kind:selection.kind,id:selection.id,title:detailTitle||'当前所选内容',status:selectedClaim?.status,sourceIds:[...sourceIds] as string[]}:null);setMaterialId(id);}
+  function choosePlace(id:string,anchor?:HTMLElement){
     cancelMotion();
+    const fallback=document.querySelector<HTMLElement>(`[data-place="${id}"], [data-bowl-target="${id}"]`);
+    entryRef.current=anchor||fallback;anchorRect.current=entryRef.current?.getBoundingClientRect()||null;
     setOpenPlace(old=>old===id?null:id);setSelection({kind:'place',id});setHover(null);setComparisonBasis('');
   }
-  function perform(row:any,button:HTMLElement){
+  function perform(row:any){
     if(locked)return;
-    const rect=button.getBoundingClientRect(),next=structuredClone(session);
+    const rect=entryRef.current?.isConnected?entryRef.current.getBoundingClientRect():anchorRect.current;
+    if(!rect)return;
+    const next=structuredClone(session);
     const before:any=buildGraph(engine.solve(session),session);
-    const result=engine.take(next,row.action.id,comparisonBasis?{comparisonBasis}:{});
+    const result=takeNewInvestigation(next,row.action.id,comparisonBasis?{comparisonBasis}:{});
     if(!result.ok){setNotice(result.why||'先选择要比较的材料。');return;}
     const after:any=buildGraph(engine.solve(next),next),changes=diffGraphs(before,after);
     setSession(next);setOpenPlace(null);setSelection({kind:'evidence',id:result.observationId});setHover(null);setLatestId(result.observationId);
-    setNotice(result.kind==='repeat'?'这份信息已经留存，本次复核仍消耗 1 次调查机会。':`已记录：${observationTitle(after,result.observationId)}`);
-    setInvestigation({id:++eventId.current,observationId:result.observationId,result,changes,origin:{x:rect.left+rect.width*.5,y:rect.top+rect.height*.5}});
+    setNotice(`已记录：${observationTitle(after,result.observationId)}`);
+    setInvestigation({id:++eventId.current,observationId:result.observationId,result,changes,origin:{x:rect.left+rect.width*.5,y:rect.top+rect.height*.5},beforeGraph:before,originPlaceId:row.action.place});
   }
   function restart(){setSession(engine.newSession(session.budget));setGameId(x=>x+1);setInvestigation(null);setHistoryIndex(null);setLatestId(null);setNotice('');setNote('');setSavedNote('');clear();setDialog(null);cancelMotion();}
   function stop(){const next=structuredClone(session);next.stopped=true;setSession(next);setSavedNote(note.trim());setDialog(null);setNotice('本局已收手。判断、依据和仍未说清的部分都保留下来。');clear();cancelMotion();}
@@ -65,19 +73,39 @@ export default function App(){
   function returnLive(){setHistoryIndex(null);clear();setNotice(session.stopped?'已回到收手时的记录。':'已回到当前调查。');cancelMotion();}
 
   useEffect(()=>{
-    const onKey=(e:KeyboardEvent)=>{if(e.key==='Escape'&&!dialog&&!materialId){if(openPlace)setOpenPlace(null);else clear();}};
+    const onKey=(e:KeyboardEvent)=>{if(e.key==='Escape'){cancelMotion();if(!dialog&&!materialId){if(openPlace)setOpenPlace(null);else clear();}}};
     window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);
   },[dialog,materialId,openPlace]);
   useEffect(()=>{
     if(!openPlace)return;
-    const close=(e:PointerEvent)=>{if(popRef.current?.contains(e.target as Node)||(e.target as Element).closest('[data-place]'))return;setOpenPlace(null);};
+    const close=(e:PointerEvent)=>{if(popRef.current?.contains(e.target as Node)||(e.target as Element).closest('[data-place],[data-bowl-target]'))return;setOpenPlace(null);};
     window.addEventListener('pointerdown',close);return()=>window.removeEventListener('pointerdown',close);
   },[openPlace]);
+  useLayoutEffect(()=>{
+    if(!openPlace||!popRef.current)return;
+    const position=()=>{
+      // A method opened from a map question can refer to a body part which is
+      // still facing away. Resolve its real entry when rotating reveals it.
+      if(!entryRef.current?.isConnected)entryRef.current=document.querySelector<HTMLElement>(`.bowl-hotspot[data-bowl-target="${openPlace}"], [data-place="${openPlace}"], [data-bowl-target="${openPlace}"]`);
+      const rect=entryRef.current?.isConnected?entryRef.current.getBoundingClientRect():anchorRect.current;
+      if(!rect||!popRef.current)return;
+      anchorRect.current=rect;
+      const pop=popRef.current.getBoundingClientRect(),gap=12;
+      let left=rect.right+gap;
+      if(left+pop.width>window.innerWidth-16)left=rect.left-pop.width-gap;
+      left=Math.max(16,Math.min(left,window.innerWidth-pop.width-16));
+      const top=Math.max(86,Math.min(rect.top-8,window.innerHeight-pop.height-16));
+      setPopoverPosition(old=>old.left===left&&old.top===top?old:{left,top});
+    };
+    position();const observer=new ResizeObserver(position);observer.observe(popRef.current);window.addEventListener('resize',position);
+    return()=>{observer.disconnect();window.removeEventListener('resize',position);};
+  },[openPlace,visibleBody,comparisonBasis,session,historyIndex]);
   useEffect(()=>{
     window.hifiSnapshot=()=>structuredClone({session,viewSession,historyIndex,gameId,selection,openPlace,visibleBody,
-      graph:model.graph,claims:model.solved.claims,stage:model.solved.stage,stopping:model.solved.stopping,reduceMotion});
+      graph:model.graph,claims:model.solved.claims,stage:model.solved.stage,stopping:model.solved.stopping,reduceMotion,materialContext,
+      entryAnchor:anchorRect.current?{x:anchorRect.current.x,y:anchorRect.current.y,width:anchorRect.current.width,height:anchorRect.current.height}:null});
     return()=>{delete window.hifiSnapshot;};
-  },[session,viewSession,historyIndex,gameId,selection,openPlace,visibleBody,model,reduceMotion]);
+  },[session,viewSession,historyIndex,gameId,selection,openPlace,visibleBody,model,reduceMotion,materialContext]);
 
   const bodyPlaceVisible=!openPlace||placeById.get(openPlace)?.group!=='object'||visibleBody.includes(openPlace);
   const detailTitle=selectedGap?.title||selectedNode?.title||selectedClaim?.title||selectedAction?.action.name||
@@ -87,7 +115,7 @@ export default function App(){
   if(selectedClaim&&!selectedNode)detailCopy=selectedClaim.sourceIds.length?'已经留下一些相关信息，当前仍不足以作出这项判断。':'还没有能够支撑这项判断的调查记录。';
   const relevantRows=(detailFocus.actionIds||[]).map((id:string)=>model.rows.find((r:any)=>r.action.id===id)).filter(Boolean);
 
-  return <main className="game-frame" data-history={historyIndex!==null} data-stopped={session.stopped}>
+  return <main className="game-frame" data-history={historyIndex!==null} data-stopped={session.stopped} data-reduced-motion={reduceMotion}>
     <header className="game-topbar">
       <div className="brand" aria-label="掌眼">掌眼<span className="brand-seal">鉴</span></div>
       <div className="case-name">彩绘大碗<span>一号委托</span></div>
@@ -102,34 +130,35 @@ export default function App(){
     <div className="workbench-columns">
       <aside className="object-panel">
         <header className="panel-heading object-heading"><h1>眼前之物</h1><span>转一转，再看一看</span></header>
-        <BowlScene key={gameId} selectedTargetId={selection?.kind==='place'?selection.id:openPlace} onSelectTarget={choosePlace} onOrientationChange={setVisibleBody} disabled={false}/>
+        <BowlScene key={gameId} selectedTargetId={selection?.kind==='place'?selection.id:openPlace} relatedTargetIds={focus.placeIds||[]} onSelectTarget={choosePlace} onOrientationChange={setVisibleBody} disabled={false}/>
         <section className="outside-panel" aria-label="器物之外的调查">
           <div className="outside-heading"><h2>器物之外</h2><span>查档、送检与比对</span></div>
           <div className="outside-groups">{['送检','查档','比对','现状'].map(group=><section className={`investigation-group group-${group}`} key={group}>
             <h3>{group}</h3><div className="place-buttons">{places.filter(p=>p.group===group).map(p=>{
               const related=focus.placeIds?.includes(p.id)||model.rows.some((r:any)=>r.action.place===p.id&&focus.actionIds?.includes(r.action.id));
               const rows=model.rows.filter((r:any)=>r.action.place===p.id),done=rows.every((r:any)=>r.done);
-              return <button key={p.id} data-place={p.id} className={`place-button ${openPlace===p.id?'selected':''} ${related?'related':''}`} onClick={()=>choosePlace(p.id)} aria-expanded={openPlace===p.id}>
+              return <button key={p.id} data-place={p.id} className={`place-button ${openPlace===p.id?'selected':''} ${related?'related':''}`} onClick={e=>choosePlace(p.id,e.currentTarget)} aria-expanded={openPlace===p.id}>
                 {p.name}{done&&<span className="done-dot" aria-label="已有记录"/>}
               </button>;
             })}</div>
           </section>)}</div>
           <div className="cost-ledger"><span>本局调查费用</span><span>{billText(viewSession)}</span></div>
         </section>
-        {openPlace&&<div className="investigation-popover" ref={popRef} role="region" aria-label={`${placeById.get(openPlace)?.name}的调查手段`}>
+        {openPlace&&<div className="investigation-popover" style={popoverPosition} ref={popRef} role="region" aria-label={`${placeById.get(openPlace)?.name}的调查手段`}>
           <div className="popover-heading"><span>{placeById.get(openPlace)?.name}</span><button aria-label="关闭手段" onClick={()=>setOpenPlace(null)}>×</button></div>
           {!bodyPlaceVisible&&<p className="condition-note">转动器物，让这个部位朝向你，便可以查看这里的手段。</p>}
-          {bodyPlaceVisible&&activeRows.map((row:any)=><div className="method" key={row.action.id} data-action-row={row.action.id}>
+          {bodyPlaceVisible&&activeRows.map((row:any)=>{const completed=completedInvestigation(viewSession,row.action.id,comparisonBasis);return <div className="method" key={row.action.id} data-action-row={row.action.id}>
             <button className="method-title" onClick={()=>choose({kind:'action',id:row.action.id})}>{row.action.name}</button>
             <p>{row.action.ask}</p>
             {row.comparisonOptions&&<fieldset className="comparison-options"><legend>用哪份材料比较？</legend>{row.comparisonOptions.map((o:any)=><label key={o.id} className={!o.usable?'unavailable':''}>
-              <input type="radio" name="comparison-basis" value={o.id} checked={comparisonBasis===o.id} disabled={!o.usable||locked} onChange={()=>setComparisonBasis(o.id)}/><span>{o.label}{!o.usable&&<small>{o.why}</small>}</span>
+              <input type="radio" name="comparison-basis" value={o.id} checked={comparisonBasis===o.id} disabled={!o.usable||locked} onChange={()=>setComparisonBasis(o.id)}/><span>{o.label}{completedInvestigation(viewSession,row.action.id,o.id)&&<small>这组材料已比较，可查看记录</small>}{!o.usable&&<small>{o.why}</small>}</span>
             </label>)}</fieldset>}
             {!row.usable&&<div className="condition-note">{row.why}</div>}
-            <div className="method-footer"><span>占 1 次 · {row.action.cost?`费用${costNames[row.action.cost]}`:'免费'}{row.done?' · 已做过':''}</span>
-              <button className="investigate-button" data-action={row.action.id} disabled={locked||!row.usable||!row.affordable||!!row.comparisonOptions&&!comparisonBasis} onClick={e=>perform(row,e.currentTarget)}>{row.done?'再核查一次':'做这一步'}</button></div>
+            <div className="method-footer"><span>{completed?'记录已留存':`占 1 次 · ${row.action.cost?`费用${costNames[row.action.cost]}`:'免费'}`}</span>
+              <button className="investigate-button" data-action={row.action.id} disabled={!!completed||locked||!row.usable||!row.affordable||!!row.comparisonOptions&&!comparisonBasis} onClick={()=>perform(row)}>{completed?'已经做过':'做这一步'}</button></div>
+            {completed&&<button className="completed-record quiet-link" onClick={()=>inspect(completed.observationId,false)}>查看第 {completed.step} 次调查记录 · 免费</button>}
             {!row.affordable&&!locked&&<small>调查机会已用完，你仍可以查看记录并作出判断。</small>}
-          </div>)}
+          </div>;})}
           {locked&&<p className="condition-note">{historyIndex!==null?'正在回看历史，回到当前调查后再继续。':'本局已经收手，可以继续查看记录。'}</p>}
         </div>}
       </aside>
@@ -137,7 +166,7 @@ export default function App(){
       <section className="knowledge-panel" aria-label="已知与推理">
         <MapView key={gameId} graph={model.graph} focus={focus} selection={selection} onSelect={choose} onHover={setHover}
           investigation={historyIndex===null?investigation:null} cancelEpoch={cancelEpoch} reducedMotion={reduceMotion} historyMode={historyIndex!==null}
-          notice={notice} latestTitle={latestId?observationTitle(model.graph,latestId):''} onOpenLatest={latestId?()=>inspect(latestId):undefined}/>
+          notice={notice} latestTitle={latestId?observationTitle(model.graph,latestId):''} onOpenLatest={latestId?()=>inspect(latestId,false):undefined}/>
       </section>
 
       <aside className="judgment-panel">
@@ -152,10 +181,11 @@ export default function App(){
             <h3>{detailTitle}</h3>{detailCopy&&<p>{cleanCopy(detailCopy)}</p>}
             {selectedNode?.relations&&<ul className="relation-status">{selectedNode.relations.map((r:any)=><li key={r.key}><span>{r.status==='established'?'✓':'○'}</span>{r.title}<small>{r.status==='established'?'已核对':'待核对'}</small></li>)}</ul>}
             {selection.kind==='evidence'&&model.graph.observations.some((o:any)=>o.id===selection.id)&&<button className="material-link" onClick={()=>inspect(selection.id)}>展开这份材料 <span>↗</span></button>}
+            {!!detailFocus.inputSources?.length&&<div className="sources-section input-sources"><h4>本次核对用到的材料</h4>{detailFocus.inputSources.map((o:any)=><button className="source-row" key={o.id} onClick={()=>inspect(o.id)}><span className="source-dot"/>{o.title}<span>↗</span></button>)}</div>}
             {sourceRecords.length>0&&<div className="sources-section"><h4>回看依据</h4>{sourceRecords.map((o:any)=><button className="source-row" key={o.id} onClick={()=>inspect(o.id)}><span className="source-dot"/>{o.title}<span>↗</span></button>)}</div>}
             {(selectedClaim?.claimId==='coherentDecisionProfile')&&<div className="judgment-facets">{model.facets.map((f:any)=><div key={f.id}><span>{f.label}</span><strong>{f.stateLabel}</strong></div>)}</div>}
             {selectedAction&&<div className="selected-method"><div>占 1 次调查机会 · {costNames[selectedAction.action.cost]}费用</div>{!selectedAction.usable&&<p>{selectedAction.why}</p>}<button className="material-link" onClick={()=>choosePlace(selectedAction.action.place)}>在器物一侧查看手段 →</button></div>}
-            {selectedGap&&relevantRows.length>0&&<details className="related-methods"><summary>有哪些方法可以了解它</summary>{relevantRows.map((row:any)=><button key={row.action.id} onClick={()=>{setSelection({kind:'action',id:row.action.id});setOpenPlace(row.action.place);}}><span>{row.action.name}</span><small>{costNames[row.action.cost]} · {row.usable?'可调查':'条件未齐'}</small></button>)}</details>}
+            {selectedGap&&relevantRows.length>0&&<details className="related-methods"><summary>有哪些方法可以了解它</summary>{relevantRows.map((row:any)=><button key={row.action.id} onClick={()=>{choosePlace(row.action.place);setSelection({kind:'action',id:row.action.id});}}><span>{row.action.name}</span><small>{costNames[row.action.cost]} · {row.usable?'可调查':'条件未齐'}</small></button>)}</details>}
           </>:<>
             <div className="detail-kicker">{session.stopped?'收手时留下的判断':'尚未说清'}</div>
             {session.stopped&&<p className="final-note">{savedNote||'我选择带着目前的判断与未解之处收手。'}</p>}
@@ -172,6 +202,6 @@ export default function App(){
     {dialog==='stop'&&<Dialog title="收手，作出判断" onClose={()=>setDialog(null)}><p className="dialog-intro">你已经调查了 {session.log.length} 次。目前的依据与未决之处都会保留。</p><div className="stop-overview">{model.overview.map((c:any)=><div key={c.id}><span>{c.title}</span><strong>{c.statusLabel}</strong></div>)}</div><label className="note-label" htmlFor="judgment-note">留下你的判断</label><textarea id="judgment-note" value={note} onChange={e=>setNote(e.target.value)} placeholder="哪些已经有把握，哪些仍需要保留？" rows={4}/><div className="dialog-actions"><button className="quiet-link" onClick={()=>setDialog(null)}>继续调查</button><button className="dark-button" onClick={stop}>确认收手</button></div></Dialog>}
     {dialog==='restart'&&<Dialog title="重新开始这次委托" onClose={()=>setDialog(null)}><p className="dialog-intro">这会清除本局的调查记录与判断，使用当前的 {session.budget} 次机会设置重新开始。</p><div className="dialog-actions"><button className="quiet-link" onClick={()=>setDialog(null)}>保留本局</button><button className="dark-button" onClick={restart}>重新开始</button></div></Dialog>}
     {dialog==='settings'&&<Dialog title="工作台设置" onClose={()=>setDialog(null)}><label className="setting-row"><span>减少动态效果<small>直接呈现调查后的关系，保留短暂强调。</small></span><input type="checkbox" checked={reduceMotion} onChange={e=>{setReduceMotion(e.target.checked);cancelMotion();}}/></label><label className="setting-row"><span>本局调查机会<small>{session.log.length?'已开始的调查不修改机会设置。':'开始第一次调查前可以设置。'}</small></span><input aria-label="本局调查机会" type="number" min={12} max={22} value={session.budget} disabled={!!session.log.length||session.stopped} onChange={e=>{const next=structuredClone(session);engine.setBudget(next,e.target.value);setSession(next);}}/></label><div className="setting-row"><span>重新开始<small>清除本局记录，重新鉴定这只碗。</small></span><button className="outlined-button" onClick={()=>setDialog('restart')}>重开</button></div></Dialog>}
-    {materialId&&<MaterialViewer observationId={materialId} graph={model.graph} onClose={()=>setMaterialId(null)}/>}
+    {materialId&&<MaterialViewer observationId={materialId} graph={model.graph} context={materialContext} onClose={()=>setMaterialId(null)}/>}
   </main>;
 }

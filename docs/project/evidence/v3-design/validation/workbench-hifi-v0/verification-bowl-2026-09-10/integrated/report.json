@@ -1,0 +1,326 @@
+{
+  "review": "review required",
+  "initial": {
+    "state": {
+      "session": {
+        "acquired": [],
+        "log": [],
+        "billed": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stopped": false,
+        "budget": 22
+      },
+      "viewSession": {
+        "acquired": [],
+        "log": [],
+        "billed": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stopped": false,
+        "budget": 22
+      },
+      "historyIndex": null,
+      "gameId": 0,
+      "selection": null,
+      "openPlace": null,
+      "visibleBody": [
+        "OBJ_W",
+        "OBJ_D",
+        "OBJ_R",
+        "SURF"
+      ],
+      "graph": {
+        "nodes": [],
+        "edges": [],
+        "questions": [],
+        "stage": {
+          "key": "NONE",
+          "title": "还没有方向",
+          "summary": "手上有东西,但还说不出该问什么。这不是失败,是每一局的起点。"
+        },
+        "observations": [],
+        "localSupportGroups": [],
+        "proofRepresentatives": {},
+        "frontiers": [],
+        "supportGroups": []
+      },
+      "claims": {
+        "coherentDecisionProfile": {
+          "established": false
+        },
+        "g1": {
+          "established": false
+        },
+        "identity": {
+          "contested": false,
+          "established": false,
+          "logicallyRefuted": false
+        },
+        "majorReassembly": {
+          "contested": false,
+          "established": false,
+          "logicallyRefuted": false
+        },
+        "threePhase": {
+          "established": false
+        }
+      },
+      "stage": "NONE",
+      "stopping": {
+        "frozenStage": null,
+        "playerChoice": "CONTINUE",
+        "systemAutoEnded": false
+      },
+      "reduceMotion": false,
+      "materialContext": null,
+      "entryAnchor": null
+    },
+    "stage": {
+      "width": 379,
+      "height": 326
+    },
+    "labels": [
+      {
+        "id": "OBJ_D",
+        "label": "纹饰与色差"
+      },
+      {
+        "id": "OBJ_R",
+        "label": "没被改动的特征"
+      },
+      {
+        "id": "SURF",
+        "label": "表面"
+      }
+    ],
+    "hotspots": 3
+  },
+  "selected": {
+    "state": {
+      "session": {
+        "acquired": [],
+        "log": [],
+        "billed": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stopped": false,
+        "budget": 22
+      },
+      "viewSession": {
+        "acquired": [],
+        "log": [],
+        "billed": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stopped": false,
+        "budget": 22
+      },
+      "historyIndex": null,
+      "gameId": 0,
+      "selection": {
+        "kind": "place",
+        "id": "OBJ_D"
+      },
+      "openPlace": "OBJ_D",
+      "visibleBody": [
+        "OBJ_W",
+        "OBJ_D",
+        "OBJ_R",
+        "SURF"
+      ],
+      "graph": {
+        "nodes": [],
+        "edges": [],
+        "questions": [],
+        "stage": {
+          "key": "NONE",
+          "title": "还没有方向",
+          "summary": "手上有东西,但还说不出该问什么。这不是失败,是每一局的起点。"
+        },
+        "observations": [],
+        "localSupportGroups": [],
+        "proofRepresentatives": {},
+        "frontiers": [],
+        "supportGroups": []
+      },
+      "claims": {
+        "coherentDecisionProfile": {
+          "established": false
+        },
+        "g1": {
+          "established": false
+        },
+        "identity": {
+          "contested": false,
+          "established": false,
+          "logicallyRefuted": false
+        },
+        "majorReassembly": {
+          "contested": false,
+          "established": false,
+          "logicallyRefuted": false
+        },
+        "threePhase": {
+          "established": false
+        }
+      },
+      "stage": "NONE",
+      "stopping": {
+        "frozenStage": null,
+        "playerChoice": "CONTINUE",
+        "systemAutoEnded": false
+      },
+      "reduceMotion": false,
+      "materialContext": null,
+      "entryAnchor": {
+        "x": 30,
+        "y": 250,
+        "width": 60,
+        "height": 42
+      }
+    },
+    "stage": {
+      "width": 379,
+      "height": 326
+    },
+    "labels": [
+      {
+        "id": "OBJ_D",
+        "label": "纹饰与色差"
+      },
+      {
+        "id": "OBJ_R",
+        "label": "没被改动的特征"
+      },
+      {
+        "id": "SURF",
+        "label": "表面"
+      }
+    ],
+    "hotspots": 3
+  },
+  "bottom": {
+    "state": {
+      "session": {
+        "acquired": [],
+        "log": [],
+        "billed": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stopped": false,
+        "budget": 22
+      },
+      "viewSession": {
+        "acquired": [],
+        "log": [],
+        "billed": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "stopped": false,
+        "budget": 22
+      },
+      "historyIndex": null,
+      "gameId": 0,
+      "selection": {
+        "kind": "place",
+        "id": "OBJ_D"
+      },
+      "openPlace": null,
+      "visibleBody": [
+        "OBJ_W",
+        "OBJ_D",
+        "OBJ_R",
+        "OBJ_F"
+      ],
+      "graph": {
+        "nodes": [],
+        "edges": [],
+        "questions": [],
+        "stage": {
+          "key": "NONE",
+          "title": "还没有方向",
+          "summary": "手上有东西,但还说不出该问什么。这不是失败,是每一局的起点。"
+        },
+        "observations": [],
+        "localSupportGroups": [],
+        "proofRepresentatives": {},
+        "frontiers": [],
+        "supportGroups": []
+      },
+      "claims": {
+        "coherentDecisionProfile": {
+          "established": false
+        },
+        "g1": {
+          "established": false
+        },
+        "identity": {
+          "contested": false,
+          "established": false,
+          "logicallyRefuted": false
+        },
+        "majorReassembly": {
+          "contested": false,
+          "established": false,
+          "logicallyRefuted": false
+        },
+        "threePhase": {
+          "established": false
+        }
+      },
+      "stage": "NONE",
+      "stopping": {
+        "frozenStage": null,
+        "playerChoice": "CONTINUE",
+        "systemAutoEnded": false
+      },
+      "reduceMotion": false,
+      "materialContext": null,
+      "entryAnchor": {
+        "x": 30,
+        "y": 250,
+        "width": 60,
+        "height": 42
+      }
+    },
+    "stage": {
+      "width": 379,
+      "height": 326
+    },
+    "labels": [
+      {
+        "id": "OBJ_D",
+        "label": "纹饰与色差"
+      },
+      {
+        "id": "OBJ_R",
+        "label": "没被改动的特征"
+      },
+      {
+        "id": "OBJ_F",
+        "label": "底足与修足"
+      }
+    ],
+    "hotspots": 3
+  },
+  "errors": []
+}

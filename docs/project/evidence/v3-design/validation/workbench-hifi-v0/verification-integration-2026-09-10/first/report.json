@@ -1,0 +1,84 @@
+{
+  "reviewRequired": true,
+  "sha256": "bf5197611ca4f334943247796edb3483bf1e3810e3d31cd4abaecb7af930f7be",
+  "checks": [
+    {
+      "name": "Identical investigations are free to recall; a new comparison basis is still new",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-integration-2026-09-10.mjs:36:9\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-integration-2026-09-10.mjs:31:56)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-integration-2026-09-10.mjs:33:7",
+      "errors": [],
+      "screenshot": null
+    },
+    {
+      "name": "Actual entry anchors the popup and the flight for outside and bowl hotspots",
+      "passed": true,
+      "evidence": [
+        {
+          "id": "A.IMAGE.XRAY",
+          "anchor": {
+            "x": 22,
+            "y": 753.25,
+            "width": 77.484375,
+            "height": 33.1875
+          },
+          "pop": {
+            "x": 111.484375,
+            "y": 745.25,
+            "width": 330,
+            "height": 191.578125
+          },
+          "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-integration-2026-09-10\\first\\outside-near-popup.png"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "anchor": {
+            "x": 199.796875,
+            "y": 298.5,
+            "width": 30,
+            "height": 30
+          },
+          "pop": {
+            "x": 241.796875,
+            "y": 290.5,
+            "width": 330,
+            "height": 191.578125
+          },
+          "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-integration-2026-09-10\\first\\bowl-near-popup.png"
+        }
+      ]
+    },
+    {
+      "name": "Map dragging does not select text; selection and recovery remain free",
+      "passed": true,
+      "evidence": {
+        "selectedText": "",
+        "sessionUnchanged": true
+      }
+    },
+    {
+      "name": "UI repeat buttons are disabled and material recall preserves judgment context",
+      "passed": false,
+      "error": "locator.check: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-action-row=\"A.MAP.REGION_CONTINUITY\"]').locator('input[value=\"photo\"]')\u001b[22m\n\u001b[2m    - locator resolved to <input disabled type=\"radio\" value=\"photo\" name=\"comparison-basis\"/>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    59 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at prepare (E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\scripts\\check-integration-2026-09-10.mjs:25:129)\n    at async take (E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\scripts\\check-integration-2026-09-10.mjs:27:44)\n    at async file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-integration-2026-09-10.mjs:61:35\n    at async check (E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\scripts\\check-integration-2026-09-10.mjs:31:50)\n    at async file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-integration-2026-09-10.mjs:58:1",
+      "errors": [],
+      "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-integration-2026-09-10\\first\\failure-3.png"
+    },
+    {
+      "name": "Old photo and xray remain acquired once; verification grows first and later uses follow",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected \"actual\" to be strictly unequal to:\n\n'0.5px'\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-integration-2026-09-10.mjs:67:305\n    at async check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-integration-2026-09-10.mjs:31:50)\n    at async file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-integration-2026-09-10.mjs:63:1",
+      "errors": [],
+      "screenshot": "E:\\zhangyan__v2\\docs\\project\\evidence\\v3-design\\validation\\workbench-hifi-v0\\verification-integration-2026-09-10\\first\\failure-4.png"
+    },
+    {
+      "name": "History, restart and stopping cancel camera and roads without stale callbacks",
+      "passed": true,
+      "evidence": {
+        "history": true,
+        "restart": true,
+        "stopping": true
+      }
+    }
+  ],
+  "generatedAt": "2026-09-10T03:43:52.594Z",
+  "passed": false
+}

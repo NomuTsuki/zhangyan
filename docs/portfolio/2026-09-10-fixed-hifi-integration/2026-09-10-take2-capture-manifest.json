@@ -1,0 +1,71 @@
+{
+  "captureCommand": "node output/playwright/portfolio-fixed-hifi-2026-09-10/final-hero-process.cjs",
+  "source": {
+    "bytes": 5085304,
+    "sha256": "8d8f672bd02f658ebe52943f0db9573ff788df531d6a383f3d2ed6f6ca3c9ff4",
+    "input": "output\\playwright\\portfolio-fixed-hifi-2026-09-10\\2026-09-10-take2-after-final-8d8f672.html"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "deviceScaleFactor": 2,
+  "hero": "2026-09-10-take2-final-hero-local-four-actions-1440x1000-2x.png",
+  "camera": {
+    "x": 72.48289262820512,
+    "y": 7.089230769230767,
+    "s": 0.5064102564102564
+  },
+  "sessionLog": [
+    {
+      "actionId": "A.OBSERVE.WHOLE",
+      "eventKey": "whole",
+      "observationId": "obs.current.whole",
+      "cost": 0,
+      "materialObservationIds": []
+    },
+    {
+      "actionId": "A.OBSERVE.BASE",
+      "eventKey": "base",
+      "observationId": "obs.current.base",
+      "cost": 0,
+      "materialObservationIds": []
+    },
+    {
+      "actionId": "A.LOCATE.HISTORIC_IMAGE",
+      "eventKey": "t1",
+      "observationId": "obs.phase.t1",
+      "cost": 1,
+      "materialObservationIds": []
+    },
+    {
+      "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+      "eventKey": "identityContinuity",
+      "observationId": "obs.object.continuity",
+      "cost": 2,
+      "materialObservationIds": [
+        "obs.phase.t1",
+        "obs.current.base"
+      ]
+    }
+  ],
+  "cameraPolicy": "Real UI: local overview of the four-action graph, then select identity; no full-run graph or injected state.",
+  "process": {
+    "filename": "2026-09-10-take2-review-skeleton-to-workbench-process-2x.png",
+    "compositionHtml": "output\\playwright\\portfolio-fixed-hifi-2026-09-10\\2026-09-10-take2-process-composition.html",
+    "viewport": {
+      "width": 1680,
+      "height": 900
+    },
+    "reviewSource": "output\\playwright\\fixed-map-skeleton-v2-2026-09-09\\preview.html",
+    "reviewSha256": "b15a62765234a871490985e9f51bfe4f1fd4164cc0d0bbf64eda823ee58c3dfe",
+    "reviewInteraction": [
+      "photo mode",
+      "perform object check"
+    ],
+    "sourceScreenshot": "output\\playwright\\portfolio-fixed-hifi-2026-09-10\\2026-09-10-review-photo-logic.png",
+    "actualScreenshot": "2026-09-10-take2-final-hero-local-four-actions-1440x1000-2x.png"
+  },
+  "pageErrors": [],
+  "reviewRequired": true
+}

@@ -1,0 +1,86 @@
+{
+  "scope": "Asset-file readback only; no product or playability claim",
+  "reviewRequired": true,
+  "assets": [
+    {
+      "file": "2026-09-10-take1-after-same-four-actions-1440x1000-2x.png",
+      "bytes": 2703568,
+      "sha256": "d559bf1feaffb9453798e2339708f6dc1f10fa172035ed84832e7474277b3d73",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-10-take1-before-same-four-actions-1440x1000-2x.png",
+      "bytes": 2811927,
+      "sha256": "86aae338cea0cd468a61e2911e8c4fe0e27b0542477360d1dd964b80d47da6a1",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-10-take1-hero-local-judgment-1440x1000-2x.png",
+      "bytes": 2774164,
+      "sha256": "fce8dfa2516f6932db9638df00e6299edd5e654df77950602120713431b27af3",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-10-take1-verification-road-and-current-scan.mp4",
+      "bytes": 1370401,
+      "sha256": "d2db0c5700fe844a1b0a8946f9b2dddfa05132198ddbb3b1a63fe9ade203cc47",
+      "media": {
+        "programs": [],
+        "streams": [
+          {
+            "width": 1440,
+            "height": 1000,
+            "avg_frame_rate": "25/1"
+          }
+        ],
+        "format": {
+          "duration": "19.960000",
+          "size": "1370401"
+        }
+      }
+    },
+    {
+      "file": "2026-09-10-take2-final-hero-local-four-actions-1440x1000-2x.png",
+      "bytes": 2723927,
+      "sha256": "5b988b14b6cfe1dbcf441f5fc1c67c17e3b2b11031a925d2b30cdf40e4a2752d",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-10-take2-review-skeleton-to-workbench-process-2x.png",
+      "bytes": 1753760,
+      "sha256": "fa42d5ed419db94837b142be7c1bae3e22584f294863c1f8332e12bb50788576",
+      "width": 3360,
+      "height": 1800
+    },
+    {
+      "file": "2026-09-10-take3-final-automatic-pullback-hero-1440x1000-2x.png",
+      "bytes": 2730593,
+      "sha256": "555a471e9eda54d50e4b0607328d30273315d795f116e4058b8fba09f907c376",
+      "width": 2880,
+      "height": 2000
+    },
+    {
+      "file": "2026-09-10-take3-final-automatic-road-connection.mp4",
+      "bytes": 1465665,
+      "sha256": "96784c48114004f19f1894fdec6eeb76c6428bd52e75e573e214cbf5a196899a",
+      "media": {
+        "programs": [],
+        "streams": [
+          {
+            "width": 1440,
+            "height": 1000,
+            "avg_frame_rate": "25/1"
+          }
+        ],
+        "format": {
+          "duration": "22.000000",
+          "size": "1465665"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "reviewRequired": true,
+  "provenance": "Implementation owner, real UI and read-only hifiSnapshot",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "checks": [
+    "Partial identity context and missing basis are visible before images",
+    "Images start collapsed; canvas, angle and zoom remain available",
+    "Escape closes; reading does not change the session",
+    "D uses three acquired inputs and retains pending photo attribution",
+    "Following an input preserves context; return restores the original report"
+  ],
+  "resultBounds": {
+    "x": 251,
+    "y": 394.546875,
+    "width": 455,
+    "height": 97.78125
+  },
+  "boundaryBounds": {
+    "x": 251,
+    "y": 511.328125,
+    "width": 938,
+    "height": 148.625
+  },
+  "contextId": "obs.structure.major.cross-time",
+  "pageErrors": []
+}

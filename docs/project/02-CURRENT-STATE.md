@@ -1,5 +1,11 @@
 # Current State
 
+## 2026-09-10 当前进展：固定骨架高保真已接入并完成机器核验，待试玩
+
+用户确认固定骨架审阅版“可读行不错，没有什么大的问题”，随后明确要求动手整合。本轮已将固定节点／道路、原路虚实接通、来源回查、连续调查反馈与此前八项交互修复接入 [高保真页](evidence/v3-design/validation/workbench-hifi-v0/prototype.html)。审阅图得到肯定与三栏游戏体验通过分开记录；原话和范围见 [接入记录](evidence/v3-design/2026-09-10-hifi-fixed-map-integration.md)。
+
+源码、离线页与新检查在当前工作区；原检查点 `68f9283` 保留，本轮未提交或推送。固定布局8/8、既有合同7/7、材料内容6/6、最终整合UI7/7及三种桌面22动作流程3/3通过；最终镜头边界与22秒原速资产已读回，准确构建和限定独立复核见 [本轮验证](evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-2026-09-10.md)。新增检查触发 `review required`，下一步直接由用户试玩此高保真修订版。
+
 ## 2026-09-09 当前进展：独立高保真已实现，待用户体验评价
 
 用户已明确启动高保真页面，并确认“道路优先，文字避让，蜿蜒稍加强”的排布。新入口为 [workbench-hifi-v0](evidence/v3-design/validation/workbench-hifi-v0/)，使用 React / Three.js，直接复用融合版 local-session、graph 与选择投影，不修改冻结求解器。

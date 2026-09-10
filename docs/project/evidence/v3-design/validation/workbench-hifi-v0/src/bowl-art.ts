@@ -270,8 +270,10 @@ export function createBowlGroup({ period = 'current', mode = 'normal' }: BowlMod
   inner.name = 'open-inner-wall'; group.add(inner);
   const rim = new THREE.Mesh(new THREE.TorusGeometry(1.32, 0.022, 12, 160), glaze(undefined, '#d1bb91'));
   rim.rotation.x = Math.PI / 2; rim.position.y = 0.5; rim.name = 'thick-glazed-lip'; group.add(rim);
+  // The closed section must run up the outer wall: reverse its winding so the
+  // outside faces outward and the contact face points down under FrontSide.
   const foot = new THREE.Mesh(new THREE.LatheGeometry(profile([[0.35, -0.625], [0.435, -0.65], [0.456, -0.752],
-    [0.439, -0.814], [0.359, -0.814], [0.342, -0.758], [0.35, -0.625]], 36), 100),
+    [0.439, -0.814], [0.359, -0.814], [0.342, -0.758], [0.35, -0.625]].reverse(), 36), 100),
     xray ? glaze() : new THREE.MeshStandardMaterial({ color: '#c5b795', roughness: 0.8 }));
   foot.name = 'unglazed-foot-ring'; group.add(foot);
   const base = new THREE.Mesh(new THREE.CircleGeometry(0.355, 96), glaze(xray ? undefined : texture(baseTexture()), '#f0e8d4'));

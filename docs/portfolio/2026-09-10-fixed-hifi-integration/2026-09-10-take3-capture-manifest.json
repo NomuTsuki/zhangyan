@@ -1,0 +1,162 @@
+{
+  "captureCommand": "node output/playwright/portfolio-fixed-hifi-2026-09-10/capture-final-motion.cjs",
+  "source": {
+    "sourcePath": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+    "input": "output\\playwright\\portfolio-fixed-hifi-2026-09-10\\2026-09-10-take3-final-automatic-camera.html",
+    "bytes": 5085383,
+    "sha256": "98f640e5341d575d003e38b695851bf54f6ffecf275f0e5b308a9a7d0aafae1f"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "heroDeviceScaleFactor": 2,
+  "normalSpeed": true,
+  "pageErrors": [],
+  "reviewRequired": true,
+  "hero": {
+    "filename": "2026-09-10-take3-final-automatic-pullback-hero-1440x1000-2x.png",
+    "camera": {
+      "x": 128.0234375,
+      "y": 7.089230769230767,
+      "s": 0.5064102564102564
+    },
+    "sessionLog": [
+      {
+        "actionId": "A.OBSERVE.WHOLE",
+        "eventKey": "whole",
+        "observationId": "obs.current.whole",
+        "cost": 0,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.OBSERVE.BASE",
+        "eventKey": "base",
+        "observationId": "obs.current.base",
+        "cost": 0,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.LOCATE.HISTORIC_IMAGE",
+        "eventKey": "t1",
+        "observationId": "obs.phase.t1",
+        "cost": 1,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+        "eventKey": "identityContinuity",
+        "observationId": "obs.object.continuity",
+        "cost": 2,
+        "materialObservationIds": [
+          "obs.phase.t1",
+          "obs.current.base"
+        ]
+      }
+    ],
+    "newResultBounds": {
+      "viewport": {
+        "left": 424.234375,
+        "right": 1055.53125,
+        "top": 212,
+        "bottom": 954
+      },
+      "items": [
+        {
+          "id": "claim:identity",
+          "left": 644.930908203125,
+          "right": 771.0270385742188,
+          "top": 598.1373291015625,
+          "bottom": 645.2334594726562
+        },
+        {
+          "id": "interpretation:photo-repair",
+          "left": 692.0270385742188,
+          "right": 755.834716796875,
+          "top": 837.4161376953125,
+          "bottom": 869.3200073242188
+        }
+      ]
+    },
+    "cameraPolicy": "Automatic post-C pullback; selecting identity does not change camera; no manual pan, zoom or overview."
+  },
+  "clip": {
+    "filename": "2026-09-10-take3-final-automatic-road-connection.mp4",
+    "raw": "output\\playwright\\portfolio-fixed-hifi-2026-09-10\\2026-09-10-take3-raw-video\\page@46dbe8e438f0b96be826fc179179e61b.webm",
+    "trimStartSeconds": 12.752,
+    "requestedDurationSeconds": 22,
+    "normalSpeed": true,
+    "preparedActions": [
+      "A.OBSERVE.WHOLE",
+      "A.OBSERVE.BASE",
+      "A.LOCATE.HISTORIC_IMAGE"
+    ],
+    "capturedActions": [
+      "A.VERIFY.OBJECT_CONTINUITY",
+      "A.IMAGE.XRAY"
+    ],
+    "sessionLog": [
+      {
+        "actionId": "A.OBSERVE.WHOLE",
+        "eventKey": "whole",
+        "observationId": "obs.current.whole",
+        "cost": 0,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.OBSERVE.BASE",
+        "eventKey": "base",
+        "observationId": "obs.current.base",
+        "cost": 0,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.LOCATE.HISTORIC_IMAGE",
+        "eventKey": "t1",
+        "observationId": "obs.phase.t1",
+        "cost": 1,
+        "materialObservationIds": []
+      },
+      {
+        "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+        "eventKey": "identityContinuity",
+        "observationId": "obs.object.continuity",
+        "cost": 2,
+        "materialObservationIds": [
+          "obs.phase.t1",
+          "obs.current.base"
+        ]
+      },
+      {
+        "actionId": "A.IMAGE.XRAY",
+        "eventKey": "xrayEarly",
+        "observationId": "obs.structure.xray.early",
+        "cost": 3,
+        "materialObservationIds": []
+      }
+    ],
+    "ffmpegArgs": [
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-ss",
+      "12.752",
+      "-i",
+      "E:\\zhangyan__v2\\output\\playwright\\portfolio-fixed-hifi-2026-09-10\\2026-09-10-take3-raw-video\\page@46dbe8e438f0b96be826fc179179e61b.webm",
+      "-t",
+      "22",
+      "-an",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "medium",
+      "-crf",
+      "20",
+      "-pix_fmt",
+      "yuv420p",
+      "-movflags",
+      "+faststart",
+      "E:\\zhangyan__v2\\docs\\portfolio\\2026-09-10-fixed-hifi-integration\\2026-09-10-take3-final-automatic-road-connection.mp4"
+    ]
+  }
+}

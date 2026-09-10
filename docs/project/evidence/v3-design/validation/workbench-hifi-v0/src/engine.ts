@@ -8,7 +8,7 @@ export const engine = SessionEngine as any;
 export const actions: any[] = frozenActions;
 export { buildGraph, diffGraphs };
 export type Selection = { kind: 'place'|'action'|'evidence'|'claim'|'edge'|'gap'|'group'; id: string } | null;
-export type Investigation = { id:number; observationId:string; result:any; changes:any; origin:{x:number;y:number}; } | null;
+export type Investigation = { id:number; observationId:string; result:any; changes:any; origin:{x:number;y:number}; beforeGraph?:any; originPlaceId?:string; } | null;
 export const places = [
   {id:'OBJ_W',name:'整只碗',group:'object'}, {id:'OBJ_F',name:'底足与修足',group:'object'},
   {id:'OBJ_D',name:'纹饰与色差',group:'object'}, {id:'OBJ_R',name:'没被改动的特征',group:'object'},
@@ -35,7 +35,37 @@ export function resolveFocus(selection:Selection,model:ReturnType<typeof derive>
       placeIds:[],claimIds:[group.targetId.replace('claim:','')],sourceIds:group.sourceIds,
       sources:model.graph.observations.filter((o:any)=>group.sourceIds.includes(o.id)),primaryNodeIds:[group.targetId],primaryEdgeIds:group.edgeIds};
   }
-  return (resolveSelection as any)(selection,model.graph,model.solved,session,model.rows);
+  const projected:any=(resolveSelection as any)(selection,model.graph,model.solved,session,model.rows);
+  if(!selection||!projected.subject)return projected;
+  const graph=model.graph;
+  // Selecting a judgment highlights its actual incoming proofs, never the
+  // downstream claims that happen to cite one of the same source reports.
+  if(selection.kind==='claim'){
+    const id=selection.id.startsWith('claim:')?selection.id:`claim:${selection.id}`;
+    const incoming=graph.edges.filter((e:any)=>e.to===id&&['support','conflict'].includes(e.kind));
+    projected.edgeIds=incoming.map((e:any)=>e.id);
+    projected.primaryEdgeIds=[...projected.edgeIds];
+  }
+  const observation=selection.kind==='evidence'?graph.observations.find((o:any)=>o.id===selection.id):null;
+  const folded=observation?.representedAs==='relation';
+  if(folded){
+    const carriers=graph.edges.filter((e:any)=>['attribution','corroboration','same-object'].includes(e.kind)&&e.sourceIds?.includes(observation.id));
+    projected.edgeIds=carriers.map((e:any)=>e.id);
+    projected.primaryEdgeIds=[...projected.edgeIds];
+    projected.nodeIds=[...new Set(carriers.flatMap((e:any)=>[e.from,e.to]))];
+  }
+  const report=observation||((selection.kind==='edge'&&selection.id==='photo:object')?graph.observations.find((o:any)=>o.id==='obs.object.continuity'):null);
+  let inputIds:string[]=[];
+  if(report){
+    inputIds=(report.materialObservationIds||[]).filter((id:string)=>graph.nodes.some((n:any)=>n.id===id));
+    if(!inputIds.length)inputIds=graph.edges.filter((e:any)=>e.to===report.id&&['reference','context'].includes(e.kind)).map((e:any)=>e.from);
+    if(report.id==='obs.object.continuity')inputIds=['obs.phase.t1','obs.current.base'].filter(id=>graph.nodes.some((n:any)=>n.id===id));
+  }
+  projected.inputNodeIds=[...new Set(inputIds)];
+  projected.nodeIds=[...new Set([...projected.nodeIds,...inputIds])];
+  projected.inputSources=inputIds.map(id=>graph.observations.find((o:any)=>o.id===id)).filter(Boolean);
+  for(const o of projected.inputSources){if(!projected.actionIds.includes(o.actionId))projected.actionIds.push(o.actionId);const place=actionById.get(o.actionId)?.place;if(place&&!projected.placeIds.includes(place))projected.placeIds.push(place);}
+  return projected;
 }
 export function billText(session:any){return session.billed.map((count:number,i:number)=>count?`${costNames[i]} × ${count}`:'').filter(Boolean).join(' · ')||'尚未产生调查费用';}
 export function observationTitle(graph:any,id:string){return graph.observations.find((o:any)=>o.id===id)?.title||'调查记录';}

@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+import assert from 'node:assert/strict';
+const root=process.cwd(),base=path.join(root,'docs/project/evidence/v3-design/validation/workbench-hifi-v0');
+const bytes=fs.readFileSync(path.join(base,'prototype.html')),stamp=JSON.parse(fs.readFileSync(path.join(base,'build-stamp.json')));
+const sha=crypto.createHash('sha256').update(bytes).digest('hex');assert.equal(sha,stamp.sha256);assert.equal(bytes.length,stamp.bytes);
+const integration=JSON.parse(fs.readFileSync(path.join(base,'verification-integration-2026-09-10/final-camera/report.json'))),main=JSON.parse(fs.readFileSync(path.join(base,'verification-browser-2026-09-10-final-main.json')));
+assert.equal(integration.sha256,sha);assert.equal(integration.passed,true);assert.equal(main.passed,true);
+const files=['docs/project/02-CURRENT-STATE.md','docs/project/03-NEXT-ACTIONS.md','docs/project/evidence/v3-design/2026-09-10-hifi-fixed-map-integration.md',path.relative(root,path.join(base,'VERIFICATION-2026-09-10.md')),path.relative(root,path.join(base,'README.md')),path.relative(root,path.join(base,'PLAYTEST.md'))];
+const broken=[];
+for(const file of files){const content=fs.readFileSync(path.join(root,file),'utf8');assert.equal(content.includes('\ufffd'),false,file);if(file.endsWith('CURRENT-STATE.md')||file.endsWith('NEXT-ACTIONS.md'))continue;
+ for(const match of content.matchAll(/\]\(([^)]+)\)/g)){const target=match[1].split('#')[0];if(!target||target.includes('://'))continue;if(!fs.existsSync(path.resolve(path.dirname(path.join(root,file)),target)))broken.push({file,target});}}
+assert.deepEqual(broken,[]);
+const protectedPaths=['first-ceramic-author-scenarios-v0','knowledge-map-slice-v0','workbench-map-v0','workbench-map-focus-v1','workbench-map-atlas-v0','workbench-map-fusion-v0'].map(name=>'docs/project/evidence/v3-design/validation/'+name);
+const git=spawnSync('git',['diff','--name-only','HEAD','--',...protectedPaths,path.relative(root,path.join(base,'scripts/check-contract.mjs')),path.relative(root,path.join(base,'scripts/check-browser.mjs'))],{cwd:root,encoding:'utf8'});assert.equal(git.status,0);assert.equal(git.stdout.trim(),'');
+const whitespace=spawnSync('git',['diff','--check'],{cwd:root,encoding:'utf8'});assert.equal(whitespace.status,0);
+const report={sha256:sha,bytes:bytes.length,integrationChecks:integration.checks.length,desktopScenarios:main.scenarios.length,brokenLinks:broken,protectedChanges:[],diffCheckExit:whitespace.status,commit:'not committed',generatedAt:new Date().toISOString()};
+fs.writeFileSync(new URL('./release-readback.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));

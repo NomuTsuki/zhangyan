@@ -1,5 +1,56 @@
 # 产品数值登记表
 
+## 2026-09-10 固定地图与调查反馈（Experimental）
+
+用户肯定审阅骨架可读性后，明确要求接入高保真并修复前次八项反馈。以下记录呈现值及可回退条件；预算、费用档、四项判断条件均未转正或改值。
+
+id: v3.hifi.discovery.timeline
+value & unit: 原飞线560ms／聚焦420ms／全部道路800ms → 飞线850ms、聚焦600ms、停留420ms、拉远950ms；对应关系1800ms，普通支持1700ms、长路2300ms、短汇流出口850ms、收束260ms
+identity: experimental-default
+why: 用户认为旧连线瞬间出现；本次按真实依赖逐段接通，让旧关系和后续解释的先后可观察
+affects: 一次调查的反馈时长、定位与接通可读性；复杂调查总时长由实际依赖层数决定，玩家可打断
+does NOT affect: 调查结果、证据计数、预算、费用、阶段判定与人工收手
+status: experimental
+reopen when: 用户认为动画妨碍连续调查，或无法分辨刚接通哪部分；回退时仍保留正确遮罩及取消机制
+
+id: v3.hifi.fixed-map.geometry
+value & unit: 审阅736px骨架按1.5倍迁入1104×2760世界坐标；信息21px／31.5px行高，判断249×93px；试窗前沿显露最终道路0–0.68，照片缺口两端0–0.43和0.57–1
+identity: experimental-default
+why: 用同一位置和同一路径保留空间记忆，虚实变化不再另画尾线；字体随骨架同比放大
+affects: 地图密度、道路形状、前沿走向与标签避让
+does NOT affect: 未取得节点的显露条件、任何证明规则、调查顺序自由
+status: experimental
+reopen when: 实际桌面局部仍拥挤、文字难与节点对应，或新增有来源的案例内容需要调整空间骨架
+
+id: v3.hifi.discovery.camera-context
+value & unit: 聚焦1.18–1.42倍上限区间；拉远适合本次所有新增／重新解释内容及至多补足6项的旧邻居；取消原0.68最低拉远限制，缩放可在0.2–1.8之间，全览上限1
+identity: experimental-default
+why: 录屏发现0.68下限会裁掉较远的新历史解释；只限制额外旧邻居数量，所有本次结果必须入镜
+affects: 本次变化的画面覆盖；全览可见整体形状但小字需放大阅读
+does NOT affect: 地图世界坐标、道路、会话内容；选择节点不会自动移动镜头
+status: experimental
+reopen when: 用户认为拉远过度、看不清新内容或镜头打断思考；以实际显示边界和真人体验共同重估
+
+id: v3.hifi.archive-road.parts
+value & unit: 归属0–0.485；实物印证0.515–1；两项都成立后接满0–1；新增部分按其自身区间用完整1800ms生长
+identity: experimental-default
+why: 同一条关系分别核验，避免完成归属就把实物印证也画实；命中范围与可见路段对应
+affects: 档案两种核验的视觉差别和点击对象
+does NOT affect: 两项核验真实状态、来源报告、可执行顺序与判断成立条件
+status: experimental
+reopen when: 用户分不清同路两段表达的核验，或需要更直接的关系短标
+
+id: v3.hifi.bowl.annotation-fit
+value & unit: 取景直径min(舞台宽×0.80,舞台高−80px)；外引字12px，单行26px／双行42px；可见圆16px／点击区30px；拖动启动4px
+identity: experimental-default
+why: 给轮廓外部位名留空间，避免短舞台近看丢失标签；原130ms显隐稳定及朝向阈值不变
+affects: 器物观感大小、入口可读性、点选与拖动分辨
+does NOT affect: 五个入口、22手段、费用、会话、求解器与成像语义
+status: experimental
+reopen when: 用户认为器物太小或标签跳位，或出现实际舞台高度小于235px
+
+同一调查禁止重复执行属于本次明确授权的交互政策，来源与边界见 [接入记录](evidence/v3-design/2026-09-10-hifi-fixed-map-integration.md)；不把它伪装成费用数值调节。
+
 ## 2026-09-09 高保真调查呈现（Experimental）
 
 用户已授权按已采纳的画面制作，确认道路先行、文字避路，蜿蜒程度略加强。此处只登记呈现与操作参数；游戏预算、费用档位、判定阈值均沿用融合版。

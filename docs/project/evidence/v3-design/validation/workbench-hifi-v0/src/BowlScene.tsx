@@ -13,12 +13,16 @@ export const BOWL_TARGETS = [
 
 export interface BowlSceneProps {
   selectedTargetId: string | null;
-  onSelectTarget: (id: string) => void;
+  /** Actual clicked control anchors the investigation popover and its flyline. */
+  onSelectTarget: (id: string, anchor?: HTMLElement) => void;
+  relatedTargetIds?: string[];
   onOrientationChange?: (ids: string[]) => void;
   /** Prevents investigation selection; viewing and rotation remain available. */
   disabled?: boolean;
 }
-type Hotspot = { id: string; x: number; y: number; visible: boolean };
+type Point = { x: number; y: number };
+type Callout = { x: number; y: number; width: number; height: number; path: string; lines: string[] };
+type Hotspot = Point & { id: string; visible: boolean; callout?: Callout };
 type Controls = { reset: () => void; zoom: (delta: number) => void };
 
 // Experimental presentation parameters, not game costs or evidence rules.
@@ -30,7 +34,59 @@ const POSE = {
   settleMs: 130, orientationEase: 0.24,
 };
 
-export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientationChange, disabled = false }: BowlSceneProps) {
+// Experimental presentation defaults. Keep the established orientation cones;
+// reserve room around the specimen for readable, persistent investigation names.
+// Revisit if a desktop label needs a long detour or the specimen feels too small.
+const CALLOUT = { fontSize: 12, height: 26, gap: 8, inset: 8, top: 42, bottom: 48, dragThreshold: 4 };
+
+function convexHull(points: Point[]) {
+  const sorted = [...points].sort((a, b) => a.x - b.x || a.y - b.y);
+  const cross = (o: Point, a: Point, b: Point) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+  const half = (list: Point[]) => { const result: Point[] = []; for (const p of list) { while (result.length > 1 && cross(result.at(-2)!, result.at(-1)!, p) <= 0) result.pop(); result.push(p); } return result; };
+  return [...half(sorted).slice(0, -1), ...half(sorted.reverse()).slice(0, -1)];
+}
+
+/** Only annotation positions change; investigation IDs and 3D anchors do not. */
+export function layoutBowlCallouts(points: Hotspot[], hull: Point[], width: number, height: number): Hotspot[] {
+  const occupied: Callout[] = [];
+  const cross = (a: Point, b: Point, p: Point) => (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x);
+  const inside = (p: Point) => hull.length > 2 && hull.every((a, i) => cross(a, hull[(i + 1) % hull.length], p) >= 0);
+  const intersectsHull = (r: Callout) => {
+    const left = r.x - CALLOUT.gap, right = r.x + r.width + CALLOUT.gap, top = r.y - CALLOUT.gap, bottom = r.y + r.height + CALLOUT.gap;
+    if ([{ x: left, y: top }, { x: right, y: top }, { x: right, y: bottom }, { x: left, y: bottom }].some(inside)) return true;
+    for (let i = 0; i < hull.length; i++) { const a = hull[i], b = hull[(i + 1) % hull.length];
+      if (a.x >= left && a.x <= right && a.y >= top && a.y <= bottom) return true;
+      for (const y of [top, bottom]) if ((a.y <= y && b.y >= y) || (b.y <= y && a.y >= y)) { const t = (y - a.y) / (b.y - a.y); const x = a.x + (b.x - a.x) * t; if (x >= left && x <= right) return true; }
+    }
+    return false;
+  };
+  return points.map(point => {
+    if (!point.visible || point.id === 'OBJ_W') return point;
+    const target = BOWL_TARGETS.find(item => item.id === point.id)!;
+    const variants: { lines: string[]; width: number; height: number }[] = [{ lines: [target.label], width: target.label.length * CALLOUT.fontSize + 12, height: CALLOUT.height }];
+    const wrapped: Record<string, string[]> = { OBJ_D: ['纹饰', '与色差'], OBJ_R: ['没被改动', '的特征'], OBJ_F: ['底足', '与修足'] };
+    if (wrapped[point.id]) variants.push({ lines: wrapped[point.id], width: Math.max(...wrapped[point.id].map(line => line.length)) * CALLOUT.fontSize + 12, height: 42 });
+    const candidates: (Callout & { score: number })[] = [];
+    for (const variant of variants) for (const side of ['left', 'right'] as const) for (let y = CALLOUT.top; y <= height - CALLOUT.bottom - variant.height; y += 4) {
+      const x = side === 'left' ? CALLOUT.inset : width - CALLOUT.inset - variant.width;
+      const label: Callout = { x, y, ...variant, path: '' };
+      const overlap = occupied.some(r => x < r.x + r.width + 8 && x + variant.width + 8 > r.x && y < r.y + r.height + 8 && y + variant.height + 8 > r.y);
+      if (overlap || intersectsHull(label)) continue;
+      const endX = side === 'left' ? x + variant.width : x, endY = y + variant.height / 2;
+      const elbowX = endX + (side === 'left' ? 12 : -12);
+      label.path = `M ${point.x} ${point.y} L ${elbowX} ${endY} L ${endX} ${endY}`;
+      candidates.push({ ...label, score: Math.abs(endY - point.y) + Math.abs(endX - point.x) * 0.18 + (variant.lines.length - 1) * 24 });
+    }
+    candidates.sort((a, b) => a.score - b.score);
+    const chosen = candidates[0];
+    // If a very close zoom fills the stage, retain the clickable specimen point
+    // and the existing lower list rather than overlaying a name on the ceramic.
+    if (!chosen) return point;
+    occupied.push(chosen); return { ...point, callout: chosen };
+  });
+}
+
+export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientationChange, relatedTargetIds = [], disabled = false }: BowlSceneProps) {
   const host = useRef<HTMLDivElement>(null);
   const callbacks = useRef({ onOrientationChange, onSelectTarget, disabled });
   callbacks.current = { onOrientationChange, onSelectTarget, disabled };
@@ -40,6 +96,7 @@ export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientat
   const [dragging, setDragging] = useState(false);
   const [visibleIds, setVisibleIds] = useState<string[]>(['OBJ_W']);
   const [magnification, setMagnification] = useState(100);
+  const suppressSelectionUntil = useRef(0);
 
   useEffect(() => {
     const container = host.current;
@@ -81,18 +138,27 @@ export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientat
     const environment = pmrem.fromScene(studio, 0.08); scene.environment = environment.texture;
     panels.forEach(panel => { panel.geometry.dispose(); (panel.material as THREE.Material).dispose(); }); pmrem.dispose();
     let width = 360, height = 340, distance = POSE.cameraDistance, disposed = false, contextLost = false, raf = 0;
-    let pointer: { id: number; x: number; y: number } | null = null;
+    let pointer: { id: number; x: number; y: number; startX: number; startY: number; dragged: boolean; capture: Element } | null = null;
     let lastPaint = 0, lastHotspotString = '', lastVisibleString = '';
     const active = new Map(BOWL_TARGETS.map(target => [target.id as string, target.id === 'OBJ_W']));
     const pending = new Map<string, { visible: boolean; since: number }>();
     const vector = new THREE.Vector3(), normal = new THREE.Vector3(), localView = new THREE.Vector3(), inverse = new THREE.Quaternion();
+    const outlinePoints: THREE.Vector3[] = [];
+    for (const name of ['outer-wall-and-solid-underside', 'unglazed-foot-ring']) {
+      const mesh = model.getObjectByName(name) as THREE.Mesh;
+      const vertices = mesh.geometry.getAttribute('position');
+      for (let i = 0; i < vertices.count; i += 23) outlinePoints.push(new THREE.Vector3().fromBufferAttribute(vertices, i));
+    }
     const updateCamera = () => {
       camera.position.set(0, 0.24, distance); camera.lookAt(0, -0.07, 0);
       setMagnification(Math.round(POSE.cameraDistance / distance * 100));
     };
     const resize = () => {
       width = Math.max(1, container.clientWidth); height = Math.max(1, container.clientHeight);
-      camera.aspect = width / height; camera.updateProjectionMatrix(); renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      const projectedDiameter = height * 1.42 / (POSE.cameraDistance * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+      camera.zoom = Math.min(width * 0.8, height - 80) / projectedDiameter;
+      camera.updateProjectionMatrix(); renderer.setSize(width, height, false);
     };
     const rotate = (dx: number, dy: number) => {
       const delta = new THREE.Quaternion().setFromEuler(new THREE.Euler(dy, dx, 0, 'XYZ'));
@@ -105,17 +171,23 @@ export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientat
     const observer = new ResizeObserver(resize); observer.observe(container);
     const down = (event: PointerEvent) => {
       if (event.button !== 0) return;
-      element.focus({ preventScroll: true }); pointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
-      element.setPointerCapture(event.pointerId); setDragging(true);
+      const source = event.target as Element;
+      if (source !== element && !source.closest('.bowl-hotspot')) return;
+      const capture = source.closest('.bowl-hotspot') || element;
+      element.focus({ preventScroll: true }); pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, startX: event.clientX, startY: event.clientY, dragged: false, capture };
+      capture.setPointerCapture(event.pointerId);
     };
     const move = (event: PointerEvent) => {
       if (!pointer || pointer.id !== event.pointerId) return;
+      if (!pointer.dragged && Math.hypot(event.clientX - pointer.startX, event.clientY - pointer.startY) < CALLOUT.dragThreshold) return;
+      pointer.dragged = true; setDragging(true);
       rotate((event.clientX - pointer.x) * POSE.dragRadiansPerPixel, (event.clientY - pointer.y) * POSE.dragRadiansPerPixel);
       pointer.x = event.clientX; pointer.y = event.clientY;
     };
     const up = (event: PointerEvent) => {
       if (!pointer || pointer.id !== event.pointerId) return;
-      if (element.hasPointerCapture(event.pointerId)) element.releasePointerCapture(event.pointerId);
+      if (pointer.capture.hasPointerCapture(event.pointerId)) pointer.capture.releasePointerCapture(event.pointerId);
+      if (pointer.dragged) suppressSelectionUntil.current = performance.now() + 250;
       pointer = null; setDragging(false);
     };
     const wheel = (event: WheelEvent) => { event.preventDefault(); zoom(Math.sign(event.deltaY) * 0.18); };
@@ -128,8 +200,8 @@ export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientat
     };
     const lost = (event: Event) => { event.preventDefault(); contextLost = true; setError('3D 画面暂时中断，正在等待浏览器恢复。'); };
     const restored = () => { contextLost = false; setError(null); resize(); };
-    element.addEventListener('pointerdown', down); element.addEventListener('pointermove', move);
-    element.addEventListener('pointerup', up); element.addEventListener('pointercancel', up);
+    container.addEventListener('pointerdown', down); container.addEventListener('pointermove', move);
+    container.addEventListener('pointerup', up); container.addEventListener('pointercancel', up);
     element.addEventListener('wheel', wheel, { passive: false }); element.addEventListener('keydown', keydown);
     element.addEventListener('webglcontextlost', lost); element.addEventListener('webglcontextrestored', restored);
 
@@ -169,7 +241,11 @@ export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientat
         lastVisibleString = visibility; setVisibleIds(visible); callbacks.current.onOrientationChange?.(visible);
       }
       const serial = JSON.stringify(next);
-      if (serial !== lastHotspotString) { lastHotspotString = serial; setHotspots(next); }
+      if (serial !== lastHotspotString) {
+        lastHotspotString = serial;
+        const projected = outlinePoints.map(p => { vector.copy(p).applyQuaternion(model.quaternion).project(camera); return { x: (vector.x * 0.5 + 0.5) * width, y: (-vector.y * 0.5 + 0.5) * height }; });
+        setHotspots(layoutBowlCallouts(next, convexHull(projected), width, height));
+      }
     }
     function paint(now: number) {
       if (disposed) return;
@@ -182,25 +258,34 @@ export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientat
     raf = requestAnimationFrame(paint);
     return () => {
       disposed = true; cancelAnimationFrame(raf); observer.disconnect(); controls.current = null;
-      element.removeEventListener('pointerdown', down); element.removeEventListener('pointermove', move);
-      element.removeEventListener('pointerup', up); element.removeEventListener('pointercancel', up);
+      container.removeEventListener('pointerdown', down); container.removeEventListener('pointermove', move);
+      container.removeEventListener('pointerup', up); container.removeEventListener('pointercancel', up);
       element.removeEventListener('wheel', wheel); element.removeEventListener('keydown', keydown);
       element.removeEventListener('webglcontextlost', lost); element.removeEventListener('webglcontextrestored', restored);
       disposeBowlGroup(model); environment.dispose(); scene.clear(); renderer.dispose(); element.remove();
     };
   }, []);
 
-  const select = (id: string) => { if (!disabled) onSelectTarget(id); };
+  const select = (id: string, anchor: HTMLElement) => { if (!disabled && performance.now() >= suppressSelectionUntil.current) onSelectTarget(id, anchor); };
+  const visualState = (id: string) => selectedTargetId === id ? ' is-selected' : relatedTargetIds.includes(id) ? ' is-related' : '';
   return <div className={`bowl-scene${dragging ? ' is-dragging' : ''}`}>
     <div className="bowl-stage" ref={host}>
       <div className="bowl-stage-guide" aria-hidden="true"><span>拖动器物，自由把玩</span><span>滚轮拉近</span></div>
+      <svg className="bowl-leaders" aria-hidden="true">
+        {!error && hotspots.filter(point => point.visible && point.callout).map(point => <path key={point.id} data-bowl-leader={point.id} className={visualState(point.id)} d={point.callout!.path} />)}
+      </svg>
       {!error && hotspots.filter(point => point.visible && point.id !== 'OBJ_W').map(point => {
         const target = BOWL_TARGETS.find(item => item.id === point.id)!;
-        return <button key={point.id} type="button" className={`bowl-hotspot${selectedTargetId === point.id ? ' is-selected' : ''}`}
-          style={{ left: point.x, top: point.y }} aria-label={`调查${target.label}`} title={target.label}
-          aria-pressed={selectedTargetId === point.id} disabled={disabled} onClick={() => select(point.id)}>
-          <span className="bowl-hotspot-ring" /><span className="bowl-hotspot-label">{target.label}</span>
-        </button>;
+        return <div key={point.id} className="bowl-annotation">
+          <button type="button" className={`bowl-hotspot${visualState(point.id)}`} data-bowl-target={point.id}
+            style={{ left: point.x, top: point.y }} aria-label={`调查${target.label}`} title={target.label}
+            aria-pressed={selectedTargetId === point.id} disabled={disabled} onClick={event => select(point.id, event.currentTarget)}>
+            <span className="bowl-hotspot-ring" />
+          </button>
+          {point.callout && <button type="button" className={`bowl-callout${visualState(point.id)}`} data-bowl-target={point.id}
+            style={{ left: point.callout.x, top: point.callout.y, width: point.callout.width, height: point.callout.height }}
+            aria-label={target.label} aria-pressed={selectedTargetId === point.id} disabled={disabled} onClick={event => select(point.id, event.currentTarget)}>{point.callout.lines.map((line, i) => <span key={i}>{line}</span>)}</button>}
+        </div>;
       })}
       {error && <div className="bowl-render-error" role="alert">{error}</div>}
       <div className="bowl-view-controls">
@@ -214,8 +299,8 @@ export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientat
       <span className="bowl-target-caption">此刻看得见</span>
       <div className="bowl-target-list">
         {BOWL_TARGETS.filter(target => visibleIds.includes(target.id)).map(target => <button type="button" key={target.id}
-          className={selectedTargetId === target.id ? 'is-selected' : ''} aria-pressed={selectedTargetId === target.id}
-          disabled={disabled} onClick={() => select(target.id)}>{target.label}<span aria-hidden="true">↗</span></button>)}
+          className={visualState(target.id)} data-bowl-target={target.id} aria-pressed={selectedTargetId === target.id}
+          disabled={disabled} onClick={event => select(target.id, event.currentTarget)}>{target.label}<span aria-hidden="true">↗</span></button>)}
       </div>
       <p className="bowl-orientation-help">转到底部，可以查看底足。选部位不消耗调查机会。</p>
     </div>

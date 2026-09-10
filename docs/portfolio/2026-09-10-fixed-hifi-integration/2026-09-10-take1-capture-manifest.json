@@ -1,0 +1,243 @@
+{
+  "captureCommand": "node output/playwright/portfolio-fixed-hifi-2026-09-10/capture.cjs",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "deviceScaleFactor": 2,
+  "normalMotion": true,
+  "before": {
+    "revision": "68f9283",
+    "source": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+    "input": "output\\playwright\\portfolio-fixed-hifi-2026-09-10\\2026-09-10-take1-before-68f9283.html",
+    "bytes": 5056180,
+    "sha256": "40dfc7b133a602bf4a55b6dd1445fb69f9da05e6c42738dd1945a65c3b23d0b3"
+  },
+  "after": {
+    "revision": "working-tree-final-build",
+    "source": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+    "input": "output\\playwright\\portfolio-fixed-hifi-2026-09-10\\2026-09-10-take1-after-final.html",
+    "bytes": 5085140,
+    "sha256": "8b66500f774c072640564829e214970dcae98f589f67b19787f5be0a55f82f74"
+  },
+  "route": [
+    "A.OBSERVE.WHOLE",
+    "A.OBSERVE.BASE",
+    "A.LOCATE.HISTORIC_IMAGE",
+    "A.VERIFY.OBJECT_CONTINUITY"
+  ],
+  "captures": [
+    {
+      "kind": "before",
+      "filename": "2026-09-10-take1-before-same-four-actions-1440x1000-2x.png",
+      "sessionLog": [
+        {
+          "actionId": "A.OBSERVE.WHOLE",
+          "eventKey": "whole",
+          "observationId": "obs.current.whole",
+          "cost": 0,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.OBSERVE.BASE",
+          "eventKey": "base",
+          "observationId": "obs.current.base",
+          "cost": 0,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.LOCATE.HISTORIC_IMAGE",
+          "eventKey": "t1",
+          "observationId": "obs.phase.t1",
+          "cost": 1,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+          "eventKey": "identityContinuity",
+          "observationId": "obs.object.continuity",
+          "cost": 2,
+          "materialObservationIds": [
+            "obs.phase.t1",
+            "obs.current.base"
+          ]
+        }
+      ],
+      "camera": {
+        "x": -104.36036250000001,
+        "y": 160.03199999999995,
+        "s": 0.68
+      },
+      "scalePolicy": "Natural post-investigation camera; selection cleared, no full overview or manual zoom."
+    },
+    {
+      "kind": "after",
+      "filename": "2026-09-10-take1-after-same-four-actions-1440x1000-2x.png",
+      "sessionLog": [
+        {
+          "actionId": "A.OBSERVE.WHOLE",
+          "eventKey": "whole",
+          "observationId": "obs.current.whole",
+          "cost": 0,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.OBSERVE.BASE",
+          "eventKey": "base",
+          "observationId": "obs.current.base",
+          "cost": 0,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.LOCATE.HISTORIC_IMAGE",
+          "eventKey": "t1",
+          "observationId": "obs.phase.t1",
+          "cost": 1,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+          "eventKey": "identityContinuity",
+          "observationId": "obs.object.continuity",
+          "cost": 2,
+          "materialObservationIds": [
+            "obs.phase.t1",
+            "obs.current.base"
+          ]
+        }
+      ],
+      "camera": {
+        "x": 63.708437499999974,
+        "y": -107.48000000000002,
+        "s": 0.68
+      },
+      "scalePolicy": "Natural post-investigation camera; selection cleared, no full overview or manual zoom."
+    },
+    {
+      "kind": "hero",
+      "filename": "2026-09-10-take1-hero-local-judgment-1440x1000-2x.png",
+      "sessionLog": [
+        {
+          "actionId": "A.OBSERVE.WHOLE",
+          "eventKey": "whole",
+          "observationId": "obs.current.whole",
+          "cost": 0,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.OBSERVE.BASE",
+          "eventKey": "base",
+          "observationId": "obs.current.base",
+          "cost": 0,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.LOCATE.HISTORIC_IMAGE",
+          "eventKey": "t1",
+          "observationId": "obs.phase.t1",
+          "cost": 1,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+          "eventKey": "identityContinuity",
+          "observationId": "obs.object.continuity",
+          "cost": 2,
+          "materialObservationIds": [
+            "obs.phase.t1",
+            "obs.current.base"
+          ]
+        }
+      ],
+      "camera": {
+        "x": 63.708437499999974,
+        "y": -107.48000000000002,
+        "s": 0.68
+      },
+      "selection": "claim:identity"
+    }
+  ],
+  "clips": [
+    {
+      "filename": "2026-09-10-take1-verification-road-and-current-scan.mp4",
+      "raw": "output\\playwright\\portfolio-fixed-hifi-2026-09-10\\2026-09-10-take1-raw-video\\page@5703e2f86fc7258c78e659dd06da3e42.webm",
+      "normalSpeed": true,
+      "preparedActions": [
+        "A.OBSERVE.WHOLE",
+        "A.OBSERVE.BASE",
+        "A.LOCATE.HISTORIC_IMAGE"
+      ],
+      "capturedActions": [
+        "A.VERIFY.OBJECT_CONTINUITY",
+        "A.IMAGE.XRAY"
+      ],
+      "trimStartSeconds": 12.842,
+      "durationSeconds": 20,
+      "ffmpegArgs": [
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-ss",
+        "12.842",
+        "-i",
+        "E:\\zhangyan__v2\\output\\playwright\\portfolio-fixed-hifi-2026-09-10\\2026-09-10-take1-raw-video\\page@5703e2f86fc7258c78e659dd06da3e42.webm",
+        "-t",
+        "20",
+        "-an",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "medium",
+        "-crf",
+        "20",
+        "-pix_fmt",
+        "yuv420p",
+        "-movflags",
+        "+faststart",
+        "E:\\zhangyan__v2\\docs\\portfolio\\2026-09-10-fixed-hifi-integration\\2026-09-10-take1-verification-road-and-current-scan.mp4"
+      ],
+      "sessionLog": [
+        {
+          "actionId": "A.OBSERVE.WHOLE",
+          "eventKey": "whole",
+          "observationId": "obs.current.whole",
+          "cost": 0,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.OBSERVE.BASE",
+          "eventKey": "base",
+          "observationId": "obs.current.base",
+          "cost": 0,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.LOCATE.HISTORIC_IMAGE",
+          "eventKey": "t1",
+          "observationId": "obs.phase.t1",
+          "cost": 1,
+          "materialObservationIds": []
+        },
+        {
+          "actionId": "A.VERIFY.OBJECT_CONTINUITY",
+          "eventKey": "identityContinuity",
+          "observationId": "obs.object.continuity",
+          "cost": 2,
+          "materialObservationIds": [
+            "obs.phase.t1",
+            "obs.current.base"
+          ]
+        },
+        {
+          "actionId": "A.IMAGE.XRAY",
+          "eventKey": "xrayEarly",
+          "observationId": "obs.structure.xray.early",
+          "cost": 3,
+          "materialObservationIds": []
+        }
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "reviewRequired": true
+}

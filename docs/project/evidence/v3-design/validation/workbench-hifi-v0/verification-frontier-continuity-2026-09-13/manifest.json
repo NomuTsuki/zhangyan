@@ -1,0 +1,202 @@
+{
+  "generatedAt": "2026-09-13T07:37:15.719Z",
+  "head": "2e5dafce87bbfd1cd36e1f72ce8bfda36fb4365f",
+  "product": {
+    "builtAt": "2026-09-13T07:32:13.637Z",
+    "entry": "prototype.html",
+    "bytes": 5265161,
+    "sha256": "11ea710e4fd0495f41c79d930e28916b3b54b5be6bffd4e7cd84396761c0323a",
+    "source": "React/Three.js presentation; imports unchanged fusion local-session and graph modules"
+  },
+  "entries": [
+    {
+      "source": "output/frontier-repair-before.json",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/model-before.json",
+      "bytes": 10967,
+      "sha256": "24eea315685bee8f58a6a99acd255fda5af1bb2da4f26c82e29fb60eed99f5bd"
+    },
+    {
+      "source": "output/frontier-repair-model-final.json",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/model-final.json",
+      "bytes": 2383,
+      "sha256": "2aba9a4b26fd6059b7bdf78c8c162ac3dc689d9ed63ff8c9b98e98226d88de9a"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-final-2026-09-13/sweep.json",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/matrix.json",
+      "bytes": 98005,
+      "sha256": "e0f5b011bf46f384b971bcbde300f9f4ab753d26be73ee90d7ac94175ed795a8"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-final-2026-09-13/browser/report.json",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/browser-15.json",
+      "bytes": 341508,
+      "sha256": "f19a55a9e0d3800a0db95d157b110a33e9ac9d7cfb1d7ba53e84fcdd2dc2f8ec"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-delivery-2026-09-13/browser/report.json",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/browser-history-delivery.json",
+      "bytes": 19330,
+      "sha256": "cc959c61f57a7c4ccba56f54c2acefe1997efaff074006a860062e1da4e7d6b0"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-delivery-2026-09-13/browser-capture/report.json",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/browser-material-delivery.json",
+      "bytes": 6773,
+      "sha256": "c9d04102746e8d3c1dc30ce7e14db90df1fd3723d8b2a30cf61ad8fc8330524b"
+    },
+    {
+      "source": "output/playwright/bilingual-2026-09-13/frontier-complete/report.json",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/english-browser.json",
+      "bytes": 3818,
+      "sha256": "a3f113e06c1d05d4bc21d25a0ea41303bd1369acc56174261be9d00e38712306"
+    },
+    {
+      "source": "output/playwright/language-audit-2026-09-13/frontier-complete/copy-coverage.json",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/english-copy.json",
+      "bytes": 3006,
+      "sha256": "9bb787a8b5b65e69a7c187b971f5f6cb05e1f1dae4d28eef2b9df207c0cd985d"
+    },
+    {
+      "source": "output/playwright/report-source-2026-09-13/frontier-repair/browser.json",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/source-browser.json",
+      "bytes": 2353,
+      "sha256": "1c60263153ff1204bd3d5f67802f1047160011bbde3fdc3747ec4dc59c452b2c"
+    },
+    {
+      "source": "output/frontier-repair-source-delivery.json",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/source-model.json",
+      "bytes": 1734,
+      "sha256": "d8ffb3503af48c8b126de100aee132151f43bd2ca9aca742402ef5c56d7b3e57"
+    },
+    {
+      "source": "output/frontier-repair-contract-delivery.log",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/contract.log",
+      "bytes": 180,
+      "sha256": "b72aea3f72e560b8613a2d42fee3a108c243f064fc6b3256f9f37e7add7ca422"
+    },
+    {
+      "source": "output/frontier-repair-layout.log",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/layout.log",
+      "bytes": 2644,
+      "sha256": "9e68791714a3ee30776e78fff6cbc9a5a603c6dff9acf99d677eff0b17387664"
+    },
+    {
+      "source": "output/frontier-repair-reveal-first.log",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/reveal.log",
+      "bytes": 502,
+      "sha256": "153929d0fc5b36fbac498e93a72f6d37459be1d796963c80966bbbc3392f6fee"
+    },
+    {
+      "source": "output/frontier-repair-build-delivery.log",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/build.log",
+      "bytes": 490,
+      "sha256": "894eee2a34fa435be5eed9b0d208c6ac1f3288f8168c96632bb92822c20fc502"
+    },
+    {
+      "source": "output/frontier-repair-build-first.log",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/build-first-failure.log",
+      "bytes": 245,
+      "sha256": "d5e002a8be5a3db5aafb8a8dcd22c15864273be0af11be937dc26b26262ee414"
+    },
+    {
+      "source": "output/check-frontier-browser-delivery-2026-09-13.mjs",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/check-frontier-browser-delivery-2026-09-13.mjs.txt",
+      "bytes": 9318,
+      "sha256": "e6c73db220cff16bdee0013bcc975724dec67d1f3c9935094dd0e8563cfa3f21"
+    },
+    {
+      "source": "output/check-frontier-browser-final-2026-09-13.mjs",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/check-frontier-browser-final-2026-09-13.mjs.txt",
+      "bytes": 8621,
+      "sha256": "ca3acbb809efcefce711cd6f8c731638574436975769ff0b69a6db5ba1eeafa6"
+    },
+    {
+      "source": "output/check-map-frontiers-final-2026-09-13.mjs",
+      "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-frontier-continuity-2026-09-13/check-map-frontiers-final-2026-09-13.mjs.txt",
+      "bytes": 6335,
+      "sha256": "89db84f1f747614b31a6a5f1161ad65cee26540e038e718d63d3947963cc51ef"
+    },
+    {
+      "source": "output/playwright/frontier-system-audit-2026-09-13/browser/layers-before-material-before.png",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-before-material-first.png",
+      "bytes": 2577114,
+      "sha256": "12d08f19459da2ccf6a15ef5a9649a2e9c7d020abc3aeae0ec227784de8e7140"
+    },
+    {
+      "source": "output/playwright/frontier-system-audit-2026-09-13/browser/layers-before-material-after.png",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-before-material-second.png",
+      "bytes": 2650544,
+      "sha256": "eb9c1fcc5f0bd6696b97e08d165c90c60cb0c8341c3929f095b95be3ce1d07d3"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-delivery-2026-09-13/browser-capture/layers-before-material-before.png",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-material-first.png",
+      "bytes": 2571945,
+      "sha256": "154e94729d60e741338854d4379e85eb30846cd03d3e462c4dfa1d0b8cd42273"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-delivery-2026-09-13/browser-capture/layers-before-material-connect.png",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-material-connecting.png",
+      "bytes": 2660999,
+      "sha256": "0c71d87e462a455952807df431b944ea8172ff75e447d77825ea69744bffaa7c"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-delivery-2026-09-13/browser-capture/layers-before-material-after.png",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-material-connected.png",
+      "bytes": 2665786,
+      "sha256": "0c7d25f1d83b16bdc3ceec7d2827a65f50d0daa324ccfaae59a0663718bc25aa"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-final-2026-09-13/browser/record-to-object-endpoint-connect.png",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-record-endpoint-handover.png",
+      "bytes": 2632909,
+      "sha256": "b553a58f675f51c78d49d7aefd3b66e85e0cad28b4b698459c249a2235d717c1"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-final-2026-09-13/browser/appearance-to-window-after.png",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-surface-enquiry-connected.png",
+      "bytes": 2663673,
+      "sha256": "b09b6607e52019e78ae69ee67c0393072a12900f7ba0b751505789e5ca2695f8"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-final-2026-09-13/browser/uv-to-regional-synthesis-after.png",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-uv-limit-retained.png",
+      "bytes": 2653872,
+      "sha256": "982235dfc0671f1b7c21f6b2abeca5b4a4a9e5798236555ceefdcd1074c4d9a2"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-delivery-2026-09-13/browser/history-source-review-evidence.png",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-history-source-review.png",
+      "bytes": 495975,
+      "sha256": "f7b858e609581c5815bc81213b2ff3311af560a71a21b88afd4a4218b0bfbe7c"
+    },
+    {
+      "source": "output/playwright/bilingual-2026-09-13/frontier-complete/2026-09-13-frontier-complete-full-1920.png",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-english-overview-1920.png",
+      "bytes": 1017425,
+      "sha256": "a4c0000735505c03437a9a20f5726c802576d88269275b2cb54c8efd359d5509"
+    },
+    {
+      "source": "output/playwright/frontier-system-repair-delivery-2026-09-13/browser-capture/page@f74c701c1586c0899e5260a223bfc22f.webm",
+      "file": "docs/portfolio/2026-09-13-frontier-continuity/2026-09-13-material-continuity.webm",
+      "bytes": 1816747,
+      "sha256": "531aa54951598e81554d4fd9c4a850b896512d18b1543a30f477a4eb4e9f1383"
+    }
+  ],
+  "video": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1440,
+        "height": 1000
+      }
+    ],
+    "format": {
+      "duration": "16.600000"
+    }
+  },
+  "reviewRequired": true,
+  "note": "Each raw browser or matrix report names its own build SHA. The delivery build additionally corrects history-source IDs; full visual tests precede only that metadata fix."
+}

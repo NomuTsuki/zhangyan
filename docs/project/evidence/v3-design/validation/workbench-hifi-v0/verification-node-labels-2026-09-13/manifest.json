@@ -1,0 +1,111 @@
+{
+  "artifact": {
+    "builtAt": "2026-09-13T11:27:09.352Z",
+    "entry": "prototype.html",
+    "bytes": 5267301,
+    "sha256": "4d6362a82d5788e9a26b904c80550b53281452bec294bb71a60a1c58a96569eb",
+    "source": "React/Three.js presentation; imports unchanged fusion local-session and graph modules"
+  },
+  "files": [
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/before-results.json",
+      "sha256": "826572272939e98dea4a7f5ae3485448dc260d2d7f64344d5b6363ce879bbfb3"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/first-results.json",
+      "sha256": "eeda1ed166f0e36e9bedf63c8174046198f752d716c0a032ca2805bfd93f7397"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/second-results.json",
+      "sha256": "390b097c79bd817bf2cf527dca1dcc6167425ffde96c05277d3a7293ae814070"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/third-results.json",
+      "sha256": "65bf72850495d9f2b5646739ff482765d0cccbb7aabdf9f6a8c8b918a2440a80"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/delivery-results.json",
+      "sha256": "ef39a377fe347bca55eae4c937a8444651cfc9278c29dd051dea9ffa7aecfd12"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/verified-results.json",
+      "sha256": "949c11cbc13bca4c01f62a0fd29d453dc6701518a83910d093ffaa43c7d9db6f"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/before-matched-results.json",
+      "sha256": "cf1e8733273287ad4b5cd792a946735eb25d35f4cbd91721ac27834d212b2883"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/matched-results.json",
+      "sha256": "4a135ffdfdc57beb0381e804f612d28e02ae8d87dea74f4293205d6b446e3a11"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/node-label-build-fourth.log",
+      "sha256": "7beffef51cc95d6df1e854cd45442c0526d0cda83a414200369dcd6c93aae82d"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/node-label-final-contract.log",
+      "sha256": "b72aea3f72e560b8613a2d42fee3a108c243f064fc6b3256f9f37e7add7ca422"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/node-label-final-layout.log",
+      "sha256": "9e68791714a3ee30776e78fff6cbc9a5a603c6dff9acf99d677eff0b17387664"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/node-label-final-reveal.log",
+      "sha256": "153929d0fc5b36fbac498e93a72f6d37459be1d796963c80966bbbc3392f6fee"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/node-label-frontier.log",
+      "sha256": "2aba9a4b26fd6059b7bdf78c8c162ac3dc689d9ed63ff8c9b98e98226d88de9a"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/node-label-language-copy.log",
+      "sha256": "22bf82e48b85b6095791ae9a9b85879cdfafcca628e43716307f6060775b059b"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/node-label-report-browser.log",
+      "sha256": "b9531ce2783af1f7d3dfd98bf1e8ec07abd764ca17f5f23090161cef2bf265aa"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/node-label-browser-verified.log",
+      "sha256": "48b15824207ef7e9e3291ebe4a748ad5c99d07c827b5fd9ace5946622e412659"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/node-label-matched-0.log",
+      "sha256": "74f0118dbff1b6a62932609bee7c798a6f148da67d405a4ed0a1295c1c568dbf"
+    },
+    {
+      "path": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-node-labels-2026-09-13/node-label-matched-1.log",
+      "sha256": "70fbd18646131039224e1d4f5170e8407c552255dab37bdd657204dd546d5487"
+    },
+    {
+      "path": "docs/portfolio/2026-09-13-node-labels/2026-09-13-before-zh-upper-map.png",
+      "sha256": "264c67aa63689be9e9121ea7c182c2551f9e20b9f594643d45bc47d7a4f3be81"
+    },
+    {
+      "path": "docs/portfolio/2026-09-13-node-labels/2026-09-13-after-zh-upper-map.png",
+      "sha256": "3712d838593026c8ee9647448a9a3abac11dd274173b2ffbf4e1e0c02b6e58e0"
+    },
+    {
+      "path": "docs/portfolio/2026-09-13-node-labels/2026-09-13-after-zh-overview.png",
+      "sha256": "a8ef51e7cf7b959f98cada35b40250f1cf97734a9366ce91b30715b5fce09bfb"
+    },
+    {
+      "path": "docs/portfolio/2026-09-13-node-labels/2026-09-13-before-en-upper-map.png",
+      "sha256": "cbdaf214834f902e19c31ed0ca93f75854169dea7956049be2d9d0c3618cd0f3"
+    },
+    {
+      "path": "docs/portfolio/2026-09-13-node-labels/2026-09-13-after-en-upper-map.png",
+      "sha256": "13f2587600128b3f921a21a239474330118f50fe97d9fa8d08c570bdfb0e660b"
+    },
+    {
+      "path": "docs/portfolio/2026-09-13-node-labels/2026-09-13-after-en-overview.png",
+      "sha256": "a3112813a56e71de70ae8bebab19af3075e09c4b2920e125223bdacee93c8208"
+    },
+    {
+      "path": "docs/portfolio/2026-09-13-node-labels/2026-09-13-process-english-labels-still-remote.png",
+      "sha256": "58b6b3e1fc71f6e5edc199b2b3f2d9be8a0d8b85ee228c863072b9b1ab15049e"
+    }
+  ]
+}

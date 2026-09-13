@@ -1,0 +1,145 @@
+{
+  "reviewRequired": true,
+  "sha256": "370fc2c10025e8a5db358b2bcf1deaebd1a926c608220fe62c645b7545ebc842",
+  "checks": [
+    {
+      "name": "Language preference, keyboard toggle, empty-state copy and no reset",
+      "passed": true,
+      "evidence": {
+        "preferenceRetained": true,
+        "keyboard": true,
+        "stepCount": 0
+      }
+    },
+    {
+      "name": "Trial-window gate and switching during normal motion preserve state and 3D canvas",
+      "passed": true,
+      "evidence": {
+        "steps": 2,
+        "geometryUnchanged": true,
+        "canvasPreserved": true
+      }
+    },
+    {
+      "name": "1280px English full appraisal, translated map, history and personal note",
+      "passed": true,
+      "evidence": {
+        "steps": 16,
+        "stage": "G3",
+        "remaining": 6,
+        "claims": [
+          {
+            "text": "Coherent account\nfor a decision\nSupported",
+            "height": 91,
+            "content": 91
+          },
+          {
+            "text": "Late-18th-century\nexport porcelain\nSupported",
+            "height": 91,
+            "content": 91
+          },
+          {
+            "text": "Major reassembly\nestablished\nSupported",
+            "height": 91,
+            "content": 91
+          },
+          {
+            "text": "Three phases\nof restoration\nSupported",
+            "height": 91,
+            "content": 91
+          }
+        ],
+        "topbar": {
+          "width": 1280,
+          "scrollWidth": 1280
+        },
+        "historyPreserved": true,
+        "notePreserved": true
+      }
+    },
+    {
+      "name": "1440px English full appraisal, translated map, history and personal note",
+      "passed": true,
+      "evidence": {
+        "steps": 16,
+        "stage": "G3",
+        "remaining": 6,
+        "claims": [
+          {
+            "text": "Coherent account\nfor a decision\nSupported",
+            "height": 91,
+            "content": 91
+          },
+          {
+            "text": "Late-18th-century\nexport porcelain\nSupported",
+            "height": 91,
+            "content": 91
+          },
+          {
+            "text": "Major reassembly\nestablished\nSupported",
+            "height": 91,
+            "content": 91
+          },
+          {
+            "text": "Three phases\nof restoration\nSupported",
+            "height": 91,
+            "content": 91
+          }
+        ],
+        "topbar": {
+          "width": 1440,
+          "scrollWidth": 1440
+        },
+        "historyPreserved": true,
+        "notePreserved": true
+      }
+    },
+    {
+      "name": "1920px English full appraisal, translated map, history and personal note",
+      "passed": true,
+      "evidence": {
+        "steps": 16,
+        "stage": "G3",
+        "remaining": 6,
+        "claims": [
+          {
+            "text": "Coherent account\nfor a decision\nSupported",
+            "height": 91,
+            "content": 91
+          },
+          {
+            "text": "Late-18th-century\nexport porcelain\nSupported",
+            "height": 91,
+            "content": 91
+          },
+          {
+            "text": "Major reassembly\nestablished\nSupported",
+            "height": 91,
+            "content": 91
+          },
+          {
+            "text": "Three phases\nof restoration\nSupported",
+            "height": 91,
+            "content": 91
+          }
+        ],
+        "topbar": {
+          "width": 1920,
+          "scrollWidth": 1920
+        },
+        "historyPreserved": true,
+        "notePreserved": true
+      }
+    },
+    {
+      "name": "All 22 investigations and both comparison choices expose English records and conditions",
+      "passed": true,
+      "evidence": {
+        "all22Reachable": true,
+        "bothBasesChecked": true,
+        "restartRetainsLanguage": true
+      }
+    }
+  ],
+  "passed": true
+}

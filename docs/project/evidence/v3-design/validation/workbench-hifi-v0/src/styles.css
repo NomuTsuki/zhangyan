@@ -25,17 +25,23 @@
 /* Reviewed fixed map integration. Road windows own reveal; the paper clearance
    stays paper and is clipped with the ink, so it can never flash a full road. */
 .map-viewport,.map-viewport *{user-select:none;-webkit-user-select:none}
-.map-road{stroke:#5e625c;stroke-width:2.5}.map-road.support-road{stroke:#687e4e;stroke-width:3.05}
+.map-component{--map-support-ink:#5d7645;--map-correspondence-ink:#62615d;--map-enquiry-ink:#74736e}
+.map-road{stroke:var(--map-correspondence-ink);stroke-width:2.5}.map-road.support-road{stroke:var(--map-support-ink);stroke-width:3.05}
 .map-road,.frontier-road,.road-clearance{pointer-events:none}
-.map-road.is-related{stroke-width:3.7}.map-road.is-quiet{opacity:.42}
+.map-road.is-related{stroke-width:3.7}.map-road.is-quiet{opacity:.52}
 .road-clearance{stroke:var(--paper);stroke-width:7;stroke-linecap:round;fill:none}
 .frontier-road{stroke:#ab7b31;stroke-width:2.5;stroke-dasharray:9 10.5;opacity:.88}
 .frontier-road.is-related{stroke-width:3.1}
 .map-dot{width:30px;height:30px}.map-dot i{left:5px;top:5px;width:20px;height:20px;border-width:2px}.map-dot i:after{inset:4px}
 .map-dot.is-input i{border-color:#97713a;box-shadow:0 0 0 6px #a98a3e33}.map-label.is-input{color:#89662d}
+.map-report-marker{z-index:4}.map-report-marker:disabled{opacity:1}.map-report-marker i{left:6.5px;top:6.5px;width:17px;height:17px;background:var(--paper)}.map-report-marker i:after{inset:3px}
+.legend-information{display:flex;align-items:center;gap:3px}.map-legend .legend-information-icon{position:relative;display:inline-block;flex:none;margin:-5px 0 -5px -5px}
+.report-transfer{pointer-events:none}.retained-report{position:absolute;background:none;border:0;z-index:3}.report-traveler{position:absolute;left:0;top:0;width:16px;height:16px;border:2px solid #5e625c;background:var(--paper);border-radius:50%;z-index:5;offset-anchor:center}.report-traveler:after{content:'';position:absolute;inset:3px;background:#343a34;border-radius:50%}
+@keyframes report-travel{from{offset-distance:0%}to{offset-distance:100%}}
 .map-junction i{left:8px;top:8px;width:12px;height:12px;border-width:1.8px}
 .map-relation-label{position:absolute;border:0;background:none;padding:0;color:#656855;text-align:left;z-index:3}
-.map-relation-label:hover{color:#687b4b;text-decoration:underline;text-underline-offset:4px}
+.map-relation-label:hover,.map-relation-label.is-related{color:#7b622f;text-decoration:underline;text-underline-offset:4px}
+.map-relation-label:disabled{opacity:1;cursor:default}
 .map-label small{line-height:1.5}
 .map-claim small{font-size:12px}
 @keyframes road-reveal{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
@@ -85,3 +91,8 @@
 :lang(en) .material-reader p{line-height:1.8}
 :lang(en) .relation-status li{flex-wrap:wrap}
 :lang(en) .map-claim small{letter-spacing:0}
+
+/* Enquiry trails retain connections without borrowing the support arrow. */
+.map-road.enquiry-road { stroke: var(--map-enquiry-ink); stroke-width: 1.7; }
+.map-road.enquiry-road.is-related { stroke-width: 2.6; }
+.map-road.handover-road { stroke: #ad8746; stroke-dasharray: 8 7; stroke-width: 2; }

@@ -1,0 +1,18 @@
+{
+  "reviewRequired": true,
+  "sha256": "8b62c7e4e0af95a39c53acfbab3a93777d71ad2fde051f1d4fa77f23460032b2",
+  "checks": [
+    {
+      "name": "t2 object-attribution: source grows, remains, then report joins its carrier",
+      "passed": true,
+      "evidence": {
+        "width": 1440,
+        "steps": 3,
+        "canonicalPathPreserved": true,
+        "sourceAndReportReview": true,
+        "travelDistance": 44.11275095444822
+      }
+    }
+  ],
+  "passed": true
+}

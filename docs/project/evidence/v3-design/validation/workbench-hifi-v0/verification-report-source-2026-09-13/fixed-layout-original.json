@@ -1,0 +1,105 @@
+{
+  "reviewRequired": true,
+  "passed": true,
+  "checks": 8,
+  "results": [
+    {
+      "name": "Empty graph reveals no fixed slots, roads or judgments",
+      "passed": true,
+      "evidence": {
+        "nodes": 0
+      }
+    },
+    {
+      "name": "Different legal discovery orders and a fresh final projection have identical geometry",
+      "passed": true,
+      "evidence": {
+        "nodes": 5,
+        "routes": 6,
+        "measurementsCannotMoveRoads": true
+      }
+    },
+    {
+      "name": "Photo gap exposes two masks of the exact later correspondence curve",
+      "passed": true,
+      "evidence": {
+        "canonicalRoad": "photo:object",
+        "oldNodesStable": true
+      }
+    },
+    {
+      "name": "Archive attribution and corroboration establish separate same-curve halves in either order",
+      "passed": true,
+      "evidence": [
+        {
+          "first": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "visible": [
+            0,
+            0.485
+          ],
+          "labelsAvoidEachOther": true
+        },
+        {
+          "first": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "visible": [
+            0.515,
+            1
+          ],
+          "labelsAvoidEachOther": true
+        }
+      ]
+    },
+    {
+      "name": "One-ended surface frontier follows its later support curve without revealing the result",
+      "passed": true,
+      "evidence": {
+        "visibleEnd": 0.68
+      }
+    },
+    {
+      "name": "UV unresolved negative is an open boundary and cannot manufacture a support road",
+      "passed": true,
+      "evidence": {
+        "question": "question:negative",
+        "canonicalRoad": null
+      }
+    },
+    {
+      "name": "Twenty-two real actions and reordered acquisition preserve every real node and group",
+      "passed": true,
+      "evidence": [
+        {
+          "seed": 1,
+          "nodes": 22,
+          "routes": 34,
+          "remoteEstimatedLabels": [],
+          "remoteLabelsByStep": []
+        },
+        {
+          "seed": 2,
+          "nodes": 22,
+          "routes": 33,
+          "remoteEstimatedLabels": [],
+          "remoteLabelsByStep": []
+        },
+        {
+          "seed": 3,
+          "nodes": 22,
+          "routes": 33,
+          "remoteEstimatedLabels": [],
+          "remoteLabelsByStep": []
+        }
+      ]
+    },
+    {
+      "name": "Actual cubic paths avoid unrelated real information glyphs, junctions and claim boxes",
+      "passed": true,
+      "evidence": {
+        "nodes": 24,
+        "routes": 40,
+        "comparisons": 1200,
+        "sampling": "independent SVG cubic evaluation at <=1px control-polygon step"
+      }
+    }
+  ]
+}

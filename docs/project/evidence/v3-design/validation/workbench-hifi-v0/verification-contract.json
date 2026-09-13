@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T07:06:48.339Z",
+  "generatedAt": "2026-09-13T11:32:44.365Z",
   "reviewRequired": true,
   "checks": [
     {
@@ -14,7 +14,7 @@
       "name": "Protected modules and old tests have no staged or unstaged difference from HEAD",
       "passed": true,
       "evidence": {
-        "head": "18dc40dc494e9737125ab76d429698e947adf316",
+        "head": "2e5dafce87bbfd1cd36e1f72ce8bfda36fb4365f",
         "paths": [
           "docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0",
           "docs/project/evidence/v3-design/validation/knowledge-map-slice-v0",
@@ -179,7 +179,7 @@
     }
   ],
   "protected": {
-    "head": "18dc40dc494e9737125ab76d429698e947adf316",
+    "head": "2e5dafce87bbfd1cd36e1f72ce8bfda36fb4365f",
     "paths": [
       "docs/project/evidence/v3-design/validation/first-ceramic-author-scenarios-v0",
       "docs/project/evidence/v3-design/validation/knowledge-map-slice-v0",

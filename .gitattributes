@@ -3,3 +3,6 @@
 *.jpg binary
 *.jpeg binary
 *.webp binary
+
+# Preserve the captured failure log byte-for-byte with its recorded SHA-256.
+docs/project/evidence/v3-design/validation/workbench-hifi-v0/verification-report-source-2026-09-13/initial-syntax-failure.txt -text

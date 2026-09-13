@@ -40,6 +40,8 @@ export default function MaterialViewer({observationId,graph,context,onClose}:{ob
   const record=materialRecord(graph,activeId,context);
   if(!record)return null;
   const {observation}=record;
+  const binding=graph.reportBindings?.find((b:any)=>b.reportId===activeId&&b.recordAcquired);
+  const originalRecord=binding?graph.observations.find((o:any)=>o.id===binding.recordId):null;
   const navigate=(id:string)=>{setActiveId(id);setShowImage(false);setView('side');};
   const photo=activeId==='obs.phase.t1';
   const verification=activeId==='obs.object.continuity';
@@ -64,6 +66,7 @@ export default function MaterialViewer({observationId,graph,context,onClose}:{ob
     <section className="material-boundary"><h3>{t("还不能据此判断什么")}</h3><p>{t(record.limit)}</p>{record.pending.length>0&&<ul className="material-pending">{record.pending.map(text=><li key={text}>{t(text)}</li>)}</ul>}</section>
     {record.archiveRelations.length>0&&<section className="material-checks"><h3>{t("这组记录的三项核验")}</h3><dl>{record.archiveRelations.map((relation:any)=><div key={relation.key} data-relation={relation.key}><dt>{t(relation.title)}</dt><dd className={relation.status==='established'?'is-established':''}>{t(relation.status==='established'?'已核实':relation.status==='contested'?'存在冲突':'尚未核实')}</dd></div>)}</dl><p>{t("一项核验成立，不会自动替另两项作结论。")}</p></section>}
     {record.inputs.length>0&&<section className="material-inputs"><h3>{t(verification?'这次核验用到的材料':'这次比较用到的材料')}</h3><p>{t("下面列出报告实际使用的材料；材料输入本身不等于判断已成立。")}</p><div>{record.inputs.map(input=><button key={input.id} onClick={()=>navigate(input.id)} data-material-source={input.id}><span>{t(input.title)}<small>{t(input.role)}</small></span><span>{t("回看 →")}</span></button>)}</div></section>}
+    {originalRecord&&<section className="material-inputs"><h3>{t('核验对应的原始记录')}</h3><div><button data-report-source={originalRecord.id} onClick={()=>navigate(originalRecord.id)}><span>{t(originalRecord.title)}</span><span>{t('回看 →')}</span></button></div></section>}
     <section className="material-visuals">
     <button className="material-image-toggle" aria-expanded={showImage} onClick={()=>setShowImage(value=>!value)}>{t(showImage?'收起':'展开')}{t(hasImage?'器物与材料示意':'原记录摘录')}<span>{t(hasImage?'辅助定位观察范围':'回查原始摘要')} {showImage?'−':'＋'}</span></button>
     {showImage&&<div className="material-image-body">

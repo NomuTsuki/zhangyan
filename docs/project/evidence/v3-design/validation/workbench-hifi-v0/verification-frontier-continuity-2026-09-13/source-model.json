@@ -1,0 +1,60 @@
+{
+  "reviewRequired": true,
+  "passed": true,
+  "results": [
+    {
+      "name": "t2 object-attribution: missing source becomes a traceable same-path connection",
+      "passed": true,
+      "evidence": {
+        "sourceRoad": "source:obs.archive.t2.object-attribution",
+        "retireAt": 1800,
+        "marker": "archive:t2:object"
+      }
+    },
+    {
+      "name": "t2 current-corroboration: missing source becomes a traceable same-path connection",
+      "passed": true,
+      "evidence": {
+        "sourceRoad": "source:obs.archive.t2.current-corroboration",
+        "retireAt": 1800,
+        "marker": "archive:t2:object"
+      }
+    },
+    {
+      "name": "t3 object-attribution: missing source becomes a traceable same-path connection",
+      "passed": true,
+      "evidence": {
+        "sourceRoad": "source:obs.archive.t3.object-attribution",
+        "retireAt": 1800,
+        "marker": "archive:t3:object"
+      }
+    },
+    {
+      "name": "t3 current-corroboration: missing source becomes a traceable same-path connection",
+      "passed": true,
+      "evidence": {
+        "sourceRoad": "source:obs.archive.t3.current-corroboration",
+        "retireAt": 1800,
+        "marker": "archive:t3:object"
+      }
+    },
+    {
+      "name": "Both report types can precede one source without proving each other",
+      "passed": true,
+      "evidence": {
+        "reports": 2,
+        "sourceRecords": 1
+      }
+    },
+    {
+      "name": "Four report links remain readable before the object view and fold without moving fixed nodes",
+      "passed": true,
+      "evidence": {
+        "beforeActions": 18,
+        "sourceLinks": 4,
+        "finalMarkers": 4,
+        "finalGeometryIndependentOfOrder": true
+      }
+    }
+  ]
+}

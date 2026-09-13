@@ -1,0 +1,18 @@
+{
+  "reviewRequired": true,
+  "sha256": "370fc2c10025e8a5db358b2bcf1deaebd1a926c608220fe62c645b7545ebc842",
+  "checks": [
+    {
+      "name": "Stopping, restarting and changing language during transfer clear every temporary carrier",
+      "passed": true,
+      "evidence": {
+        "interruptedDuringTravel": [
+          "stop",
+          "restart",
+          "language"
+        ]
+      }
+    }
+  ],
+  "passed": true
+}

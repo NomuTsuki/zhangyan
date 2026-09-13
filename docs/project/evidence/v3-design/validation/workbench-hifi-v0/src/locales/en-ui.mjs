@@ -27,6 +27,7 @@ export default {
   '本局已经收手，可以继续查看记录。':'You have finished this appraisal. Records remain available.',
   '已知与推理':'Evidence & reasoning', '观察留下线索，关联逐渐清晰':'Each observation brings the connections into focus.',
   '每一份观察，都会在这里留下位置。':'Each observation leaves a place on this map.', '图注':'Key', '查看材料 ↗':'View evidence ↗',
+  '已知信息与解释':'Observations & interpretations',
   '● 已知信息与解释':'● Observations & interpretations', '▭ 已有依据的判断':'▭ Supported assessments', '◇ 共同支持':'◇ Evidence used together',
   '→ 支持解释与判断':'→ Supports an interpretation', '— 已核实的对应':'— Verified correspondence', '┄ 沿路留下的疑问':'┄ Questions still open',
   '从眼前这只碗开始':'Start with the bowl before you', '转动、观察，或找一份记录。':'Turn it, examine it, or find a record.',

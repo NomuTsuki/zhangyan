@@ -1,0 +1,216 @@
+{
+  "readOnly": true,
+  "sha256": "11ea710e4fd0495f41c79d930e28916b3b54b5be6bffd4e7cd84396761c0323a",
+  "cases": [
+    {
+      "name": "layers-before-material",
+      "executed": true,
+      "pre": [
+        "A.INSPECT.MATERIAL.LAYER_SEQUENCE"
+      ],
+      "action": "A.ANALYZE.MATERIAL.SUBSTRATE",
+      "questionId": "question:material-base",
+      "beforeFrontier": {
+        "id": "question:material-base",
+        "anchorIds": [
+          "obs.key-material.layer-sequence"
+        ],
+        "title": "这些层底下是什么材料？",
+        "explanation": "层序说明先后，不能替代基底材料分析。",
+        "actionIds": [
+          "A.ANALYZE.MATERIAL.SUBSTRATE"
+        ],
+        "kind": "stub",
+        "continuation": {
+          "nodeIds": [
+            "obs.key-material.substrate-readings"
+          ],
+          "edgeIds": []
+        },
+        "sourceIds": [
+          "obs.key-material.layer-sequence"
+        ],
+        "continuity": {
+          "role": "complement",
+          "roads": [
+            {
+              "id": "enquiry:material-pair",
+              "from": "obs.key-material.substrate-readings",
+              "to": "obs.key-material.layer-sequence"
+            }
+          ],
+          "completionTargets": []
+        },
+        "successorRouteIds": [
+          "enquiry:material-pair"
+        ],
+        "x": 928.9822564266472,
+        "y": 1895.5836004033183,
+        "labelX": 712.98,
+        "labelY": 1880.58,
+        "labelWidth": 198,
+        "fontSize": 18,
+        "lineHeight": 30,
+        "lines": [
+          "这些层底下是什么材料？"
+        ],
+        "segments": [
+          {
+            "d": "M 928.91 1766.88 C 933.68 1775.72 962.64 1812.76 963 1830 C 963.36 1847.24 938.57 1874.95 931.5 1890 C 924.43 1905.05 915.17 1930.82 912.51 1937.47",
+            "from": 0.5310174358055896,
+            "to": 1,
+            "canonicalRouteId": "enquiry:material-pair",
+            "edgeIds": [
+              "enquiry:material-pair"
+            ],
+            "reverse": true
+          }
+        ],
+        "paths": [
+          "M 952.31 1857.2 C 944.8 1869.4 935.42 1881.65 931.5 1890 C 924.43 1905.05 915.17 1930.82 912.51 1937.47"
+        ],
+        "openBoundary": false,
+        "canonicalRouteId": "enquiry:material-pair",
+        "labelHeight": 30,
+        "labelBounds": {
+          "x": 712.98,
+          "y": 1880.58,
+          "width": 198,
+          "height": 30
+        }
+      },
+      "oldOpacityAt350ms": "1",
+      "connectPlan": {
+        "routes": {
+          "enquiry:material-pair": {
+            "id": "enquiry:material-pair",
+            "from": "obs.key-material.substrate-readings",
+            "to": "obs.key-material.layer-sequence",
+            "d": "M 928.91 1766.88 C 933.68 1775.72 962.64 1812.76 963 1830 C 963.36 1847.24 938.57 1874.95 931.5 1890 C 924.43 1905.05 915.17 1930.82 912.51 1937.47",
+            "start": 0,
+            "duration": 1800,
+            "end": 1800,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "reverse": true,
+            "enhanced": false,
+            "both": false,
+            "continuityTargetIds": [
+              "obs.key-material.substrate-readings"
+            ]
+          }
+        },
+        "nodeDelays": {},
+        "frontiers": {},
+        "retiring": [
+          {
+            "frontier": {
+              "id": "question:material-base",
+              "anchorIds": [
+                "obs.key-material.layer-sequence"
+              ],
+              "title": "这些层底下是什么材料？",
+              "explanation": "层序说明先后，不能替代基底材料分析。",
+              "actionIds": [
+                "A.ANALYZE.MATERIAL.SUBSTRATE"
+              ],
+              "kind": "stub",
+              "continuation": {
+                "nodeIds": [
+                  "obs.key-material.substrate-readings"
+                ],
+                "edgeIds": []
+              },
+              "sourceIds": [
+                "obs.key-material.layer-sequence"
+              ],
+              "continuity": {
+                "role": "complement",
+                "roads": [
+                  {
+                    "id": "enquiry:material-pair",
+                    "from": "obs.key-material.substrate-readings",
+                    "to": "obs.key-material.layer-sequence"
+                  }
+                ],
+                "completionTargets": []
+              },
+              "successorRouteIds": [
+                "enquiry:material-pair"
+              ],
+              "x": 928.9822564266472,
+              "y": 1895.5836004033183,
+              "labelX": 712.98,
+              "labelY": 1880.58,
+              "labelWidth": 198,
+              "fontSize": 18,
+              "lineHeight": 30,
+              "lines": [
+                "这些层底下是什么材料？"
+              ],
+              "segments": [
+                {
+                  "d": "M 928.91 1766.88 C 933.68 1775.72 962.64 1812.76 963 1830 C 963.36 1847.24 938.57 1874.95 931.5 1890 C 924.43 1905.05 915.17 1930.82 912.51 1937.47",
+                  "from": 0.5310174358055896,
+                  "to": 1,
+                  "canonicalRouteId": "enquiry:material-pair",
+                  "edgeIds": [
+                    "enquiry:material-pair"
+                  ],
+                  "reverse": true
+                }
+              ],
+              "paths": [
+                "M 952.31 1857.2 C 944.8 1869.4 935.42 1881.65 931.5 1890 C 924.43 1905.05 915.17 1930.82 912.51 1937.47"
+              ],
+              "openBoundary": false,
+              "canonicalRouteId": "enquiry:material-pair",
+              "labelHeight": 30,
+              "labelBounds": {
+                "x": 712.98,
+                "y": 1880.58,
+                "width": 198,
+                "height": 30
+              }
+            },
+            "retireAt": 1800,
+            "labelRetireAt": 1800,
+            "successorRouteIds": [
+              "enquiry:material-pair"
+            ]
+          }
+        ],
+        "handovers": [],
+        "reportTransfers": [],
+        "duration": 2220
+      },
+      "afterNodes": [
+        {
+          "id": "obs.key-material.layer-sequence",
+          "title": "关键界面的层序读数"
+        },
+        {
+          "id": "obs.key-material.substrate-readings",
+          "title": "关键点位的基底读数"
+        }
+      ],
+      "afterRoads": [
+        {
+          "id": "enquiry:material-pair",
+          "kind": "enquiry",
+          "edgeIds": [
+            "enquiry:material-pair"
+          ]
+        }
+      ],
+      "afterQuestions": [],
+      "steps": 2,
+      "errors": []
+    }
+  ]
+}

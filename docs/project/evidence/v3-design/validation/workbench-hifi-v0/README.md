@@ -1,5 +1,13 @@
 # 掌眼 · 高保真工作台 v0
 
+**2026-09-13 地图修正检查点：** 用户批准提交并同步本轮来源、前沿、节点名称及其验证／作品集资产，页面为4d6362a8，目标为origin/codex/xray-photo-local-study。提交与同步状态以Git实际记录为准；下文的“未提交／推送”保留为各次实现时的历史状态。
+
+**2026-09-13 名称与符号修正：** 当前页4d6362a8修正名称远离、报告短名、圆点大小与图注一致性，并轻微加深道路区分。中英24组实际渲染状态／134项断言与来源恢复7组通过，体验待真人反馈；未提交／推送。[验证](VERIFICATION-NODE-LABELS-2026-09-13.md) · [短复测](PLAYTEST-NODE-LABELS.md) · [同尺寸对照](../../../../../portfolio/2026-09-13-node-labels/README.md)。下文按历史构建保留。
+
+**2026-09-13 整图前沿接续：** 已按整图审查后的批准接入固定前沿去向、互补／调查联系、替代入路、持续限制、历史真实来源与过渡取景。当前页 `11ea710e`，尚未提交／推送。[实现与验证](VERIFICATION-FRONTIER-CONTINUITY-2026-09-13.md)、[短复测](PLAYTEST-FRONTIER-CONTINUITY.md)、[过程资产](../../../../../portfolio/2026-09-13-frontier-continuity/README.md)。真人易读性待反馈，新增检查 `review required`；下文旧构建仅作历史。
+
+**2026-09-13 来源道路连续性：** 英文版先保存为 `2e5dafc`，随后来源虚线改为沿原路接通；报告收纳到主道路时有可见移动与留存标记，可继续回查原记录。当前页 SHA 前缀 `370fc2c1`，本次道路调整尚未提交／推送。见[实现与验证](VERIFICATION-REPORT-SOURCE-2026-09-13.md)、[短复测](PLAYTEST-REPORT-SOURCE.md)与[实际画面及原速片](../../../../../portfolio/2026-09-13-report-source-continuity/README.md)。下方报告仍对应各自历史构建。
+
 **2026-09-13 换序漏译修复：** 用户报告英文中出现中文，已复现并补齐报告先到、层序先到等条件分支。当前页面 SHA 前缀 `b0975f68`；58条调查顺序／1,069个状态、9条专项交互及原6项回归的结果见[扩展验证](VERIFICATION-LANGUAGE-AUDIT-2026-09-13.md)和[修正前后截图](../../../../../portfolio/2026-09-13-language-order-fix/README.md)。下段及更早报告保留各自构建，不代表当前穷尽覆盖。
 
 **2026-09-13 中／英界面初版：** 顶部“中 / EN”切换当前工作台及材料／历史等浮层，保留调查进度、个人输入与固定道路；英文标签按完整单词换行。可用 `prototype.html?lang=en` 直接进入英文。见[初版双语验证](VERIFICATION-LANGUAGE-2026-09-13.md)、[短复测](PLAYTEST-LANGUAGE.md)与[英文作品集截图](../../../../../portfolio/2026-09-13-bilingual-workbench/README.md)。该次构建 SHA 前缀为 `c9e676ca`，后续漏译修复以上段为准。

@@ -1,5 +1,29 @@
 # Next Actions
 
+## 2026-09-13 封存后的下一步
+
+用户已批准将当前4d6362a8地图页面及整轮来源、前沿和名称修正提交并同步到origin/codex/xray-photo-local-study。检查点内容见[当前状态](02-CURRENT-STATE.md)；远端是否一致以Git实际记录为准。继续按下方名称与辨识短复测收集真实反馈，暂不扩玩法、改正式数值或重做美术。历史段落的提交状态只对应当时。
+
+## 2026-09-13 当前：复测名称归属、圆点与线条辨识
+
+使用[当前高保真页](evidence/v3-design/validation/workbench-hifi-v0/prototype.html)4d6362a8，按[短复测](evidence/v3-design/validation/workbench-hifi-v0/PLAYTEST-NODE-LABELS.md)观察节点能否直接找到名称、报告点与短名联动是否清楚、绿线和灰黑线是否更易区分。机器与截图证据见[验证报告](evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-NODE-LABELS-2026-09-13.md)。不扩玩法；本轮未提交／推送，新增呈现检查review required，真人体验待用户评价。
+
+## 2026-09-13 当前：复测已修订的前沿接续
+
+已按批准的整图建议更新[高保真页](evidence/v3-design/validation/workbench-hifi-v0/prototype.html)，当前 `11ea710e`。先用[三分钟短复测](evidence/v3-design/validation/workbench-hifi-v0/PLAYTEST-FRONTIER-CONTINUITY.md)查看材料双向、档案反向、持续限制与打断恢复；下一步依据实际反馈收尾，不继续自行扩玩法或重做美术。
+
+实现、运行证据和构建差异见[验证报告](evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-FRONTIER-CONTINUITY-2026-09-13.md)。新增测试及呈现默认值 `review required`，真人体验尚未验收。所有修订仍在本地工作区，未提交／推送，`2e5dafc` 检查点保留。
+
+## 2026-09-13 当前：依据整图反例统一修正前沿接续
+
+整图审查已确认系统性缺陷，不能继续按“来源分支通过，只待用户验收”推进。下一步应让前沿的实际去向同时决定固定短线路径、接续后保留的关系、旧问题退场时点和镜头取景；覆盖材料双向、档案反向、问题转向、替代证明路线与持续未知，不再只补单个问题ID。方案与具体证据见[整图审查](evidence/v3-design/2026-09-13-frontier-system-audit.md)。
+
+本轮完成核验及失败证据保存，尚未启动新的产品修复。不能把互补材料连成相互证明，不能把下一种调查等同于答案，也不能为消除虚线而清空能力限制；具体呈现建议仍为未实现／`review required`。当前页面 `370fc2c1` 仍可复现缺陷；保留英文提交 `2e5dafc` 与工作区来源修订，不重置、不推送，不扩玩法或改冻结规则。
+
+## 2026-09-13 当前：体验来源接通与报告收纳
+
+英文版检查点 `2e5dafc` 已本地提交，未推送；其后来源道路调整已经实现并通过限定核验，留在工作区。直接使用[当前游戏](evidence/v3-design/validation/workbench-hifi-v0/prototype.html)，按[短复测](evidence/v3-design/validation/workbench-hifi-v0/PLAYTEST-REPORT-SOURCE.md)观察“先事故归属报告，再事故原记录，随后整器观察”的接通与收纳。当前页 SHA 前缀 `370fc2c1`，准确机器结果见[验证](evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-REPORT-SOURCE-2026-09-13.md)。下一步只根据用户体验反馈收尾；不自行推送、扩玩法或改判定规则。
+
 ## 2026-09-13 当前：使用漏译修订版，按实际反馈收尾
 
 [当前游戏](evidence/v3-design/validation/workbench-hifi-v0/prototype.html)的英文换序漏译已修复，SHA 前缀 `b0975f68`。[扩展验证](evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-LANGUAGE-AUDIT-2026-09-13.md)记录58条顺序／1,069个状态、9条专项浏览器路径及原6项完整回归；已发现漏译消除，未宣称穷尽所有排列。下一步继续使用此页并按实际问题反馈收尾，不自动扩玩法或改地图；[短复测](evidence/v3-design/validation/workbench-hifi-v0/PLAYTEST-LANGUAGE.md)仅供需要定位时使用。源码、页面和检查留在本地工作区，尚未提交／推送。

@@ -1,0 +1,3790 @@
+{
+  "buildSha256": "370fc2c10025e8a5db358b2bcf1deaebd1a926c608220fe62c645b7545ebc842",
+  "readOnly": true,
+  "orders": 48,
+  "transitions": 1056,
+  "uniqueTransitions": 980,
+  "frontiers": {
+    "question:material-base": {
+      "title": "这些层底下是什么材料？",
+      "states": 186,
+      "canonical": false,
+      "open": true,
+      "declaredTargets": [
+        "obs.key-material.substrate-readings"
+      ],
+      "retireActions": [
+        "A.ANALYZE.MATERIAL.SUBSTRATE"
+      ]
+    },
+    "question:archive:t3:source": {
+      "title": "这份关系核验所指的原始记录是什么？",
+      "states": 270,
+      "canonical": true,
+      "open": false,
+      "declaredTargets": [
+        "obs.phase.t3"
+      ],
+      "retireActions": [
+        "A.RESEARCH.LATE_TREATMENT"
+      ]
+    },
+    "question:archive:t2:source": {
+      "title": "这份关系核验所指的原始记录是什么？",
+      "states": 195,
+      "canonical": true,
+      "open": false,
+      "declaredTargets": [
+        "obs.accident.major"
+      ],
+      "retireActions": [
+        "A.RESEARCH.ACCIDENT"
+      ]
+    },
+    "question:archive:t3:attribution": {
+      "title": "后期记录说的是这只碗吗？",
+      "states": 162,
+      "canonical": true,
+      "open": false,
+      "declaredTargets": [],
+      "retireActions": [
+        "A.RELATE.ARCHIVE.T3_TO_OBJECT"
+      ]
+    },
+    "question:photo-object": {
+      "title": "照片里是眼前这只碗吗？",
+      "states": 346,
+      "canonical": true,
+      "open": false,
+      "declaredTargets": [],
+      "retireActions": [
+        "A.VERIFY.OBJECT_CONTINUITY"
+      ]
+    },
+    "question:appearance": {
+      "title": "这些外观变化压在哪一层？",
+      "states": 177,
+      "canonical": false,
+      "open": true,
+      "declaredTargets": [
+        "obs.surface.point-layering"
+      ],
+      "retireActions": [
+        "A.INSPECT.WINDOWS"
+      ]
+    },
+    "question:archive:t2:corroboration": {
+      "title": "事故记录与实物相符吗？",
+      "states": 150,
+      "canonical": true,
+      "open": false,
+      "declaredTargets": [],
+      "retireActions": [
+        "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+        "A.MAP.REGION_CONTINUITY"
+      ]
+    },
+    "question:change": {
+      "title": "结构从另一个时点到现在变了什么？",
+      "states": 447,
+      "canonical": false,
+      "open": true,
+      "declaredTargets": [
+        "obs.structure.major.cross-time"
+      ],
+      "retireActions": [
+        "A.MAP.REGION_CONTINUITY"
+      ]
+    },
+    "question:craft": {
+      "title": "这些制造特征放进历史参照会怎样？",
+      "states": 289,
+      "canonical": false,
+      "open": true,
+      "declaredTargets": [
+        "obs.corpus.identity"
+      ],
+      "retireActions": [
+        "A.VERIFY.OBJECT_CONTINUITY",
+        "A.COMPARE.CORPUS",
+        "A.COMPARE.CORPUS.RECHECK"
+      ]
+    },
+    "question:history": {
+      "title": "这些改动发生在什么时点？",
+      "states": 270,
+      "canonical": false,
+      "open": true,
+      "declaredTargets": [],
+      "retireActions": [
+        "A.VERIFY.OBJECT_CONTINUITY",
+        "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+        "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+        "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+        "A.RESEARCH.LATE_TREATMENT",
+        "A.RESEARCH.ACCIDENT"
+      ]
+    },
+    "question:surface": {
+      "title": "这些点能说明多大范围？",
+      "states": 236,
+      "canonical": true,
+      "open": false,
+      "declaredTargets": [
+        "obs.surface.resolved"
+      ],
+      "retireActions": [
+        "A.SYNTHESIZE.SURFACE_REGIONS"
+      ]
+    },
+    "question:material-sequence": {
+      "title": "这些基底与后来各层谁先谁后？",
+      "states": 180,
+      "canonical": false,
+      "open": true,
+      "declaredTargets": [
+        "obs.key-material.layer-sequence"
+      ],
+      "retireActions": [
+        "A.INSPECT.MATERIAL.LAYER_SEQUENCE"
+      ]
+    },
+    "question:archive:t3:corroboration": {
+      "title": "后期记录与实物相符吗？",
+      "states": 135,
+      "canonical": true,
+      "open": false,
+      "declaredTargets": [],
+      "retireActions": [
+        "A.CORROBORATE.ARCHIVE.T3_CURRENT"
+      ]
+    },
+    "question:negative": {
+      "title": "未检出能说明没有补绘吗？",
+      "states": 286,
+      "canonical": false,
+      "open": true,
+      "declaredTargets": [
+        "obs.surface.point-layering"
+      ],
+      "retireActions": [
+        "A.SYNTHESIZE.SURFACE_REGIONS"
+      ]
+    },
+    "question:visible-intervention": {
+      "title": "眼见的修补牵涉哪些层面？",
+      "states": 59,
+      "canonical": false,
+      "open": true,
+      "declaredTargets": [],
+      "retireActions": [
+        "A.IMAGE.XRAY",
+        "A.OBSERVE.REGION_DECOR",
+        "A.RESEARCH.ACCIDENT"
+      ]
+    },
+    "question:archive:t2:attribution": {
+      "title": "事故记录说的是这只碗吗？",
+      "states": 184,
+      "canonical": true,
+      "open": false,
+      "declaredTargets": [],
+      "retireActions": [
+        "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+      ]
+    }
+  },
+  "retirements": [
+    {
+      "frontier": "question:material-base",
+      "title": "这些层底下是什么材料？",
+      "action": {
+        "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+        "observationId": "obs.key-material.substrate-readings"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        }
+      ],
+      "anchorIds": [
+        "obs.key-material.layer-sequence"
+      ],
+      "declaredNextNodeIds": [
+        "obs.key-material.substrate-readings"
+      ],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.key-material.substrate-readings"
+      ],
+      "newEdgeIds": [],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t3:source",
+      "title": "这份关系核验所指的原始记录是什么？",
+      "action": {
+        "id": "A.RESEARCH.LATE_TREATMENT",
+        "observationId": "obs.phase.t3"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        }
+      ],
+      "anchorIds": [
+        "obs.archive.t3.current-corroboration"
+      ],
+      "declaredNextNodeIds": [
+        "obs.phase.t3"
+      ],
+      "canonicalRouteIds": [
+        "source:obs.archive.t3.current-corroboration"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "obs.phase.t3"
+      ],
+      "newEdgeIds": [
+        "source:obs.archive.t3.current-corroboration"
+      ],
+      "matchingRoadIds": [
+        "source:obs.archive.t3.current-corroboration"
+      ]
+    },
+    {
+      "frontier": "question:archive:t2:source",
+      "title": "这份关系核验所指的原始记录是什么？",
+      "action": {
+        "id": "A.RESEARCH.ACCIDENT",
+        "observationId": "obs.accident.major"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        }
+      ],
+      "anchorIds": [
+        "obs.archive.t2.object-attribution"
+      ],
+      "declaredNextNodeIds": [
+        "obs.accident.major"
+      ],
+      "canonicalRouteIds": [
+        "source:obs.archive.t2.object-attribution"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "obs.accident.major"
+      ],
+      "newEdgeIds": [
+        "source:obs.archive.t2.object-attribution"
+      ],
+      "matchingRoadIds": [
+        "source:obs.archive.t2.object-attribution"
+      ]
+    },
+    {
+      "frontier": "question:archive:t2:corroboration",
+      "title": "事故记录与实物相符吗？",
+      "action": {
+        "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+        "observationId": "obs.archive.t2.current-corroboration"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        }
+      ],
+      "anchorIds": [
+        "obs.accident.major",
+        "obs.current.whole"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t2:object"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "claim:majorReassembly"
+      ],
+      "newEdgeIds": [
+        "proof:majorReassembly:obs.accident.major:documented"
+      ],
+      "matchingRoadIds": [
+        "archive:t2:object"
+      ]
+    },
+    {
+      "frontier": "question:appearance",
+      "title": "这些外观变化压在哪一层？",
+      "action": {
+        "id": "A.INSPECT.WINDOWS",
+        "observationId": "obs.surface.point-layering"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        }
+      ],
+      "anchorIds": [
+        "obs.appearance.restore"
+      ],
+      "declaredNextNodeIds": [
+        "obs.surface.point-layering"
+      ],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.surface.point-layering"
+      ],
+      "newEdgeIds": [],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t3:attribution",
+      "title": "后期记录说的是这只碗吗？",
+      "action": {
+        "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+        "observationId": "obs.archive.t3.object-attribution"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        }
+      ],
+      "anchorIds": [
+        "obs.phase.t3",
+        "obs.current.whole"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t3:object"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [],
+      "newEdgeIds": [],
+      "matchingRoadIds": [
+        "archive:t3:object"
+      ]
+    },
+    {
+      "frontier": "question:surface",
+      "title": "这些点能说明多大范围？",
+      "action": {
+        "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+        "observationId": "obs.surface.resolved"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        }
+      ],
+      "anchorIds": [
+        "obs.surface.point-layering"
+      ],
+      "declaredNextNodeIds": [
+        "obs.surface.resolved"
+      ],
+      "canonicalRouteIds": [
+        "support:obs.surface.point-layering:obs.surface.resolved"
+      ],
+      "retireAt": 1700,
+      "newNodeIds": [
+        "obs.surface.resolved"
+      ],
+      "newEdgeIds": [
+        "support:obs.surface.point-layering:obs.surface.resolved"
+      ],
+      "matchingRoadIds": [
+        "support:obs.surface.point-layering:obs.surface.resolved"
+      ]
+    },
+    {
+      "frontier": "question:craft",
+      "title": "这些制造特征放进历史参照会怎样？",
+      "action": {
+        "id": "A.VERIFY.OBJECT_CONTINUITY",
+        "observationId": "obs.object.continuity"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "archive",
+          "observationId": "obs.structure.major.documented-cross-time"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        }
+      ],
+      "anchorIds": [
+        "obs.current.whole",
+        "obs.current.base"
+      ],
+      "declaredNextNodeIds": [
+        "obs.corpus.identity"
+      ],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "claim:identity",
+        "claim:threePhase",
+        "interpretation:photo-repair"
+      ],
+      "newEdgeIds": [
+        "proof:identity:obs.object.continuity",
+        "proof:identity:obs.current.whole:current",
+        "proof:identity:obs.current.base:current",
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3",
+        "photo:object",
+        "interpretation:photo-history"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:history",
+      "title": "这些改动发生在什么时点？",
+      "action": {
+        "id": "A.VERIFY.OBJECT_CONTINUITY",
+        "observationId": "obs.object.continuity"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "archive",
+          "observationId": "obs.structure.major.documented-cross-time"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        }
+      ],
+      "anchorIds": [
+        "claim:majorReassembly",
+        "obs.phase.t1",
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "claim:identity",
+        "claim:threePhase",
+        "interpretation:photo-repair"
+      ],
+      "newEdgeIds": [
+        "proof:identity:obs.object.continuity",
+        "proof:identity:obs.current.whole:current",
+        "proof:identity:obs.current.base:current",
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3",
+        "photo:object",
+        "interpretation:photo-history"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:photo-object",
+      "title": "照片里是眼前这只碗吗？",
+      "action": {
+        "id": "A.VERIFY.OBJECT_CONTINUITY",
+        "observationId": "obs.object.continuity"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "archive",
+          "observationId": "obs.structure.major.documented-cross-time"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        }
+      ],
+      "anchorIds": [
+        "obs.phase.t1",
+        "obs.current.base"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "photo:object",
+        "photo:object"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "claim:identity",
+        "claim:threePhase",
+        "interpretation:photo-repair"
+      ],
+      "newEdgeIds": [
+        "proof:identity:obs.object.continuity",
+        "proof:identity:obs.current.whole:current",
+        "proof:identity:obs.current.base:current",
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3",
+        "photo:object",
+        "interpretation:photo-history"
+      ],
+      "matchingRoadIds": [
+        "photo:object"
+      ]
+    },
+    {
+      "frontier": "question:material-sequence",
+      "title": "这些基底与后来各层谁先谁后？",
+      "action": {
+        "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+        "observationId": "obs.key-material.layer-sequence"
+      },
+      "route": [
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        }
+      ],
+      "anchorIds": [
+        "obs.key-material.substrate-readings"
+      ],
+      "declaredNextNodeIds": [
+        "obs.key-material.layer-sequence"
+      ],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.key-material.layer-sequence"
+      ],
+      "newEdgeIds": [],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:craft",
+      "title": "这些制造特征放进历史参照会怎样？",
+      "action": {
+        "id": "A.COMPARE.CORPUS",
+        "observationId": "obs.corpus.identity"
+      },
+      "route": [
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        }
+      ],
+      "anchorIds": [
+        "obs.current.whole",
+        "obs.current.base"
+      ],
+      "declaredNextNodeIds": [
+        "obs.corpus.identity"
+      ],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.corpus.identity",
+        "claim:identity"
+      ],
+      "newEdgeIds": [
+        "context:obs.current.whole:obs.corpus.identity",
+        "context:obs.current.base:obs.corpus.identity",
+        "proof:identity:obs.corpus.identity"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t2:source",
+      "title": "这份关系核验所指的原始记录是什么？",
+      "action": {
+        "id": "A.RESEARCH.ACCIDENT",
+        "observationId": "obs.accident.major"
+      },
+      "route": [
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        }
+      ],
+      "anchorIds": [
+        "obs.archive.t2.object-attribution",
+        "obs.archive.t2.current-corroboration"
+      ],
+      "declaredNextNodeIds": [
+        "obs.accident.major"
+      ],
+      "canonicalRouteIds": [
+        "source:obs.archive.t2.object-attribution",
+        "source:obs.archive.t2.current-corroboration"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "obs.accident.major",
+        "claim:majorReassembly"
+      ],
+      "newEdgeIds": [
+        "archive:t2:object",
+        "proof:majorReassembly:obs.accident.major:documented"
+      ],
+      "matchingRoadIds": [
+        "source:obs.archive.t2.object-attribution",
+        "source:obs.archive.t2.current-corroboration"
+      ]
+    },
+    {
+      "frontier": "question:archive:t3:corroboration",
+      "title": "后期记录与实物相符吗？",
+      "action": {
+        "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+        "observationId": "obs.archive.t3.current-corroboration"
+      },
+      "route": [
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        }
+      ],
+      "anchorIds": [
+        "obs.phase.t3",
+        "obs.current.whole"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t3:object"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "claim:threePhase"
+      ],
+      "newEdgeIds": [
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3"
+      ],
+      "matchingRoadIds": [
+        "archive:t3:object"
+      ]
+    },
+    {
+      "frontier": "question:history",
+      "title": "这些改动发生在什么时点？",
+      "action": {
+        "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+        "observationId": "obs.archive.t3.current-corroboration"
+      },
+      "route": [
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        }
+      ],
+      "anchorIds": [
+        "claim:majorReassembly",
+        "obs.phase.t1",
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "claim:threePhase"
+      ],
+      "newEdgeIds": [
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:change",
+      "title": "结构从另一个时点到现在变了什么？",
+      "action": {
+        "id": "A.MAP.REGION_CONTINUITY",
+        "basis": "photo",
+        "observationId": "obs.structure.major.cross-time"
+      },
+      "route": [
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.TRACE.PROVENANCE_CHAIN",
+          "observationId": "obs.documentation.resolved"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "photo",
+          "observationId": "obs.structure.major.cross-time"
+        }
+      ],
+      "anchorIds": [
+        "obs.structure.xray.early"
+      ],
+      "declaredNextNodeIds": [
+        "obs.structure.major.cross-time"
+      ],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.structure.major.cross-time",
+        "interpretation:photo-change"
+      ],
+      "newEdgeIds": [
+        "proof:majorReassembly:obs.current.whole:physical",
+        "proof:majorReassembly:obs.structure.xray.early:physical",
+        "proof:majorReassembly:obs.structure.major.cross-time:physical",
+        "comparison-material:photo:obs.phase.t1",
+        "comparison-material:photo:obs.current.whole",
+        "comparison-material:photo:obs.structure.xray.early",
+        "interpretation:photo:difference",
+        "interpretation:photo:attribution"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:negative",
+      "title": "未检出能说明没有补绘吗？",
+      "action": {
+        "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+        "observationId": "obs.surface.resolved"
+      },
+      "route": [
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.TRACE.PROVENANCE_CHAIN",
+          "observationId": "obs.documentation.resolved"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "photo",
+          "observationId": "obs.structure.major.cross-time"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        }
+      ],
+      "anchorIds": [
+        "obs.surface.no-signal.unresolved"
+      ],
+      "declaredNextNodeIds": [
+        "obs.surface.point-layering"
+      ],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.surface.resolved",
+        "claim:coherentDecisionProfile"
+      ],
+      "newEdgeIds": [
+        "support:obs.surface.point-layering:obs.surface.resolved",
+        "proof:coherentDecisionProfile:claim:identity",
+        "proof:coherentDecisionProfile:claim:majorReassembly",
+        "proof:coherentDecisionProfile:claim:threePhase",
+        "proof:coherentDecisionProfile:obs.key-material.substrate-readings",
+        "proof:coherentDecisionProfile:obs.key-material.layer-sequence",
+        "proof:coherentDecisionProfile:obs.surface.resolved",
+        "proof:coherentDecisionProfile:obs.stability.resolved",
+        "proof:coherentDecisionProfile:obs.documentation.resolved"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:visible-intervention",
+      "title": "眼见的修补牵涉哪些层面？",
+      "action": {
+        "id": "A.IMAGE.XRAY",
+        "observationId": "obs.structure.xray.early"
+      },
+      "route": [
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        }
+      ],
+      "anchorIds": [
+        "obs.current.whole"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.structure.xray.early"
+      ],
+      "newEdgeIds": [],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t3:source",
+      "title": "这份关系核验所指的原始记录是什么？",
+      "action": {
+        "id": "A.RESEARCH.LATE_TREATMENT",
+        "observationId": "obs.phase.t3"
+      },
+      "route": [
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        }
+      ],
+      "anchorIds": [
+        "obs.archive.t3.object-attribution"
+      ],
+      "declaredNextNodeIds": [
+        "obs.phase.t3"
+      ],
+      "canonicalRouteIds": [
+        "source:obs.archive.t3.object-attribution"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "obs.phase.t3"
+      ],
+      "newEdgeIds": [
+        "archive:t3:object"
+      ],
+      "matchingRoadIds": [
+        "source:obs.archive.t3.object-attribution"
+      ]
+    },
+    {
+      "frontier": "question:visible-intervention",
+      "title": "眼见的修补牵涉哪些层面？",
+      "action": {
+        "id": "A.OBSERVE.REGION_DECOR",
+        "observationId": "obs.appearance.restore"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        }
+      ],
+      "anchorIds": [
+        "obs.current.whole"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.appearance.restore"
+      ],
+      "newEdgeIds": [],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t2:corroboration",
+      "title": "事故记录与实物相符吗？",
+      "action": {
+        "id": "A.MAP.REGION_CONTINUITY",
+        "basis": "archive",
+        "observationId": "obs.structure.major.documented-cross-time"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "archive",
+          "observationId": "obs.structure.major.documented-cross-time"
+        }
+      ],
+      "anchorIds": [
+        "obs.accident.major",
+        "obs.current.whole"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t2:object"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "obs.structure.major.documented-cross-time",
+        "claim:majorReassembly",
+        "interpretation:archive-change"
+      ],
+      "newEdgeIds": [
+        "proof:majorReassembly:obs.accident.major:documented",
+        "comparison-material:archive:obs.accident.major",
+        "comparison-material:archive:obs.current.whole",
+        "interpretation:archive:difference",
+        "interpretation:archive:attribution"
+      ],
+      "matchingRoadIds": [
+        "archive:t2:object"
+      ]
+    },
+    {
+      "frontier": "question:archive:t2:source",
+      "title": "这份关系核验所指的原始记录是什么？",
+      "action": {
+        "id": "A.RESEARCH.ACCIDENT",
+        "observationId": "obs.accident.major"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        }
+      ],
+      "anchorIds": [
+        "obs.archive.t2.current-corroboration"
+      ],
+      "declaredNextNodeIds": [
+        "obs.accident.major"
+      ],
+      "canonicalRouteIds": [
+        "source:obs.archive.t2.current-corroboration"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "obs.accident.major"
+      ],
+      "newEdgeIds": [
+        "archive:t2:object"
+      ],
+      "matchingRoadIds": [
+        "source:obs.archive.t2.current-corroboration"
+      ]
+    },
+    {
+      "frontier": "question:archive:t2:attribution",
+      "title": "事故记录说的是这只碗吗？",
+      "action": {
+        "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+        "observationId": "obs.archive.t2.object-attribution"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "archive",
+          "observationId": "obs.structure.major.documented-cross-time"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        }
+      ],
+      "anchorIds": [
+        "obs.accident.major",
+        "obs.current.whole"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t2:object"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "claim:majorReassembly",
+        "interpretation:archive-change"
+      ],
+      "newEdgeIds": [
+        "proof:majorReassembly:obs.accident.major:documented",
+        "interpretation:archive:difference",
+        "interpretation:archive:attribution"
+      ],
+      "matchingRoadIds": [
+        "archive:t2:object"
+      ]
+    },
+    {
+      "frontier": "question:visible-intervention",
+      "title": "眼见的修补牵涉哪些层面？",
+      "action": {
+        "id": "A.RESEARCH.ACCIDENT",
+        "observationId": "obs.accident.major"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        }
+      ],
+      "anchorIds": [
+        "obs.current.whole"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.accident.major"
+      ],
+      "newEdgeIds": [],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:history",
+      "title": "这些改动发生在什么时点？",
+      "action": {
+        "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+        "observationId": "obs.archive.t3.object-attribution"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "archive",
+          "observationId": "obs.structure.major.documented-cross-time"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.COMPARE.CORPUS.RECHECK",
+          "observationId": "obs.corpus.identity.repeat"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.TRACE.PROVENANCE_CHAIN",
+          "observationId": "obs.documentation.resolved"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        }
+      ],
+      "anchorIds": [
+        "claim:majorReassembly",
+        "obs.phase.t1",
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "claim:threePhase"
+      ],
+      "newEdgeIds": [
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t3:source",
+      "title": "这份关系核验所指的原始记录是什么？",
+      "action": {
+        "id": "A.RESEARCH.LATE_TREATMENT",
+        "observationId": "obs.phase.t3"
+      },
+      "route": [
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "photo",
+          "observationId": "obs.structure.major.cross-time"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.COMPARE.CORPUS.RECHECK",
+          "observationId": "obs.corpus.identity.repeat"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        }
+      ],
+      "anchorIds": [
+        "obs.archive.t3.object-attribution",
+        "obs.archive.t3.current-corroboration"
+      ],
+      "declaredNextNodeIds": [
+        "obs.phase.t3"
+      ],
+      "canonicalRouteIds": [
+        "source:obs.archive.t3.object-attribution",
+        "source:obs.archive.t3.current-corroboration"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "obs.phase.t3"
+      ],
+      "newEdgeIds": [
+        "archive:t3:object"
+      ],
+      "matchingRoadIds": [
+        "source:obs.archive.t3.object-attribution",
+        "source:obs.archive.t3.current-corroboration"
+      ]
+    },
+    {
+      "frontier": "question:history",
+      "title": "这些改动发生在什么时点？",
+      "action": {
+        "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+        "observationId": "obs.archive.t2.object-attribution"
+      },
+      "route": [
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "photo",
+          "observationId": "obs.structure.major.cross-time"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.COMPARE.CORPUS.RECHECK",
+          "observationId": "obs.corpus.identity.repeat"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        }
+      ],
+      "anchorIds": [
+        "claim:majorReassembly",
+        "obs.phase.t1",
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "claim:threePhase"
+      ],
+      "newEdgeIds": [
+        "proof:majorReassembly:obs.accident.major:documented",
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t2:attribution",
+      "title": "事故记录说的是这只碗吗？",
+      "action": {
+        "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+        "observationId": "obs.archive.t2.object-attribution"
+      },
+      "route": [
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        }
+      ],
+      "anchorIds": [
+        "obs.accident.major"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t2:object"
+      ],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.archive.t2.object-attribution"
+      ],
+      "newEdgeIds": [
+        "source:obs.archive.t2.object-attribution"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t2:corroboration",
+      "title": "事故记录与实物相符吗？",
+      "action": {
+        "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+        "observationId": "obs.archive.t2.current-corroboration"
+      },
+      "route": [
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        }
+      ],
+      "anchorIds": [
+        "obs.accident.major"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t2:object"
+      ],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.archive.t2.current-corroboration",
+        "claim:majorReassembly"
+      ],
+      "newEdgeIds": [
+        "proof:majorReassembly:obs.accident.major:documented",
+        "source:obs.archive.t2.current-corroboration"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t3:corroboration",
+      "title": "后期记录与实物相符吗？",
+      "action": {
+        "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+        "observationId": "obs.archive.t3.current-corroboration"
+      },
+      "route": [
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.TRACE.PROVENANCE_CHAIN",
+          "observationId": "obs.documentation.resolved"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        }
+      ],
+      "anchorIds": [
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t3:object"
+      ],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.archive.t3.current-corroboration",
+        "claim:threePhase"
+      ],
+      "newEdgeIds": [
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3",
+        "source:obs.archive.t3.current-corroboration"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t3:attribution",
+      "title": "后期记录说的是这只碗吗？",
+      "action": {
+        "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+        "observationId": "obs.archive.t3.object-attribution"
+      },
+      "route": [
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        }
+      ],
+      "anchorIds": [
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t3:object"
+      ],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.archive.t3.object-attribution"
+      ],
+      "newEdgeIds": [
+        "source:obs.archive.t3.object-attribution"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:craft",
+      "title": "这些制造特征放进历史参照会怎样？",
+      "action": {
+        "id": "A.COMPARE.CORPUS.RECHECK",
+        "observationId": "obs.corpus.identity.repeat"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "archive",
+          "observationId": "obs.structure.major.documented-cross-time"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.COMPARE.CORPUS.RECHECK",
+          "observationId": "obs.corpus.identity.repeat"
+        }
+      ],
+      "anchorIds": [
+        "obs.current.whole",
+        "obs.current.base"
+      ],
+      "declaredNextNodeIds": [
+        "obs.corpus.identity"
+      ],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.corpus.identity.repeat",
+        "claim:identity"
+      ],
+      "newEdgeIds": [
+        "proof:identity:obs.corpus.identity.repeat",
+        "proof:identity:obs.current.whole:current",
+        "proof:identity:obs.current.base:current"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:archive:t2:corroboration",
+      "title": "事故记录与实物相符吗？",
+      "action": {
+        "id": "A.MAP.REGION_CONTINUITY",
+        "basis": "archive",
+        "observationId": "obs.structure.major.documented-cross-time"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "archive",
+          "observationId": "obs.structure.major.documented-cross-time"
+        }
+      ],
+      "anchorIds": [
+        "obs.accident.major",
+        "obs.current.whole"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t2:object"
+      ],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.structure.major.documented-cross-time"
+      ],
+      "newEdgeIds": [
+        "comparison-material:archive:obs.accident.major",
+        "comparison-material:archive:obs.current.whole"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:history",
+      "title": "这些改动发生在什么时点？",
+      "action": {
+        "id": "A.RESEARCH.LATE_TREATMENT",
+        "observationId": "obs.phase.t3"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "archive",
+          "observationId": "obs.structure.major.documented-cross-time"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.TRACE.PROVENANCE_CHAIN",
+          "observationId": "obs.documentation.resolved"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.COMPARE.CORPUS.RECHECK",
+          "observationId": "obs.corpus.identity.repeat"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        }
+      ],
+      "anchorIds": [
+        "claim:majorReassembly",
+        "obs.phase.t1"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.phase.t3",
+        "claim:threePhase"
+      ],
+      "newEdgeIds": [
+        "archive:t3:object",
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3"
+      ],
+      "matchingRoadIds": []
+    },
+    {
+      "frontier": "question:history",
+      "title": "这些改动发生在什么时点？",
+      "action": {
+        "id": "A.RESEARCH.ACCIDENT",
+        "observationId": "obs.accident.major"
+      },
+      "route": [
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.COMPARE.CORPUS.RECHECK",
+          "observationId": "obs.corpus.identity.repeat"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "photo",
+          "observationId": "obs.structure.major.cross-time"
+        },
+        {
+          "id": "A.TRACE.PROVENANCE_CHAIN",
+          "observationId": "obs.documentation.resolved"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        }
+      ],
+      "anchorIds": [
+        "claim:majorReassembly",
+        "obs.phase.t1",
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.accident.major",
+        "claim:threePhase",
+        "claim:coherentDecisionProfile"
+      ],
+      "newEdgeIds": [
+        "archive:t2:object",
+        "proof:majorReassembly:obs.accident.major:documented",
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3",
+        "proof:coherentDecisionProfile:claim:identity",
+        "proof:coherentDecisionProfile:claim:majorReassembly",
+        "proof:coherentDecisionProfile:claim:threePhase",
+        "proof:coherentDecisionProfile:obs.key-material.substrate-readings",
+        "proof:coherentDecisionProfile:obs.key-material.layer-sequence",
+        "proof:coherentDecisionProfile:obs.surface.resolved",
+        "proof:coherentDecisionProfile:obs.stability.resolved",
+        "proof:coherentDecisionProfile:obs.documentation.resolved"
+      ],
+      "matchingRoadIds": []
+    }
+  ],
+  "directionMismatches": [
+    {
+      "frontier": "question:material-base",
+      "title": "这些层底下是什么材料？",
+      "action": {
+        "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+        "observationId": "obs.key-material.substrate-readings"
+      },
+      "route": [
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        }
+      ],
+      "anchorIds": [
+        "obs.key-material.layer-sequence"
+      ],
+      "declaredNextNodeIds": [
+        "obs.key-material.substrate-readings"
+      ],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.key-material.substrate-readings"
+      ],
+      "newEdgeIds": [],
+      "matchingRoadIds": [],
+      "anchor": {
+        "id": "obs.key-material.layer-sequence",
+        "x": 907.5,
+        "y": 1950
+      },
+      "target": {
+        "id": "obs.key-material.substrate-readings",
+        "x": 922.5,
+        "y": 1755
+      },
+      "pathStart": {
+        "x": 899.36,
+        "y": 1960.77
+      },
+      "pathEnd": {
+        "x": 842.5,
+        "y": 2036
+      },
+      "startDistance": 207.06702417333378,
+      "endDistance": 292.1660486778024
+    },
+    {
+      "frontier": "question:archive:t2:corroboration",
+      "title": "事故记录与实物相符吗？",
+      "action": {
+        "id": "A.MAP.REGION_CONTINUITY",
+        "basis": "archive",
+        "observationId": "obs.structure.major.documented-cross-time"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "archive",
+          "observationId": "obs.structure.major.documented-cross-time"
+        }
+      ],
+      "anchorIds": [
+        "obs.accident.major",
+        "obs.current.whole"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t2:object"
+      ],
+      "retireAt": 1800,
+      "newNodeIds": [
+        "obs.structure.major.documented-cross-time",
+        "claim:majorReassembly",
+        "interpretation:archive-change"
+      ],
+      "newEdgeIds": [
+        "proof:majorReassembly:obs.accident.major:documented",
+        "comparison-material:archive:obs.accident.major",
+        "comparison-material:archive:obs.current.whole",
+        "interpretation:archive:difference",
+        "interpretation:archive:attribution"
+      ],
+      "matchingRoadIds": [
+        "archive:t2:object"
+      ],
+      "anchor": {
+        "id": "obs.accident.major",
+        "x": 637.5,
+        "y": 885
+      },
+      "target": {
+        "id": "obs.structure.major.documented-cross-time",
+        "x": 420,
+        "y": 1065
+      },
+      "pathStart": {
+        "x": 693.6300153187252,
+        "y": 469.1757896509878
+      },
+      "pathEnd": {
+        "x": 534.86,
+        "y": 144.23
+      },
+      "startDistance": 655.6522515185544,
+      "endDistance": 927.906359769131
+    },
+    {
+      "frontier": "question:history",
+      "title": "这些改动发生在什么时点？",
+      "action": {
+        "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+        "observationId": "obs.archive.t3.current-corroboration"
+      },
+      "route": [
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.TRACE.PROVENANCE_CHAIN",
+          "observationId": "obs.documentation.resolved"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        }
+      ],
+      "anchorIds": [
+        "claim:majorReassembly",
+        "obs.phase.t1",
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.archive.t3.current-corroboration",
+        "claim:threePhase"
+      ],
+      "newEdgeIds": [
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3",
+        "source:obs.archive.t3.current-corroboration"
+      ],
+      "matchingRoadIds": [],
+      "anchor": {
+        "id": "obs.phase.t3",
+        "x": 930,
+        "y": 1447.5
+      },
+      "target": {
+        "id": "obs.archive.t3.current-corroboration",
+        "x": 1020,
+        "y": 1297.5
+      },
+      "pathStart": {
+        "x": 938.14,
+        "y": 1458.27
+      },
+      "pathEnd": {
+        "x": 995,
+        "y": 1533.5
+      },
+      "startDistance": 180.41078820292316,
+      "endDistance": 237.32045845227924
+    },
+    {
+      "frontier": "question:archive:t3:attribution",
+      "title": "后期记录说的是这只碗吗？",
+      "action": {
+        "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+        "observationId": "obs.archive.t3.object-attribution"
+      },
+      "route": [
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        }
+      ],
+      "anchorIds": [
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [
+        "archive:t3:object"
+      ],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.archive.t3.object-attribution"
+      ],
+      "newEdgeIds": [
+        "source:obs.archive.t3.object-attribution"
+      ],
+      "matchingRoadIds": [],
+      "anchor": {
+        "id": "obs.phase.t3",
+        "x": 930,
+        "y": 1447.5
+      },
+      "target": {
+        "id": "obs.archive.t3.object-attribution",
+        "x": 870,
+        "y": 1350
+      },
+      "pathStart": {
+        "x": 939.55,
+        "y": 1437.95
+      },
+      "pathEnd": {
+        "x": 1020.5564106512938,
+        "y": 1384.6972958541282
+      },
+      "startDistance": 112.12673632992266,
+      "endDistance": 154.50286446467564
+    },
+    {
+      "frontier": "question:history",
+      "title": "这些改动发生在什么时点？",
+      "action": {
+        "id": "A.RESEARCH.ACCIDENT",
+        "observationId": "obs.accident.major"
+      },
+      "route": [
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.COMPARE.CORPUS.RECHECK",
+          "observationId": "obs.corpus.identity.repeat"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "photo",
+          "observationId": "obs.structure.major.cross-time"
+        },
+        {
+          "id": "A.TRACE.PROVENANCE_CHAIN",
+          "observationId": "obs.documentation.resolved"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        }
+      ],
+      "anchorIds": [
+        "claim:majorReassembly",
+        "obs.phase.t1",
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.accident.major",
+        "claim:threePhase",
+        "claim:coherentDecisionProfile"
+      ],
+      "newEdgeIds": [
+        "archive:t2:object",
+        "proof:majorReassembly:obs.accident.major:documented",
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3",
+        "proof:coherentDecisionProfile:claim:identity",
+        "proof:coherentDecisionProfile:claim:majorReassembly",
+        "proof:coherentDecisionProfile:claim:threePhase",
+        "proof:coherentDecisionProfile:obs.key-material.substrate-readings",
+        "proof:coherentDecisionProfile:obs.key-material.layer-sequence",
+        "proof:coherentDecisionProfile:obs.surface.resolved",
+        "proof:coherentDecisionProfile:obs.stability.resolved",
+        "proof:coherentDecisionProfile:obs.documentation.resolved"
+      ],
+      "matchingRoadIds": [],
+      "anchor": {
+        "id": "claim:majorReassembly",
+        "x": 847.5,
+        "y": 1132.5
+      },
+      "target": {
+        "id": "obs.accident.major",
+        "x": 637.5,
+        "y": 885
+      },
+      "pathStart": {
+        "x": 882.65,
+        "y": 1179
+      },
+      "pathEnd": {
+        "x": 912.5,
+        "y": 1218.5
+      },
+      "startDistance": 382.7982791236136,
+      "endDistance": 432.2583139744105
+    },
+    {
+      "frontier": "question:history",
+      "title": "这些改动发生在什么时点？",
+      "action": {
+        "id": "A.RESEARCH.ACCIDENT",
+        "observationId": "obs.accident.major"
+      },
+      "route": [
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE",
+          "observationId": "obs.current.whole"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED",
+          "observationId": "obs.stability.resolved"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.COMPARE.CORPUS.RECHECK",
+          "observationId": "obs.corpus.identity.repeat"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.COMPARE.CORPUS",
+          "observationId": "obs.corpus.identity"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "photo",
+          "observationId": "obs.structure.major.cross-time"
+        },
+        {
+          "id": "A.TRACE.PROVENANCE_CHAIN",
+          "observationId": "obs.documentation.resolved"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        }
+      ],
+      "anchorIds": [
+        "claim:majorReassembly",
+        "obs.phase.t1",
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.accident.major",
+        "claim:threePhase",
+        "claim:coherentDecisionProfile"
+      ],
+      "newEdgeIds": [
+        "archive:t2:object",
+        "proof:majorReassembly:obs.accident.major:documented",
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3",
+        "proof:coherentDecisionProfile:claim:identity",
+        "proof:coherentDecisionProfile:claim:majorReassembly",
+        "proof:coherentDecisionProfile:claim:threePhase",
+        "proof:coherentDecisionProfile:obs.key-material.substrate-readings",
+        "proof:coherentDecisionProfile:obs.key-material.layer-sequence",
+        "proof:coherentDecisionProfile:obs.surface.resolved",
+        "proof:coherentDecisionProfile:obs.stability.resolved",
+        "proof:coherentDecisionProfile:obs.documentation.resolved"
+      ],
+      "matchingRoadIds": [],
+      "anchor": {
+        "id": "obs.phase.t3",
+        "x": 930,
+        "y": 1447.5
+      },
+      "target": {
+        "id": "obs.accident.major",
+        "x": 637.5,
+        "y": 885
+      },
+      "pathStart": {
+        "x": 938.14,
+        "y": 1458.27
+      },
+      "pathEnd": {
+        "x": 995,
+        "y": 1533.5
+      },
+      "startDistance": 647.319783800866,
+      "endDistance": 740.5123226523648
+    },
+    {
+      "frontier": "question:history",
+      "title": "这些改动发生在什么时点？",
+      "action": {
+        "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+        "observationId": "obs.archive.t3.object-attribution"
+      },
+      "route": [
+        {
+          "id": "A.OBSERVE.REGION_DECOR",
+          "observationId": "obs.appearance.restore"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT",
+          "observationId": "obs.phase.t3"
+        },
+        {
+          "id": "A.RESEARCH.ACCIDENT",
+          "observationId": "obs.accident.major"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+          "observationId": "obs.archive.t2.current-corroboration"
+        },
+        {
+          "id": "A.OBSERVE.BASE",
+          "observationId": "obs.current.base"
+        },
+        {
+          "id": "A.SCREEN.UV",
+          "observationId": "obs.surface.no-signal.unresolved"
+        },
+        {
+          "id": "A.IMAGE.XRAY",
+          "observationId": "obs.structure.xray.early"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+          "observationId": "obs.key-material.layer-sequence"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS",
+          "observationId": "obs.surface.point-layering"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE",
+          "observationId": "obs.phase.t1"
+        },
+        {
+          "id": "A.ANALYZE.MATERIAL.SUBSTRATE",
+          "observationId": "obs.key-material.substrate-readings"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS",
+          "observationId": "obs.surface.resolved"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+          "observationId": "obs.archive.t2.object-attribution"
+        },
+        {
+          "id": "A.VERIFY.OBJECT_CONTINUITY",
+          "observationId": "obs.object.continuity"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+          "observationId": "obs.archive.t3.current-corroboration"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+          "observationId": "obs.archive.t3.object-attribution"
+        }
+      ],
+      "anchorIds": [
+        "claim:majorReassembly",
+        "obs.phase.t1",
+        "obs.phase.t3"
+      ],
+      "declaredNextNodeIds": [],
+      "canonicalRouteIds": [],
+      "retireAt": 0,
+      "newNodeIds": [
+        "obs.archive.t3.object-attribution",
+        "claim:threePhase"
+      ],
+      "newEdgeIds": [
+        "proof:threePhase:obs.phase.t1",
+        "proof:threePhase:obs.accident.major",
+        "proof:threePhase:obs.phase.t3",
+        "source:obs.archive.t3.object-attribution"
+      ],
+      "matchingRoadIds": [],
+      "anchor": {
+        "id": "obs.phase.t3",
+        "x": 930,
+        "y": 1447.5
+      },
+      "target": {
+        "id": "obs.archive.t3.object-attribution",
+        "x": 870,
+        "y": 1350
+      },
+      "pathStart": {
+        "x": 938.14,
+        "y": 1458.27
+      },
+      "pathEnd": {
+        "x": 995,
+        "y": 1533.5
+      },
+      "startDistance": 127.92752831193133,
+      "endDistance": 222.029840336834
+    }
+  ],
+  "summary": {
+    "frontierIds": 16,
+    "retirementVariants": 35,
+    "immediateVariants": 22,
+    "misdirectedVariants": 7
+  }
+}

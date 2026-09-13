@@ -43,12 +43,12 @@ function RoadInk({r,index,timing,phase,layout,className,initialPending}:any){
   const bounds=useMemo(()=>maskBounds(r.samples,layout.width,layout.height),[r.samples,layout.width,layout.height]);
   const ink=(key:string)=><g key={key}>
     <path d={r.d} className="road-clearance"/>
-    <path d={r.d} pathLength={1} data-route={r.id} data-edge-ids={r.edgeIds.join('|')} data-ink-layer={key}
-      className={`map-road ${r.kind==='support'?'support-road':'correspondence-road'} ${className}`}
+    <path d={r.d} pathLength={className.includes('handover-road')?undefined:1} data-route={r.id} data-edge-ids={r.edgeIds.join('|')} data-ink-layer={key}
+      className={`map-road ${r.kind==='support'?'support-road':'correspondence-road'} ${r.kind==='enquiry'?'enquiry-road':''} ${className}`}
       markerEnd={r.arrow?'url(#map-support-arrow)':undefined}/>
   </g>;
   const pieces=timing?timing.growthSegments.flatMap((part:any)=>timing.both&&part.from===0&&part.to===1?
-    [{from:0,to:.5,reverse:false},{from:.5,to:1,reverse:true}]:[{...part,reverse:r.kind!=='support'&&!timing.enhanced&&part.from>.5}]):[];
+    [{from:0,to:.5,reverse:false},{from:.5,to:1,reverse:true}]:[{...part,reverse:timing.reverse||r.kind!=='support'&&!timing.enhanced&&part.from>.5}]):[];
   if(!timing&&parts.length===1&&parts[0].from===0&&parts[0].to===1)return <g data-road-group={r.id} className={initialPending?'new-pending':''}>{ink('settled')}</g>;
   return <g data-road-group={r.id} className={initialPending?'new-pending':''}>
     <defs>
@@ -130,8 +130,13 @@ export default function MapView(props:Props){
   }
   useLayoutEffect(()=>{
     if(!world.current)return;
-    const measurements:Record<string,{width:number;height:number}>={};
-    world.current.querySelectorAll<HTMLElement>('[data-map-label]').forEach(el=>{measurements[el.dataset.mapLabel!]={width:el.offsetWidth,height:el.offsetHeight};});
+    const measurements:Record<string,{width:number;height:number;textWidth?:(text:string)=>number}>={};
+    world.current.querySelectorAll<HTMLElement>('[data-map-label]').forEach(el=>{
+      const context=document.createElement('canvas').getContext('2d'),style=getComputedStyle(el),cache=new Map<string,number>();
+      if(context)context.font=`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      measurements[el.dataset.mapLabel!]={width:el.offsetWidth,height:el.offsetHeight,
+        ...(context?{textWidth:(text:string)=>{if(!cache.has(text))cache.set(text,context.measureText(text).width);return cache.get(text)!;}}:{})};
+    });
     const next=placeMapLabels(base,measurements,base);setMeasured({base,layout:next});if(!historyMode)previous.current=next;
   },[base,historyMode]);
 
@@ -151,14 +156,14 @@ export default function MapView(props:Props){
       // A report's carrier is the correspondence itself, not a proof road
       // which happens to cite that same report as one of its prerequisites.
       const edge=graph.edges.find((e:any)=>obs.edgeIds?.includes(e.id)&&e.sourceIds?.includes(obs.id)&&['attribution','corroboration','same-object'].includes(e.kind));
-      const route=layout.routes.find((r:any)=>r.edgeIds.includes(edge?.id));if(route){point=route.midpoint;landingId=route.id;}
+      const route=layout.routes.find((r:any)=>r.edgeIds.includes(edge?.id));if(route){point=layout.reportMarkers?.find((m:any)=>m.reportId===obs.id)||route.midpoint;landingId=route.id;}
     }
     if(!point){const node=layout.nodes.find((n:any)=>n.id===(obs?.nodeId||obs?.id));if(node){point=node;landingId=node.id;}}
     if(!point)return;
     const run=token.current;
     if(investigation.result.newlyAcquired===false||reducedMotion){setFresh({...changes,landingId});setCamera(fit([point],1,1));later(()=>setFresh(null),900,run);return;}
     const beforeLayout=priorLayout.current||layoutMap(investigation.beforeGraph||{nodes:[],edges:[],frontiers:[],supportGroups:[]},null,language);
-    const plan=roadTransitionPlan(graph,layout,beforeLayout,changes);
+    const plan:any=roadTransitionPlan(graph,layout,beforeLayout,changes);
     setTransition({...plan,beforeLayout});
     setFresh({...changes,landingId});setPhase('fly');
     const oldCamera={...cam.current},vr=viewport.current!.getBoundingClientRect();
@@ -177,7 +182,12 @@ export default function MapView(props:Props){
     // neighbors are capped; a distant historical use must not be cropped away.
     const primary=layout.nodes.filter((n:any)=>seedIds.has(n.id));
     const neighbors=layout.nodes.filter((n:any)=>adjacent.has(n.id)&&!seedIds.has(n.id)).sort((a:any,b:any)=>Math.hypot(a.x-point.x,a.y-point.y)-Math.hypot(b.x-point.x,b.y-point.y)).slice(0,Math.max(0,6-primary.length));
-    const neighborhood=[...primary,...neighbors];
+    const previousQuestions=plan.retiring.map((r:any)=>r.frontier);
+    const followingQuestions=layout.frontiers.filter((f:any)=>plan.frontiers[f.id]);
+    const continuityAnchors=new Set([...previousQuestions,...followingQuestions].flatMap((f:any)=>f.anchorIds));
+    const continuityNodes=[...layout.nodes,...beforeLayout.nodes].filter((n:any)=>continuityAnchors.has(n.id));
+    const neighborhood=[...primary,...neighbors,...continuityNodes,...plan.reportTransfers.flatMap((r:any)=>[r.fromNode,r]),...previousQuestions,...followingQuestions,
+      ...plan.handovers.flatMap((r:any)=>r.points)];
     const contextual=fit([point,...neighborhood],.2,1.04);
     const enough=oldCamera.s>=.65&&[point,...neighborhood].every((n:any)=>{const b=visibleBounds(n);return b.left*oldCamera.s+oldCamera.x>45&&b.right*oldCamera.s+oldCamera.x<vr.width-45&&b.top*oldCamera.s+oldCamera.y>45&&b.bottom*oldCamera.s+oldCamera.y<vr.height-45;});
     const pullbackAt=MOTION.flight+MOTION.focus+MOTION.hold,connectAt=pullbackAt+MOTION.pullback;
@@ -193,7 +203,7 @@ export default function MapView(props:Props){
       else setCamera({...cam.current,x:cam.current.x-e.deltaX,y:cam.current.y-e.deltaY});};
     el.addEventListener('wheel',wheel,{passive:false});return()=>el.removeEventListener('wheel',wheel);
   },[]);
-  useEffect(()=>{window.hifiMapSnapshot=()=>({camera:cam.current,phase,flight:!!flight,flightPath:flight?.d||null,layout:structuredClone(layoutRef.current),fresh,transition:transition?{routes:transition.routes,nodeDelays:transition.nodeDelays,frontiers:transition.frontiers,duration:transition.duration}:null});return()=>{delete window.hifiMapSnapshot;};},[phase,flight,fresh,transition]);
+  useEffect(()=>{window.hifiMapSnapshot=()=>({camera:cam.current,phase,flight:!!flight,flightPath:flight?.d||null,layout:structuredClone(layoutRef.current),fresh,transition:transition?{routes:transition.routes,nodeDelays:transition.nodeDelays,frontiers:transition.frontiers,retiring:transition.retiring,handovers:transition.handovers,reportTransfers:transition.reportTransfers,duration:transition.duration}:null});return()=>{delete window.hifiMapSnapshot;};},[phase,flight,fresh,transition]);
   const zoom=(factor:number)=>{manualNavigation();const r=viewport.current!.getBoundingClientRect(),c=cam.current,s=clamp(c.s*factor,.2,1.8);setCamera({x:r.width/2-(r.width/2-c.x)*s/c.s,y:r.height/2-(r.height/2-c.y)*s/c.s,s});};
   const beginDrag=(e:React.PointerEvent)=>{if(e.button!==0||(e.target as Element).closest('button,.road-hit'))return;e.preventDefault();window.getSelection()?.removeAllRanges();manualNavigation();drag.current={x:e.clientX,y:e.clientY,camera:{...cam.current},moved:false,pointerId:e.pointerId};e.currentTarget.setPointerCapture(e.pointerId);};
   const onDrag=(e:React.PointerEvent)=>{const d=drag.current;if(!d||d.pointerId!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(Math.hypot(dx,dy)>4){d.moved=true;setDragging(true);setCamera({...d.camera,x:d.camera.x+dx,y:d.camera.y+dy});}};
@@ -211,6 +221,7 @@ export default function MapView(props:Props){
     return {};
   };
   const edgeClass=(r:any)=>{const related=r.edgeIds.some((id:string)=>focus.edgeIds?.includes(id));return `${related?'is-related':''} ${active&&!related?'is-quiet':''}`;};
+  const reportRelated=(id:string)=>focus.subject?.id===id||selection?.id===id;
   const selectNode=(n:any)=>onSelect({kind:n.kind==='claim'?'claim':'evidence',id:n.id});
   const selectRoute=(r:any)=>onSelect(r.groupId?{kind:'group',id:r.groupId}:{kind:'edge',id:r.edgeIds[0]});
   const questionStyle=(f:any):React.CSSProperties=>{
@@ -219,24 +230,47 @@ export default function MapView(props:Props){
     if(!timing)return {};
     return phase==='connect'?{animation:`map-appear 240ms linear ${timing.end}ms both`}:{opacity:0,visibility:'hidden',pointerEvents:'none'};
   };
+  const reportMarkerStyle=(marker:any):React.CSSProperties=>{
+    const move=transition?.reportTransfers.find((m:any)=>m.reportId===marker.reportId);
+    if(move)return phase==='connect'?{animation:`map-appear 240ms linear ${move.end}ms both`}:{opacity:0,visibility:'hidden'};
+    if(incoming&&!investigation?.beforeGraph?.observations.some((o:any)=>o.id===marker.reportId))return {opacity:0,visibility:'hidden'};
+    if(phase==='fly'&&investigation?.observationId===marker.reportId)return {opacity:0,visibility:'hidden'};
+    return {};
+  };
   return <div className="map-component" data-phase={phase}>
     <header className="map-heading"><div><h2>{t("已知与推理")}</h2><p>{t("观察留下线索，关联逐渐清晰")}</p></div><button className="map-legend-toggle" aria-expanded={legend} onClick={()=>setLegend(v=>!v)}>{t("图注")}</button></header>
     <div className="map-notice" aria-live="polite"><span>{t(props.notice||'每一份观察，都会在这里留下位置。')}</span>{props.onOpenLatest&&<button onClick={props.onOpenLatest}>{t("查看材料 ↗")}</button>}</div>
-    {legend&&<div className="map-legend"><span>{t("● 已知信息与解释")}</span><span>{t("▭ 已有依据的判断")}</span><span>{t("◇ 共同支持")}</span><span>{t("→ 支持解释与判断")}</span><span>{t("— 已核实的对应")}</span><span className="frontier-color">{t("┄ 沿路留下的疑问")}</span></div>}
+    {legend&&<div className="map-legend"><span className="legend-information"><span className="map-dot legend-information-icon" aria-hidden="true"><i/></span>{t("已知信息与解释")}</span><span>{t("▭ 已有依据的判断")}</span><span>{t("◇ 共同支持")}</span><span>{t("→ 支持解释与判断")}</span><span>{t("— 对应与调查联系")}</span><span className="frontier-color">{t("┄ 沿路留下的疑问")}</span></div>}
     <div className={`map-viewport ${dragging?'dragging':''}`} ref={viewport} onPointerDown={beginDrag} onPointerMove={onDrag} onPointerUp={endDrag} onPointerCancel={()=>{drag.current=null;setDragging(false);}}>
       {!layout.nodes.length&&<div className="map-empty"><div className="empty-impression"/><h3>{t("从眼前这只碗开始")}</h3><p>{t("转动、观察，或找一份记录。")}<br/>{t("你的认识会从第一次调查向外延伸。")}</p></div>}
       <div className="map-world" ref={world} style={{width:layout.width,height:layout.height,transform:`translate(${cam.current.x}px,${cam.current.y}px) scale(${cam.current.s})`}}>
         <svg className="map-roads" width={layout.width} height={layout.height} aria-hidden="true"><defs>
-          <marker id="map-support-arrow" viewBox="0 0 9 9" refX="8" refY="4.5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1 L8 4.5 L1 8 Z" fill="#687e4e"/></marker>
+          <marker id="map-support-arrow" viewBox="0 0 9 9" refX="8" refY="4.5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1 L8 4.5 L1 8 Z" fill="var(--map-support-ink)"/></marker>
         </defs>
         {transition?.retiring.map(({frontier:f,retireAt}:any,i:number)=><FrontierInk key={`retiring-${f.id}`} f={f} index={i} width={layout.width} height={layout.height} retiring phase={phase} retireAt={retireAt}/>)}
+        {transition?.handovers.map((r:any,i:number)=><g key={r.id} data-frontier-handover={r.frontierId} style={phase==='connect'?{animation:`map-retire 160ms linear ${Math.max(r.end,transition.retiring.find((f:any)=>f.frontier.id===r.frontierId)?.labelRetireAt||0)}ms both`}:undefined}>
+          <RoadInk r={{...r,edgeIds:[],kind:'enquiry',arrow:false}} index={layout.routes.length+transition.reportTransfers.length+i} timing={{...r,priorSegments:[],growthSegments:[{from:0,to:1}]}} phase={phase} layout={layout} className="handover-road"/>
+        </g>)}
+        {transition?.reportTransfers.map((move:any,i:number)=><g key={`source-transfer-${move.reportId}`} data-source-transfer={move.reportId}
+          style={phase==='connect'?{animation:`map-retire 160ms linear ${move.end}ms both`}:undefined}>
+          <RoadInk r={move.sourceRoute} index={layout.routes.length+i} timing={transition.routes[move.sourceRoute.id]} phase={phase} layout={layout} className=""/>
+        </g>)}
         {layout.routes.map((r:any,i:number)=><g key={r.id}>
           <RoadInk r={r} index={i} timing={transition?.routes[r.id]} phase={phase} layout={layout} className={edgeClass(r)} initialPending={incoming&&r.edgeIds.some((id:string)=>[...incoming.addedEdgeIds,...incoming.changedEdgeIds].includes(id))}/>
           <path d={routeHits.get(r.id) as string} className="road-hit" data-road-hit={r.id} style={incoming||transition?.routes[r.id]?{pointerEvents:'none'}:undefined} onClick={e=>{e.stopPropagation();selectRoute(r);}} onPointerEnter={()=>onHover(r.groupId?{kind:'group',id:r.groupId}:{kind:'edge',id:r.edgeIds[0]})} onPointerLeave={()=>onHover(null)}/>
         </g>)}{layout.frontiers.map((f:any,i:number)=><FrontierInk key={f.id} f={f} index={i} width={layout.width} height={layout.height} related={focus.frontierIds?.includes(f.id)} onSelect={onSelect} timing={transition?.frontiers[f.id]} phase={phase} pending={frontierPending(f)}/>)}</svg>
         {layout.routes.map((r:any)=><button key={r.id} className="road-key" disabled={!!incoming||!!transition?.routes[r.id]} aria-label={t(r.groupId?'回看共同支持':graph.edges.find((e:any)=>r.edgeIds.includes(e.id))?.label||'查看道路')} style={{left:r.midpoint.x-12,top:r.midpoint.y-12}} onClick={()=>selectRoute(r)}/>)}
         {layout.junctions.map((j:any)=><button className={`map-junction ${selection?.kind==='group'&&selection.id===j.groupId?'is-related':''}`} key={j.id} data-junction={j.groupId} style={{left:j.x-14,top:j.y-14,...appearance(j.id,true)}} aria-label={t("查看共同支持的依据")} onClick={()=>onSelect({kind:'group',id:j.groupId})}><i/></button>)}
-        {(layout.roadLabels||[]).map((r:any)=><button key={r.id} data-map-label={r.id} data-road-label={r.routeId} className="map-relation-label" style={{left:r.labelX,top:r.labelY,width:r.labelWidth,fontSize:r.fontSize,lineHeight:`${r.lineHeight}px`,...(transition?.routes[r.routeId]&&!transition.beforeLayout.roadLabels.some((old:any)=>old.id===r.id)?(phase==='connect'?{animation:`map-appear 240ms linear ${transition.routes[r.routeId].end}ms both`}:{opacity:0}):{})}} onClick={()=>onSelect({kind:'edge',id:r.routeId})}>{r.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</button>)}
+        {(layout.roadLabels||[]).map((r:any)=>{
+          const subject={kind:r.reportId?'evidence':'edge',id:r.reportId||r.routeId} as Selection;
+          const timing=r.reportId?reportMarkerStyle(r):(transition?.routes[r.routeId]&&!transition.beforeLayout.roadLabels.some((old:any)=>old.id===r.id)?(phase==='connect'?{animation:`map-appear 240ms linear ${transition.routes[r.routeId].end}ms both`}:{opacity:0}):{});
+          return <button key={r.id} data-map-label={r.id} data-road-label={r.routeId} data-report-label={r.reportId}
+            className={`map-relation-label ${r.reportId&&reportRelated(r.reportId)?'is-related':''}`}
+            disabled={!!r.reportId&&(!!incoming||!!transition)}
+            style={{left:r.labelX,top:r.labelY,width:r.labelWidth,fontSize:r.fontSize,lineHeight:`${r.lineHeight}px`,...timing}}
+            onClick={()=>onSelect(subject)} onPointerEnter={()=>onHover(subject)} onPointerLeave={()=>onHover(null)}>
+            {r.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</button>;
+        })}
         {layout.nodes.map((n:any)=>n.box?<button key={n.id} data-map-node={n.id} className={`map-claim ${nodeClass(n)}`} style={{left:n.x-n.box.w/2,top:n.y-n.box.h/2,width:n.box.w,height:n.box.h,fontSize:n.fontSize,lineHeight:`${n.lineHeight}px`,...appearance(n.id)}} onClick={()=>selectNode(n)} onPointerEnter={()=>onHover({kind:'claim',id:n.id})} onPointerLeave={()=>onHover(null)}>
           <span>{n.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</span><small>{t("已有依据")}</small>
         </button>:<div key={n.id}>
@@ -245,7 +279,21 @@ export default function MapView(props:Props){
             {n.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}{n.subline&&<small style={{fontSize:n.sublineFontSize}}>{t(n.subline)}</small>}
           </button>
         </div>)}
-        {transition?.retiring.map(({frontier:f,retireAt}:any)=><span key={`old-label-${f.id}`} className="map-question retiring-question" data-retiring-question={f.id} aria-hidden="true" style={{left:f.labelX,top:f.labelY,width:f.labelWidth,fontSize:f.fontSize,lineHeight:`${f.lineHeight}px`,pointerEvents:'none',...(phase==='connect'?{animation:`map-retire 160ms linear ${retireAt}ms both`}:{})}}>{f.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</span>)}
+        {(layout.reportMarkers||[]).map((marker:any)=><button key={marker.reportId} data-report-marker={marker.reportId}
+          className={`map-dot map-report-marker ${reportRelated(marker.reportId)?'is-related':''}`}
+          style={{left:marker.x-15,top:marker.y-15,...reportMarkerStyle(marker)}} disabled={!!incoming||!!transition}
+          aria-label={t(marker.title)} title={t(marker.title)} onClick={()=>onSelect({kind:'evidence',id:marker.reportId})}
+          onPointerEnter={()=>onHover({kind:'evidence',id:marker.reportId})} onPointerLeave={()=>onHover(null)}><i/></button>)}
+        {transition?.reportTransfers.map((move:any)=>{
+          const n=move.fromNode,depart=phase==='connect'?{animation:`map-retire 160ms linear ${move.start}ms both`}:{};
+          return <div key={`report-transfer-${move.reportId}`} aria-hidden="true" className="report-transfer">
+            <span className="map-dot retained-report" data-retained-report={move.reportId} style={{left:n.x-15,top:n.y-15,...depart}}><i/></span>
+            <span className="map-label" style={{left:n.labelX,top:n.labelY,width:n.labelWidth,fontSize:n.fontSize,lineHeight:`${n.lineHeight}px`,...depart}}>{n.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</span>
+            <span className="report-traveler" data-report-traveler={move.reportId} style={{offsetPath:`path("${move.travel.d}")`,offsetRotate:'0deg',
+              ...(phase==='connect'?{animation:`report-travel ${move.duration}ms linear ${move.start}ms both, map-appear 240ms linear ${move.start}ms both`}:{opacity:0})} as React.CSSProperties}/>
+          </div>;
+        })}
+        {transition?.retiring.map(({frontier:f,labelRetireAt}:any)=><span key={`old-label-${f.id}`} className="map-question retiring-question" data-retiring-question={f.id} aria-hidden="true" style={{left:f.labelX,top:f.labelY,width:f.labelWidth,fontSize:f.fontSize,lineHeight:`${f.lineHeight}px`,pointerEvents:'none',...(phase==='connect'?{animation:`map-retire 160ms linear ${labelRetireAt}ms both`}:{})}}>{f.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</span>)}
         {layout.frontiers.map((f:any)=><button key={f.id} data-map-label={f.id} data-map-frontier={f.id} className={`map-question ${focus.frontierIds?.includes(f.id)?'is-related':''}`} style={{left:f.labelX,top:f.labelY,width:f.labelWidth,fontSize:f.fontSize,lineHeight:`${f.lineHeight}px`,...questionStyle(f)}} onClick={()=>onSelect({kind:'gap',id:f.id})} onPointerEnter={()=>onHover({kind:'gap',id:f.id})} onPointerLeave={()=>onHover(null)}>{f.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</button>)}
       </div>
     </div>

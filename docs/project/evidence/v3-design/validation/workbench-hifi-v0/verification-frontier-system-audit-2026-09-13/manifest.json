@@ -1,0 +1,91 @@
+{
+  "capturedAt": "2026-09-13T06:53:44.619Z",
+  "head": "2e5dafce87bbfd1cd36e1f72ce8bfda36fb4365f",
+  "branch": "codex/xray-photo-local-study",
+  "product": {
+    "file": "docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+    "sha256": "370fc2c10025e8a5db358b2bcf1deaebd1a926c608220fe62c645b7545ebc842",
+    "bytes": 5249566
+  },
+  "verdict": "FAIL: systematic frontier retirement without a visible successor",
+  "reviewRequired": true,
+  "coverage": {
+    "orders": 48,
+    "transitions": 1056,
+    "uniqueTransitions": 980,
+    "frontierIds": 16,
+    "retirementVariants": 35,
+    "immediateVariants": 22,
+    "misdirectedVariants": 7,
+    "browserCasesExecuted": 9,
+    "browserCasesTotal": 9
+  },
+  "entries": [
+    {
+      "file": "sweep.json",
+      "source": "output/playwright/frontier-system-audit-2026-09-13/sweep.json",
+      "bytes": 109091,
+      "sha256": "b03ce7f26d041788a9086ec13f32179bada0951bf88b747d6fcafe157f3cb2bf"
+    },
+    {
+      "file": "browser-report.json",
+      "source": "output/playwright/frontier-system-audit-2026-09-13/browser/report.json",
+      "bytes": 40285,
+      "sha256": "91f0870e022dc067c276d0bb01236e426d060c65fd2e9d8730d6ef24bfa7d8cb"
+    },
+    {
+      "file": "layers-before-material-before.png",
+      "source": "output/playwright/frontier-system-audit-2026-09-13/browser/layers-before-material-before.png",
+      "bytes": 2577114,
+      "sha256": "12d08f19459da2ccf6a15ef5a9649a2e9c7d020abc3aeae0ec227784de8e7140"
+    },
+    {
+      "file": "layers-before-material-after.png",
+      "source": "output/playwright/frontier-system-audit-2026-09-13/browser/layers-before-material-after.png",
+      "bytes": 2650544,
+      "sha256": "eb9c1fcc5f0bd6696b97e08d165c90c60cb0c8341c3929f095b95be3ce1d07d3"
+    },
+    {
+      "file": "record-before-verification-connect.png",
+      "source": "output/playwright/frontier-system-audit-2026-09-13/browser/record-before-verification-connect.png",
+      "bytes": 2657158,
+      "sha256": "ed9957beb46b8e796a092d9a097db66ed3a0eb9d07ec20ff28f7d4bcb3d433c0"
+    },
+    {
+      "file": "uv-to-regional-synthesis-after.png",
+      "source": "output/playwright/frontier-system-audit-2026-09-13/browser/uv-to-regional-synthesis-after.png",
+      "bytes": 2643006,
+      "sha256": "5d06018b58f77536ca254eaf766516dcb6db22164170e27d9ad0e187291dee7e"
+    },
+    {
+      "file": "appearance-to-window-after.png",
+      "source": "output/playwright/frontier-system-audit-2026-09-13/browser/appearance-to-window-after.png",
+      "bytes": 2614856,
+      "sha256": "e179ae0bee76247609193a8faaf66ff857bd1517c5dde93724a489f94e122f31"
+    },
+    {
+      "file": "xray-to-comparison-connect.png",
+      "source": "output/playwright/frontier-system-audit-2026-09-13/browser/xray-to-comparison-connect.png",
+      "bytes": 2801599,
+      "sha256": "bec400ad99282bd4762a0fa0b9fca49c2fbe28c89ab1fa5d093adb9f794726ab"
+    },
+    {
+      "file": "user-material-order-feedback.png",
+      "source": "C:/Users/ASUS/AppData/Local/Temp/codex-clipboard-6887514c-91de-4e07-9e5f-09ecc416644e.png",
+      "bytes": 57484,
+      "sha256": "4915e218e5eeaeeea8c52c62a9d4b4f1d0ac697463c18841ff825ecffb7203a9"
+    },
+    {
+      "file": "audit-map-frontiers-2026-09-13.mjs.txt",
+      "source": "output/audit-map-frontiers-2026-09-13.mjs",
+      "bytes": 5981,
+      "sha256": "696efe59fec53bb01afa18b998fe03c392d73ecce7232a656a57a3ea5d27fb7f"
+    },
+    {
+      "file": "audit-frontier-browser-2026-09-13.mjs.txt",
+      "source": "output/audit-frontier-browser-2026-09-13.mjs",
+      "bytes": 5740,
+      "sha256": "3113825c92a9b4aa1c3335d6821d81983e311c670e36c84805c335dd6d9f22bd"
+    }
+  ]
+}

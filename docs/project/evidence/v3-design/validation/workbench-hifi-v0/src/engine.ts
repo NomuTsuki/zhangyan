@@ -1,13 +1,16 @@
 import * as SessionEngine from '../../workbench-map-fusion-v0/local-session.mjs';
 import { ACTIONS as frozenActions } from '../../workbench-map-fusion-v0/local-case.mjs';
-import { buildGraph, diffGraphs } from '../../workbench-map-fusion-v0/graph.mjs';
+import { buildGraph as buildFusionGraph, diffGraphs } from '../../workbench-map-fusion-v0/graph.mjs';
+import { connectReportSources } from './archive-report-links.mjs';
+import { projectFrontierContinuity } from './frontier-contract.mjs';
 import { resolveSelection, judgmentOverview, judgmentFacets } from '../../workbench-map-fusion-v0/selection.mjs';
 
 // Worker computation exports are also retained for existing Node contracts.
 // App consumes worker snapshots; resolveFocus is a read-only UI projection.
 export const engine = SessionEngine as any;
 export const actions: any[] = frozenActions;
-export { buildGraph, diffGraphs };
+export const buildGraph=(solved:any,session:any)=>projectFrontierContinuity(connectReportSources(buildFusionGraph(solved,session)));
+export { diffGraphs };
 export type Selection = { kind: 'place'|'action'|'evidence'|'claim'|'edge'|'gap'|'group'; id: string } | null;
 export type Investigation = { id:number; observationId:string; result:any; changes:any; origin:{x:number;y:number}; beforeGraph?:any; originPlaceId?:string; } | null;
 export const places = [
@@ -39,6 +42,7 @@ export function resolveFocus(selection:Selection,model:ReturnType<typeof derive>
   const projected:any=(resolveSelection as any)(selection,model.graph,model.solved,session,model.rows);
   if(!selection||!projected.subject)return projected;
   const graph=model.graph;
+  if(selection.kind==='edge'&&projected.subject.provenanceOnly)projected.claimIds=[];
   // Selecting a judgment highlights its actual incoming proofs, never the
   // downstream claims that happen to cite one of the same source reports.
   if(selection.kind==='claim'){

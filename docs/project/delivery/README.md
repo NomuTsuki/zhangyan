@@ -1,6 +1,14 @@
 # 掌眼 V3 阶段成果
 
+9月13日封存：用户批准将4d6362a8页面及其来源、前沿、名称修订作为同一次地图检查点提交，并同步到origin/codex/xray-photo-local-study。Git实际记录是提交与同步状态的依据；下方文字按各自历史阶段保留。
+
+9月13日节点名称修订：当前页4d6362a8已修正名称远离、报告短名、图注和道路对比。[实现与核验](../evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-NODE-LABELS-2026-09-13.md)及[短复测](../evidence/v3-design/validation/workbench-hifi-v0/PLAYTEST-NODE-LABELS.md)。未提交／推送，真人易读性待反馈；下文为历史。
+
 **当前入口：[打开阶段成果页](index.html)**。日期：2026-09-12。
+
+9月13日整图接续修订：当前页 `11ea710e` 统一处理旧前沿的方向、接续与退场，材料互补联系保留，其他探索方向及能力限制继续显示。实现与精确核验边界见[验证报告](../evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-FRONTIER-CONTINUITY-2026-09-13.md)、[短复测](../evidence/v3-design/validation/workbench-hifi-v0/PLAYTEST-FRONTIER-CONTINUITY.md)。尚未提交／推送；以下按各自日期和构建保留为历史。
+
+9月13日来源道路更新：先拿核验结果、后拿原记录时沿原虚线路径接通，报告随后收纳到主道路仍可点击回查。英文版已保存为本地提交 `2e5dafc`；当前道路调整 `370fc2c1` 尚未提交／推送。[验证与短复测](../evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-REPORT-SOURCE-2026-09-13.md)。
 
 9月13日漏译修订：报告先于原记录等顺序分支的英文已补齐，当前页 SHA 前缀 `b0975f68`。见[扩展验证](../evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-LANGUAGE-AUDIT-2026-09-13.md)与[修复对照](../../portfolio/2026-09-13-language-order-fix/README.md)。本地修改尚未提交／推送。
 

@@ -1,0 +1,38 @@
+{
+  "reviewRequired": true,
+  "checkpoint": "2e5dafce87bbfd1cd36e1f72ce8bfda36fb4365f",
+  "build": {
+    "builtAt": "2026-09-13T06:08:11.625Z",
+    "entry": "prototype.html",
+    "bytes": 5249566,
+    "sha256": "370fc2c10025e8a5db358b2bcf1deaebd1a926c608220fe62c645b7545ebc842",
+    "source": "React/Three.js presentation; imports unchanged fusion local-session and graph modules"
+  },
+  "modelChecks": 6,
+  "browserChecks": 7,
+  "originalContractChecks": 7,
+  "originalLayoutChecks": 8,
+  "originalRevealChecks": 5,
+  "bilingualChecks": 6,
+  "languageBranches": 9,
+  "copy": {
+    "orders": 58,
+    "uniqueStates": 1069,
+    "uniqueDisplayStrings": 391,
+    "missing": 0
+  },
+  "videoInfo": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1440,
+        "height": 1000
+      }
+    ],
+    "format": {
+      "duration": "16.120000"
+    }
+  },
+  "provenance": "Implementation owner: real Edge UI, read-only snapshots, screenshot inspection, video contact sheet; no independent or human acceptance."
+}

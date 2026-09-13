@@ -1,0 +1,1441 @@
+{
+  "readOnly": true,
+  "sha256": "370fc2c10025e8a5db358b2bcf1deaebd1a926c608220fe62c645b7545ebc842",
+  "cases": [
+    {
+      "name": "layers-before-material",
+      "executed": true,
+      "pre": [
+        "A.INSPECT.MATERIAL.LAYER_SEQUENCE"
+      ],
+      "action": "A.ANALYZE.MATERIAL.SUBSTRATE",
+      "questionId": "question:material-base",
+      "beforeFrontier": {
+        "id": "question:material-base",
+        "anchorIds": [
+          "obs.key-material.layer-sequence"
+        ],
+        "title": "这些层底下是什么材料？",
+        "explanation": "层序说明先后，不能替代基底材料分析。",
+        "actionIds": [
+          "A.ANALYZE.MATERIAL.SUBSTRATE"
+        ],
+        "kind": "stub",
+        "continuation": {
+          "nodeIds": [
+            "obs.key-material.substrate-readings"
+          ],
+          "edgeIds": []
+        },
+        "sourceIds": [
+          "obs.key-material.layer-sequence"
+        ],
+        "x": 868.1526262091292,
+        "y": 1996.5475085040064,
+        "labelX": 652.15,
+        "labelY": 1948.55,
+        "labelWidth": 198,
+        "fontSize": 18,
+        "lineHeight": 30,
+        "lines": [
+          "这些层底下是什么材料？"
+        ],
+        "segments": [
+          {
+            "d": "M 899.36 1960.77 C 889.3 1983 849 2005 842.5 2036",
+            "from": 0,
+            "to": 1,
+            "canonicalRouteId": null,
+            "edgeIds": []
+          }
+        ],
+        "paths": [
+          "M 899.36 1960.77 C 889.3 1983 849 2005 842.5 2036"
+        ],
+        "openBoundary": true,
+        "canonicalRouteId": null,
+        "labelHeight": 30,
+        "labelBounds": {
+          "x": 652.15,
+          "y": 1948.55,
+          "width": 198,
+          "height": 30
+        }
+      },
+      "oldOpacityAt350ms": null,
+      "connectPlan": {
+        "routes": {},
+        "nodeDelays": {},
+        "frontiers": {},
+        "reportTransfers": [],
+        "duration": 260
+      },
+      "afterNodes": [
+        {
+          "id": "obs.key-material.layer-sequence",
+          "title": "关键界面的层序读数"
+        },
+        {
+          "id": "obs.key-material.substrate-readings",
+          "title": "关键点位的基底读数"
+        }
+      ],
+      "afterRoads": [],
+      "afterQuestions": [],
+      "steps": 2,
+      "errors": []
+    },
+    {
+      "name": "material-before-layers",
+      "executed": true,
+      "pre": [
+        "A.ANALYZE.MATERIAL.SUBSTRATE"
+      ],
+      "action": "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+      "questionId": "question:material-sequence",
+      "beforeFrontier": {
+        "id": "question:material-sequence",
+        "anchorIds": [
+          "obs.key-material.substrate-readings"
+        ],
+        "title": "这些基底与后来各层谁先谁后？",
+        "explanation": "材料组成已经取得；形成顺序需要界面层序说明。",
+        "actionIds": [
+          "A.INSPECT.MATERIAL.LAYER_SEQUENCE"
+        ],
+        "kind": "stub",
+        "continuation": {
+          "nodeIds": [
+            "obs.key-material.layer-sequence"
+          ],
+          "edgeIds": []
+        },
+        "sourceIds": [
+          "obs.key-material.substrate-readings"
+        ],
+        "x": 883.1526262091292,
+        "y": 1801.5475085040064,
+        "labelX": 613.15,
+        "labelY": 1753.55,
+        "labelWidth": 252,
+        "fontSize": 18,
+        "lineHeight": 30,
+        "lines": [
+          "这些基底与后来各层谁先谁后？"
+        ],
+        "segments": [
+          {
+            "d": "M 914.36 1765.77 C 904.3 1788 864 1810 857.5 1841",
+            "from": 0,
+            "to": 1,
+            "canonicalRouteId": null,
+            "edgeIds": []
+          }
+        ],
+        "paths": [
+          "M 914.36 1765.77 C 904.3 1788 864 1810 857.5 1841"
+        ],
+        "openBoundary": true,
+        "canonicalRouteId": null,
+        "labelHeight": 30,
+        "labelBounds": {
+          "x": 613.15,
+          "y": 1753.55,
+          "width": 252,
+          "height": 30
+        }
+      },
+      "oldOpacityAt350ms": null,
+      "connectPlan": {
+        "routes": {},
+        "nodeDelays": {},
+        "frontiers": {},
+        "reportTransfers": [],
+        "duration": 260
+      },
+      "afterNodes": [
+        {
+          "id": "obs.key-material.substrate-readings",
+          "title": "关键点位的基底读数"
+        },
+        {
+          "id": "obs.key-material.layer-sequence",
+          "title": "关键界面的层序读数"
+        }
+      ],
+      "afterRoads": [],
+      "afterQuestions": [],
+      "steps": 2,
+      "errors": []
+    },
+    {
+      "name": "record-before-verification",
+      "executed": true,
+      "pre": [
+        "A.RESEARCH.ACCIDENT"
+      ],
+      "action": "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+      "questionId": "question:archive:t2:attribution",
+      "beforeFrontier": {
+        "id": "question:archive:t2:attribution",
+        "kind": "stub",
+        "anchorIds": [
+          "obs.accident.major"
+        ],
+        "title": "事故记录说的是这只碗吗？",
+        "explanation": "需要核对记录所指的对象。事件看起来相符，仍不能代替对象归属；归属核实也不自动证明记载事件。",
+        "sourceIds": [
+          "obs.accident.major"
+        ],
+        "actionIds": [
+          "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+        ],
+        "continuation": {
+          "nodeIds": [],
+          "edgeIds": [
+            "archive:t2:object"
+          ]
+        },
+        "x": 661.6515886425634,
+        "y": 826.3158116151031,
+        "labelX": 679.65,
+        "labelY": 811.32,
+        "labelWidth": 216,
+        "fontSize": 18,
+        "lineHeight": 30,
+        "lines": [
+          "事故记录说的是这只碗吗？"
+        ],
+        "segments": [
+          {
+            "d": "M 642.04 872.29 C 646.65 859.37 667.24 822.32 675 780 C 682.76 737.68 698.76 641.82 697.5 570 C 696.24 498.18 688.77 326.61 666 267 C 643.23 207.39 553.22 161.42 534.86 144.23",
+            "from": 0,
+            "to": 0.1254048884464378,
+            "canonicalRouteId": "archive:t2:object",
+            "edgeIds": [
+              "archive:t2:object"
+            ]
+          }
+        ],
+        "paths": [
+          "M 642.04 872.29 C 646.65 859.37 667.24 822.32 675 780 C 675.1 779.44 675.21 778.87 675.31 778.29"
+        ],
+        "openBoundary": false,
+        "canonicalRouteId": "archive:t2:object",
+        "labelHeight": 30,
+        "labelBounds": {
+          "x": 679.65,
+          "y": 811.32,
+          "width": 216,
+          "height": 30
+        }
+      },
+      "oldOpacityAt350ms": "0",
+      "connectPlan": {
+        "routes": {
+          "source:obs.archive.t2.object-attribution": {
+            "id": "source:obs.archive.t2.object-attribution",
+            "start": 0,
+            "duration": 1800,
+            "end": 1800,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false,
+            "sourceRecordId": "obs.accident.major"
+          }
+        },
+        "nodeDelays": {},
+        "frontiers": {},
+        "reportTransfers": [],
+        "duration": 2060
+      },
+      "afterNodes": [
+        {
+          "id": "obs.accident.major",
+          "title": "事故记录组"
+        },
+        {
+          "id": "obs.archive.t2.object-attribution",
+          "title": "事故记录归属已核对"
+        }
+      ],
+      "afterRoads": [
+        {
+          "id": "source:obs.archive.t2.object-attribution",
+          "kind": "source-record",
+          "edgeIds": [
+            "source:obs.archive.t2.object-attribution"
+          ]
+        }
+      ],
+      "afterQuestions": [
+        {
+          "id": "question:archive:t2:corroboration",
+          "title": "事故记录与实物相符吗？"
+        }
+      ],
+      "steps": 2,
+      "errors": []
+    },
+    {
+      "name": "uv-to-regional-synthesis",
+      "executed": true,
+      "pre": [
+        "A.SCREEN.UV",
+        "A.INSPECT.WINDOWS"
+      ],
+      "action": "A.SYNTHESIZE.SURFACE_REGIONS",
+      "questionId": "question:negative",
+      "beforeFrontier": {
+        "id": "question:negative",
+        "anchorIds": [
+          "obs.surface.no-signal.unresolved"
+        ],
+        "title": "未检出能说明没有补绘吗？",
+        "explanation": "本次检测能力不足以支持没有补绘；点位层次检查能提供另一种观察，但不会抹掉这次阴性记录。",
+        "actionIds": [
+          "A.INSPECT.WINDOWS"
+        ],
+        "kind": "stub",
+        "continuation": {
+          "nodeIds": [
+            "obs.surface.point-layering"
+          ],
+          "edgeIds": []
+        },
+        "sourceIds": [
+          "obs.surface.no-signal.unresolved"
+        ],
+        "x": 283.1526262091292,
+        "y": 1891.5475085040064,
+        "labelX": 49.15,
+        "labelY": 1843.55,
+        "labelWidth": 216,
+        "fontSize": 18,
+        "lineHeight": 30,
+        "lines": [
+          "未检出能说明没有补绘吗？"
+        ],
+        "segments": [
+          {
+            "d": "M 314.36 1855.77 C 304.3 1878 264 1900 257.5 1931",
+            "from": 0,
+            "to": 1,
+            "canonicalRouteId": null,
+            "edgeIds": []
+          }
+        ],
+        "paths": [
+          "M 314.36 1855.77 C 304.3 1878 264 1900 257.5 1931"
+        ],
+        "openBoundary": true,
+        "canonicalRouteId": null,
+        "labelHeight": 30,
+        "labelBounds": {
+          "x": 49.15,
+          "y": 1843.55,
+          "width": 216,
+          "height": 30
+        }
+      },
+      "oldOpacityAt350ms": "0",
+      "connectPlan": {
+        "routes": {
+          "support:obs.surface.point-layering:obs.surface.resolved": {
+            "id": "support:obs.surface.point-layering:obs.surface.resolved",
+            "start": 0,
+            "duration": 1700,
+            "end": 1700,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          }
+        },
+        "nodeDelays": {},
+        "frontiers": {},
+        "reportTransfers": [],
+        "duration": 1960
+      },
+      "afterNodes": [
+        {
+          "id": "obs.surface.no-signal.unresolved",
+          "title": "紫外未见补绘信号"
+        },
+        {
+          "id": "obs.surface.point-layering",
+          "title": "试窗点位的层压关系"
+        },
+        {
+          "id": "obs.surface.resolved",
+          "title": "表面处理的覆盖范围"
+        }
+      ],
+      "afterRoads": [
+        {
+          "id": "support:obs.surface.point-layering:obs.surface.resolved",
+          "kind": "support",
+          "edgeIds": [
+            "support:obs.surface.point-layering:obs.surface.resolved"
+          ]
+        }
+      ],
+      "afterQuestions": [],
+      "steps": 3,
+      "errors": []
+    },
+    {
+      "name": "manufacturing-comparison",
+      "executed": true,
+      "pre": [
+        "A.OBSERVE.WHOLE",
+        "A.OBSERVE.BASE"
+      ],
+      "action": "A.COMPARE.CORPUS",
+      "questionId": "question:craft",
+      "beforeFrontier": {
+        "id": "question:craft",
+        "anchorIds": [
+          "obs.current.whole",
+          "obs.current.base"
+        ],
+        "title": "这些制造特征放进历史参照会怎样？",
+        "explanation": "把已有的形制与底足读数放进同期真品参照，可以了解哪些身份方向对得上、哪些对不上。",
+        "actionIds": [
+          "A.COMPARE.CORPUS"
+        ],
+        "kind": "shared",
+        "continuation": {
+          "nodeIds": [
+            "obs.corpus.identity"
+          ],
+          "edgeIds": []
+        },
+        "sourceIds": [
+          "obs.current.whole",
+          "obs.current.base"
+        ],
+        "x": 564.3473737908707,
+        "y": 181.54750850400637,
+        "labelX": 600.35,
+        "labelY": 151.55,
+        "labelWidth": 252,
+        "fontSize": 18,
+        "lineHeight": 30,
+        "lines": [
+          "这些制造特征放进历史参照会怎",
+          "样？"
+        ],
+        "segments": [
+          {
+            "d": "M 533.14 145.77 C 543.2 168 583.5 190 590 221",
+            "from": 0,
+            "to": 1,
+            "canonicalRouteId": null,
+            "edgeIds": []
+          },
+          {
+            "d": "M 233.14 303.27 C 243.2 325.5 283.5 347.5 290 378.5",
+            "from": 0,
+            "to": 1,
+            "canonicalRouteId": null,
+            "edgeIds": []
+          }
+        ],
+        "paths": [
+          "M 533.14 145.77 C 543.2 168 583.5 190 590 221",
+          "M 233.14 303.27 C 243.2 325.5 283.5 347.5 290 378.5"
+        ],
+        "openBoundary": true,
+        "canonicalRouteId": null,
+        "labelHeight": 60,
+        "labelBounds": {
+          "x": 600.35,
+          "y": 151.55,
+          "width": 252,
+          "height": 60
+        }
+      },
+      "oldOpacityAt350ms": "0",
+      "connectPlan": {
+        "routes": {
+          "proof-group:identity:comparison:input:obs.corpus.identity": {
+            "id": "proof-group:identity:comparison:input:obs.corpus.identity",
+            "start": 0,
+            "duration": 1700,
+            "end": 1700,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "proof-group:identity:comparison:input:obs.current.base": {
+            "id": "proof-group:identity:comparison:input:obs.current.base",
+            "start": 0,
+            "duration": 1700,
+            "end": 1700,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "proof-group:identity:comparison:input:obs.current.whole": {
+            "id": "proof-group:identity:comparison:input:obs.current.whole",
+            "start": 0,
+            "duration": 2300,
+            "end": 2300,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "trunk:proof-group:identity:comparison": {
+            "id": "trunk:proof-group:identity:comparison",
+            "start": 2300,
+            "duration": 850,
+            "end": 3150,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          }
+        },
+        "nodeDelays": {
+          "claim:identity": 3150
+        },
+        "frontiers": {},
+        "reportTransfers": [],
+        "duration": 3410
+      },
+      "afterNodes": [
+        {
+          "id": "obs.current.whole",
+          "title": "整器形制与可见修补"
+        },
+        {
+          "id": "obs.current.base",
+          "title": "底足制造痕迹"
+        },
+        {
+          "id": "obs.corpus.identity",
+          "title": "同期真品比对"
+        },
+        {
+          "id": "claim:identity",
+          "title": "晚 18 世纪外销瓷方向成立"
+        }
+      ],
+      "afterRoads": [
+        {
+          "id": "proof-group:identity:comparison:input:obs.corpus.identity",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.corpus.identity"
+          ]
+        },
+        {
+          "id": "proof-group:identity:comparison:input:obs.current.base",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.corpus.identity"
+          ]
+        },
+        {
+          "id": "proof-group:identity:comparison:input:obs.current.whole",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.corpus.identity"
+          ]
+        },
+        {
+          "id": "trunk:proof-group:identity:comparison",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.corpus.identity"
+          ]
+        }
+      ],
+      "afterQuestions": [
+        {
+          "id": "question:visible-intervention",
+          "title": "眼见的修补牵涉哪些层面？"
+        }
+      ],
+      "steps": 3,
+      "errors": []
+    },
+    {
+      "name": "alternative-identity-route",
+      "executed": true,
+      "pre": [
+        "A.OBSERVE.WHOLE",
+        "A.OBSERVE.BASE",
+        "A.LOCATE.HISTORIC_IMAGE"
+      ],
+      "action": "A.VERIFY.OBJECT_CONTINUITY",
+      "questionId": "question:craft",
+      "beforeFrontier": {
+        "id": "question:craft",
+        "anchorIds": [
+          "obs.current.whole",
+          "obs.current.base"
+        ],
+        "title": "这些制造特征放进历史参照会怎样？",
+        "explanation": "把已有的形制与底足读数放进同期真品参照，可以了解哪些身份方向对得上、哪些对不上。",
+        "actionIds": [
+          "A.COMPARE.CORPUS"
+        ],
+        "kind": "shared",
+        "continuation": {
+          "nodeIds": [
+            "obs.corpus.identity"
+          ],
+          "edgeIds": []
+        },
+        "sourceIds": [
+          "obs.current.whole",
+          "obs.current.base"
+        ],
+        "x": 564.3473737908707,
+        "y": 181.54750850400637,
+        "labelX": 600.35,
+        "labelY": 151.55,
+        "labelWidth": 252,
+        "fontSize": 18,
+        "lineHeight": 30,
+        "lines": [
+          "这些制造特征放进历史参照会怎",
+          "样？"
+        ],
+        "segments": [
+          {
+            "d": "M 533.14 145.77 C 543.2 168 583.5 190 590 221",
+            "from": 0,
+            "to": 1,
+            "canonicalRouteId": null,
+            "edgeIds": []
+          },
+          {
+            "d": "M 233.14 303.27 C 243.2 325.5 283.5 347.5 290 378.5",
+            "from": 0,
+            "to": 1,
+            "canonicalRouteId": null,
+            "edgeIds": []
+          }
+        ],
+        "paths": [
+          "M 533.14 145.77 C 543.2 168 583.5 190 590 221",
+          "M 233.14 303.27 C 243.2 325.5 283.5 347.5 290 378.5"
+        ],
+        "openBoundary": true,
+        "canonicalRouteId": null,
+        "labelHeight": 60,
+        "labelBounds": {
+          "x": 600.35,
+          "y": 151.55,
+          "width": 252,
+          "height": 60
+        }
+      },
+      "oldOpacityAt350ms": "0",
+      "connectPlan": {
+        "routes": {
+          "photo:object": {
+            "id": "photo:object",
+            "start": 0,
+            "duration": 1800,
+            "end": 1800,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": true
+          },
+          "interpretation:photo-history": {
+            "id": "interpretation:photo-history",
+            "start": 1940,
+            "duration": 2300,
+            "end": 4240,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "proof-group:identity:continuity:input:obs.current.base": {
+            "id": "proof-group:identity:continuity:input:obs.current.base",
+            "start": 1940,
+            "duration": 1700,
+            "end": 3640,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "proof-group:identity:continuity:input:obs.current.whole": {
+            "id": "proof-group:identity:continuity:input:obs.current.whole",
+            "start": 1940,
+            "duration": 1700,
+            "end": 3640,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "proof-group:identity:continuity:input:obs.phase.t1": {
+            "id": "proof-group:identity:continuity:input:obs.phase.t1",
+            "start": 1940,
+            "duration": 1700,
+            "end": 3640,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "trunk:proof-group:identity:continuity": {
+            "id": "trunk:proof-group:identity:continuity",
+            "start": 3640,
+            "duration": 850,
+            "end": 4490,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          }
+        },
+        "nodeDelays": {
+          "claim:identity": 4490,
+          "interpretation:photo-repair": 4240
+        },
+        "frontiers": {},
+        "reportTransfers": [],
+        "duration": 4750
+      },
+      "afterNodes": [
+        {
+          "id": "obs.current.whole",
+          "title": "整器形制与可见修补"
+        },
+        {
+          "id": "obs.current.base",
+          "title": "底足制造痕迹"
+        },
+        {
+          "id": "obs.phase.t1",
+          "title": "旧照片中的锔修痕迹"
+        },
+        {
+          "id": "claim:identity",
+          "title": "晚 18 世纪外销瓷方向成立"
+        },
+        {
+          "id": "interpretation:photo-repair",
+          "title": "照片拍摄时已留有锔修痕迹"
+        }
+      ],
+      "afterRoads": [
+        {
+          "id": "interpretation:photo-history",
+          "kind": "support",
+          "edgeIds": [
+            "interpretation:photo-history"
+          ]
+        },
+        {
+          "id": "photo:object",
+          "kind": "attribution",
+          "edgeIds": [
+            "photo:object"
+          ]
+        },
+        {
+          "id": "proof-group:identity:continuity:input:obs.current.base",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.current.base:current"
+          ]
+        },
+        {
+          "id": "proof-group:identity:continuity:input:obs.current.whole",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.current.whole:current"
+          ]
+        },
+        {
+          "id": "proof-group:identity:continuity:input:obs.phase.t1",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.object.continuity"
+          ]
+        },
+        {
+          "id": "trunk:proof-group:identity:continuity",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.object.continuity",
+            "proof:identity:obs.current.whole:current",
+            "proof:identity:obs.current.base:current"
+          ]
+        }
+      ],
+      "afterQuestions": [
+        {
+          "id": "question:visible-intervention",
+          "title": "眼见的修补牵涉哪些层面？"
+        }
+      ],
+      "steps": 4,
+      "errors": []
+    },
+    {
+      "name": "visible-repairs-branch",
+      "executed": true,
+      "pre": [
+        "A.OBSERVE.WHOLE"
+      ],
+      "action": "A.IMAGE.XRAY",
+      "questionId": "question:visible-intervention",
+      "beforeFrontier": {
+        "id": "question:visible-intervention",
+        "anchorIds": [
+          "obs.current.whole"
+        ],
+        "title": "眼见的修补牵涉哪些层面？",
+        "explanation": "肉眼已经看到修补分布。纹饰色差、内部结构或事件记录能从不同方面继续了解这些改动。",
+        "actionIds": [
+          "A.OBSERVE.REGION_DECOR",
+          "A.IMAGE.XRAY",
+          "A.RESEARCH.ACCIDENT"
+        ],
+        "kind": "stub",
+        "continuation": {
+          "nodeIds": [],
+          "edgeIds": []
+        },
+        "sourceIds": [
+          "obs.current.whole"
+        ],
+        "x": 564.3473737908707,
+        "y": 181.54750850400637,
+        "labelX": 582.35,
+        "labelY": 133.55,
+        "labelWidth": 216,
+        "fontSize": 18,
+        "lineHeight": 30,
+        "lines": [
+          "眼见的修补牵涉哪些层面？"
+        ],
+        "segments": [
+          {
+            "d": "M 533.14 145.77 C 543.2 168 583.5 190 590 221",
+            "from": 0,
+            "to": 1,
+            "canonicalRouteId": null,
+            "edgeIds": []
+          }
+        ],
+        "paths": [
+          "M 533.14 145.77 C 543.2 168 583.5 190 590 221"
+        ],
+        "openBoundary": true,
+        "canonicalRouteId": null,
+        "labelHeight": 30,
+        "labelBounds": {
+          "x": 582.35,
+          "y": 133.55,
+          "width": 216,
+          "height": 30
+        }
+      },
+      "oldOpacityAt350ms": "0",
+      "connectPlan": {
+        "routes": {},
+        "nodeDelays": {},
+        "frontiers": {
+          "question:change": {
+            "start": 0,
+            "duration": 900,
+            "end": 900,
+            "segments": [
+              {
+                "d": "M 953.14 243.27 C 963.2 265.5 1003.5 287.5 1010 318.5",
+                "from": 0,
+                "to": 1,
+                "canonicalRouteId": null,
+                "edgeIds": [],
+                "prior": [],
+                "growth": [
+                  {
+                    "from": 0,
+                    "to": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "reportTransfers": [],
+        "duration": 1160
+      },
+      "afterNodes": [
+        {
+          "id": "obs.current.whole",
+          "title": "整器形制与可见修补"
+        },
+        {
+          "id": "obs.structure.xray.early",
+          "title": "当前内部的接合痕迹"
+        }
+      ],
+      "afterRoads": [],
+      "afterQuestions": [
+        {
+          "id": "question:craft",
+          "title": "这些制造特征放进历史参照会怎样？"
+        },
+        {
+          "id": "question:change",
+          "title": "结构从另一个时点到现在变了什么？"
+        }
+      ],
+      "steps": 2,
+      "errors": []
+    },
+    {
+      "name": "appearance-to-window",
+      "executed": true,
+      "pre": [
+        "A.OBSERVE.REGION_DECOR"
+      ],
+      "action": "A.INSPECT.WINDOWS",
+      "questionId": "question:appearance",
+      "beforeFrontier": {
+        "id": "question:appearance",
+        "anchorIds": [
+          "obs.appearance.restore"
+        ],
+        "title": "这些外观变化压在哪一层？",
+        "explanation": "外观整合的迹象已经取得，还需要分清表面层次；这与结构是否大改是不同问题。",
+        "actionIds": [
+          "A.SCREEN.UV",
+          "A.INSPECT.WINDOWS"
+        ],
+        "kind": "stub",
+        "continuation": {
+          "nodeIds": [
+            "obs.surface.point-layering"
+          ],
+          "edgeIds": []
+        },
+        "sourceIds": [
+          "obs.appearance.restore"
+        ],
+        "x": 181.84737379087082,
+        "y": 1786.5475085040064,
+        "labelX": 199.85,
+        "labelY": 1738.55,
+        "labelWidth": 216,
+        "fontSize": 18,
+        "lineHeight": 30,
+        "lines": [
+          "这些外观变化压在哪一层？"
+        ],
+        "segments": [
+          {
+            "d": "M 150.64 1750.77 C 160.7 1773 201 1795 207.5 1826",
+            "from": 0,
+            "to": 1,
+            "canonicalRouteId": null,
+            "edgeIds": []
+          }
+        ],
+        "paths": [
+          "M 150.64 1750.77 C 160.7 1773 201 1795 207.5 1826"
+        ],
+        "openBoundary": true,
+        "canonicalRouteId": null,
+        "labelHeight": 30,
+        "labelBounds": {
+          "x": 199.85,
+          "y": 1738.55,
+          "width": 216,
+          "height": 30
+        }
+      },
+      "oldOpacityAt350ms": "0",
+      "connectPlan": {
+        "routes": {},
+        "nodeDelays": {},
+        "frontiers": {
+          "question:surface": {
+            "start": 0,
+            "duration": 900,
+            "end": 900,
+            "segments": [
+              {
+                "d": "M 203.89 2065.16 C 210 2072.14 230.89 2109.07 247.5 2115 C 264.11 2120.93 305.67 2098.59 322.5 2107.5 C 339.34 2116.41 361.42 2168.65 367.75 2178.61",
+                "from": 0,
+                "to": 0.68,
+                "canonicalRouteId": "support:obs.surface.point-layering:obs.surface.resolved",
+                "edgeIds": [
+                  "support:obs.surface.point-layering:obs.surface.resolved"
+                ],
+                "prior": [],
+                "growth": [
+                  {
+                    "from": 0,
+                    "to": 0.68
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "reportTransfers": [],
+        "duration": 1160
+      },
+      "afterNodes": [
+        {
+          "id": "obs.appearance.restore",
+          "title": "外观重整痕迹"
+        },
+        {
+          "id": "obs.surface.point-layering",
+          "title": "试窗点位的层压关系"
+        }
+      ],
+      "afterRoads": [],
+      "afterQuestions": [
+        {
+          "id": "question:surface",
+          "title": "这些点能说明多大范围？"
+        }
+      ],
+      "steps": 2,
+      "errors": []
+    },
+    {
+      "name": "xray-to-comparison",
+      "executed": true,
+      "pre": [
+        "A.IMAGE.XRAY",
+        "A.LOCATE.HISTORIC_IMAGE",
+        "A.OBSERVE.WHOLE",
+        "A.OBSERVE.BASE",
+        "A.VERIFY.OBJECT_CONTINUITY"
+      ],
+      "action": "A.MAP.REGION_CONTINUITY",
+      "questionId": "question:change",
+      "beforeFrontier": {
+        "id": "question:change",
+        "anchorIds": [
+          "obs.structure.xray.early"
+        ],
+        "title": "结构从另一个时点到现在变了什么？",
+        "explanation": "当前结构已经能读，状态本身仍不能说明发生过什么变化。",
+        "actionIds": [
+          "A.MAP.REGION_CONTINUITY"
+        ],
+        "kind": "stub",
+        "continuation": {
+          "nodeIds": [
+            "obs.structure.major.cross-time"
+          ],
+          "edgeIds": []
+        },
+        "sourceIds": [
+          "obs.structure.xray.early"
+        ],
+        "x": 984.3473737908708,
+        "y": 279.0475085040064,
+        "labelX": 714.35,
+        "labelY": 297.05,
+        "labelWidth": 252,
+        "fontSize": 18,
+        "lineHeight": 30,
+        "lines": [
+          "结构从另一个时点到现在变了什",
+          "么？"
+        ],
+        "segments": [
+          {
+            "d": "M 953.14 243.27 C 963.2 265.5 1003.5 287.5 1010 318.5",
+            "from": 0,
+            "to": 1,
+            "canonicalRouteId": null,
+            "edgeIds": []
+          }
+        ],
+        "paths": [
+          "M 953.14 243.27 C 963.2 265.5 1003.5 287.5 1010 318.5"
+        ],
+        "openBoundary": true,
+        "canonicalRouteId": null,
+        "labelHeight": 60,
+        "labelBounds": {
+          "x": 714.35,
+          "y": 297.05,
+          "width": 252,
+          "height": 60
+        }
+      },
+      "oldOpacityAt350ms": "0",
+      "connectPlan": {
+        "routes": {
+          "interpretation-group:photo:input:obs.phase.t1": {
+            "id": "interpretation-group:photo:input:obs.phase.t1",
+            "start": 0,
+            "duration": 1700,
+            "end": 1700,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "interpretation-group:photo:input:obs.structure.major.cross-time": {
+            "id": "interpretation-group:photo:input:obs.structure.major.cross-time",
+            "start": 0,
+            "duration": 1700,
+            "end": 1700,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "trunk:interpretation-group:photo": {
+            "id": "trunk:interpretation-group:photo",
+            "start": 1700,
+            "duration": 850,
+            "end": 2550,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "proof-group:major:physical:input:interpretation:photo-change": {
+            "id": "proof-group:major:physical:input:interpretation:photo-change",
+            "start": 2550,
+            "duration": 1700,
+            "end": 4250,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "proof-group:major:physical:input:obs.current.whole": {
+            "id": "proof-group:major:physical:input:obs.current.whole",
+            "start": 0,
+            "duration": 2300,
+            "end": 2300,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "proof-group:major:physical:input:obs.structure.xray.early": {
+            "id": "proof-group:major:physical:input:obs.structure.xray.early",
+            "start": 0,
+            "duration": 2300,
+            "end": 2300,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          },
+          "trunk:proof-group:major:physical": {
+            "id": "trunk:proof-group:major:physical",
+            "start": 4250,
+            "duration": 850,
+            "end": 5100,
+            "priorSegments": [],
+            "growthSegments": [
+              {
+                "from": 0,
+                "to": 1
+              }
+            ],
+            "enhanced": false,
+            "both": false
+          }
+        },
+        "nodeDelays": {
+          "claim:majorReassembly": 5100,
+          "interpretation:photo-change": 2550
+        },
+        "frontiers": {
+          "question:history": {
+            "start": 5340,
+            "duration": 900,
+            "end": 6240,
+            "segments": [
+              {
+                "d": "M 882.65 1179 C 865.7 1165.5 906 1187.5 912.5 1218.5",
+                "from": 0,
+                "to": 1,
+                "canonicalRouteId": null,
+                "edgeIds": [],
+                "prior": [],
+                "growth": [
+                  {
+                    "from": 0,
+                    "to": 1
+                  }
+                ]
+              },
+              {
+                "d": "M 488.14 408.27 C 498.2 430.5 538.5 452.5 545 483.5",
+                "from": 0,
+                "to": 1,
+                "canonicalRouteId": null,
+                "edgeIds": [],
+                "prior": [],
+                "growth": [
+                  {
+                    "from": 0,
+                    "to": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "reportTransfers": [],
+        "duration": 6500
+      },
+      "afterNodes": [
+        {
+          "id": "obs.structure.xray.early",
+          "title": "当前内部的接合痕迹"
+        },
+        {
+          "id": "obs.phase.t1",
+          "title": "旧照片中的锔修痕迹"
+        },
+        {
+          "id": "obs.current.whole",
+          "title": "整器形制与可见修补"
+        },
+        {
+          "id": "obs.current.base",
+          "title": "底足制造痕迹"
+        },
+        {
+          "id": "obs.structure.major.cross-time",
+          "title": "旧照与现状的区域差异报告"
+        },
+        {
+          "id": "claim:identity",
+          "title": "晚 18 世纪外销瓷方向成立"
+        },
+        {
+          "id": "claim:majorReassembly",
+          "title": "曾发生重大重组"
+        },
+        {
+          "id": "interpretation:photo-repair",
+          "title": "照片拍摄时已留有锔修痕迹"
+        },
+        {
+          "id": "interpretation:photo-change",
+          "title": "此碗在两个时点间的区域变化"
+        }
+      ],
+      "afterRoads": [
+        {
+          "id": "interpretation-group:photo:input:obs.phase.t1",
+          "kind": "support",
+          "edgeIds": [
+            "interpretation:photo:attribution"
+          ]
+        },
+        {
+          "id": "interpretation-group:photo:input:obs.structure.major.cross-time",
+          "kind": "support",
+          "edgeIds": [
+            "interpretation:photo:difference"
+          ]
+        },
+        {
+          "id": "interpretation:photo-history",
+          "kind": "support",
+          "edgeIds": [
+            "interpretation:photo-history"
+          ]
+        },
+        {
+          "id": "photo:object",
+          "kind": "attribution",
+          "edgeIds": [
+            "photo:object"
+          ]
+        },
+        {
+          "id": "proof-group:identity:continuity:input:obs.current.base",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.current.base:current"
+          ]
+        },
+        {
+          "id": "proof-group:identity:continuity:input:obs.current.whole",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.current.whole:current"
+          ]
+        },
+        {
+          "id": "proof-group:identity:continuity:input:obs.phase.t1",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.object.continuity"
+          ]
+        },
+        {
+          "id": "proof-group:major:physical:input:interpretation:photo-change",
+          "kind": "support",
+          "edgeIds": [
+            "proof:majorReassembly:obs.structure.major.cross-time:physical"
+          ]
+        },
+        {
+          "id": "proof-group:major:physical:input:obs.current.whole",
+          "kind": "support",
+          "edgeIds": [
+            "proof:majorReassembly:obs.current.whole:physical"
+          ]
+        },
+        {
+          "id": "proof-group:major:physical:input:obs.structure.xray.early",
+          "kind": "support",
+          "edgeIds": [
+            "proof:majorReassembly:obs.structure.xray.early:physical"
+          ]
+        },
+        {
+          "id": "trunk:interpretation-group:photo",
+          "kind": "support",
+          "edgeIds": [
+            "interpretation:photo:difference",
+            "interpretation:photo:attribution"
+          ]
+        },
+        {
+          "id": "trunk:proof-group:identity:continuity",
+          "kind": "support",
+          "edgeIds": [
+            "proof:identity:obs.object.continuity",
+            "proof:identity:obs.current.whole:current",
+            "proof:identity:obs.current.base:current"
+          ]
+        },
+        {
+          "id": "trunk:proof-group:major:physical",
+          "kind": "support",
+          "edgeIds": [
+            "proof:majorReassembly:obs.current.whole:physical",
+            "proof:majorReassembly:obs.structure.xray.early:physical",
+            "proof:majorReassembly:obs.structure.major.cross-time:physical"
+          ]
+        }
+      ],
+      "afterQuestions": [
+        {
+          "id": "question:history",
+          "title": "这些改动发生在什么时点？"
+        }
+      ],
+      "steps": 6,
+      "errors": []
+    }
+  ]
+}

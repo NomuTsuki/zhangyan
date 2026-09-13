@@ -160,7 +160,7 @@ export default function App(){
   const bodyPlaceVisible=!openPlace||placeById.get(openPlace)?.group!=='object'||visibleBody.includes(openPlace);
   const detailTitle=selectedGap?.title||selectedNode?.title||selectedClaim?.title||selectedAction?.action.name||
     (selectedGroup?'这些依据共同支持什么？':selection?.kind==='place'?placeById.get(selection.id)?.name:subject?.label||subject?.title||'');
-  let detailCopy=selectedGap?.explanation||selectedNode?.summary||selectedAction?.action.ask||subject?.details||'';
+  let detailCopy=selectedGap?.explanation||selectedNode?.summary||selectedAction?.action.ask||subject?.details||subject?.summary||'';
   if(selectedGroup)detailCopy=`${model.graph.nodes.find((n:any)=>n.id===selectedGroup.targetId)?.title||'当前判断'}，需要下列依据共同成立。`;
   if(selectedClaim&&!selectedNode)detailCopy=selectedClaim.sourceIds.length?'已经留下一些相关信息，当前仍不足以作出这项判断。':'还没有能够支撑这项判断的调查记录。';
   const relevantRows=(detailFocus.actionIds||[]).map((id:string)=>model.rows.find((r:any)=>r.action.id===id)).filter(Boolean);

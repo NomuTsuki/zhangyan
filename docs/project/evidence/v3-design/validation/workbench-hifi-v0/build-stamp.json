@@ -1,7 +1,7 @@
 {
-  "builtAt": "2026-09-13T05:19:59.774Z",
+  "builtAt": "2026-09-13T11:27:09.352Z",
   "entry": "prototype.html",
-  "bytes": 5242082,
-  "sha256": "b0975f68be84929eb5c48558dc9e8aee54cb346cb18f21283d1a104d7de15ffb",
+  "bytes": 5267301,
+  "sha256": "4d6362a82d5788e9a26b904c80550b53281452bec294bb71a60a1c58a96569eb",
   "source": "React/Three.js presentation; imports unchanged fusion local-session and graph modules"
 }

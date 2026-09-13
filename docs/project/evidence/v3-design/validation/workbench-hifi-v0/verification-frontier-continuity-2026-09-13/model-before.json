@@ -1,0 +1,62 @@
+{
+  "reviewRequired": true,
+  "passed": 0,
+  "total": 11,
+  "results": [
+    {
+      "name": "question:material-base: same road survives in both orders without claiming proof",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Complementary readings must leave a visible link\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:14:9\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:12:96\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "name": "question:material-sequence: same road survives in both orders without claiming proof",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Complementary readings must leave a visible link\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:14:9\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:12:96\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "name": "T2 RELATE: record first, report second, no object view",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'M 642.04 872.29 C 646.65 859.37 667.24 822.32 675 780 C 682.76 737.68 698.76 641.82 697.5 570 C 696.24 498.18 688.77 326.61 666 267 C 643.23 207.39 553.22 161.42 534.86 144.23'\n- 'M 543.64 780.12 C 550.06 784.51 577.39 798.4 589.5 811.5 C 601.61 824.6 624.43 864.99 630.12 873.7'\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:24:9\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:20:75\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "name": "T2 CORROBORATE: record first, report second, no object view",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'M 642.04 872.29 C 646.65 859.37 667.24 822.32 675 780 C 682.76 737.68 698.76 641.82 697.5 570 C 696.24 498.18 688.77 326.61 666 267 C 643.23 207.39 553.22 161.42 534.86 144.23'\n- 'M 745.39 762.69 C 741.84 772.46 733.51 816.39 720 832.5 C 706.49 848.61 658.85 871.42 648.89 877.75'\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:24:9\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:20:75\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "name": "T3 RELATE: record first, report second, no object view",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'M 939.55 1437.95 C 952.91 1424.59 1017.23 1434.61 1035 1342.5 C 1052.77 1250.39 1061.67 923.85 1066.5 780 C 1071.33 636.15 1097.01 408.87 1069.5 315 C 1041.99 221.13 929.43 139.95 870 109.5 C 810.57 79.05 691.5 94.49 645 97.5 C 598.5 100.51 552.89 126.28 537.89 130.97'\n- 'M 880.23 1358.81 C 884.89 1362.83 907.03 1376.91 913.5 1387.5 C 919.97 1398.09 924.61 1427.9 926.42 1434.48'\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:24:9\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:20:75\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "name": "T3 CORROBORATE: record first, report second, no object view",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'M 939.55 1437.95 C 952.91 1424.59 1017.23 1434.61 1035 1342.5 C 1052.77 1250.39 1061.67 923.85 1066.5 780 C 1071.33 636.15 1097.01 408.87 1069.5 315 C 1041.99 221.13 929.43 139.95 870 109.5 C 810.57 79.05 691.5 94.49 645 97.5 C 598.5 100.51 552.89 126.28 537.89 130.97'\n- 'M 1012.02 1308.39 C 1006.21 1316.32 981.15 1347.22 970.5 1365 C 959.85 1382.78 940.79 1425.53 935.95 1435.38'\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:24:9\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:20:75\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "name": "UV capability limit survives trial windows and regional synthesis",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(after.graph.frontiers.some(f=>f.id==='question:negative'&&f.kind==='boundary'))\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:27:115\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:27:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "name": "Alternative identity proof does not pretend an unperformed period comparison is completed",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(after.graph.frontiers.some(f=>f.id==='question:craft'))\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:28:201\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:28:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "name": "Surface enquiry is handed to the new question after its connecting trail",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(r)\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:30:191\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:29:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "name": "One repair branch leaves the other exploration directions open",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(f)\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:33:193\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:33:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "name": "Actual X-ray material used by a comparison retains its enquiry trail",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(r)\n\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:34:311\n    at check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:9:69)\n    at file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-frontier-continuity.mjs:34:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "reviewRequired": true,
+  "passed": 14,
+  "total": 14,
+  "results": [
+    {
+      "name": "question:material-base: same road survives in both orders without claiming proof",
+      "passed": true,
+      "evidence": {
+        "road": "enquiry:material-pair",
+        "reverse": true,
+        "retireAt": 1800
+      }
+    },
+    {
+      "name": "question:material-sequence: same road survives in both orders without claiming proof",
+      "passed": true,
+      "evidence": {
+        "road": "enquiry:material-pair",
+        "reverse": false,
+        "retireAt": 1800
+      }
+    },
+    {
+      "name": "T2 RELATE: record first, report second, no object view",
+      "passed": true,
+      "evidence": {
+        "road": "source:obs.archive.t2.object-attribution"
+      }
+    },
+    {
+      "name": "T2 CORROBORATE: record first, report second, no object view",
+      "passed": true,
+      "evidence": {
+        "road": "source:obs.archive.t2.current-corroboration"
+      }
+    },
+    {
+      "name": "T3 RELATE: record first, report second, no object view",
+      "passed": true,
+      "evidence": {
+        "road": "source:obs.archive.t3.object-attribution"
+      }
+    },
+    {
+      "name": "T3 CORROBORATE: record first, report second, no object view",
+      "passed": true,
+      "evidence": {
+        "road": "source:obs.archive.t3.current-corroboration"
+      }
+    },
+    {
+      "name": "UV capability limit survives trial windows and regional synthesis",
+      "passed": true
+    },
+    {
+      "name": "Alternative identity proof does not pretend an unperformed period comparison is completed",
+      "passed": true
+    },
+    {
+      "name": "Surface enquiry is handed to the new question after its connecting trail",
+      "passed": true
+    },
+    {
+      "name": "One repair branch leaves the other exploration directions open",
+      "passed": true
+    },
+    {
+      "name": "Actual X-ray material used by a comparison retains its enquiry trail",
+      "passed": true
+    },
+    {
+      "name": "Alternate corpus comparison follows its own branch and remains traceable later",
+      "passed": true
+    },
+    {
+      "name": "Archive cross-time comparison has a separate enquiry branch before it is acquired",
+      "passed": true
+    },
+    {
+      "name": "A history question traces interpreted early material to acquired records",
+      "passed": true
+    }
+  ]
+}

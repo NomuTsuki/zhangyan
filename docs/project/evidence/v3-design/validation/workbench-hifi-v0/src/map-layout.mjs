@@ -1,6 +1,7 @@
 /** Fixed desktop map; route geometry is independent of labels and acquisition order. */
 import { NAMES, POSITIONS, LABELS, GROUPS, GUIDES, SCALE, WORLD_WIDTH, WORLD_HEIGHT } from './fixed-map-schema.mjs';
 import { localizeMapLayout } from './map-language.mjs';
+import { REPORT_SOURCES } from './archive-report-links.mjs';
 const FONT = 21, LINE = 31.5, LABEL_WIDTH = 264;
 const CLAIM_BOX = { w: 249, h: 93 };
 const round = n => Math.round(n * 100) / 100;
@@ -11,19 +12,19 @@ const unique = values => [...new Set(values)];
 function textWidth(text, font = FONT) {
   return [...String(text)].reduce((sum, c) => sum + (c.codePointAt(0) > 255 ? font : font * .58), 0);
 }
-function wrap(text, width = LABEL_WIDTH, font = FONT, words = false) {
+function wrap(text, width = LABEL_WIDTH, font = FONT, words = false, measure = t => textWidth(t, font)) {
   const lines = [''];
   if (words) {
     for (const word of String(text ?? '').split(/\s+/)) {
       const next = lines.at(-1) ? lines.at(-1) + ' ' + word : word;
-      if (lines.at(-1) && textWidth(next,font) > width) lines.push(word);
+      if (lines.at(-1) && measure(next) > width) lines.push(word);
       else lines[lines.length-1] = next;
     }
     return lines;
   }
   for (const c of String(text ?? '')) {
     if (c === '\n') { lines.push(''); continue; }
-    if (lines.at(-1) && textWidth(lines.at(-1) + c, font) > width) lines.push(c);
+    if (lines.at(-1) && measure(lines.at(-1) + c) > width) lines.push(c);
     else lines[lines.length - 1] += c;
   }
   return lines;
@@ -63,6 +64,7 @@ const canonicalEnds = {
   'archive:t2:object': [NAMES.T2, NAMES.W],
   'archive:t3:object': [NAMES.T3, NAMES.W],
   'support:obs.surface.point-layering:obs.surface.resolved': [NAMES.POINT, NAMES.SURF],
+  ...Object.fromEntries(Object.values(REPORT_SOURCES).map(b=>[b.sourceEdgeId,[b.reportId,b.recordId]])),
 };
 const archiveRange = key => key === 'attribution' ? [0, .485] : [.515, 1];
 const lerp = (a, b, t) => point(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
@@ -133,12 +135,25 @@ function geometryFromCurves(curves) {
     fractionPoint: f => { const q = parameter(f); return bezierPoint(curves[q.index], q.t); }, slice };
 }
 const geometryCache = new Map();
+const reportGuides={
+ 'MAT>LAYER':[[642,1220],[621,1260]],
+ 'DECOR>POINT':[[78,1240],[114,1300]],
+ 'W>X':[[452,103],[530,132]],
+ 'W>DECOR':[[40,125],[16,430],[16,870],[52,1100]],
+ 'W>T2':[[398,280],[411,435]],
+ 'W>obs.corpus.identity.repeat':[[55,142],[27,312]],
+ 'B>obs.corpus.identity.repeat':[[94,311]],
+ 'obs.archive.t2.object-attribution>T2':[[393,541]],
+ 'obs.archive.t2.current-corroboration>T2':[[480,555]],
+ 'obs.archive.t3.object-attribution>T3':[[609,925]],
+ 'obs.archive.t3.current-corroboration>T3':[[647,910]],
+};
 function roadGeometry(fromId, toId) {
   const key = `${fromId}>${toId}`;
   if (geometryCache.has(key)) return geometryCache.get(key);
   const a = aliases.get(fromId) ?? fromId, b = aliases.get(toId) ?? toId;
   const from = glyph(fromId), to = glyph(toId);
-  const points = [from, ...(GUIDES[`${a}>${b}`] ?? []).map(([x, y]) => point(x * SCALE, y * SCALE)), to];
+  const points = [from, ...(GUIDES[`${a}>${b}`] ?? reportGuides[`${a}>${b}`] ?? []).map(([x, y]) => point(x * SCALE, y * SCALE)), to];
   points[0] = endpoint(from, points[1]);
   points[points.length - 1] = endpoint(to, points.at(-2));
   const curves = [];
@@ -217,7 +232,21 @@ export function layoutMap(graph, previousLayout = null, language = 'zh') {
       const id = (f.continuation?.edgeIds ?? []).find(id => canonicalEnds[id] || edges.some(e => e.id === id));
       const edge = edges.find(e => e.id === id), ends = edge ? [edge.from, edge.to] : canonicalEnds[id];
       const segments = [], records = [];
-      if (ends) {
+      const sourceReports=/^question:archive:t[23]:source$/.test(f.id)?f.anchorIds.map(id=>REPORT_SOURCES[id]).filter(Boolean):[];
+      if (f.continuity?.roads?.length) {
+        for(const road of f.continuity.roads){
+          const g=roadGeometry(road.from,road.to),forward=f.anchorIds.includes(road.from),span=Math.min(.62,90/g.length);
+          const from=forward?0:1-span,to=forward?span:1;
+          segments.push({d:g.d,from,to,canonicalRouteId:road.id,edgeIds:[road.id],reverse:!forward});
+          records.push({from:forward?road.from:road.to,...publicGeometry(geometryFromCurves(g.slice(from,to)))});
+        }
+      } else if (sourceReports.length) {
+        for(const b of sourceReports){
+          const g=roadGeometry(b.reportId,b.recordId),to=Math.min(.62,90/g.length);
+          segments.push({d:g.d,from:0,to,canonicalRouteId:b.sourceEdgeId,edgeIds:[b.sourceEdgeId]});
+          records.push({from:b.reportId,...publicGeometry(geometryFromCurves(g.slice(0,to)))});
+        }
+      } else if (ends) {
         const g = roadGeometry(...ends), archive = /^question:archive:t[23]:(attribution|corroboration)$/.exec(f.id);
         let spans;
         if (archive) spans = [archiveRange(archive[1])];
@@ -241,11 +270,16 @@ export function layoutMap(graph, previousLayout = null, language = 'zh') {
           records.push({ from: anchorId, ...publicGeometry(g) });
         }
       }
+      for(const road of f.alternativeRoads||[]){
+        const g=roadGeometry(road.from,road.to),to=Math.min(.62,90/g.length);
+        segments.push({d:g.d,from:0,to,canonicalRouteId:road.id,edgeIds:[road.id],reverse:false});
+        records.push({from:road.from,...publicGeometry(geometryFromCurves(g.slice(0,to)))});
+      }
       frontierRoads[f.id] = records;
       const location = records[0]?.midpoint ?? coordinates(f.anchorIds[0]);
       return { ...f, ...location, labelX: location.x, labelY: location.y + 18, labelWidth: LABEL_WIDTH,
         fontSize: 18, lineHeight: 30, lines: wrap(f.title, LABEL_WIDTH, 18), segments,
-        paths: records.map(r => r.d), openBoundary: !ends, canonicalRouteId: id ?? null };
+        paths: records.map(r => r.d), openBoundary: !ends&&!sourceReports.length&&!f.continuity?.roads?.length, canonicalRouteId: segments.length===1?segments[0].canonicalRouteId:id ?? null };
     });
   for (const route of routes) {
     route.pendingFrontierIds = frontiers.filter(f => f.canonicalRouteId === route.id).map(f => f.id);
@@ -268,13 +302,56 @@ export function layoutMap(graph, previousLayout = null, language = 'zh') {
       roadLabels.push(label); return label;
     });
   }
+  const reportMarkers=(graph.reportBindings??[]).filter(b=>b.carrierEdgeId&&b.recordAcquired).map(b=>{
+    const carrier=routes.find(r=>r.id===b.carrierEdgeId),g=roadGeometry(carrier.from,carrier.to);
+    const fraction=b.relationKey==='attribution'?.25:.75;
+    return {...b,id:`marker:${b.reportId}`,...g.fractionPoint(fraction),fraction};
+  });
+  // A folded report remains acquired information. Reuse its existing road
+  // caption as a nearby, selectable name, rather than adding another label.
+  for (const marker of reportMarkers) {
+    const label=roadLabels.find(l=>l.routeId===marker.carrierEdgeId&&l.relationKey===marker.relationKey);
+    if (!label) continue;
+    const text=(marker.group==='t2'?'事故':'后期')+(marker.relationKey==='attribution'?'归属核验':'实物印证');
+    Object.assign(label,{reportId:marker.reportId,text,title:text,lines:[text]});
+  }
   const maxNodeMovement = Math.max(0, ...nodes.map(n => { const old = previousLayout?.nodes?.find(p => p.id === n.id); return old ? distance(old, n) : 0; }));
-  const layout = { width: WORLD_WIDTH, height: Math.max(WORLD_HEIGHT, ...nodes.map(n => n.y + 140)), nodes, routes, junctions, frontiers, roadLabels,
+  const layout = { width: WORLD_WIDTH, height: Math.max(WORLD_HEIGHT, ...nodes.map(n => n.y + 140)), nodes, routes, junctions, frontiers, roadLabels,reportMarkers,
     _state: { frontierRoads, fixedSchema: 'reviewed-skeleton-v2', roadMemories: {} },
     diagnostics: { maxNodeMovement, routingPolicy: 'fixed-reviewed-control-points-roads-first', hiddenRelationEdgeIds: hidden.map(e => e.id),
       ignoredEdgeIds: (graph?.edges ?? []).filter(e => !allEdges.includes(e)).map(e => e.id),
       unmappedNodeIds: nodes.filter(n => !knownShapeIds.includes(n.id)).map(n => n.id) } };
   return placeMapLabels(localizeMapLayout(layout, language), null, null);
+}
+
+/** Animation-only carriers retain an already acquired report while it is folded
+ * into an existing correspondence. They are never added to the knowledge graph. */
+export function reportTransferGeometry(reportId,marker) {
+  const b=REPORT_SOURCES[reportId],source=roadGeometry(b.reportId,b.recordId);
+  const main=roadGeometry(b.recordId,NAMES.W),target=main.fractionPoint(marker.fraction);
+  const a=source.curves.at(-1).at(-1),z=main.curves[0][0];
+  const bridge=[a,lerp(a,z,1/3),lerp(a,z,2/3),z];
+  return {sourceRoute:{id:b.sourceEdgeId,from:b.reportId,to:b.recordId,kind:'source-record',arrow:false,
+    edgeIds:[b.sourceEdgeId],...publicGeometry(source)},
+    travel:publicGeometry(geometryFromCurves([...source.curves,bridge,...main.slice(0,marker.fraction)])),target};
+}
+
+/** Temporary amber handover when the same enquiry changes representation.
+ * It leaves no proof edge and cannot create a node. The old stroke remains the
+ * beginning of the path; only its tip extends to the actual successor. */
+export function frontierHandoverGeometry(frontier,target){
+ const numbers=(frontier.paths[0]?.match(/-?\d+(?:\.\d+)?/g)||[]).map(Number);
+ if(numbers.length<8)return null;
+ let start=point(numbers[0],numbers[1]);const curves=[];
+ for(let i=2;i+5<numbers.length;i+=6){const c=[start,point(numbers[i],numbers[i+1]),point(numbers[i+2],numbers[i+3]),point(numbers[i+4],numbers[i+5])];curves.push(c);start=c[3];}
+ const anchor=coordinates(frontier.anchorIds[0]);
+ if(distance(curves[0][0],anchor)>distance(curves.at(-1)[3],anchor))curves.reverse().forEach(c=>c.reverse());
+ const tip=curves.at(-1)[3],end=point(target.x,target.y),length=distance(tip,end);
+ if(length<1)return null;
+ const dx=end.x-tip.x,dy=end.y-tip.y,bend=Math.min(24,length*.08);
+ const one=lerp(tip,end,1/3),two=lerp(tip,end,2/3);
+ curves.push([tip,point(one.x-dy/length*bend,one.y+dx/length*bend),point(two.x-dy/length*bend,two.y+dx/length*bend),end]);
+ return publicGeometry(geometryFromCurves(curves));
 }
 
 function overlaps(a, b, margin = 0) {
@@ -284,31 +361,55 @@ function overlaps(a, b, margin = 0) {
  * block per frontier ID. Sizes use world pixels; DOM callers divide by zoom.
  * This function only changes label coordinates / bounds and canvas height.
  * @param {any} layout
- * @param {Record<string,{width:number,height:number}> | Map<string,{width:number,height:number}> | null} measurements
+ * @param {Record<string,{width:number,height:number,textWidth?:(text:string)=>number}> | Map<string,{width:number,height:number,textWidth?:(text:string)=>number}> | null} measurements
  * @param {any} previousLayout
  */
 export function placeMapLabels(layout, measurements = null, previousLayout = layout) {
   const nodes = layout.nodes.map(n => ({ ...n })), frontiers = layout.frontiers.map(f => ({ ...f }));
   const roadLabels = (layout.roadLabels ?? []).map(label => ({ ...label }));
-  const boxes = [...nodes, ...layout.junctions].map(n => shape(n, 9));
+  const boxes = [...nodes, ...layout.junctions, ...(layout.reportMarkers??[])].map(n => shape(n, 9));
   const samples = [...layout.routes.map(r => r.samples), ...Object.values(layout._state.frontierRoads).flat().map(r => r.samples)].filter(Boolean);
   const segments = samples.flatMap(path => path.slice(1).map((p, i) => [path[i], p]));
+  // Candidate captions inspect only nearby road segments. Text reflow must not
+  // turn each investigation into a full-world collision scan on the UI thread.
+  const cellSize=96, roadCells=new Map();
+  for (const segment of segments) {
+    const [a,b]=segment;
+    for(let y=Math.floor(Math.min(a.y,b.y)/cellSize);y<=Math.floor(Math.max(a.y,b.y)/cellSize);y++)
+      for(let x=Math.floor(Math.min(a.x,b.x)/cellSize);x<=Math.floor(Math.max(a.x,b.x)/cellSize);x++){
+        const key=`${x}:${y}`;if(!roadCells.has(key))roadCells.set(key,[]);roadCells.get(key).push(segment);
+      }
+  }
+  const crossesRoad=r=>{
+    const padded={left:r.left-4,right:r.right+4,top:r.top-4,bottom:r.bottom+4};
+    for(let y=Math.floor(padded.top/cellSize);y<=Math.floor(padded.bottom/cellSize);y++)
+      for(let x=Math.floor(padded.left/cellSize);x<=Math.floor(padded.right/cellSize);x++)
+        if(roadCells.get(`${x}:${y}`)?.some(([a,b])=>crosses(a,b,padded)))return true;
+    return false;
+  };
   const labelRects = [], remoteLabelIds = [];
   const maxRoadY = Math.max(0, ...samples.flatMap(path => path.map(p => p.y)));
   const getMeasurement = id => measurements instanceof Map ? measurements.get(id) : measurements?.[id];
+  // Edge nodes need room for their names on the outside of the road network.
+  // This is text-only breathing room; authored world coordinates stay fixed.
+  // Camera fitting already includes label bounds, including negative x.
+  const textLeft=-LABEL_WIDTH,textRight=layout.width+LABEL_WIDTH;
   const frontierIds = new Set(frontiers.map(f => f.id));
+  const roadLabelIds = new Set(roadLabels.map(l => l.id));
+  const priority = n => frontierIds.has(n.id) ? 2 : roadLabelIds.has(n.id) ? 1 : 0;
   const labels = [...nodes.filter(n => !n.box), ...frontiers, ...roadLabels].sort((a, b) =>
-    Number(frontierIds.has(a.id)) - Number(frontierIds.has(b.id)) ||
+    priority(a) - priority(b) ||
     a.y - b.y || a.x - b.x || a.id.localeCompare(b.id));
   for (const n of labels) {
     const measured = getMeasurement(n.id), lineHeight = n.lineHeight ?? LINE;
-    const estimatedWidth = Math.min(LABEL_WIDTH, Math.max(48, ...n.lines.map(line => textWidth(line, n.fontSize)), n.subline ? textWidth(n.subline, n.sublineFontSize ?? 19.5) : 0));
-    let width = Math.min(layout.width - 40, Math.max(24, measured?.width ?? estimatedWidth));
+    const measureText=measured?.textWidth??(text=>textWidth(text,n.fontSize));
+    const estimatedWidth = Math.min(LABEL_WIDTH, Math.max(48, ...n.lines.map(measureText), n.subline ? textWidth(n.subline, n.sublineFontSize ?? 19.5) : 0));
+    let width = Math.min(layout.width - 40, Math.max(24, measured?.textWidth?Math.ceil(estimatedWidth):measured?.width ?? estimatedWidth));
     let height = Math.max(lineHeight, measured?.height ?? n.lines.length * lineHeight + (n.subline ? 33 : 0));
     const rect = (x, y) => ({ id: n.id, left: x, right: x + width, top: y, bottom: y + height });
-    const free = r => r.left >= 20 && r.right <= layout.width - 20 && r.top >= 20 &&
+    const free = r => r.left >= textLeft && r.right <= textRight && r.top >= 20 &&
       !boxes.some(b => overlaps(r, b, 3)) && !labelRects.some(b => overlaps(r, b, 10)) &&
-      !segments.some(([a, b]) => crosses(a, b, { left: r.left - 4, right: r.right + 4, top: r.top - 4, bottom: r.bottom + 4 }));
+      !crossesRoad(r);
     const candidates = [];
     for (const gap of [18, 36, 58, 84, 116, 156, 208]) {
       candidates.push(rect(n.x - width / 2, n.y - height - gap), rect(n.x + gap, n.y - height / 2),
@@ -320,7 +421,7 @@ export function placeMapLabels(layout, measurements = null, previousLayout = lay
     if (!chosen) {
       const search = [];
       for (let y = 24; y <= Math.max(layout.height, maxRoadY + 64); y += 28) {
-        for (let x = 24; x + width < layout.width - 20; x += 36) search.push(rect(x, y));
+        for (let x = textLeft; x + width < textRight; x += 36) search.push(rect(x, y));
       }
       search.sort((a, b) => distance(point((a.left + a.right) / 2, (a.top + a.bottom) / 2), n) - distance(point((b.left + b.right) / 2, (b.top + b.bottom) / 2), n));
       chosen = search.find(free);
@@ -330,26 +431,28 @@ export function placeMapLabels(layout, measurements = null, previousLayout = lay
       chosen = rect(Math.max(20, Math.min(layout.width - width - 20, n.x - width / 2)), y);
     }
     const separationOf = r => Math.hypot(Math.max(r.left - n.x, 0, n.x - r.right), Math.max(r.top - n.y, 0, n.y - r.bottom));
-    if (!measured && !n.subline && separationOf(chosen) > 100) {
+    if (!n.subline && separationOf(chosen) > 60) {
       const original = { width, height, lines: n.lines, chosen };
-      let best = { ...original, separation: separationOf(chosen) };
-      // A narrow text column is preferable to a distant caption. Keep the
-      // same font size and move/reflow only text; the world graph stays fixed.
-      for (const compactWidth of [144, 128, 112, 96]) {
-        if (compactWidth >= original.width) continue;
+      const score=(r,lines)=>separationOf(r)+Math.max(0,lines.length-2)*12;
+      let best = { ...original, score: score(chosen,n.lines) };
+      // DOM measurement must not lock a previous narrow column in place:
+      // a wider, shorter caption may fit locally on this pass. Reflow the
+      // concise display text, keeping font size, glyphs and roads unchanged.
+      const displayText=n.displayText||n.lines.join(n.wordWrap?' ':'');
+      for (const compactWidth of [264, 216, 180, 144, 128, 112, 96, 84, 72]) {
         // English words are indivisible. Do not substitute the longer source
         // title for the deliberately concise display label during compaction.
-        if (n.wordWrap && (n.displayText || n.title).split(/\s+/).some(word => textWidth(word,n.fontSize) > compactWidth)) continue;
-        const lines = wrap(n.wordWrap ? n.displayText || n.title : n.title, compactWidth, n.fontSize, n.wordWrap);
-        width = compactWidth; height = lines.length * lineHeight;
+        if (n.wordWrap && displayText.split(/\s+/).some(word => measureText(word) > compactWidth)) continue;
+        const lines = wrap(displayText, compactWidth, n.fontSize, n.wordWrap, measureText);
+        width = Math.ceil(Math.max(48,...lines.map(measureText))); height = lines.length * lineHeight;
         const local = [];
         for (let y = Math.max(20, n.y - height - 150); y <= n.y + 150; y += 12) {
-          for (let x = Math.max(20, n.x - width - 150); x <= Math.min(layout.width - width - 20, n.x + 150); x += 12) local.push(rect(x, y));
+          for (let x = Math.max(textLeft, n.x - width - 150); x <= Math.min(textRight - width, n.x + 150); x += 12) local.push(rect(x, y));
         }
         local.sort((a, b) => separationOf(a) - separationOf(b) || distance(point((a.left + a.right) / 2, (a.top + a.bottom) / 2), n)
           - distance(point((b.left + b.right) / 2, (b.top + b.bottom) / 2), n));
         const match = local.find(free);
-        if (match && separationOf(match) < best.separation) best = { width, height, lines, chosen: match, separation: separationOf(match) };
+        if (match && score(match,lines) < best.score) best = { width, height, lines, chosen: match, score: score(match,lines) };
       }
       width = best.width; height = best.height; n.lines = best.lines; chosen = best.chosen;
     }

@@ -1,0 +1,143 @@
+{
+  "candidateSpreadSlots": [
+    "System",
+    "Process",
+    "Reflection"
+  ],
+  "build": "370fc2c10025e8a5db358b2bcf1deaebd1a926c608220fe62c645b7545ebc842",
+  "videoInfo": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1440,
+        "height": 1000
+      }
+    ],
+    "format": {
+      "duration": "16.120000"
+    }
+  },
+  "assets": [
+    {
+      "file": "2026-09-13-after-same-two-enquiries.png",
+      "bytes": 2605671,
+      "sha256": "c28426f35f4c7cef5609be6fb77080111b868f9617b93d9a75d2162f42c7962a",
+      "width": 2880,
+      "height": 2000,
+      "status": "Verified capture / working take; see README"
+    },
+    {
+      "file": "2026-09-13-before-same-two-enquiries.png",
+      "bytes": 2607216,
+      "sha256": "689c917b1c7308ab28ca57bdbaac941acc47d0fe263b26ed66e62bf0b1580b98",
+      "width": 2880,
+      "height": 2000,
+      "status": "Before: checkpoint 2e5dafc"
+    },
+    {
+      "file": "2026-09-13-capture-source-connect-and-fold.webm",
+      "bytes": 1517748,
+      "sha256": "015d6db1f16896f9af01214f866a639213751912d2becf4963b29a1c02af5a54",
+      "status": "Verified capture / working take; see README"
+    },
+    {
+      "file": "2026-09-13-first-held-report-frontier.png",
+      "bytes": 2663227,
+      "sha256": "4793bb188bfe4ec3932b8b445fee9d0e78faeb2f24b0942d9a57c4c2701d3aab",
+      "width": 2880,
+      "height": 2000,
+      "status": "Intermediate: before camera correction"
+    },
+    {
+      "file": "2026-09-13-first-report-joining-main-road.png",
+      "bytes": 2713383,
+      "sha256": "2aa9129664455862c35879b51642a7bf9a771ffe422bc2b1935b78cfd8555ad7",
+      "width": 2880,
+      "height": 2000,
+      "status": "Intermediate: before camera correction"
+    },
+    {
+      "file": "2026-09-13-first-report-on-main-road.png",
+      "bytes": 2687939,
+      "sha256": "06c9b8805f3d83805d2a5db6bfd1e5ffd61f8de7e869d6ae70902628b0b8d65d",
+      "width": 2880,
+      "height": 2000,
+      "status": "Intermediate: before camera correction"
+    },
+    {
+      "file": "2026-09-13-first-source-connected.png",
+      "bytes": 2696572,
+      "sha256": "c383d370f03dc97715a968dd123582d0aa231ee916a3d47be05bcdfd1ba8ba6e",
+      "width": 2880,
+      "height": 2000,
+      "status": "Intermediate: before camera correction"
+    },
+    {
+      "file": "2026-09-13-first-source-connecting.png",
+      "bytes": 2674636,
+      "sha256": "82c0f9faf102e130eadbb84caa690bbbb76975727255ea88bea34379cc0c821f",
+      "width": 2880,
+      "height": 2000,
+      "status": "Intermediate: before camera correction"
+    },
+    {
+      "file": "2026-09-13-second-held-report-frontier.png",
+      "bytes": 2663225,
+      "sha256": "766815942fe0b92a6eaea7e806815f28ead028c8e3c85c81b7de2e88ea1bc3b4",
+      "width": 2880,
+      "height": 2000,
+      "status": "Verified capture / working take; see README"
+    },
+    {
+      "file": "2026-09-13-second-report-joining-main-road.png",
+      "bytes": 2713398,
+      "sha256": "9349922c934dc5f6f251958308f2439d41985a4a5f22551c945866ec69a44b69",
+      "width": 2880,
+      "height": 2000,
+      "status": "Verified capture / working take; see README"
+    },
+    {
+      "file": "2026-09-13-second-report-on-main-road.png",
+      "bytes": 2730160,
+      "sha256": "d9ab8f535507968ab15e701a2477f059545eceac44eb5af9d7f245b4275d7155",
+      "width": 2880,
+      "height": 2000,
+      "status": "Verified capture / working take; see README"
+    },
+    {
+      "file": "2026-09-13-second-source-connect-and-fold.webm",
+      "bytes": 1196538,
+      "sha256": "453216de88443ca4fa1edbc487f6907947f8a11675ea81d6509b5820dde08efe",
+      "status": "Verified capture / working take; see README"
+    },
+    {
+      "file": "2026-09-13-second-source-connected.png",
+      "bytes": 2680112,
+      "sha256": "6370cf8b678c296e437450bea9182bdc21fa9feb0bdd73deee8bc4f7433cffa4",
+      "width": 2880,
+      "height": 2000,
+      "status": "Verified capture / working take; see README"
+    },
+    {
+      "file": "2026-09-13-second-source-connecting.png",
+      "bytes": 2673761,
+      "sha256": "594630a0e4061c7355cea5440c1e84507c3bf007379a0f59cc02d38c514ae09a",
+      "width": 2880,
+      "height": 2000,
+      "status": "Verified capture / working take; see README"
+    },
+    {
+      "file": "2026-09-13-source-connect-and-fold.mp4",
+      "bytes": 1685721,
+      "sha256": "1620d61f57737671f1c4d291564303deb2a430d219f485d2cd3233f0021ed2f1",
+      "status": "Verified capture / working take; see README"
+    },
+    {
+      "file": "2026-09-13-source-continuity-normal-speed.mp4",
+      "bytes": 1756879,
+      "sha256": "64be482e92e586b6d673c0e96cd32c5762739c196c70b90d9a8330805082eb26",
+      "status": "Verified capture / working take; see README"
+    }
+  ]
+}

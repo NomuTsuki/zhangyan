@@ -3,8 +3,8 @@ import { translate } from './locale-text.mjs';
 // Short display labels retain the same acquired IDs and authored glyph positions.
 // Explicit line breaks protect English words; only text placement may change.
 const labels = {
- 'obs.current.whole':['Form & visible','repairs'], 'obs.current.base':['Foot manufacture'], 'obs.phase.t1':['Earlier photograph'],
- 'obs.corpus.identity':['Period comparison'], 'obs.corpus.identity.repeat':['Repeat comparison'], 'obs.structure.xray.early':['Current internal','structure'],
+ 'obs.current.whole':['Form & visible','repairs'], 'obs.current.base':['Foot traces'], 'obs.phase.t1':['Old photo'],
+ 'obs.corpus.identity':['Period check'], 'obs.corpus.identity.repeat':['Repeat comparison'], 'obs.structure.xray.early':['Current internal','structure'],
  'obs.structure.major.cross-time':['Changes in','comparable areas'], 'obs.structure.major.documented-cross-time':['Records–object','comparison'],
  'interpretation:photo-change':['Changes in this bowl','between two dates'], 'interpretation:archive-change':['Recorded treatment','matched to this bowl'],
  'interpretation:photo-repair':['Staple repairs already','visible in the photograph'],

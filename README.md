@@ -1,5 +1,5 @@
 > [!IMPORTANT]
-> **当前 V3 阶段成果入口：[打开成果页](docs/project/delivery/index.html)**。当前工作分支为 `codex/xray-photo-local-study`，2026-09-12 收尾修订位于本地工作区，基于已推送的 `14a54a2`。
+> **当前 V3 阶段成果入口：[打开成果页](docs/project/delivery/index.html)**。当前工作分支为 `codex/xray-photo-local-study`；双语检查点为 `2e5dafc`，本次地图修正检查点包含其后的来源道路、整图前沿及节点名称修订（页面 `4d6362a8`）。用户已批准提交与远端同步；同步状态以该分支与 `origin` 的实际记录为准，范围见[当前状态](docs/project/02-CURRENT-STATE.md)。
 > 本仓库于 2026-08-24 从 `zhangyan_V2` 完整镜像迁移；旧仓库保留为 `handoff-freeze-2026-08-24` 存档。
 
 # 《掌眼》V1/V2/V3 项目说明与仓库入口

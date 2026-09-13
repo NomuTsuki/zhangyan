@@ -1,0 +1,190 @@
+{
+  "reviewRequired": true,
+  "sha256": "370fc2c10025e8a5db358b2bcf1deaebd1a926c608220fe62c645b7545ebc842",
+  "checks": [
+    {
+      "name": "Report-first later attribution",
+      "passed": true,
+      "evidence": {
+        "width": 1440,
+        "steps": 4,
+        "historyChecked": true
+      }
+    },
+    {
+      "name": "Report-first later corroboration",
+      "passed": true,
+      "evidence": {
+        "width": 1280,
+        "steps": 4,
+        "historyChecked": true
+      }
+    },
+    {
+      "name": "Report-first damage attribution",
+      "passed": true,
+      "evidence": {
+        "width": 1920,
+        "steps": 4,
+        "historyChecked": true
+      }
+    },
+    {
+      "name": "Report-first damage corroboration",
+      "passed": true,
+      "evidence": {
+        "width": 1440,
+        "steps": 4,
+        "historyChecked": true
+      }
+    },
+    {
+      "name": "Photograph and comparison before attribution",
+      "passed": true,
+      "evidence": {
+        "width": 1280,
+        "steps": 6,
+        "historyChecked": true
+      }
+    },
+    {
+      "name": "Archive comparison before attribution",
+      "passed": true,
+      "evidence": {
+        "width": 1920,
+        "steps": 4,
+        "historyChecked": true
+      }
+    },
+    {
+      "name": "Layers before substrates and surface synthesis",
+      "passed": true,
+      "evidence": {
+        "width": 1440,
+        "steps": 5,
+        "historyChecked": true
+      }
+    },
+    {
+      "name": "Repeat comparison before primary comparison",
+      "passed": true,
+      "evidence": {
+        "width": 1440,
+        "steps": 4,
+        "historyChecked": true
+      }
+    },
+    {
+      "name": "Eight-action state matching the reported evidence set",
+      "passed": true,
+      "evidence": {
+        "width": 1440,
+        "steps": 8,
+        "historyChecked": true
+      }
+    }
+  ],
+  "inspected": {
+    "questions": [
+      "question:archive:t3:source",
+      "question:craft",
+      "question:visible-intervention",
+      "question:archive:t3:corroboration",
+      "question:archive:t3:attribution",
+      "question:archive:t2:source",
+      "question:archive:t2:corroboration",
+      "question:history",
+      "question:archive:t2:attribution",
+      "question:photo-object",
+      "question:change",
+      "question:material-base",
+      "question:surface"
+    ],
+    "roads": [
+      "edge:archive:t3:object",
+      "edge:source:obs.archive.t3.current-corroboration",
+      "edge:archive:t2:object",
+      "group:proof-group:major:documented-current",
+      "edge:source:obs.archive.t2.current-corroboration",
+      "group:interpretation-group:photo",
+      "edge:interpretation:photo-history",
+      "edge:photo:object",
+      "group:proof-group:identity:continuity",
+      "group:proof-group:major:physical",
+      "group:interpretation-group:archive",
+      "group:proof-group:major:documented-cross-time",
+      "edge:support:obs.surface.point-layering:obs.surface.resolved",
+      "group:proof-group:identity:comparison"
+    ],
+    "nodes": [
+      "obs.archive.t3.object-attribution",
+      "obs.current.whole",
+      "obs.phase.t3",
+      "obs.archive.t3.current-corroboration",
+      "obs.archive.t2.object-attribution",
+      "obs.accident.major",
+      "claim:majorReassembly",
+      "obs.archive.t2.current-corroboration",
+      "obs.phase.t1",
+      "obs.current.base",
+      "obs.structure.xray.early",
+      "obs.structure.major.cross-time",
+      "claim:identity",
+      "interpretation:photo-change",
+      "interpretation:photo-repair",
+      "obs.structure.major.documented-cross-time",
+      "interpretation:archive-change",
+      "obs.key-material.layer-sequence",
+      "obs.key-material.substrate-readings",
+      "obs.surface.point-layering",
+      "obs.surface.resolved",
+      "obs.surface.no-signal.unresolved",
+      "obs.corpus.identity.repeat",
+      "obs.corpus.identity"
+    ],
+    "materials": [
+      "obs.archive.t3.object-attribution",
+      "obs.current.whole",
+      "obs.phase.t3",
+      "obs.archive.t3.current-corroboration",
+      "obs.archive.t2.object-attribution",
+      "obs.accident.major",
+      "obs.archive.t2.current-corroboration",
+      "obs.phase.t1",
+      "obs.current.base",
+      "obs.structure.xray.early",
+      "obs.structure.major.cross-time",
+      "obs.structure.major.documented-cross-time",
+      "obs.key-material.layer-sequence",
+      "obs.key-material.substrate-readings",
+      "obs.surface.point-layering",
+      "obs.surface.resolved",
+      "obs.surface.no-signal.unresolved",
+      "obs.corpus.identity.repeat",
+      "obs.corpus.identity"
+    ],
+    "actions": [
+      "A.RELATE.ARCHIVE.T3_TO_OBJECT",
+      "A.OBSERVE.WHOLE",
+      "A.RESEARCH.LATE_TREATMENT",
+      "A.CORROBORATE.ARCHIVE.T3_CURRENT",
+      "A.RELATE.ARCHIVE.T2_TO_OBJECT",
+      "A.RESEARCH.ACCIDENT",
+      "A.CORROBORATE.ARCHIVE.T2_CURRENT",
+      "A.LOCATE.HISTORIC_IMAGE",
+      "A.OBSERVE.BASE",
+      "A.IMAGE.XRAY",
+      "A.MAP.REGION_CONTINUITY",
+      "A.VERIFY.OBJECT_CONTINUITY",
+      "A.INSPECT.MATERIAL.LAYER_SEQUENCE",
+      "A.ANALYZE.MATERIAL.SUBSTRATE",
+      "A.INSPECT.WINDOWS",
+      "A.SYNTHESIZE.SURFACE_REGIONS",
+      "A.SCREEN.UV",
+      "A.COMPARE.CORPUS.RECHECK",
+      "A.COMPARE.CORPUS"
+    ]
+  },
+  "scans": 898,
+  "passed": true
+}

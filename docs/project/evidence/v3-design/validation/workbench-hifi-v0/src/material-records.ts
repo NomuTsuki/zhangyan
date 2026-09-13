@@ -84,7 +84,7 @@ const records: Record<string, RecordCopy> = {
   [O.appearance]: { result: '纹饰衔接与色差留下外观曾被重新整合的痕迹。', scope: '本次查看的纹饰与色差区域', limit: '外观重整不能单独推出结构层面的重大重组。', role: '提示表面干预，保留继续查看层次与范围的理由。' },
   [O.negative]: { result: '本次紫外检查没有检测到补绘信号。', scope: '本次检测能力与查看范围', limit: '未见信号不等于没有补绘；这份阴性结果不足以排除表面干预。', role: '保留一次阴性检查及能力边界，不把它改写为表面完整。' },
   [O.point]: { result: '试窗留下所取点位上各层的上下关系。', scope: '已取样的试窗点位', limit: '几个点的层次不能直接外推为整片区域。', role: '提供区域综合所需的点位读数，范围仍需另行综合。' },
-  [O.surface]: { result: '点位读数已按区域综合，留下表面处理的覆盖范围。', scope: '已覆盖的表面区域', limit: '范围不超出本次综合覆盖，不能声称整只器物处处都已检查。', role: '补充连贯说明中的表面范围，与材料和结构判断分别保留。' },
+  [O.surface]: { result: '本局已取得的试窗点位读数已按区域综合，留下表面处理的覆盖范围。', scope: '已覆盖的表面区域', limit: '范围不超出本次综合覆盖，不能声称整只器物处处都已检查。', role: '将试窗点位扩展为范围明确的表面说明，与材料和结构判断分别保留。' },
   [O.substrate]: { result: '材料分析留下注明关键点位的基底读数。', scope: '实际覆盖的关键点位', limit: '点位基底不能代替界面层序，也不能说整个区域都已化验。', role: '补充材料基底这一面，与层序读数共同用于范围明确的材料说明。' },
   [O.layer]: { result: '关键界面的叠压读数留下层与层的先后关系。', scope: '实际读取的关键界面', limit: '层序不能代替基底材料读数，也不独自确定每次修复的年代。', role: '补充材料层序这一面；它与基底回答不同问题。' },
   [O.stability]: { result: '本次已评估承力路径与静态陈列条件。', scope: '已评估的承力与陈列条件', limit: '这不代表任何使用方式或载荷下都安全，也不为年代提供依据。', role: '说明当前如何陈列这一面，帮助最终决策保留使用条件。' },
@@ -95,10 +95,12 @@ const materialBindings: Record<string, { materialObservationIds: string[] }> = {
   [O.continuity]: SOURCE_BINDINGS.identityReference,
   [O.comparison]: SOURCE_BINDINGS.photoComparison,
   [O.documented]: SOURCE_BINDINGS.archiveComparison,
+  [O.surface]: SOURCE_BINDINGS.surfaceSynthesis,
 };
 const inputRoles: Record<string, string> = {
   [O.photo]: '历史可见区域', [O.base]: '现器对应特征', [O.whole]: '当前可见修补与器形',
   [O.xray]: '当前结构定位', [O.accident]: '事故记录中的处理',
+  [O.point]: '本局先前取得的试窗点位读数',
 };
 
 /** Only the supplied graph's acquired observations are allowed into this view. */

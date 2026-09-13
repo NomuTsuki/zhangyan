@@ -1,0 +1,86 @@
+{
+  "candidateSpreadSlot": "Process / reflection",
+  "images": [
+    {
+      "file": "2026-09-13-after-eight-actions.png",
+      "bytes": 2621518,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "fa4471a5b967634681668f18c587df482521b37cdc3d446c2c2f347f975f9fd0",
+      "provenance": "After fix: b0975f68be84929eb5c48558dc9e8aee54cb346cb18f21283d1a104d7de15ffb",
+      "role": "Intermediate audit capture"
+    },
+    {
+      "file": "2026-09-13-after-report-first-detail.png",
+      "bytes": 2671399,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "9037c46bb14efd0820d6ff51381530f2ece523b2bc431536ef36e092e6dfb956",
+      "provenance": "After fix: b0975f68be84929eb5c48558dc9e8aee54cb346cb18f21283d1a104d7de15ffb",
+      "role": "Intermediate audit capture"
+    },
+    {
+      "file": "2026-09-13-after-report-first-overview.png",
+      "bytes": 2614630,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "9d58d52c19b26ba9a59c901a7129b6c8c437f61f7c31c596473ebda8c11b3f6f",
+      "provenance": "After fix: b0975f68be84929eb5c48558dc9e8aee54cb346cb18f21283d1a104d7de15ffb",
+      "role": "Intermediate audit capture"
+    },
+    {
+      "file": "2026-09-13-before-report-first-detail.png",
+      "bytes": 2653151,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "011da772c124aa87a3071435dda477da112db6114e7f48f18a9e119f97bb2917",
+      "provenance": "Before fix: c9e676ca",
+      "role": "Selected audit evidence"
+    },
+    {
+      "file": "2026-09-13-before-report-first-overview.png",
+      "bytes": 2601993,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "7101c3edbadda4b26a8fe472a4a641b7e63e2482b12a0bfe64c4f28c217f1fc8",
+      "provenance": "Before fix: c9e676ca",
+      "role": "Selected audit evidence"
+    },
+    {
+      "file": "2026-09-13-final-eight-actions.png",
+      "bytes": 2621518,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "fa4471a5b967634681668f18c587df482521b37cdc3d446c2c2f347f975f9fd0",
+      "provenance": "After fix: b0975f68be84929eb5c48558dc9e8aee54cb346cb18f21283d1a104d7de15ffb",
+      "role": "Selected audit evidence"
+    },
+    {
+      "file": "2026-09-13-final-report-first-detail.png",
+      "bytes": 2671402,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "246b6a502d53e8f3154658339a800b707edebbd00f0e2d83dad9c02eedefddf8",
+      "provenance": "After fix: b0975f68be84929eb5c48558dc9e8aee54cb346cb18f21283d1a104d7de15ffb",
+      "role": "Selected audit evidence"
+    },
+    {
+      "file": "2026-09-13-final-report-first-overview.png",
+      "bytes": 2614630,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "9d58d52c19b26ba9a59c901a7129b6c8c437f61f7c31c596473ebda8c11b3f6f",
+      "provenance": "After fix: b0975f68be84929eb5c48558dc9e8aee54cb346cb18f21283d1a104d7de15ffb",
+      "role": "Selected audit evidence"
+    },
+    {
+      "file": "2026-09-13-user-language-leak.png",
+      "bytes": 2154814,
+      "width": 2559,
+      "height": 1460,
+      "sha256": "9c8f13d806a5d9512da248b06cc4dab3493034746941e2da1c6b9b5311a30684",
+      "provenance": "User-supplied original",
+      "role": "Selected audit evidence"
+    }
+  ]
+}

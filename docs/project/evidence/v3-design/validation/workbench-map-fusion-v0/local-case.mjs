@@ -16,6 +16,10 @@ export const events = { ...frozenEvents,
     contextualFacts: [], requiresContextFacts: [] },
   identityContinuity: { ...frozenEvents.identityContinuity,
     acquisitionRequires: [...frozenEvents.identityContinuity.acquisitionRequires, "t1ReadingAcquired"] },
+  // Approved 2026-09-10; applied 2026-09-12. Synthesis uses the player's
+  // acquired point readings. The original source IDs and evidence factor stay intact.
+  surface: { ...frozenEvents.surface,
+    acquisitionRequires: [...frozenEvents.surface.acquisitionRequires, "surfacePointLayering"] },
 };
 
 const comparisonDefinitions = [
@@ -84,6 +88,11 @@ export const SOURCE_BINDINGS = {
     materialObservationIds: [...comparisonDefinitions[1].materialObservationIds],
     use: comparisonDefinitions[1].scopeNote, sameDocumentAsOtherBindings: false,
   },
+  surfaceSynthesis: {
+    observationId: "obs.surface.resolved", sourceIds: [...frozenEvents.surface.sourceIds],
+    materialObservationIds: ["obs.surface.point-layering"],
+    use: "区域综合使用本局已取得的试窗点位记录；综合范围不超出实际覆盖。",
+  },
 };
 
 const factNames = {
@@ -91,6 +100,7 @@ const factNames = {
   baseManufacture: "现器底足观察", t1ReadingAcquired: "已经取得的旧照片",
   xrayReadingsByRegionAcquired: "当前 X 射线读数", t2RecordGroupCoherent: "事故记录",
   identityObjectContinuity: "照片与现器的对象核验",
+  surfacePointLayering: "已取得的试窗点位记录（先在表面开几个小窗看层次）",
 };
 
 export const ACTIONS = frozenActions.map((action) => {

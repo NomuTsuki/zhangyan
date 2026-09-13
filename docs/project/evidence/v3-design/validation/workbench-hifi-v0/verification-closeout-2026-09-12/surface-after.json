@@ -1,0 +1,85 @@
+{
+  "reviewRequired": true,
+  "passed": true,
+  "checks": [
+    {
+      "name": "Regional synthesis requires acquired trial-window readings; rejected request is atomic",
+      "passed": true,
+      "evidence": {
+        "why": "这一步要用到：已取得的试窗点位记录（先在表面开几个小窗看层次）",
+        "noCharge": true,
+        "noPrematureMaterial": true
+      }
+    },
+    {
+      "name": "Point investigation unlocks synthesis; report traces the actual point input",
+      "passed": true,
+      "evidence": {
+        "inputs": [
+          {
+            "id": "obs.surface.point-layering",
+            "title": "试窗点位的层压关系",
+            "role": "本局先前取得的试窗点位读数"
+          }
+        ],
+        "historyAndRepeatPreserved": true
+      }
+    },
+    {
+      "name": "Surface road grows on the existing geometry without moving the point",
+      "passed": true,
+      "evidence": {
+        "pointPosition": [
+          195,
+          2055
+        ],
+        "frontierId": "question:surface",
+        "roadId": "support:obs.surface.point-layering:obs.surface.resolved"
+      }
+    },
+    {
+      "name": "Both 16-investigation routes retain all four claims, bills and stop behavior",
+      "passed": true,
+      "evidence": [
+        {
+          "alternative": false,
+          "steps": 16,
+          "billed": [
+            2,
+            8,
+            4,
+            2
+          ],
+          "stage": "G3"
+        },
+        {
+          "alternative": true,
+          "steps": 16,
+          "billed": [
+            2,
+            7,
+            5,
+            2
+          ],
+          "stage": "G3"
+        }
+      ]
+    },
+    {
+      "name": "All 22 distinct methods remain reachable under the unchanged budget",
+      "passed": true,
+      "evidence": {
+        "methods": 22,
+        "stage": "G3"
+      }
+    },
+    {
+      "name": "Frozen source and evidence weights remain unchanged",
+      "passed": true,
+      "evidence": {
+        "baseline": "14a54a2",
+        "frozenAndOldPrototypesUntouched": true
+      }
+    }
+  ]
+}

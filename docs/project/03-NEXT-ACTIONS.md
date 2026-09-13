@@ -1,5 +1,21 @@
 # Next Actions
 
+## 2026-09-13 当前：使用漏译修订版，按实际反馈收尾
+
+[当前游戏](evidence/v3-design/validation/workbench-hifi-v0/prototype.html)的英文换序漏译已修复，SHA 前缀 `b0975f68`。[扩展验证](evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-LANGUAGE-AUDIT-2026-09-13.md)记录58条顺序／1,069个状态、9条专项浏览器路径及原6项完整回归；已发现漏译消除，未宣称穷尽所有排列。下一步继续使用此页并按实际问题反馈收尾，不自动扩玩法或改地图；[短复测](evidence/v3-design/validation/workbench-hifi-v0/PLAYTEST-LANGUAGE.md)仅供需要定位时使用。源码、页面和检查留在本地工作区，尚未提交／推送。
+
+## 2026-09-13 当前：直接使用双语高保真，按反馈收尾
+
+打开[当前游戏](evidence/v3-design/validation/workbench-hifi-v0/prototype.html)，右上角“中 / EN”切换。可以直接截取英文作品集画面；简短核对入口与范围见[双语短复测](evidence/v3-design/validation/workbench-hifi-v0/PLAYTEST-LANGUAGE.md)。当前仅等待实际问题反馈，不扩玩法、不调整现有录像。收尾与双语修改尚未提交／推送；策划案和周报保持暂停。
+
+## 2026-09-12 当前唯一下一步：用户复测阶段成果
+
+收尾修订和成果入口已制作，见[阶段成果页](delivery/index.html)与[短复测／16次演示路线](delivery/试玩与演示.md)。先取得试窗才能做区域综合，点位回查已补齐；最终工作台、原速操作片和精选过程资产均由入口集中连接。
+
+下一步由用户用自己的桌面浏览器检查调查接通、最小缩放和回看收手。只有实际反馈暴露阻塞问题时继续修对应部分，不自动重做地图或扩展玩法。策划案与用户已自行完成的周报保持暂停。本轮源码与交付资料未再次提交／推送，基础检查点 `14a54a2` 已在远端；验证范围见[报告](evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-CLOSEOUT-2026-09-12.md)。
+
+**以下均为历史排程，不作为当前待办；“下一步／当前／最新”等措辞按各自日期理解。**
+
 ## 2026-09-10 最新：直接复测已修订高保真的最小缩放与连续调查
 
 阻塞和提前显露修复已实施，最小缩放绘制/变换已加固并完成四配置有界复验。入口为[高保真页](evidence/v3-design/validation/workbench-hifi-v0/prototype.html)，按照[短复测步骤](evidence/v3-design/validation/workbench-hifi-v0/PLAYTEST.md)优先使用用户上次卡死的浏览器窗口，检查20%缩放、恢复、后台调查时继续操作和前沿出现次序。机器结果与未覆盖项见[验证](evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-PERFORMANCE-2026-09-10.md)。下一步依据真实复测继续处理仍出现的问题，不重新讨论已采纳的地图方向。用户已批准保存本次修复的本地提交，未推送，旧检查点`18dc40d`保留。

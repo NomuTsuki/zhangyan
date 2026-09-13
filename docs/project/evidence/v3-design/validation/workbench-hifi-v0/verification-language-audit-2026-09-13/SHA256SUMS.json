@@ -1,0 +1,52 @@
+[
+  {
+    "file": "aggregate.json",
+    "bytes": 10070,
+    "sha256": "1b3018cdfc332a9684b095828649d096715d5a8faa1cf49f4e15c7c881aad5ac"
+  },
+  {
+    "file": "browser-archive-rerun.json",
+    "bytes": 1199,
+    "sha256": "a640ab2573b563cddcccad3f71eed071f732116f5aa48c726f1aa7c92281f9c4"
+  },
+  {
+    "file": "browser-before.json",
+    "bytes": 1449,
+    "sha256": "afe29212b78dfd39fc5805ecd2285b60465310376db67d119dd50d90927bf8fe"
+  },
+  {
+    "file": "browser-eight-pass-one-runner-failure.json",
+    "bytes": 6152,
+    "sha256": "75e876794183ac1723dddb48600409997029f05881cd38e019f44143fcb24105"
+  },
+  {
+    "file": "browser-existing-six-checks.json",
+    "bytes": 3818,
+    "sha256": "2d18bf34e7831ad926709d161e5afa550ff2c7d0b6019d9b7802a5dae46d1045"
+  },
+  {
+    "file": "browser-first-after-runner-failures.json",
+    "bytes": 6790,
+    "sha256": "af36628bbc4d2e17bb65ad34780276cb2610db2380ae2a4f9518f78e1045d34d"
+  },
+  {
+    "file": "build-stamp.json",
+    "bytes": 274,
+    "sha256": "993781690d84050efe0973ef135f256d8dead9450adef4c179fb4afe20f99d6b"
+  },
+  {
+    "file": "copy-after.json",
+    "bytes": 2460,
+    "sha256": "5a60f4e78bc3829a03cf275e9263eff5e9a25c65b03dcde3a81162d00b05a4f0"
+  },
+  {
+    "file": "copy-before.json",
+    "bytes": 10976,
+    "sha256": "81136d5599fa2d90326dcfa67ebd30a48e62f11ba256da3cc57d418bad490fb5"
+  },
+  {
+    "file": "copy-minimal-before.json",
+    "bytes": 952,
+    "sha256": "0f155609a4785894ea1bde49ec07c83ac43696195517160c5b351b683c8eefb4"
+  }
+]

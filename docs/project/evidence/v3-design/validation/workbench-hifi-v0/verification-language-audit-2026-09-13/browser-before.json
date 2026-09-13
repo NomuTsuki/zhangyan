@@ -1,0 +1,24 @@
+{
+  "reviewRequired": true,
+  "sha256": "c9e676caf708d41da51b22d27ed06ca5bedc35aa36f056cb8b74940bf4bd64e5",
+  "checks": [
+    {
+      "name": "Minimal report-first reproduction",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: minimal report-first leaks Chinese\n+ actual - expected\n\n+ [\n+   '这份关系核验所指的原始记录是什么？',\n+   '已经取得关系核验报告；原始记录尚未在本局取得。保留报告，等记录与实物各自出现后再接线。'\n+ ]\n- []\n\n    at scan (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-language-branches.mjs:31:12)\n    at async file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-language-branches.mjs:56:338\n    at async check (file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-language-branches.mjs:43:87)\n    at async file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/scripts/check-language-branches.mjs:56:12",
+      "errors": [],
+      "screenshot": "E:\\zhangyan__v2\\output\\playwright\\language-audit-2026-09-13\\before\\2026-09-13-before-failure-0.png"
+    }
+  ],
+  "inspected": {
+    "questions": [],
+    "roads": [],
+    "nodes": [],
+    "materials": [],
+    "actions": [
+      "A.RELATE.ARCHIVE.T3_TO_OBJECT"
+    ]
+  },
+  "scans": 1,
+  "passed": false
+}

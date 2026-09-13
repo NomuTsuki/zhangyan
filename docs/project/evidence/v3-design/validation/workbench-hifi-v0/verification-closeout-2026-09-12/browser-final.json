@@ -1,0 +1,109 @@
+{
+  "reviewRequired": true,
+  "url": "file:///E:/zhangyan__v2/docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+  "sha256": "72ff2c27a199729fce3678dbf2b1b7d32b9ecd6ea9df8eeb3b4860c6a3ac95a9",
+  "checks": [
+    {
+      "name": "Unavailable synthesis explains the missing input and cannot spend an opportunity",
+      "passed": true,
+      "evidence": {
+        "setup": "E:\\zhangyan__v2\\docs\\portfolio\\2026-09-12-v3-closeout\\2026-09-12-closeout-after-surface-method-2x.png",
+        "steps": 0,
+        "why": "把开过的小窗连成片\n\n补绘一共盖了多大范围?\n\n这一步要用到：已取得的试窗点位记录（先在表面开几个小窗看层次）\n占 1 次 · 费用中\n做这一步"
+      }
+    },
+    {
+      "name": "Window result then regional synthesis grows the existing road and keeps history",
+      "passed": true,
+      "evidence": {
+        "phases": [
+          {
+            "phase": "fly",
+            "at": 3717.600000000559
+          },
+          {
+            "phase": "focus",
+            "at": 4567.200000000186
+          },
+          {
+            "phase": "pullback",
+            "at": 5588.100000000559
+          },
+          {
+            "phase": "connect",
+            "at": 6537.800000000745
+          },
+          {
+            "phase": "idle",
+            "at": 7700.300000000745
+          },
+          {
+            "phase": "fly",
+            "at": 8349.700000000186
+          },
+          {
+            "phase": "focus",
+            "at": 9199.800000000745
+          },
+          {
+            "phase": "pullback",
+            "at": 10221.200000000186
+          },
+          {
+            "phase": "connect",
+            "at": 11171.200000000186
+          },
+          {
+            "phase": "idle",
+            "at": 13129.900000000373
+          }
+        ],
+        "steps": 2,
+        "billed": [
+          0,
+          0,
+          2,
+          0
+        ],
+        "priorSteps": 1
+      }
+    },
+    {
+      "name": "1280px full 16-investigation route, minimum zoom, drag, history and stop",
+      "passed": true,
+      "evidence": {
+        "steps": 16,
+        "stage": "G3",
+        "minimumZoom": 0.2,
+        "maxInputToFrameMs": 2.7000000001862645,
+        "maxLongTaskMs": 0,
+        "stopped": true
+      }
+    },
+    {
+      "name": "1440px full 16-investigation route, minimum zoom, drag, history and stop",
+      "passed": true,
+      "evidence": {
+        "steps": 16,
+        "stage": "G3",
+        "minimumZoom": 0.2,
+        "maxInputToFrameMs": 2.6000000005587935,
+        "maxLongTaskMs": 0,
+        "stopped": true
+      }
+    },
+    {
+      "name": "1920px full 16-investigation route, minimum zoom, drag, history and stop",
+      "passed": true,
+      "evidence": {
+        "steps": 16,
+        "stage": "G3",
+        "minimumZoom": 0.2,
+        "maxInputToFrameMs": 3.5,
+        "maxLongTaskMs": 0,
+        "stopped": true
+      }
+    }
+  ],
+  "passed": true
+}

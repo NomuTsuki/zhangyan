@@ -1,5 +1,6 @@
 /** Fixed desktop map; route geometry is independent of labels and acquisition order. */
 import { NAMES, POSITIONS, LABELS, GROUPS, GUIDES, SCALE, WORLD_WIDTH, WORLD_HEIGHT } from './fixed-map-schema.mjs';
+import { localizeMapLayout } from './map-language.mjs';
 const FONT = 21, LINE = 31.5, LABEL_WIDTH = 264;
 const CLAIM_BOX = { w: 249, h: 93 };
 const round = n => Math.round(n * 100) / 100;
@@ -10,8 +11,16 @@ const unique = values => [...new Set(values)];
 function textWidth(text, font = FONT) {
   return [...String(text)].reduce((sum, c) => sum + (c.codePointAt(0) > 255 ? font : font * .58), 0);
 }
-function wrap(text, width = LABEL_WIDTH, font = FONT) {
+function wrap(text, width = LABEL_WIDTH, font = FONT, words = false) {
   const lines = [''];
+  if (words) {
+    for (const word of String(text ?? '').split(/\s+/)) {
+      const next = lines.at(-1) ? lines.at(-1) + ' ' + word : word;
+      if (lines.at(-1) && textWidth(next,font) > width) lines.push(word);
+      else lines[lines.length-1] = next;
+    }
+    return lines;
+  }
   for (const c of String(text ?? '')) {
     if (c === '\n') { lines.push(''); continue; }
     if (lines.at(-1) && textWidth(lines.at(-1) + c, font) > width) lines.push(c);
@@ -159,7 +168,7 @@ function openGeometry(anchorId, questionId) {
  * @param {any} graph
  * @param {any} previousLayout
  */
-export function layoutMap(graph, previousLayout = null) {
+export function layoutMap(graph, previousLayout = null, language = 'zh') {
   const sourceNodes = graph?.nodes ?? [], known = new Set(sourceNodes.map(n => n.id));
   if (known.size !== sourceNodes.length) throw new Error('Obtained map node IDs must be unique');
   const nodes = sourceNodes.map(n => {
@@ -265,7 +274,7 @@ export function layoutMap(graph, previousLayout = null) {
     diagnostics: { maxNodeMovement, routingPolicy: 'fixed-reviewed-control-points-roads-first', hiddenRelationEdgeIds: hidden.map(e => e.id),
       ignoredEdgeIds: (graph?.edges ?? []).filter(e => !allEdges.includes(e)).map(e => e.id),
       unmappedNodeIds: nodes.filter(n => !knownShapeIds.includes(n.id)).map(n => n.id) } };
-  return placeMapLabels(layout, null, null);
+  return placeMapLabels(localizeMapLayout(layout, language), null, null);
 }
 
 function overlaps(a, b, margin = 0) {
@@ -328,7 +337,10 @@ export function placeMapLabels(layout, measurements = null, previousLayout = lay
       // same font size and move/reflow only text; the world graph stays fixed.
       for (const compactWidth of [144, 128, 112, 96]) {
         if (compactWidth >= original.width) continue;
-        const lines = wrap(n.title, compactWidth, n.fontSize);
+        // English words are indivisible. Do not substitute the longer source
+        // title for the deliberately concise display label during compaction.
+        if (n.wordWrap && (n.displayText || n.title).split(/\s+/).some(word => textWidth(word,n.fontSize) > compactWidth)) continue;
+        const lines = wrap(n.wordWrap ? n.displayText || n.title : n.title, compactWidth, n.fontSize, n.wordWrap);
         width = compactWidth; height = lines.length * lineHeight;
         const local = [];
         for (let y = Math.max(20, n.y - height - 150); y <= n.y + 150; y += 12) {

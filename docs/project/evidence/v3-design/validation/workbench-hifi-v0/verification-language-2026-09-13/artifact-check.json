@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "build": {
+    "builtAt": "2026-09-12T16:09:11.767Z",
+    "entry": "prototype.html",
+    "bytes": 5240387,
+    "sha256": "c9e676caf708d41da51b22d27ed06ca5bedc35aa36f056cb8b74940bf4bd64e5",
+    "source": "React/Three.js presentation; imports unchanged fusion local-session and graph modules"
+  },
+  "browserChecks": 6,
+  "assets": 12,
+  "selectedAssets": 6,
+  "linksChecked": 10
+}

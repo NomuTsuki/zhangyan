@@ -1,0 +1,49 @@
+{
+  "reviewRequired": true,
+  "sha256": "b0975f68be84929eb5c48558dc9e8aee54cb346cb18f21283d1a104d7de15ffb",
+  "checks": [
+    {
+      "name": "Archive comparison before attribution",
+      "passed": true,
+      "evidence": {
+        "width": 1920,
+        "steps": 4,
+        "historyChecked": true
+      }
+    }
+  ],
+  "inspected": {
+    "questions": [
+      "question:craft",
+      "question:visible-intervention",
+      "question:archive:t2:attribution",
+      "question:archive:t2:corroboration",
+      "question:history"
+    ],
+    "roads": [
+      "edge:archive:t2:object",
+      "group:interpretation-group:archive",
+      "group:proof-group:major:documented-cross-time"
+    ],
+    "nodes": [
+      "obs.current.whole",
+      "obs.accident.major",
+      "obs.structure.major.documented-cross-time",
+      "claim:majorReassembly",
+      "interpretation:archive-change"
+    ],
+    "materials": [
+      "obs.current.whole",
+      "obs.accident.major",
+      "obs.structure.major.documented-cross-time"
+    ],
+    "actions": [
+      "A.OBSERVE.WHOLE",
+      "A.RESEARCH.ACCIDENT",
+      "A.MAP.REGION_CONTINUITY",
+      "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+    ]
+  },
+  "scans": 89,
+  "passed": true
+}

@@ -10,7 +10,9 @@
     "dev": "vite --host 127.0.0.1 --port 4260 --strictPort",
     "build": "tsc --noEmit && vite build && node scripts/finalize.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4261 --strictPort",
-    "check": "node scripts/check-contract.mjs"
+    "check": "node scripts/check-contract.mjs",
+    "check:language:copy": "node --experimental-strip-types scripts/check-language-orders.mjs --tag=check",
+    "check:language:branches": "node scripts/check-language-branches.mjs --tag=check"
   },
   "dependencies": {
     "react": "19.2.6",

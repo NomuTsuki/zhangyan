@@ -1,0 +1,17 @@
+
+> zhangyan-workbench-hifi-v0@0.1.0 build
+> tsc --noEmit && vite build && node scripts/finalize.mjs
+
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 53 modules transformed.
+rendering chunks...
+[plugin vite:singlefile] 
+
+[plugin vite:singlefile] Inlining: index-BFEaIIgj.js
+[plugin vite:singlefile] Inlining: style-CdZPA1Sw.css
+computing gzip size...
+dist/index.html  5,240.38 kB │ gzip: 3,367.79 kB
+
+✓ built in 291ms
+Offline prototype built: 5240387 bytes

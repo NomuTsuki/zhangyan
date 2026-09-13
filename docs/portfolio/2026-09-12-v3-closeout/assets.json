@@ -1,0 +1,110 @@
+{
+  "build": {
+    "builtAt": "2026-09-12T15:27:38.809Z",
+    "entry": "prototype.html",
+    "bytes": 5163286,
+    "sha256": "72ff2c27a199729fce3678dbf2b1b7d32b9ecd6ea9df8eeb3b4860c6a3ac95a9",
+    "source": "React/Three.js presentation; imports unchanged fusion local-session and graph modules"
+  },
+  "assets": [
+    {
+      "name": "2026-09-12-after-surface-method-2x.png",
+      "bytes": 2612057,
+      "sha256": "78118d6dbd003f3ec8457266dcb033e36347ba9df01ac9276cf92ad77e72c87e",
+      "dimensions": {
+        "width": 2880,
+        "height": 2000
+      }
+    },
+    {
+      "name": "2026-09-12-before-surface-method-2x.png",
+      "bytes": 2566045,
+      "sha256": "ddf9ca318a4e8306587d3e3dba89a706e5f53e8039b387710ca1e626159346fa",
+      "dimensions": {
+        "width": 2880,
+        "height": 2000
+      }
+    },
+    {
+      "name": "2026-09-12-closeout-after-surface-method-2x.png",
+      "bytes": 2612057,
+      "sha256": "78118d6dbd003f3ec8457266dcb033e36347ba9df01ac9276cf92ad77e72c87e",
+      "dimensions": {
+        "width": 2880,
+        "height": 2000
+      }
+    },
+    {
+      "name": "2026-09-12-closeout-surface-connected-2x.png",
+      "bytes": 2638021,
+      "sha256": "c7668ce6424c3e86a1f6d27b2c28ba2b19d0eec94b509194413fc66651ffacc1",
+      "dimensions": {
+        "width": 2880,
+        "height": 2000
+      }
+    },
+    {
+      "name": "2026-09-12-closeout-surface-frontier-2x.png",
+      "bytes": 2612842,
+      "sha256": "664469848b974ea3d7d595079f8260800e2f46701affff1a77829c0495208e42",
+      "dimensions": {
+        "width": 2880,
+        "height": 2000
+      }
+    },
+    {
+      "name": "2026-09-12-closeout-workbench-16-actions-2x.png",
+      "bytes": 2756826,
+      "sha256": "87518285d9d995edace434b1ad08043ae5813d6446da0c3268865264aa616fab",
+      "dimensions": {
+        "width": 2880,
+        "height": 2000
+      }
+    },
+    {
+      "name": "2026-09-12-final-workbench-16-actions-2x.png",
+      "bytes": 2762439,
+      "sha256": "31b13b458a45a70907d90b371edbf2d8f1a6568fab1fecf99a781bcfdf8217f1",
+      "dimensions": {
+        "width": 2880,
+        "height": 2000
+      }
+    },
+    {
+      "name": "2026-09-12-surface-connected-2x.png",
+      "bytes": 2638020,
+      "sha256": "e6527b0af28ca877ef035bb1d9b3b7cae246a4507a0e95064caf929c2522c047",
+      "dimensions": {
+        "width": 2880,
+        "height": 2000
+      }
+    },
+    {
+      "name": "2026-09-12-surface-frontier-2x.png",
+      "bytes": 2612842,
+      "sha256": "664469848b974ea3d7d595079f8260800e2f46701affff1a77829c0495208e42",
+      "dimensions": {
+        "width": 2880,
+        "height": 2000
+      }
+    },
+    {
+      "name": "2026-09-12-surface-investigation-normal-speed.mp4",
+      "bytes": 1355420,
+      "sha256": "b75700ea7d5120104c871423b2afb91b2053d5ae2a00688679e8abed71951e84",
+      "dimensions": {
+        "programs": [],
+        "streams": [
+          {
+            "width": 1440,
+            "height": 1000,
+            "r_frame_rate": "25/1"
+          }
+        ],
+        "format": {
+          "duration": "18.560000"
+        }
+      }
+    }
+  ]
+}

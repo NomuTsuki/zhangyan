@@ -1,3 +1,4 @@
+import { useLanguage } from './locale';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { layoutMap, placeMapLabels } from './map-layout.mjs';
@@ -87,10 +88,11 @@ function FrontierInk({f,index,width,height,related,retiring=false,onSelect,timin
 }
 
 export default function MapView(props:Props){
+  const { language, t, f } = useLanguage();
   const {graph,focus,selection,onSelect,onHover,investigation,cancelEpoch,reducedMotion,historyMode}=props;
   const callbacks=useRef(props);callbacks.current=props;
   const viewport=useRef<HTMLDivElement>(null),world=useRef<HTMLDivElement>(null),previous=useRef<any>(null),priorLayout=useRef<any>(null);
-  const base=useMemo(()=>{priorLayout.current=historyMode?null:previous.current;return layoutMap(graph,historyMode?null:previous.current);},[graph,historyMode]);
+  const base=useMemo(()=>{priorLayout.current=historyMode?null:previous.current;return layoutMap(graph,historyMode?null:previous.current,language);},[graph,historyMode,language]);
   const [measured,setMeasured]=useState<{base:any;layout:any}|null>(null);
   const layout:any=measured&&measured.base===base?measured.layout:base;
   const layoutRef=useRef<any>(layout);layoutRef.current=layout;
@@ -155,7 +157,7 @@ export default function MapView(props:Props){
     if(!point)return;
     const run=token.current;
     if(investigation.result.newlyAcquired===false||reducedMotion){setFresh({...changes,landingId});setCamera(fit([point],1,1));later(()=>setFresh(null),900,run);return;}
-    const beforeLayout=priorLayout.current||layoutMap(investigation.beforeGraph||{nodes:[],edges:[],frontiers:[],supportGroups:[]});
+    const beforeLayout=priorLayout.current||layoutMap(investigation.beforeGraph||{nodes:[],edges:[],frontiers:[],supportGroups:[]},null,language);
     const plan=roadTransitionPlan(graph,layout,beforeLayout,changes);
     setTransition({...plan,beforeLayout});
     setFresh({...changes,landingId});setPhase('fly');
@@ -218,11 +220,11 @@ export default function MapView(props:Props){
     return phase==='connect'?{animation:`map-appear 240ms linear ${timing.end}ms both`}:{opacity:0,visibility:'hidden',pointerEvents:'none'};
   };
   return <div className="map-component" data-phase={phase}>
-    <header className="map-heading"><div><h2>已知与推理</h2><p>观察留下线索，关联逐渐清晰</p></div><button className="map-legend-toggle" aria-expanded={legend} onClick={()=>setLegend(v=>!v)}>图注</button></header>
-    <div className="map-notice" aria-live="polite"><span>{props.notice||'每一份观察，都会在这里留下位置。'}</span>{props.onOpenLatest&&<button onClick={props.onOpenLatest}>查看材料 ↗</button>}</div>
-    {legend&&<div className="map-legend"><span>● 已知信息与解释</span><span>▭ 已有依据的判断</span><span>◇ 共同支持</span><span>→ 支持解释与判断</span><span>— 已核实的对应</span><span className="frontier-color">┄ 沿路留下的疑问</span></div>}
+    <header className="map-heading"><div><h2>{t("已知与推理")}</h2><p>{t("观察留下线索，关联逐渐清晰")}</p></div><button className="map-legend-toggle" aria-expanded={legend} onClick={()=>setLegend(v=>!v)}>{t("图注")}</button></header>
+    <div className="map-notice" aria-live="polite"><span>{t(props.notice||'每一份观察，都会在这里留下位置。')}</span>{props.onOpenLatest&&<button onClick={props.onOpenLatest}>{t("查看材料 ↗")}</button>}</div>
+    {legend&&<div className="map-legend"><span>{t("● 已知信息与解释")}</span><span>{t("▭ 已有依据的判断")}</span><span>{t("◇ 共同支持")}</span><span>{t("→ 支持解释与判断")}</span><span>{t("— 已核实的对应")}</span><span className="frontier-color">{t("┄ 沿路留下的疑问")}</span></div>}
     <div className={`map-viewport ${dragging?'dragging':''}`} ref={viewport} onPointerDown={beginDrag} onPointerMove={onDrag} onPointerUp={endDrag} onPointerCancel={()=>{drag.current=null;setDragging(false);}}>
-      {!layout.nodes.length&&<div className="map-empty"><div className="empty-impression"/><h3>从眼前这只碗开始</h3><p>转动、观察，或找一份记录。<br/>你的认识会从第一次调查向外延伸。</p></div>}
+      {!layout.nodes.length&&<div className="map-empty"><div className="empty-impression"/><h3>{t("从眼前这只碗开始")}</h3><p>{t("转动、观察，或找一份记录。")}<br/>{t("你的认识会从第一次调查向外延伸。")}</p></div>}
       <div className="map-world" ref={world} style={{width:layout.width,height:layout.height,transform:`translate(${cam.current.x}px,${cam.current.y}px) scale(${cam.current.s})`}}>
         <svg className="map-roads" width={layout.width} height={layout.height} aria-hidden="true"><defs>
           <marker id="map-support-arrow" viewBox="0 0 9 9" refX="8" refY="4.5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1 L8 4.5 L1 8 Z" fill="#687e4e"/></marker>
@@ -232,22 +234,22 @@ export default function MapView(props:Props){
           <RoadInk r={r} index={i} timing={transition?.routes[r.id]} phase={phase} layout={layout} className={edgeClass(r)} initialPending={incoming&&r.edgeIds.some((id:string)=>[...incoming.addedEdgeIds,...incoming.changedEdgeIds].includes(id))}/>
           <path d={routeHits.get(r.id) as string} className="road-hit" data-road-hit={r.id} style={incoming||transition?.routes[r.id]?{pointerEvents:'none'}:undefined} onClick={e=>{e.stopPropagation();selectRoute(r);}} onPointerEnter={()=>onHover(r.groupId?{kind:'group',id:r.groupId}:{kind:'edge',id:r.edgeIds[0]})} onPointerLeave={()=>onHover(null)}/>
         </g>)}{layout.frontiers.map((f:any,i:number)=><FrontierInk key={f.id} f={f} index={i} width={layout.width} height={layout.height} related={focus.frontierIds?.includes(f.id)} onSelect={onSelect} timing={transition?.frontiers[f.id]} phase={phase} pending={frontierPending(f)}/>)}</svg>
-        {layout.routes.map((r:any)=><button key={r.id} className="road-key" disabled={!!incoming||!!transition?.routes[r.id]} aria-label={r.groupId?'回看共同支持':graph.edges.find((e:any)=>r.edgeIds.includes(e.id))?.label||'查看道路'} style={{left:r.midpoint.x-12,top:r.midpoint.y-12}} onClick={()=>selectRoute(r)}/>)}
-        {layout.junctions.map((j:any)=><button className={`map-junction ${selection?.kind==='group'&&selection.id===j.groupId?'is-related':''}`} key={j.id} data-junction={j.groupId} style={{left:j.x-14,top:j.y-14,...appearance(j.id,true)}} aria-label="查看共同支持的依据" onClick={()=>onSelect({kind:'group',id:j.groupId})}><i/></button>)}
+        {layout.routes.map((r:any)=><button key={r.id} className="road-key" disabled={!!incoming||!!transition?.routes[r.id]} aria-label={t(r.groupId?'回看共同支持':graph.edges.find((e:any)=>r.edgeIds.includes(e.id))?.label||'查看道路')} style={{left:r.midpoint.x-12,top:r.midpoint.y-12}} onClick={()=>selectRoute(r)}/>)}
+        {layout.junctions.map((j:any)=><button className={`map-junction ${selection?.kind==='group'&&selection.id===j.groupId?'is-related':''}`} key={j.id} data-junction={j.groupId} style={{left:j.x-14,top:j.y-14,...appearance(j.id,true)}} aria-label={t("查看共同支持的依据")} onClick={()=>onSelect({kind:'group',id:j.groupId})}><i/></button>)}
         {(layout.roadLabels||[]).map((r:any)=><button key={r.id} data-map-label={r.id} data-road-label={r.routeId} className="map-relation-label" style={{left:r.labelX,top:r.labelY,width:r.labelWidth,fontSize:r.fontSize,lineHeight:`${r.lineHeight}px`,...(transition?.routes[r.routeId]&&!transition.beforeLayout.roadLabels.some((old:any)=>old.id===r.id)?(phase==='connect'?{animation:`map-appear 240ms linear ${transition.routes[r.routeId].end}ms both`}:{opacity:0}):{})}} onClick={()=>onSelect({kind:'edge',id:r.routeId})}>{r.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</button>)}
         {layout.nodes.map((n:any)=>n.box?<button key={n.id} data-map-node={n.id} className={`map-claim ${nodeClass(n)}`} style={{left:n.x-n.box.w/2,top:n.y-n.box.h/2,width:n.box.w,height:n.box.h,fontSize:n.fontSize,lineHeight:`${n.lineHeight}px`,...appearance(n.id)}} onClick={()=>selectNode(n)} onPointerEnter={()=>onHover({kind:'claim',id:n.id})} onPointerLeave={()=>onHover(null)}>
-          <span>{n.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</span><small>已有依据</small>
+          <span>{n.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</span><small>{t("已有依据")}</small>
         </button>:<div key={n.id}>
-          <button data-map-node={n.id} className={`map-dot ${nodeClass(n)}`} style={{left:n.x-15,top:n.y-15,...appearance(n.id)}} onClick={()=>selectNode(n)} aria-label={n.title}><i/></button>
+          <button data-map-node={n.id} className={`map-dot ${nodeClass(n)}`} style={{left:n.x-15,top:n.y-15,...appearance(n.id)}} onClick={()=>selectNode(n)} aria-label={t(n.title)}><i/></button>
           <button data-map-label={n.id} className={`map-label ${nodeClass(n)}`} style={{left:n.labelX,top:n.labelY,width:n.labelWidth,fontSize:n.fontSize,lineHeight:`${n.lineHeight}px`,...appearance(n.id)}} onClick={()=>selectNode(n)} onPointerEnter={()=>onHover({kind:'evidence',id:n.id})} onPointerLeave={()=>onHover(null)}>
-            {n.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}{n.subline&&<small style={{fontSize:n.sublineFontSize}}>{n.subline}</small>}
+            {n.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}{n.subline&&<small style={{fontSize:n.sublineFontSize}}>{t(n.subline)}</small>}
           </button>
         </div>)}
         {transition?.retiring.map(({frontier:f,retireAt}:any)=><span key={`old-label-${f.id}`} className="map-question retiring-question" data-retiring-question={f.id} aria-hidden="true" style={{left:f.labelX,top:f.labelY,width:f.labelWidth,fontSize:f.fontSize,lineHeight:`${f.lineHeight}px`,pointerEvents:'none',...(phase==='connect'?{animation:`map-retire 160ms linear ${retireAt}ms both`}:{})}}>{f.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</span>)}
         {layout.frontiers.map((f:any)=><button key={f.id} data-map-label={f.id} data-map-frontier={f.id} className={`map-question ${focus.frontierIds?.includes(f.id)?'is-related':''}`} style={{left:f.labelX,top:f.labelY,width:f.labelWidth,fontSize:f.fontSize,lineHeight:`${f.lineHeight}px`,...questionStyle(f)}} onClick={()=>onSelect({kind:'gap',id:f.id})} onPointerEnter={()=>onHover({kind:'gap',id:f.id})} onPointerLeave={()=>onHover(null)}>{f.lines.map((line:string,i:number)=><span className="map-line" key={i}>{line}</span>)}</button>)}
       </div>
     </div>
-    <footer className="map-footer"><span>{graph.observations.length} 份记录 · {graph.edges.filter((e:any)=>!['reference','context'].includes(e.kind)).length} 条关联</span><div className="map-tools"><button onClick={()=>zoom(1/1.15)} aria-label="缩小地图">−</button><span>{Math.round(cameraScale*100)}%</span><button onClick={()=>zoom(1.15)} aria-label="放大地图">＋</button><button className="map-fit" onClick={()=>{manualNavigation();setCamera(fit([...layout.nodes,...layout.frontiers],.2,1));}}>全览</button></div></footer>
+    <footer className="map-footer"><span>{f("{records} 份记录 · {relations} 条关联",{records:graph.observations.length,relations:graph.edges.filter((e:any)=>!['reference','context'].includes(e.kind)).length})}</span><div className="map-tools"><button onClick={()=>zoom(1/1.15)} aria-label={t("缩小地图")}>−</button><span>{Math.round(cameraScale*100)}%</span><button onClick={()=>zoom(1.15)} aria-label={t("放大地图")}>＋</button><button className="map-fit" onClick={()=>{manualNavigation();setCamera(fit([...layout.nodes,...layout.frontiers],.2,1));}}>{t("全览")}</button></div></footer>
     {flight&&createPortal(<svg className="investigation-flight" aria-hidden="true" key={flight.key}><path d={flight.d} pathLength={1}/><circle r="3.6"><animateMotion dur={`${MOTION.flight}ms`} path={flight.d} fill="freeze"/></circle></svg>,document.body)}
   </div>;
 }

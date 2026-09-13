@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "reviewRequired": true,
+  "build": {
+    "builtAt": "2026-09-12T15:27:38.809Z",
+    "entry": "prototype.html",
+    "bytes": 5163286,
+    "sha256": "72ff2c27a199729fce3678dbf2b1b7d32b9ecd6ea9df8eeb3b4860c6a3ac95a9",
+    "source": "React/Three.js presentation; imports unchanged fusion local-session and graph modules"
+  },
+  "localLinks": [
+    "../evidence/v3-design/validation/workbench-hifi-v0/prototype.html",
+    "试玩与演示.md",
+    "../../portfolio/2026-09-12-v3-closeout/2026-09-12-surface-investigation-normal-speed.mp4",
+    "../../portfolio/2026-09-12-v3-closeout/2026-09-12-closeout-workbench-16-actions-2x.png",
+    "../../portfolio/2026-09-12-v3-closeout/README.md",
+    "README.md"
+  ],
+  "checks": [
+    {
+      "width": 1280,
+      "passed": true,
+      "video": {
+        "duration": 18.56,
+        "width": 1440,
+        "height": 1000
+      },
+      "offlineGameOpened": true
+    },
+    {
+      "width": 1440,
+      "passed": true,
+      "video": {
+        "duration": 18.56,
+        "width": 1440,
+        "height": 1000
+      },
+      "offlineGameOpened": true
+    }
+  ]
+}

@@ -1,20 +1,21 @@
 > [!IMPORTANT]
-> 本仓库是 2026-08-24 从 `zhangyan_V2` 完整镜像迁移而来的**当前活跃仓库**（7 分支、3 tag 全部保全）。旧仓库已作为存档冻结于 tag `handoff-freeze-2026-08-24`。V3 开发在分支 `codex/v3-object-truth-topology` 继续。
+> **当前 V3 阶段成果入口：[打开成果页](docs/project/delivery/index.html)**。当前工作分支为 `codex/xray-photo-local-study`，2026-09-12 收尾修订位于本地工作区，基于已推送的 `14a54a2`。
+> 本仓库于 2026-08-24 从 `zhangyan_V2` 完整镜像迁移；旧仓库保留为 `handoff-freeze-2026-08-24` 存档。
 
 # 《掌眼》V1/V2/V3 项目说明与仓库入口
 
-《掌眼》是一款古玩鉴定与交易决策游戏。玩家在有限调查资源与信息不对称中观察器物、询问来客、选择是否公开证据、进行有限议价，并在交易结束后同时复盘客观经营结果和判断过程。手机竖屏是 V1／V2 的历史事实与产品长期愿景；**V3 的切片、草图与验证于 2026-08-24 由用户改为先按电脑浏览器尺寸制作**，进入高保真原型或正式页面时再重新决定移动端约束。
+《掌眼》是一款围绕古玩鉴定与交易决策展开的认知策略游戏。当前 V3 以一件虚构外销瓷为对象：玩家旋转、调查器物，在渐进显露的知识地图中回查依据、形成判断，并自行收手。估值和市场结算仍属后续设计；来客放在历史与未来愿景中，尚未完整接入当前体验。**V3 含正式切片均只做电脑浏览器，手机端不在本阶段范围**（DEC-033）。
 
-本仓库已封存 **V1 教师演示版**，并以 annotated tag `v2.0.0-player-prototype-freeze` 冻结了可运行、可回放的 **V2 玩家试玩底座**。当前分支是独立的 **V3 物品真相拓扑设计阶段**：首案作者规格已由 DEC-024 批准并冻结（`40/40` 独立重放 Pass），玩家知识地图语义已由 DEC-026／028／029 闭合；**V3 尚无任何正式产品代码，下一步是按桌面尺寸制作可丢弃的知识地图可玩切片**。
+本仓库已封存 **V1 教师演示版**，并以 tag `v2.0.0-player-prototype-freeze` 冻结 **V2 玩家试玩底座**。V3 当前已有独立可操作的高保真工作台，处于阶段收尾与用户复测；它复用冻结作者模型，不代表正式产品上线、玩法或数值验收。最新能力和边界见[阶段说明](docs/project/delivery/README.md)。
 
 ## 从哪里开始
 
 | 目的 | 入口 |
 |---|---|
-| 我想用几分钟理解项目现在在做什么（推荐） | [`docs/project/overview/00-START-HERE.md`](docs/project/overview/00-START-HERE.md) |
+| 当前 V3 试玩与阶段展示（推荐） | [成果入口](docs/project/delivery/index.html) · [试玩与演示路线](docs/project/delivery/试玩与演示.md) |
 | 查看 V3 原话、研究与来源哈希 | [`docs/project/evidence/v3-design/README.md`](docs/project/evidence/v3-design/README.md) |
-| 给老师阅读和演示 | [`docs/teacher/00_请先看.txt`](docs/teacher/00_请先看.txt) |
-| 直接打开正式游戏演示 | [`掌眼_高保真教师演示.html`](掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_高保真教师演示.html) |
+| 回看 V1 教师交付（历史） | [`docs/teacher/00_请先看.txt`](docs/teacher/00_请先看.txt) |
+| 打开 V1 冻结演示（历史） | [`掌眼_高保真教师演示.html`](掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_高保真教师演示.html) |
 | 直接试玩 V2 玩家版 | [`掌眼_V2_玩家试玩版.html`](掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_V2_玩家试玩版.html) |
 | 查看 V2 首案开发诊断面 | [`掌眼_V2_高保真演示.html`](掌眼_Codex启动包_v2/掌眼_Codex启动包_v2/prototype/public/掌眼_V2_高保真演示.html) |
 | 查看项目当前事实 | [`docs/project/02-CURRENT-STATE.md`](docs/project/02-CURRENT-STATE.md) |
@@ -23,7 +24,11 @@
 
 正式演示 HTML 已将样式、脚本与插画全部内联，解压后可直接用现代浏览器打开，无需联网、安装 Node.js 或运行服务器。
 
-## 项目要解决的问题
+## V1／V2 历史说明与设计背景
+
+以下保留旧版本的循环、界面和技术说明，不作为当前 V3 已实现功能的清单。
+
+### 项目要解决的问题
 
 《掌眼》不是“看表情猜真假”，也不是一次真假二选一。它希望让玩家体验：
 

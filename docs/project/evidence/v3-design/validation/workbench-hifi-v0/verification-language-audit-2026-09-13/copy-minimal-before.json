@@ -1,0 +1,33 @@
+{
+  "reviewRequired": true,
+  "passed": false,
+  "orders": 1,
+  "uniqueStates": 2,
+  "uniqueDisplayStrings": 80,
+  "frontierIds": [
+    "question:archive:t3:source"
+  ],
+  "edgeIds": [],
+  "missing": [
+    {
+      "source": "这份关系核验所指的原始记录是什么？",
+      "english": "这份关系核验所指的原始记录是什么？",
+      "where": "graph.questions[0].title",
+      "route": [
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT"
+        }
+      ]
+    },
+    {
+      "source": "已经取得关系核验报告；原始记录尚未在本局取得。保留报告，等记录与实物各自出现后再接线。",
+      "english": "已经取得关系核验报告；原始记录尚未在本局取得。保留报告，等记录与实物各自出现后再接线。",
+      "where": "graph.questions[0].explanation",
+      "route": [
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT"
+        }
+      ]
+    }
+  ]
+}

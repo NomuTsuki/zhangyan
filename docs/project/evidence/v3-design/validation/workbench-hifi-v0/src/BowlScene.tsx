@@ -1,7 +1,9 @@
+import { useLanguage } from './locale';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { createBowlGroup, disposeBowlGroup } from './bowl-art';
 import './bowl.css';
+import { translate } from './locale-text.mjs';
 
 export const BOWL_TARGETS = [
   { id: 'OBJ_W', label: '整只碗', region: 'whole' },
@@ -47,7 +49,7 @@ function convexHull(points: Point[]) {
 }
 
 /** Only annotation positions change; investigation IDs and 3D anchors do not. */
-export function layoutBowlCallouts(points: Hotspot[], hull: Point[], width: number, height: number): Hotspot[] {
+export function layoutBowlCallouts(points: Hotspot[], hull: Point[], width: number, height: number, language = 'zh'): Hotspot[] {
   const occupied: Callout[] = [];
   const cross = (a: Point, b: Point, p: Point) => (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x);
   const inside = (p: Point) => hull.length > 2 && hull.every((a, i) => cross(a, hull[(i + 1) % hull.length], p) >= 0);
@@ -63,9 +65,12 @@ export function layoutBowlCallouts(points: Hotspot[], hull: Point[], width: numb
   return points.map(point => {
     if (!point.visible || point.id === 'OBJ_W') return point;
     const target = BOWL_TARGETS.find(item => item.id === point.id)!;
-    const variants: { lines: string[]; width: number; height: number }[] = [{ lines: [target.label], width: target.label.length * CALLOUT.fontSize + 12, height: CALLOUT.height }];
-    const wrapped: Record<string, string[]> = { OBJ_D: ['纹饰', '与色差'], OBJ_R: ['没被改动', '的特征'], OBJ_F: ['底足', '与修足'] };
-    if (wrapped[point.id]) variants.push({ lines: wrapped[point.id], width: Math.max(...wrapped[point.id].map(line => line.length)) * CALLOUT.fontSize + 12, height: 42 });
+    const text = translate(target.label, language), characterWidth = CALLOUT.fontSize * (language === 'en' ? .57 : 1);
+    const variants: { lines: string[]; width: number; height: number }[] = [{ lines: [text], width: text.length * characterWidth + 12, height: CALLOUT.height }];
+    const wrapped: Record<string, string[]> = language === 'en'
+      ? { OBJ_D: ['Decoration', '& colour'], OBJ_R: ['Unaltered', 'features'], OBJ_F: ['Foot &', 'finishing'] }
+      : { OBJ_D: ['纹饰', '与色差'], OBJ_R: ['没被改动', '的特征'], OBJ_F: ['底足', '与修足'] };
+    if (wrapped[point.id]) variants.push({ lines: wrapped[point.id], width: Math.max(...wrapped[point.id].map(line => line.length)) * characterWidth + 12, height: 42 });
     const candidates: (Callout & { score: number })[] = [];
     for (const variant of variants) for (const side of ['left', 'right'] as const) for (let y = CALLOUT.top; y <= height - CALLOUT.bottom - variant.height; y += 4) {
       const x = side === 'left' ? CALLOUT.inset : width - CALLOUT.inset - variant.width;
@@ -87,6 +92,8 @@ export function layoutBowlCallouts(points: Hotspot[], hull: Point[], width: numb
 }
 
 export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientationChange, relatedTargetIds = [], disabled = false }: BowlSceneProps) {
+  const { language, t, f } = useLanguage();
+  const languageRef = useRef(language); languageRef.current = language;
   const host = useRef<HTMLDivElement>(null);
   const callbacks = useRef({ onOrientationChange, onSelectTarget, disabled });
   callbacks.current = { onOrientationChange, onSelectTarget, disabled };
@@ -240,11 +247,11 @@ export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientat
       if (visibility !== lastVisibleString) {
         lastVisibleString = visibility; setVisibleIds(visible); callbacks.current.onOrientationChange?.(visible);
       }
-      const serial = JSON.stringify(next);
+      const serial = languageRef.current + JSON.stringify(next);
       if (serial !== lastHotspotString) {
         lastHotspotString = serial;
         const projected = outlinePoints.map(p => { vector.copy(p).applyQuaternion(model.quaternion).project(camera); return { x: (vector.x * 0.5 + 0.5) * width, y: (-vector.y * 0.5 + 0.5) * height }; });
-        setHotspots(layoutBowlCallouts(next, convexHull(projected), width, height));
+        setHotspots(layoutBowlCallouts(next, convexHull(projected), width, height, languageRef.current));
       }
     }
     function paint(now: number) {
@@ -266,11 +273,15 @@ export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientat
     };
   }, []);
 
+  useEffect(() => {
+    host.current?.querySelector('canvas')?.setAttribute('aria-label', t('可旋转的外销瓷碗。拖动旋转，方向键转动，滚轮缩放，Home 键复位。'));
+  }, [language, t]);
+
   const select = (id: string, anchor: HTMLElement) => { if (!disabled && performance.now() >= suppressSelectionUntil.current) onSelectTarget(id, anchor); };
   const visualState = (id: string) => selectedTargetId === id ? ' is-selected' : relatedTargetIds.includes(id) ? ' is-related' : '';
   return <div className={`bowl-scene${dragging ? ' is-dragging' : ''}`}>
     <div className="bowl-stage" ref={host}>
-      <div className="bowl-stage-guide" aria-hidden="true"><span>拖动器物，自由把玩</span><span>滚轮拉近</span></div>
+      <div className="bowl-stage-guide" aria-hidden="true"><span>{t("拖动器物，自由把玩")}</span><span>{t("滚轮拉近")}</span></div>
       <svg className="bowl-leaders" aria-hidden="true">
         {!error && hotspots.filter(point => point.visible && point.callout).map(point => <path key={point.id} data-bowl-leader={point.id} className={visualState(point.id)} d={point.callout!.path} />)}
       </svg>
@@ -278,31 +289,31 @@ export default function BowlScene({ selectedTargetId, onSelectTarget, onOrientat
         const target = BOWL_TARGETS.find(item => item.id === point.id)!;
         return <div key={point.id} className="bowl-annotation">
           <button type="button" className={`bowl-hotspot${visualState(point.id)}`} data-bowl-target={point.id}
-            style={{ left: point.x, top: point.y }} aria-label={`调查${target.label}`} title={target.label}
+            style={{ left: point.x, top: point.y }} aria-label={f('调查{target}',{target:t(target.label)})} title={t(target.label)}
             aria-pressed={selectedTargetId === point.id} disabled={disabled} onClick={event => select(point.id, event.currentTarget)}>
             <span className="bowl-hotspot-ring" />
           </button>
           {point.callout && <button type="button" className={`bowl-callout${visualState(point.id)}`} data-bowl-target={point.id}
             style={{ left: point.callout.x, top: point.callout.y, width: point.callout.width, height: point.callout.height }}
-            aria-label={target.label} aria-pressed={selectedTargetId === point.id} disabled={disabled} onClick={event => select(point.id, event.currentTarget)}>{point.callout.lines.map((line, i) => <span key={i}>{line}</span>)}</button>}
+            aria-label={t(target.label)} aria-pressed={selectedTargetId === point.id} disabled={disabled} onClick={event => select(point.id, event.currentTarget)}>{point.callout.lines.map((line, i) => <span key={i}>{line}</span>)}</button>}
         </div>;
       })}
-      {error && <div className="bowl-render-error" role="alert">{error}</div>}
+      {error && <div className="bowl-render-error" role="alert">{t(error)}</div>}
       <div className="bowl-view-controls">
-        <button type="button" onClick={() => controls.current?.reset()} aria-label="复位器物视角">↺ <span>复位</span></button>
-        <div><button type="button" onClick={() => controls.current?.zoom(0.25)} aria-label="拉远器物">−</button>
+        <button type="button" onClick={() => controls.current?.reset()} aria-label={t("复位器物视角")}>↺ <span>{t("复位")}</span></button>
+        <div><button type="button" onClick={() => controls.current?.zoom(0.25)} aria-label={t("拉远器物")}>−</button>
           <span className="bowl-magnification">{magnification}%</span>
-          <button type="button" onClick={() => controls.current?.zoom(-0.25)} aria-label="拉近器物">＋</button></div>
+          <button type="button" onClick={() => controls.current?.zoom(-0.25)} aria-label={t("拉近器物")}>＋</button></div>
       </div>
     </div>
-    <div className="bowl-visible-targets" aria-label="当前角度可观察的部位">
-      <span className="bowl-target-caption">此刻看得见</span>
+    <div className="bowl-visible-targets" aria-label={t("当前角度可观察的部位")}>
+      <span className="bowl-target-caption">{t("此刻看得见")}</span>
       <div className="bowl-target-list">
         {BOWL_TARGETS.filter(target => visibleIds.includes(target.id)).map(target => <button type="button" key={target.id}
           className={visualState(target.id)} data-bowl-target={target.id} aria-pressed={selectedTargetId === target.id}
-          disabled={disabled} onClick={event => select(target.id, event.currentTarget)}>{target.label}<span aria-hidden="true">↗</span></button>)}
+          disabled={disabled} onClick={event => select(target.id, event.currentTarget)}>{t(target.label)}<span aria-hidden="true">↗</span></button>)}
       </div>
-      <p className="bowl-orientation-help">转到底部，可以查看底足。选部位不消耗调查机会。</p>
+      <p className="bowl-orientation-help">{t("转到底部，可以查看底足。选部位不消耗调查机会。")}</p>
     </div>
   </div>;
 }

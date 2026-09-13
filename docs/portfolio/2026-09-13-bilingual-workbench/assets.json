@@ -1,0 +1,107 @@
+{
+  "build": {
+    "builtAt": "2026-09-12T16:09:11.767Z",
+    "entry": "prototype.html",
+    "bytes": 5240387,
+    "sha256": "c9e676caf708d41da51b22d27ed06ca5bedc35aa36f056cb8b74940bf4bd64e5",
+    "source": "React/Three.js presentation; imports unchanged fusion local-session and graph modules"
+  },
+  "assets": [
+    {
+      "file": "2026-09-13-final-english-evidence-reader.png",
+      "bytes": 774839,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "3ee17ac8faf1158da14c084ae2c215ec237d9f55060ea5847f09cc113deb552f",
+      "selected": true
+    },
+    {
+      "file": "2026-09-13-final-english-trial-window-gate.png",
+      "bytes": 2565215,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "1e741149572f57ecd3c53959cd40d2b3f3c2cb4de770f6d7616ca7a7c7a2d1d7",
+      "selected": true
+    },
+    {
+      "file": "2026-09-13-final-full-chinese.png",
+      "bytes": 2777310,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "0da570b8abcf9ec79a94c2c65dddcd4eb15ce76c36afd7857c63e93c8b1ea4e0",
+      "selected": true
+    },
+    {
+      "file": "2026-09-13-final-full-english.png",
+      "bytes": 2707558,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "48c60f64192f0517d6e72010d9c3db94ae81c08e01ab369eb91e680467970165",
+      "selected": true
+    },
+    {
+      "file": "2026-09-13-final-surface-chinese.png",
+      "bytes": 2637673,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "4a8956f64b22ca2bae0b4c47a88eadba02b0b309724f81ba6f19884b0e6668f0",
+      "selected": true
+    },
+    {
+      "file": "2026-09-13-final-surface-english.png",
+      "bytes": 2646757,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "24940a0161ac424cb452b46696e5e9e362cdfd491fc13c5ef8bbf2dc6c1ef2c0",
+      "selected": true
+    },
+    {
+      "file": "2026-09-13-first-english-evidence-reader.png",
+      "bytes": 774783,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "b264071861d9212af5e7f1c6ab64789e4391d0f1df21fff1eb72868d20fb0cf9",
+      "selected": false
+    },
+    {
+      "file": "2026-09-13-first-english-trial-window-gate.png",
+      "bytes": 2565187,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "8e0cf74068ad6a8943fcbc52e6d5ef2335f7d65dfcf5c20f898518fb4fd27bff",
+      "selected": false
+    },
+    {
+      "file": "2026-09-13-first-full-chinese.png",
+      "bytes": 2777310,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "0da570b8abcf9ec79a94c2c65dddcd4eb15ce76c36afd7857c63e93c8b1ea4e0",
+      "selected": false
+    },
+    {
+      "file": "2026-09-13-first-full-english.png",
+      "bytes": 2709469,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "372a5099508e4763e9feb71c45c046cdea11248c0ac1d08802a745d37a3e9eff",
+      "selected": false
+    },
+    {
+      "file": "2026-09-13-first-surface-chinese.png",
+      "bytes": 2637672,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "f926233db220f55443b5492e1e2e9023918e8905bd26ff64d0da1881d854419a",
+      "selected": false
+    },
+    {
+      "file": "2026-09-13-first-surface-english.png",
+      "bytes": 2647034,
+      "width": 2880,
+      "height": 2000,
+      "sha256": "c237c8f72f6fa93a0eea5ee5b9a403c1c565a527b267fcee87c3d97b14a7ab2d",
+      "selected": false
+    }
+  ]
+}

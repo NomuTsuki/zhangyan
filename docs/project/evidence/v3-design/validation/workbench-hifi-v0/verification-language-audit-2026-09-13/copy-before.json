@@ -1,0 +1,404 @@
+{
+  "reviewRequired": true,
+  "passed": false,
+  "orders": 58,
+  "uniqueStates": 1069,
+  "uniqueDisplayStrings": 389,
+  "frontierIds": [
+    "question:appearance",
+    "question:archive:t2:attribution",
+    "question:archive:t2:corroboration",
+    "question:archive:t2:source",
+    "question:archive:t3:attribution",
+    "question:archive:t3:corroboration",
+    "question:archive:t3:source",
+    "question:change",
+    "question:craft",
+    "question:history",
+    "question:material-base",
+    "question:material-sequence",
+    "question:negative",
+    "question:photo-object",
+    "question:surface",
+    "question:visible-intervention"
+  ],
+  "edgeIds": [
+    "archive:t2:object",
+    "archive:t3:object",
+    "comparison-material:archive:obs.accident.major",
+    "comparison-material:archive:obs.current.whole",
+    "comparison-material:photo:obs.current.whole",
+    "comparison-material:photo:obs.phase.t1",
+    "comparison-material:photo:obs.structure.xray.early",
+    "context:obs.current.base:obs.corpus.identity",
+    "context:obs.current.whole:obs.corpus.identity",
+    "interpretation:archive:attribution",
+    "interpretation:archive:difference",
+    "interpretation:photo-history",
+    "interpretation:photo:attribution",
+    "interpretation:photo:difference",
+    "photo:object",
+    "proof:coherentDecisionProfile:claim:identity",
+    "proof:coherentDecisionProfile:claim:majorReassembly",
+    "proof:coherentDecisionProfile:claim:threePhase",
+    "proof:coherentDecisionProfile:obs.documentation.resolved",
+    "proof:coherentDecisionProfile:obs.key-material.layer-sequence",
+    "proof:coherentDecisionProfile:obs.key-material.substrate-readings",
+    "proof:coherentDecisionProfile:obs.stability.resolved",
+    "proof:coherentDecisionProfile:obs.surface.resolved",
+    "proof:identity:obs.corpus.identity",
+    "proof:identity:obs.corpus.identity.repeat",
+    "proof:identity:obs.current.base:current",
+    "proof:identity:obs.current.whole:current",
+    "proof:identity:obs.object.continuity",
+    "proof:majorReassembly:obs.accident.major:documented",
+    "proof:majorReassembly:obs.current.whole:physical",
+    "proof:majorReassembly:obs.structure.major.cross-time:physical",
+    "proof:majorReassembly:obs.structure.xray.early:physical",
+    "proof:threePhase:obs.accident.major",
+    "proof:threePhase:obs.phase.t1",
+    "proof:threePhase:obs.phase.t3",
+    "support:obs.surface.point-layering:obs.surface.resolved"
+  ],
+  "missing": [
+    {
+      "source": "这份关系核验所指的原始记录是什么？",
+      "english": "这份关系核验所指的原始记录是什么？",
+      "where": "graph.questions[0].title",
+      "route": [
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT"
+        }
+      ]
+    },
+    {
+      "source": "已经取得关系核验报告；原始记录尚未在本局取得。保留报告，等记录与实物各自出现后再接线。",
+      "english": "已经取得关系核验报告；原始记录尚未在本局取得。保留报告，等记录与实物各自出现后再接线。",
+      "where": "graph.questions[0].explanation",
+      "route": [
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT"
+        }
+      ]
+    },
+    {
+      "source": "照片内容已取得；先观察现器的对应特征，才有这次核验所需的另一端材料。",
+      "english": "照片内容已取得；先观察现器的对应特征，才有这次核验所需的另一端材料。",
+      "where": "graph.questions[3].explanation",
+      "route": [
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE"
+        }
+      ]
+    },
+    {
+      "source": "这些层底下是什么材料？",
+      "english": "这些层底下是什么材料？",
+      "where": "graph.questions[1].title",
+      "route": [
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR"
+        },
+        {
+          "id": "A.SCREEN.UV"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE"
+        }
+      ]
+    },
+    {
+      "source": "层序说明先后，不能替代基底材料分析。",
+      "english": "层序说明先后，不能替代基底材料分析。",
+      "where": "graph.questions[1].explanation",
+      "route": [
+        {
+          "id": "A.RELATE.ARCHIVE.T3_TO_OBJECT"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR"
+        },
+        {
+          "id": "A.SCREEN.UV"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE"
+        }
+      ]
+    },
+    {
+      "source": "所述事件与实物相符",
+      "english": "所述事件与实物相符",
+      "where": "graph.edges[0].label",
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT"
+        }
+      ]
+    },
+    {
+      "source": "事件相符不自动证明档案归属。所述处理在声明范围内得到物证对应。",
+      "english": "事件相符不自动证明档案归属。所述处理在声明范围内得到物证对应。",
+      "where": "graph.edges[0].details",
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT"
+        }
+      ]
+    },
+    {
+      "source": "事件相符不自动证明档案归属。所述处理在注明范围内得到物证对应。",
+      "english": "事件相符不自动证明档案归属。所述处理在注明范围内得到物证对应。",
+      "where": "graph.edges[0].details",
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT"
+        }
+      ]
+    },
+    {
+      "source": "报告已取得 · 归属待核实",
+      "english": "报告已取得 · 归属待核实",
+      "where": "graph.nodes[8].stateLabel",
+      "route": [
+        {
+          "id": "A.OBSERVE.WHOLE"
+        },
+        {
+          "id": "A.INSPECT.MATERIAL.LAYER_SEQUENCE"
+        },
+        {
+          "id": "A.ASSESS.TREATED_AND_UNTREATED"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS"
+        },
+        {
+          "id": "A.IMAGE.XRAY"
+        },
+        {
+          "id": "A.MAP.REGION_CONTINUITY",
+          "basis": "photo"
+        }
+      ]
+    },
+    {
+      "source": "身份判断的共同条件",
+      "english": "身份判断的共同条件",
+      "where": "graph.edges[3].label",
+      "route": [
+        {
+          "id": "A.OBSERVE.BASE"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE"
+        },
+        {
+          "id": "A.SCREEN.UV"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT"
+        },
+        {
+          "id": "A.IMAGE.XRAY"
+        },
+        {
+          "id": "A.COMPARE.CORPUS.RECHECK"
+        }
+      ]
+    },
+    {
+      "source": "这份制造读数必须与另一处工艺读数及一条身份路径共同使用；本箭头不表示它单独能够推出身份。",
+      "english": "这份制造读数必须与另一处工艺读数及一条身份路径共同使用；本箭头不表示它单独能够推出身份。",
+      "where": "graph.edges[3].details",
+      "route": [
+        {
+          "id": "A.OBSERVE.BASE"
+        },
+        {
+          "id": "A.RELATE.ARCHIVE.T2_TO_OBJECT"
+        },
+        {
+          "id": "A.RESEARCH.LATE_TREATMENT"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T3_CURRENT"
+        },
+        {
+          "id": "A.OBSERVE.WHOLE"
+        },
+        {
+          "id": "A.SCREEN.UV"
+        },
+        {
+          "id": "A.LOCATE.HISTORIC_IMAGE"
+        },
+        {
+          "id": "A.INSPECT.WINDOWS"
+        },
+        {
+          "id": "A.SYNTHESIZE.SURFACE_REGIONS"
+        },
+        {
+          "id": "A.OBSERVE.REGION_DECOR"
+        },
+        {
+          "id": "A.CORROBORATE.ARCHIVE.T2_CURRENT"
+        },
+        {
+          "id": "A.IMAGE.XRAY"
+        },
+        {
+          "id": "A.COMPARE.CORPUS.RECHECK"
+        }
+      ]
+    }
+  ]
+}

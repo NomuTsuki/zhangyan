@@ -49,3 +49,39 @@
 .investigation-popover{position:fixed;right:auto;bottom:auto;width:330px;max-height:calc(100vh - 110px);z-index:40}
 .completed-record{display:block;margin-top:13px;line-height:1.8}
 .input-sources .source-dot{border-color:#9b7a3a;background:#bfa05c22}
+
+/* Desktop bilingual presentation. The specimen, map columns and authored roads
+   keep their dimensions; English text wraps within the existing reading areas. */
+.language-switch{display:flex;align-items:center;gap:6px;flex-shrink:0;padding:7px 8px;border:1px solid #b8ad96;background:transparent;font:11px/1.4 system-ui,sans-serif;color:#938976}
+.language-switch .active{color:#374133;font-weight:600}
+:root:lang(en){font-family:Georgia,'Times New Roman',serif}
+:lang(en) .game-topbar{gap:14px;padding:0 22px}
+:lang(en) .case-name{padding-left:15px;font-size:15px}
+:lang(en) .case-name>span{font-size:9px;letter-spacing:1.5px}
+:lang(en) .session-heading{font-size:12px;white-space:normal;max-width:125px;line-height:1.5}
+:lang(en) .opportunities{gap:6px;font-size:12px}
+:lang(en) .stop-button{font-size:13px;padding:11px 13px}
+:lang(en) .top-link{font-size:13px}
+:lang(en) .object-heading>span{font-size:11px}
+:lang(en) .outside-heading{flex-wrap:wrap;gap:5px}
+:lang(en) .outside-heading h2{letter-spacing:0;font-size:19px}
+:lang(en) .outside-heading>span{font-size:9px}
+:lang(en) .outside-groups{column-gap:12px}
+:lang(en) .place-button{white-space:normal;text-align:left;font-size:12px}
+:lang(en) .bowl-callout{font-family:Georgia,'Times New Roman',serif;letter-spacing:0}
+:lang(en) .bowl-visible-targets{font-family:Georgia,'Times New Roman',serif}
+:lang(en) .map-heading h2{letter-spacing:0}
+:lang(en) .map-heading p{line-height:1.6}
+:lang(en) .map-notice{gap:10px;line-height:1.5}
+:lang(en) .map-notice>span{min-width:0}
+:lang(en) .map-notice button{flex-shrink:0}
+:lang(en) .map-empty h3{letter-spacing:0}
+:lang(en) .commission-question h3{font-size:20px;line-height:1.65;letter-spacing:0}
+:lang(en) .judgment-row{gap:8px;font-size:14px}
+:lang(en) .judgment-row small{font-size:10px;white-space:normal;text-align:right;max-width:72px}
+:lang(en) .judgment-row>span:nth-child(2){flex:1}
+:lang(en) .selection-details h3{line-height:1.5}
+:lang(en) .selection-details p{line-height:1.8}
+:lang(en) .material-reader p{line-height:1.8}
+:lang(en) .relation-status li{flex-wrap:wrap}
+:lang(en) .map-claim small{letter-spacing:0}

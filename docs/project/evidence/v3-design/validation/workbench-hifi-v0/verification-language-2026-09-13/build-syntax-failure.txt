@@ -1,0 +1,5 @@
+
+> zhangyan-workbench-hifi-v0@0.1.0 build
+> tsc --noEmit && vite build && node scripts/finalize.mjs
+
+src/locales/en-case.mjs(138,1): error TS1128: Declaration or statement expected.

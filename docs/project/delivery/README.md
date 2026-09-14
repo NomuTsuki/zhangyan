@@ -1,5 +1,9 @@
 # 掌眼 V3 阶段成果
 
+**2026-09-14 GitHub展示整理：** 当前仓库已由作者公开，默认分支已调整为V3。公开入口为[NomuTsuki/zhangyan](https://github.com/NomuTsuki/zhangyan)，本次同步英文作品介绍、中文试玩说明和精选素材导航。仍提供HTML下载；托管试玩页和视频制作以后再推进。
+
+**2026-09-14 作者收尾：** 游戏开发以已推送的3fe5704／页面4d6362a8结束，后续转为作品集呈现。[当前作品说明](../../../README.zh-CN.md)、[素材精选](../../portfolio/README.md)与[视频／试玩展示提案](../../portfolio/PRESENTATION-PLAN.md)已整理。本目录的旧HTML入口和录像保留原状，属于先前的本地交付入口；公开展示页尚未发布。下方段落按各自日期保留。
+
 9月13日封存：用户批准将4d6362a8页面及其来源、前沿、名称修订作为同一次地图检查点提交，并同步到origin/codex/xray-photo-local-study。Git实际记录是提交与同步状态的依据；下方文字按各自历史阶段保留。
 
 9月13日节点名称修订：当前页4d6362a8已修正名称远离、报告短名、图注和道路对比。[实现与核验](../evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-NODE-LABELS-2026-09-13.md)及[短复测](../evidence/v3-design/validation/workbench-hifi-v0/PLAYTEST-NODE-LABELS.md)。未提交／推送，真人易读性待反馈；下文为历史。

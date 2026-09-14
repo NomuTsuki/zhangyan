@@ -1,5 +1,9 @@
 # Current State
 
+## 2026-09-14 对外介绍修订：游戏本身优先
+
+用户明确要求以长线古董鉴定推理、从不完整证据中渐进理解作为一句话定位。中英文README及仓库简介按该方向修订；去掉作者收尾声明、作品集制作安排、素材精选及展示计划的对外跳转。素材仍在原目录，作为后续制作原材料，不作为独立展品推介。源码导航同步收敛为构建与历史索引。README明确NomuTsuki的设计与决策职责，以及OpenAI Codex、Cursor和GPT Image的辅助工作；不修改历史Git署名。下方先前展示方案按历史理解。核验见[措辞修订记录](evidence/2026-09-14-readme-game-framing.md)。
+
 ## 2026-09-14 当前：公开GitHub展示已整理，视频延后
 
 用户已自行将NomuTsuki/zhangyan改为PUBLIC，并明确要求整理GitHub侧，包括默认分支与README。本次范围为同步英文首页、中文说明、源码与历史导航、精选素材索引，补仓库简介和相关主题，并将默认分支指向已有codex/xray-photo-local-study。旧main、其他历史分支与zhangyan_V2仓库保留。

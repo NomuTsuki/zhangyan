@@ -1,12 +1,12 @@
 # Repository guide
 
-The repository keeps the development record. The [root README](../README.md) is the visitor introduction, and the [portfolio index](portfolio/README.md) selects a small set of evidence. This guide locates the implementation and historical material without moving the original directories.
+This guide locates the current implementation, build instructions and historical versions. Start with the [root README](../README.md) for an introduction to the game.
 
 ## Current work
 
 | Purpose | Location |
 |---|---|
-| Author-selected final playable checkpoint | `3fe5704`, branch `codex/xray-photo-local-study` |
+| Current game revision | `3fe5704`, branch `codex/xray-photo-local-study` |
 | Self-contained V3 game | [prototype.html](project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html) |
 | V3 React / Three.js presentation | [src](project/evidence/v3-design/validation/workbench-hifi-v0/src/) |
 | Authored map coordinates and curves | [fixed-map-schema.mjs](project/evidence/v3-design/validation/workbench-hifi-v0/src/fixed-map-schema.mjs) |
@@ -14,7 +14,7 @@ The repository keeps the development record. The [root README](../README.md) is 
 | Investigation, camera and road feedback | [MapView.tsx](project/evidence/v3-design/validation/workbench-hifi-v0/src/MapView.tsx) and [map-motion.mjs](project/evidence/v3-design/validation/workbench-hifi-v0/src/map-motion.mjs) |
 | Existing session, actions and graph used by V3 | [fusion local adapter](project/evidence/v3-design/validation/workbench-map-fusion-v0/) |
 | Final revision checks and their limits | [node-label verification](project/evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-NODE-LABELS-2026-09-13.md) and [frontier verification](project/evidence/v3-design/validation/workbench-hifi-v0/VERIFICATION-FRONTIER-CONTINUITY-2026-09-13.md) |
-| Current author decision / next presentation work | [current state](project/02-CURRENT-STATE.md) / [next actions](project/03-NEXT-ACTIONS.md) |
+| Development records | [current state](project/02-CURRENT-STATE.md) / [next actions](project/03-NEXT-ACTIONS.md) |
 
 ## Build the current V3
 
@@ -44,16 +44,12 @@ Browser checks and their local runtime requirements are documented in the dated 
 | Area | Role |
 |---|---|
 | `docs/project/` | Design decisions, source evidence and verification, including failures |
-| `docs/portfolio/` | Dated capture sets with source/build provenance; see the curated index before browsing all of them |
+| `docs/portfolio/` | Working screenshots, clips and production materials with source/build provenance |
 | `output/` | Working captures and audit output; some historically tracked evidence remains here |
 | `docs/teacher/`, `docs/superpowers/` | Historical delivery and design records |
 | `掌眼_Codex启动包_v2/` | Preserved V1/V2 implementation and materials |
 | `release/` | Historical release-boundary manifests |
 
-V1 is preserved under `v1.0.0-teacher-handoff`; V2 under `v2.0.0-player-prototype-freeze`; the migration snapshot under `handoff-freeze-2026-08-24`. The existing nine remote branches remain development history. No branch deletion, history rewrite or V1/V2 refactor is needed for the portfolio.
+V1 is preserved under `v1.0.0-teacher-handoff`; V2 under `v2.0.0-player-prototype-freeze`; the migration snapshot under `handoff-freeze-2026-08-24`. Earlier branches and their documentation remain as development history.
 
 The default branch is now `codex/xray-photo-local-study`, updated on 14 September 2026. The old `main` and the other development branches are preserved for history; their older README files do not describe the current V3 scope. The repository's public-facing introduction is the root README on the V3 branch.
-
-## Presentation and publication
-
-The author made this repository public and approved its GitHub presentation update on 14 September. The [presentation plan](portfolio/PRESENTATION-PLAN.md) now uses this repository for any later, selectively published showcase files; a second repository is not needed. Video production and a hosted play page remain later work. This reorganisation does not create a site, Release, repository or license.

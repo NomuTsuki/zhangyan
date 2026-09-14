@@ -1,5 +1,9 @@
 # Current State
 
+## 2026-09-14 公开下载入口修复
+
+用户报告下载时报GitHub错误页，已在中文README实际点击复现。主下载改为raw直连ZIP，内含原字节Zhangyan.html；中英文README的真实点击均触发download事件，远端包完整性通过。旧HTTP直读通过不等同于用户点击通过，详见[下载修复核验](evidence/2026-09-14-download-link-fix.md)。游戏未改动。
+
 ## 2026-09-14 对外介绍修订：游戏本身优先
 
 用户明确要求以长线古董鉴定推理、从不完整证据中渐进理解作为一句话定位。中英文README及仓库简介按该方向修订；去掉作者收尾声明、作品集制作安排、素材精选及展示计划的对外跳转。素材仍在原目录，作为后续制作原材料，不作为独立展品推介。源码导航同步收敛为构建与历史索引。README明确NomuTsuki的设计与决策职责，以及OpenAI Codex、Cursor和GPT Image的辅助工作；不修改历史Git署名。下方先前展示方案按历史理解。核验见[措辞修订记录](evidence/2026-09-14-readme-game-framing.md)。

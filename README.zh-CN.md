@@ -8,7 +8,9 @@
 
 ## 如何试玩
 
-下载[单文件游戏](docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html?raw=1)，用电脑 Edge 或 Chrome 打开。GitHub 中的 HTML 文件页用于看代码，不能代替已经托管的试玩网址。
+[下载游戏压缩包](https://raw.githubusercontent.com/NomuTsuki/zhangyan/refs/heads/codex/xray-photo-local-study/docs/downloads/zhangyan-v3.zip)，解压后用电脑 Edge 或 Chrome 打开 **Zhangyan.html**。压缩包中只有这一个游戏文件，无需安装、Node.js 或本地服务器。
+
+也可以[直接保存 HTML 原文件](https://raw.githubusercontent.com/NomuTsuki/zhangyan/refs/heads/codex/xray-photo-local-study/docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html)。如果浏览器显示代码，按 **Ctrl+S** 保存为 **Zhangyan.html**（不要保存成 `.txt`），再打开保存的文件。GitHub 的文件预览页不能直接运行游戏。
 
 1. 拖动碗自由旋转，朝向玩家的部位会显示调查入口；滚轮缩放器物。
 2. 选择部位或器物之外的方法。打开入口和阅读免费，执行具体调查才消耗一次机会；已经做过的同一次调查可免费回看。

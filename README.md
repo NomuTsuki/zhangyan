@@ -14,12 +14,12 @@ Rotate a porcelain bowl, investigate its materials and records, and follow the c
 
 The current V3 is a **desktop browser prototype in Chinese and English**, centred on the investigation of one fictional porcelain bowl.
 
-- **Play locally:** download the [self-contained game file](docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html?raw=1) and open it in desktop Edge or Chrome. No Node.js or local server is needed. Switch language with **中 / EN**.
+- **Play locally:** [download the game ZIP](https://raw.githubusercontent.com/NomuTsuki/zhangyan/refs/heads/codex/xray-photo-local-study/docs/downloads/zhangyan-v3.zip), extract it, and open **Zhangyan.html** in desktop Edge or Chrome. The archive contains just one self-contained game file. No Node.js or local server is needed. Switch language with **中 / EN**.
 - **Investigate:** drag to rotate the bowl and reveal investigation points, or choose an archive, comparison or test. Browsing methods is free; performing an investigation uses an enquiry. Completed investigations can be reviewed for free.
 - **Follow the evidence:** select information, roads or assessments to inspect their basis. Drag and zoom the map to explore it; press Escape to dismiss an overlay or clear a selection.
 - **Make your assessment:** choose **Finish & assess** when you are ready. Some questions may remain unresolved.
 
-Download the HTML before opening it: GitHub's file viewer displays source content rather than running the game.
+Alternatively, save the [HTML file directly](https://raw.githubusercontent.com/NomuTsuki/zhangyan/refs/heads/codex/xray-photo-local-study/docs/project/evidence/v3-design/validation/workbench-hifi-v0/prototype.html). If your browser displays code, press **Ctrl+S**, save it as **Zhangyan.html** (not `.txt`), then open the saved file. GitHub's file viewer does not run the game.
 
 ## The design question
 
